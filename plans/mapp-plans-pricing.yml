@@ -1,0 +1,65 @@
+generated: '2026-08-12'
+method: searched
+source: https://mapp.com/mapp-marketing-cloud-pricing/
+note: Mapp publishes list prices, which is unusual for enterprise martech. Pricing is scaled by database size and
+  unique monthly visitors, and those thresholds are not disclosed, so the headline monthly figure is an entry point
+  rather than a quote. No API-specific pricing, no per-call metering and no free tier are published; API access
+  to the Analytics API and Product Catalog API is an optional feature that a Customer Success Manager must enable
+  on the account.
+currency: USD
+billing_period: monthly, billed annually
+plan_count: 3
+plans:
+- name: Essential
+  price: 3050
+  currency: USD
+  period: month
+  billing: annual
+  includes:
+  - Email & SMS Automation
+  - Web Personalization & Overlays
+  - Drag & Drop Advanced Segmentation
+  - ChatGPT Content Generation
+  - Product Recommendations
+  quota: null
+  overage: null
+  limits_note: Priced on database size and unique monthly visitors; thresholds not published.
+- name: Professional
+  price: 3600
+  currency: USD
+  period: month
+  billing: annual
+  includes:
+  - Everything in Essential
+  - Full Mapp AI Assistant
+  - Web & Mobile Analytics
+  - Alerts, KPI Forecast & Anomaly Detection
+  - Customer Journey Analysis
+  - RFM Modelling
+  quota: null
+  overage: null
+- name: Custom
+  price: null
+  currency: null
+  period: null
+  billing: null
+  includes:
+  - Everything in Professional
+  - Web & Mobile Push
+  - In-App Messaging
+  - Custom Onboarding & Dashboards
+  - Flexible Data Model
+  - Data Streams
+  quota: null
+  overage: null
+  note: Contact-sales bespoke quote. Data Streams (the Kafka event surface) is Custom-tier only.
+gated_features:
+- feature: Mapp Intelligence Analytics API
+  gate: optional feature; must be enabled by a Customer Success Manager
+  source: https://docs.mapp.com/apidocs/analytics-api
+- feature: Product Catalog API
+  gate: API access must be enabled for the account
+  source: https://docs.mapp.com/apidocs/product-catalog-api-authentification
+- feature: Data Streams (Kafka)
+  gate: Custom tier only
+  source: https://mapp.com/mapp-marketing-cloud-pricing/

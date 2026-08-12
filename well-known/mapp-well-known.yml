@@ -1,0 +1,109 @@
+generated: '2026-08-12'
+method: probed
+source: live GET of /.well-known/* on every apis.yml + OpenAPI servers host
+note: >-
+  Only mapp.com serves real /.well-known/ documents, and both of them describe the MCP authorization
+  surface: RFC 8414 authorization-server metadata and RFC 9728 protected-resource metadata for the MCP
+  server at https://mapp.com/wp-json/mcp/mcp-oauth-server. api.mapp.com and auth.mapp.com answer 200 for
+  every /.well-known/* path with the WordPress marketing-site HTML shell (identical 264,644-byte body as
+  https://mapp.com/) — those are soft-404s, recorded as misses, not documents. docs.mapp.com returns real
+  404s. No security.txt, no openid-configuration, no api-catalog, no ai-plugin.json anywhere.
+hosts:
+- host: https://mapp.com
+  documents:
+  - path: /.well-known/oauth-authorization-server
+    status: 200
+    content_type: application/json
+    file: mapp-oauth-authorization-server.json
+    real_document: true
+  - path: /.well-known/oauth-protected-resource
+    status: 200
+    content_type: application/json
+    file: mapp-oauth-protected-resource.json
+    real_document: true
+  - path: /.well-known/security.txt
+    status: 404
+  - path: /.well-known/openid-configuration
+    status: 404
+  - path: /.well-known/api-catalog
+    status: 404
+  - path: /.well-known/ai-plugin.json
+    status: 404
+  - path: /.well-known/agent-card.json
+    status: 404
+  - path: /.well-known/agent.json
+    status: 404
+- host: https://docs.mapp.com
+  documents:
+  - path: /.well-known/security.txt
+    status: 404
+  - path: /.well-known/openid-configuration
+    status: 404
+  - path: /.well-known/oauth-authorization-server
+    status: 404
+  - path: /.well-known/api-catalog
+    status: 404
+  - path: /.well-known/ai-plugin.json
+    status: 404
+  - path: /.well-known/agent-card.json
+    status: 404
+  - path: /.well-known/agent.json
+    status: 404
+- host: https://api.mapp.com
+  soft_404: true
+  note: Every /.well-known/* path returns HTTP 200 with the marketing-site HTML shell. Treated as a miss.
+  documents:
+  - path: /.well-known/security.txt
+    status: 200
+    content_type: text/html
+    real_document: false
+  - path: /.well-known/openid-configuration
+    status: 200
+    content_type: text/html
+    real_document: false
+  - path: /.well-known/oauth-authorization-server
+    status: 200
+    content_type: text/html
+    real_document: false
+  - path: /.well-known/api-catalog
+    status: 200
+    content_type: text/html
+    real_document: false
+  - path: /.well-known/agent-card.json
+    status: 200
+    content_type: text/html
+    real_document: false
+  - path: /.well-known/agent.json
+    status: 200
+    content_type: text/html
+    real_document: false
+- host: https://auth.mapp.com
+  soft_404: true
+  note: Same marketing-site catch-all as api.mapp.com. All probes recorded as misses.
+  documents:
+  - path: /.well-known/oauth-authorization-server
+    status: 200
+    content_type: text/html
+    real_document: false
+  - path: /.well-known/openid-configuration
+    status: 200
+    content_type: text/html
+    real_document: false
+  - path: /.well-known/security.txt
+    status: 200
+    content_type: text/html
+    real_document: false
+  - path: /.well-known/agent-card.json
+    status: 200
+    content_type: text/html
+    real_document: false
+  - path: /.well-known/agent.json
+    status: 200
+    content_type: text/html
+    real_document: false
+summary:
+  hosts_probed: 4
+  real_documents: 2
+  security_txt: false
+  agent_card: false
+  api_catalog: false

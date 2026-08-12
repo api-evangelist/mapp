@@ -1,0 +1,416 @@
+generated: '2026-08-12'
+method: derived
+source: mcp/mapp-mcp.yml + openapi/*.yml
+note: 'This crosswalk exists to record a divergence, not a mapping. Mapp serves a real MCP endpoint (https://mapp.com/wp-json/mcp/mcp-oauth-server)
+  but it belongs to the mapp.com WordPress content platform, not to Mapp Marketing Cloud: its OAuth issuer is mapp.com,
+  its only scope is "mcp", and its authorization server is unrelated to auth.mapp.com, which issues the tokens the
+  product APIs accept. tools/list is OAuth-gated (401 with an RFC 9728 challenge), so no tool names are known —
+  nothing was guessed to fill the table. The result: 100% of the 231 published product-API operations have no agent
+  tool in front of them, which is the finding.'
+surfaces:
+  openapi:
+  - api: mapp:engage
+    file: openapi/mapp-engage-openapi.yml
+  - api: mapp:intelligence-analytics
+    file: openapi/mapp-intelligence-analytics-openapi.yml
+  - api: mapp:product-catalog
+    file: openapi/mapp-product-catalog-openapi.yml
+  - api: mapp:fashion
+    file: openapi/mapp-fashion-openapi.yml
+  graphql: null
+  mcp:
+    url: https://mapp.com/wp-json/mcp/mcp-oauth-server
+    gated: true
+    gate: OAuth 2.0 bearer, scope "mcp", authorization server https://mapp.com
+    covers: mapp.com WordPress content platform
+    covers_product_apis: false
+crosswalk: []
+mcp_only: []
+mcp_only_note: Unknown — the tool list is auth-gated. Recorded as unknown rather than empty.
+rest_only:
+- api: mapp:engage
+  capability: Address Attributes
+  operations:
+  - list
+  count: 1
+- api: mapp:engage
+  capability: Async
+  operations:
+  - getNextIndex
+  - getPollCount
+  - getSubmitCount
+  - poll
+  - pollByIndex
+  - pollByRange
+  - pollByType
+  - submit
+  count: 8
+- api: mapp:engage
+  capability: Audit Log
+  operations:
+  - auditLogEvents
+  count: 1
+- api: mapp:engage
+  capability: Automation
+  operations:
+  - find
+  - getDetails
+  - runOnce
+  count: 3
+- api: mapp:engage
+  capability: Blacklist
+  operations:
+  - createGroupEntries
+  - createGroupEntriesHashed
+  - createSystemEntries
+  - createSystemEntriesHashed
+  - deleteGroupEntries
+  - deleteSystemEntries
+  count: 6
+- api: mapp:engage
+  capability: CMS
+  operations:
+  - getMessageDefinitions
+  - getMimeMessage
+  count: 2
+- api: mapp:engage
+  capability: Contact
+  operations:
+  - anonymize
+  - checkUpdateVersion
+  - create
+  - delete
+  - export
+  - get
+  - update
+  - updateMultichannelContact
+  count: 8
+- api: mapp:engage
+  capability: Content
+  operations:
+  - DeleteContent
+  - store
+  count: 2
+- api: mapp:engage
+  capability: Draft Message
+  operations:
+  - CreateDraftMessage
+  - DeleteDraftMessage
+  - FindDraftMessage
+  - GetDraftMessage
+  - UpdateDraftMessage
+  - saveAsPreparedMessage
+  count: 6
+- api: mapp:engage
+  capability: Ecommerce
+  operations:
+  - createAbandonedBrowseItem
+  - createAbandonedCartItem
+  - createWishlistItem
+  - registerTransaction
+  - removeAbandonedBrowseItem
+  - removeAbandonedCartItem
+  - removeTransaction
+  - removeWishlistItem
+  count: 8
+- api: mapp:engage
+  capability: Group
+  operations:
+  - CreateGroup
+  - GetGroup
+  - GroupOverrideGroupSettings
+  - activate
+  - archive
+  - clone
+  - findIdsByAttributes
+  - getAllGroupSettingsTemplates
+  - getAttributes
+  - getPreparedMessages
+  - setAttributes
+  count: 11
+- api: mapp:engage
+  capability: Group Attributes
+  operations:
+  - create_2
+  - delete_4
+  - export_2
+  - get_3
+  - importAttributes
+  - list_2
+  - update_2
+  - validateName
+  count: 8
+- api: mapp:engage
+  capability: Landing Page
+  operations:
+  - FindLandingPage
+  - deleteLandingPage
+  - deleteMany
+  - getStatus
+  count: 4
+- api: mapp:engage
+  capability: Member Attributes
+  operations:
+  - create_3
+  - delete_2
+  - get_4
+  - list_3
+  - update_3
+  - validateName_2
+  count: 6
+- api: mapp:engage
+  capability: Membership
+  operations:
+  - CreateMembership
+  - DeleteMembership
+  - GetMembership
+  - GetMembershipAttributes
+  - findAll
+  - findAllByEmail
+  - getAttributesByEmail
+  - getByEmail
+  - replaceAttributes
+  - subscribe
+  - subscribeByEmail
+  - unsubscribe
+  - unsubscribeByEmail
+  - unsubscribeFromMessage
+  - unsubscribeFromMessageByEmail
+  - updateAttributes
+  count: 16
+- api: mapp:engage
+  capability: Message
+  operations:
+  - FindMessage
+  - getHistorical
+  - getManyUsedPersonalizations
+  - getStatistics
+  - getStatisticsByExternalMessageId
+  - getTimeDistribution
+  - getTimeDistributionByExternalMessageId
+  - getUsedPersonalizations
+  - sendSingle
+  - sendTransactional
+  - sendTransactionalWithEventDetails
+  - validate
+  - validateList
+  - validateMany
+  count: 14
+- api: mapp:engage
+  capability: Meta
+  operations:
+  - activateAttributeDefinitions
+  - archiveAttributeDefinitions
+  - attachTags
+  - createAttributeDefinitions
+  - createLinkCategories
+  - deleteLinkCategory
+  - detachTags
+  - findByTags
+  - getAttributeDefinitions
+  - getLinkCategories
+  - getTags
+  - mergeAttributeDefinitions
+  - updateLinkCategory
+  count: 13
+- api: mapp:engage
+  capability: Mobile Push
+  operations:
+  - MultiTenantSendSingleMobilePush
+  - SendSingleMobilePush
+  - cancelPushSend
+  - createAndSchedulePushMessage
+  - deletePushMessage
+  - getPushMessage
+  - pausePushSend
+  - resumePushSend
+  - updatePushMessage
+  count: 9
+- api: mapp:engage
+  capability: Prepared Message
+  operations:
+  - FindPreparedMessage
+  - GetPreparedMessage
+  - UpdatePreparedMessage
+  - send
+  count: 4
+- api: mapp:engage
+  capability: Process
+  operations:
+  - applyAction
+  - getProcessDetails
+  - getProcessList
+  count: 3
+- api: mapp:engage
+  capability: Profile Attributes
+  operations:
+  - archive_2
+  - create_4
+  - export_3
+  - getAvailableChannels
+  - getCapacity
+  - getMarked
+  - getTechnical
+  - get_5
+  - list_4
+  - markForStats
+  - restore
+  - unmarkForStats
+  - update_4
+  - validateName_3
+  count: 14
+- api: mapp:engage
+  capability: Related Data
+  operations:
+  - createRecord
+  - deleteRecords
+  - getRecordsByKey
+  - updateRecords
+  count: 4
+- api: mapp:engage
+  capability: Segmentation
+  operations:
+  - create_5
+  - delete_3
+  - find_2
+  - getCount
+  - get_2
+  - preview
+  - publish
+  - schema
+  - triggerCount
+  - update_5
+  count: 10
+- api: mapp:engage
+  capability: System
+  operations:
+  - getApiVersion
+  - getEcmVersion
+  count: 2
+- api: mapp:engage
+  capability: System User
+  operations:
+  - createSystemUser
+  - deleteSystemUser
+  - getSystemUser
+  - updatePassword
+  - updateSystemUser
+  count: 5
+- api: mapp:engage
+  capability: Usage Statistics
+  operations:
+  - ExportGetUsageStatistics
+  - getUsageStatistics
+  count: 2
+- api: mapp:engage
+  capability: User
+  operations:
+  - createUser
+  - deleteByEmail
+  - deleteByMobileNumber
+  - deleteUser
+  - getByIdentifier
+  - getByMobileNumber
+  - getMessageHistory
+  - getProfile
+  - getProfileByEmail
+  - getProfileByMobileNumber
+  - getUser
+  - getUserByEmail
+  - replaceProfile
+  - replaceProfileByEmail
+  - replaceProfileByMobileNumber
+  - updateProfile
+  - updateProfileByEmail
+  - updateProfileByMobileNumber
+  count: 18
+- api: mapp:engage
+  capability: Whiteboard
+  operations:
+  - delete_5
+  - find_3
+  - get_6
+  - listTemplates
+  - publish_2
+  - save
+  - schema_2
+  - validate_2
+  count: 8
+- api: mapp:intelligence-analytics
+  capability: Analysis
+  operations:
+  - DELETE /analysis-query/{correlationId}
+  - GET /analysis-query/{correlationId}
+  - GET /analysis-result/{calculationId}
+  - GET /analysis-usage/current
+  - POST /analysis-query
+  - createReportQuery
+  - deleteReportAnalysis
+  - status
+  count: 8
+- api: mapp:intelligence-analytics
+  capability: Available Objects
+  operations:
+  - GET /dynamic-timefilters
+  - GET /query-objects
+  - GET /segments
+  count: 3
+- api: mapp:product-catalog
+  capability: Catalog Metadata Operations
+  operations:
+  - getCatalogAttributes
+  - getCatalogMetadataByWorkspace
+  count: 2
+- api: mapp:product-catalog
+  capability: Product Data Operations
+  operations:
+  - listVariants
+  count: 1
+- api: mapp:product-catalog
+  capability: Variant Data Bulk Operations
+  operations:
+  - bulkAddVariants
+  - bulkDeleteVariants
+  - bulkPartialUpdateVariants
+  - bulkUpsertVariants
+  count: 4
+- api: mapp:product-catalog
+  capability: Variant Data Operations
+  operations:
+  - addVariant
+  - deleteAllCatalogData
+  - deleteVariant
+  - deleteVariantAttributes
+  - getPaginatedVariants
+  - getVariant
+  - partialUpdateVariant
+  - upsertVariant
+  count: 8
+- api: mapp:fashion
+  capability: authorization
+  operations:
+  - getOauthAuthorize
+  - postOauthToken
+  count: 2
+- api: mapp:fashion
+  capability: items
+  operations:
+  - getItemsBasket
+  - getItemsId
+  - getItemsIdComplementary
+  - getItemsIdRelated
+  - getItemsTop
+  count: 5
+- api: mapp:fashion
+  capability: recommendations
+  operations:
+  - getRecommendationsThemed
+  - postRecommendationsFacetted
+  count: 2
+coverage:
+  tools_named: 0
+  tools_bound: 0
+  mcp_only: null
+  rest_operations_total: 231
+  rest_operations_with_a_tool: 0
+  rest_operations_with_a_tool_pct: 0.0

@@ -1,0 +1,91 @@
+generated: '2026-08-12'
+method: searched
+source: openapi/mapp-engage-openapi.yml, openapi/mapp-intelligence-analytics-openapi.yml, openapi/mapp-product-catalog-openapi.yml
+summary:
+  types:
+  - http
+  - oauth2
+  oauth2_flows:
+  - clientCredentials
+  api_key_in: []
+  token_endpoints:
+  - https://auth.mapp.com/oauth2/token
+  mfa_for_api_users: false
+schemes:
+- name: basicAuth
+  type: http
+  scheme: basic
+  description: HTTP Basic authentication with a Mapp Engage system user of type API (or Hybrid).
+  sources:
+  - openapi/mapp-engage-openapi.yml
+- name: oauth_security_scheme
+  type: oauth2
+  flows:
+  - flow: clientCredentials
+    tokenUrl: https://auth.mapp.com/oauth2/token
+    scopes: 0
+  sources:
+  - openapi/mapp-intelligence-analytics-openapi.yml
+- name: Keycloak
+  type: http
+  scheme: bearer
+  bearerFormat: JWT
+  sources:
+  - openapi/mapp-product-catalog-openapi.yml
+docs:
+- https://docs.mapp.com/apidocs/getting-started-with-engage-api
+- https://docs.mapp.com/apidocs/how-to-grant-access-to-the-intelligence-analytics-api
+- https://docs.mapp.com/apidocs/product-catalog-api-authentification
+- https://docs.mapp.com/docs/mapp-cloud-centralized-api-client-management
+- https://docs.mapp.com/docs/api-client-ids
+note: 'Four surfaces, four different auth models, one shared credential store. Since 2026-05-28 a single Mapp Cloud
+  API Client ID / Secret (Settings > Mapp Cloud > API Client IDs) works across Connect, Intelligence, Engage and
+  Mapp Fashion, but each service must still be separately enabled on the account by a Customer Success Manager.
+  Mapp Engage is the outlier: it does not use the Client ID at all — it uses HTTP Basic with a system user email
+  and password, sent in clear text (base64) on every request, with no token, no session and no rotation mechanism
+  beyond changing the password. MFA is available for the Mapp Cloud UI but does not apply to API users. Note the
+  breaking detail on the Analytics token endpoint: earlier versions required a scope parameter and the current endpoint
+  rejects it.'
+per_api:
+- api: mapp:engage
+  type: http
+  scheme: basic
+  credential: system user (type API or Hybrid) email + password
+  token: null
+  rotation: password change only
+  docs: https://docs.mapp.com/apidocs/getting-started-with-engage-api
+- api: mapp:intelligence-analytics
+  type: oauth2
+  flow: clientCredentials
+  token_url: https://auth.mapp.com/oauth2/token
+  client_auth: HTTP Basic client-id:client-secret
+  token_ttl_default_minutes: 60
+  send_scope_parameter: false
+  docs: https://docs.mapp.com/apidocs/how-to-grant-access-to-the-intelligence-analytics-api
+- api: mapp:product-catalog
+  type: http
+  scheme: bearer
+  bearerFormat: JWT
+  issuer: Keycloak
+  docs: https://docs.mapp.com/apidocs/product-catalog-api-authentification
+- api: mapp:fashion
+  type: oauth2
+  flow: authorizationCode
+  pkce: required, S256 only
+  redirect_uri: urn:ietf:wg:oauth:2.0:oob:auto
+  refresh_token: true
+  note: Also references api_key and user_token security schemes that Mapp does not define in the published fragments.
+  docs: https://docs.mapp.com/apidocs/mapp-fashion-api-documentation
+- api: mapp.com MCP endpoint
+  type: oauth2
+  flow: authorizationCode
+  pkce: S256
+  authorization_server: https://mapp.com
+  token_url: https://mapp.com/oauth/token
+  scopes:
+  - mcp
+  dynamic_registration: client_id_metadata_document_supported
+  docs: well-known/mapp-oauth-authorization-server.json
+ip_restriction:
+  supported: true
+  docs: https://docs.mapp.com/docs/ip-restriction

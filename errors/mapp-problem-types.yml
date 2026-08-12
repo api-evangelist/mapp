@@ -1,0 +1,672 @@
+generated: '2026-08-12'
+method: derived
+source: openapi/mapp-engage-openapi.yml, openapi/mapp-intelligence-analytics-openapi.yml, openapi/mapp-product-catalog-openapi.yml,
+  openapi/mapp-fashion-openapi.yml + https://docs.mapp.com/apidocs/engage-api-error-handling
+format: mixed
+envelopes:
+- api: mapp:engage
+  format: proprietary
+  media_type: application/json
+  fields:
+  - errorActor
+  - errorCode
+  - message
+  example:
+    errorActor: CLIENT
+    errorCode: INVALID_REQUEST
+    message: Not Found
+  source: https://docs.mapp.com/apidocs/anonymize-a-contact
+- api: mapp:intelligence-analytics
+  format: rfc9457
+  media_type: application/problem+json
+  fields:
+  - type
+  - title
+  - status
+  - detail
+  - instance
+  - code
+  example:
+    type: about:blank
+    title: 401 UNAUTHORIZED
+    status: 401
+    detail: Missing or invalid Authorization header.
+    instance: /api/analytics/segments
+    code: AUTH_MISSING_OR_INVALID_HEADER
+  source: observed 2026-08-12 on GET https://api.mapp.com/api/analytics/segments (401)
+documented_status_codes:
+- status: 200
+  meaning: Success
+  action: Data is in the HTTP body.
+- status: 204
+  meaning: Success
+  action: No response body is returned.
+- status: 400
+  meaning: Bad Request
+  action: A required parameter is missing or invalid; the body names the parameter. Fix the request and retry.
+- status: 401
+  meaning: Unauthorized
+  action: Add the Authorization header.
+- status: 403
+  meaning: Forbidden
+  action: Generally invalid login credentials. Validate user type, username and password.
+- status: 404
+  meaning: Page Not Found
+  action: Provide a valid URL; make sure there is no backslash in the URL.
+- status: 406
+  meaning: Not Acceptable
+  action: Validate the Accept header.
+- status: 415
+  meaning: Unsupported Media Type
+  action: Validate the Content-Type header.
+- status: 417
+  meaning: Account expired
+  action: Reset the password or contact support.
+- status: 500
+  meaning: Database Access Limit Exceeded
+  action: Reduce load to ~10 transactions per second or contact support.
+- status: 5XX
+  meaning: Internal server error
+  action: Retry per the documented retry process (30s, then 15 min, then contact support).
+docs: https://docs.mapp.com/apidocs/engage-api-error-handling
+problem_count: 113
+problems:
+- api: mapp:engage
+  status: 400
+  title: Provided list of groupIds is empty
+  media_type: null
+  source_operation: openapi/mapp-engage-openapi.yml#activate
+- api: mapp:engage
+  status: 400
+  title: Parameter contactId and notificationRecipient are  mandatory, but are missing or incorrect
+  media_type: null
+  source_operation: openapi/mapp-engage-openapi.yml#anonymize
+- api: mapp:engage
+  status: 400
+  title: One of the parameters is invalid / The message ID or user ID cannot be found. / An unexpected backend error occurred.
+  media_type: null
+  source_operation: openapi/mapp-engage-openapi.yml#cancelPushSend
+- api: mapp:engage
+  status: 400
+  title: '{<br>"errorActor": "CLIENT",<br>"errorCode": "INVALID_REQUEST",<br>"message": "Bad Request"<br>}'
+  media_type: null
+  source_operation: openapi/mapp-engage-openapi.yml#checkUpdateVersion
+- api: mapp:engage
+  status: 400
+  title: Required parameters are missing or incorrect. Group with groupId cannot be found
+  media_type: null
+  source_operation: openapi/mapp-engage-openapi.yml#clone
+- api: mapp:engage
+  status: 400
+  title: Such contact already exists
+  media_type: null
+  source_operation: openapi/mapp-engage-openapi.yml#create
+- api: mapp:engage
+  status: 400
+  title: Required parameters are missing or incorrect / Group already exists
+  media_type: null
+  source_operation: openapi/mapp-engage-openapi.yml#CreateGroup
+- api: mapp:engage
+  status: 400
+  title: userId and groupId are mandatory, but are missing or incorrect. / User with id does not exist. / Group with id does
+    not exist.
+  media_type: null
+  source_operation: openapi/mapp-engage-openapi.yml#CreateMembership
+- api: mapp:engage
+  status: 400
+  title: RelatedDataList with dataSetName=products does not exist.
+  media_type: null
+  source_operation: openapi/mapp-engage-openapi.yml#createRecord
+- api: mapp:engage
+  status: 400
+  title: bad request
+  media_type: null
+  source_operation: openapi/mapp-engage-openapi.yml#create_5
+- api: mapp:engage
+  status: 400
+  title: User with email does already exist. / One of the parameters 'email' or 'mobileNumber' must not be empty.
+  media_type: null
+  source_operation: openapi/mapp-engage-openapi.yml#createUser
+- api: mapp:engage
+  status: 400
+  title: Required parameters are missing or incorrect.
+  media_type: null
+  source_operation: openapi/mapp-engage-openapi.yml#createWishlistItem
+- api: mapp:engage
+  status: 400
+  title: The supplied whiteboard JSON failed schema validation.
+  media_type: null
+  source_operation: openapi/mapp-engage-openapi.yml#save
+- api: mapp:engage
+  status: 400
+  title: Parameter 'email' is mandatory, but missing or incorrect.
+  media_type: null
+  source_operation: openapi/mapp-engage-openapi.yml#deleteByEmail
+- api: mapp:engage
+  status: 400
+  title: Parameter 'mobileNumber' is mandatory, but missing or incorrect.
+  media_type: null
+  source_operation: openapi/mapp-engage-openapi.yml#deleteByMobileNumber
+- api: mapp:engage
+  status: 400
+  title: Parameter 'userID' is mandatory, but missing or incorrect.
+  media_type: null
+  source_operation: openapi/mapp-engage-openapi.yml#deleteUser
+- api: mapp:engage
+  status: 400
+  title: id was not supplied or was invalid, or no whiteboard exists for the supplied id.
+  media_type: null
+  source_operation: openapi/mapp-engage-openapi.yml#delete_5
+- api: mapp:engage
+  status: 400
+  title: Parameter contactId and notificationRecipient are  mandatory, but are missing or incorrect.
+  media_type: null
+  source_operation: openapi/mapp-engage-openapi.yml#export
+- api: mapp:engage
+  status: 400
+  title: email is mandatory, but is missing or incorrect. / User with email does not exist.
+  media_type: null
+  source_operation: openapi/mapp-engage-openapi.yml#findAllByEmail
+- api: mapp:engage
+  status: 400
+  title: userId is mandatory, but is missing or incorrect. / User with id does not exist.
+  media_type: null
+  source_operation: openapi/mapp-engage-openapi.yml#findAll
+- api: mapp:engage
+  status: 400
+  title: '"message": "The provided JSON object representation is incorrect."'
+  media_type: null
+  source_operation: openapi/mapp-engage-openapi.yml#findIdsByAttributes
+- api: mapp:engage
+  status: 400
+  title: 'Missing parameter (messageFilter) or parameter value, or invalid, for example:<br><br><pre>{<br>  "errorActor":
+    "CLIENT",<br>  "errorCode": "MISSING_PARAMETER",<br>  "message": "Parameter ''messageFilter'' is mandatory but no value
+    was specified.",<br>  "parameterName": "messageFilter",<br>  "property'
+  media_type: null
+  source_operation: openapi/mapp-engage-openapi.yml#FindMessage
+- api: mapp:engage
+  status: 400
+  title: 'Error response: {<br>"errorActor": "CLIENT",<br>"errorCode": "NO_SUCH_OBJECT",<br>"message": "No cms message found
+    with id ''81301''!",<br>"objectType": null,<br>"propertyName": null,<br>"propertyValue": null<br>}'
+  media_type: null
+  source_operation: openapi/mapp-engage-openapi.yml#getMimeMessage
+- api: mapp:engage
+  status: 400
+  title: 'Bad request. Can have several meanings:<br><ul><li>Error message “cannot deserialize value”: Missing or typo in
+    request body JSON. Remember that EMAIL or MOBILE keywords are case-sensitive and MUST be written in uppercase.</li><li>Error
+    in formatted JSON block: Check the “errorCode” and “message” ke'
+  media_type: null
+  source_operation: openapi/mapp-engage-openapi.yml#get
+- api: mapp:engage
+  status: 400
+  title: 'Bad email or group, for example:<br><br><pre>{<br>  "errorActor": "CLIENT",<br>  "errorCode": "NO_SUCH_OBJECT",<br>  "message":
+    "User with email=no.email@example.com does not exist.",<br>  "objectType": "User",<br>  "propertyName": "email",<br>  "propertyValue":
+    "no.email@example.com"<br>}</pre><br>'
+  media_type: null
+  source_operation: openapi/mapp-engage-openapi.yml#getByEmail
+- api: mapp:engage
+  status: 400
+  title: Please enter a valid prepared message ID, Please enter a valid test contact ID to get the personalized HTML. Leave
+    it blank to get the raw HTML, No membership for user '25493969' in group '2186' found.
+  media_type: null
+  source_operation: openapi/mapp-engage-openapi.yml#GetPreparedMessage
+- api: mapp:engage
+  status: 400
+  title: Provided term ID is invalid, No term id found for specified ID, An unexpected backend error has occurred.
+  media_type: null
+  source_operation: openapi/mapp-engage-openapi.yml#getCount
+- api: mapp:engage
+  status: 400
+  title: Parameter 'email' is not a valid email address. / User with email does not exist.
+  media_type: null
+  source_operation: openapi/mapp-engage-openapi.yml#getUserByEmail
+- api: mapp:engage
+  status: 400
+  title: User with mobile number does not exist. / Parameter 'mobileNumber' is not a valid phone number.
+  media_type: null
+  source_operation: openapi/mapp-engage-openapi.yml#getByMobileNumber
+- api: mapp:engage
+  status: 400
+  title: Parameter 'userID' is mandatory, but missing or incorrect./ user with the given id does not exist.
+  media_type: null
+  source_operation: openapi/mapp-engage-openapi.yml#getMessageHistory
+- api: mapp:engage
+  status: 400
+  title: Parameter 'email' is mandatory, but missing or incorrect./ user with the given email does not exist.
+  media_type: null
+  source_operation: openapi/mapp-engage-openapi.yml#getProfileByEmail
+- api: mapp:engage
+  status: 400
+  title: Parameter 'mobileNumber' is mandatory, but missing or incorrect./ user with the given mobileNumber does not exist.
+  media_type: null
+  source_operation: openapi/mapp-engage-openapi.yml#getProfileByMobileNumber
+- api: mapp:engage
+  status: 400
+  title: Parameter 'userID' is mandatory, but missing or incorrect./ user with the given id does not exist.Error response
+  media_type: null
+  source_operation: openapi/mapp-engage-openapi.yml#getUser
+- api: mapp:engage
+  status: 400
+  title: 'Missing parameter (messageId/contactId) or parameter value, for example:<br><br><pre>{<br>  "errorActor": "CLIENT",<br>  "errorCode":
+    "MISSING_PARAMETER",<br>  "message": "Parameter ''messageId'' is mandatory but no value was specified.",<br>  "parameterName":
+    "messageId",<br>  "propertyName": null,<b'
+  media_type: null
+  source_operation: openapi/mapp-engage-openapi.yml#getHistorical
+- api: mapp:engage
+  status: 400
+  title: userId and groupId are mandatory, but are missing or incorrect.
+  media_type: null
+  source_operation: openapi/mapp-engage-openapi.yml#getAttributesByEmail
+- api: mapp:engage
+  status: 400
+  title: 'Missing parameter (externalMessageId) or parameter value, for example:<br><br><pre>{<br>  "errorActor": "CLIENT",<br>  "errorCode":
+    "MISSING_PARAMETER",<br>  "message": "Parameter ''externalMessageId'' is mandatory but no value was specified.",<br>  "parameterName":
+    "externalMessageId",<br>  "property'
+  media_type: null
+  source_operation: openapi/mapp-engage-openapi.yml#getStatisticsByExternalMessageId
+- api: mapp:engage
+  status: 400
+  title: 'Missing parameter (messageId) or parameter value, for example:<br><br><pre>{<br>  "errorActor": "CLIENT",<br>  "errorCode":
+    "MISSING_PARAMETER",<br>  "message": "Parameter ''messageID'' is mandatory, but missing or incorrect./ message with the
+    given id does not exist.",<br>  "parameterName": "messageI'
+  media_type: null
+  source_operation: openapi/mapp-engage-openapi.yml#getStatistics
+- api: mapp:engage
+  status: 400
+  title: 'Missing parameter (messageId/interval) or parameter value, for example:<br><br><pre>{<br>  "errorActor": "CLIENT",<br>  "errorCode":
+    "MISSING_PARAMETER",<br>  "message": "Parameter ''messageId'' is mandatory but no value was specified.",<br>  "parameterName":
+    "messageId",<br>  "propertyName": null,<br'
+  media_type: null
+  source_operation: openapi/mapp-engage-openapi.yml#getTimeDistributionByExternalMessageId
+- api: mapp:engage
+  status: 400
+  title: 'Message ID does not exist, for example:<br><br><pre>{<br>  "errorActor": "CLIENT",<br>  "errorCode": "NO_SUCH_OBJECT",<br>  "message":
+    "Message with id=24011454555 does not exist.",<br>  "objectType": "Message",<br>  "propertyName": "id",<br>  "propertyValue":
+    "24011454555"<br>}</pre>'
+  media_type: null
+  source_operation: openapi/mapp-engage-openapi.yml#getManyUsedPersonalizations
+- api: mapp:engage
+  status: 400
+  title: Invalid request parameters.
+  media_type: null
+  source_operation: openapi/mapp-engage-openapi.yml#auditLogEvents
+- api: mapp:engage
+  status: 400
+  title: 'Required parameters are missing or incorrect. Error response: {<br>"errorActor": "CLIENT",<br>"errorCode": "PERMISSION_DENIED",<br>"message":
+    "Permission ''message_view'' denied: SystemUser ''1'' on group ''803725555''.",<br>"errorId": null<br>}'
+  media_type: null
+  source_operation: openapi/mapp-engage-openapi.yml#getPreparedMessages
+- api: mapp:engage
+  status: 400
+  title: 'Required parameters are missing or incorrect. Error response: {<br>"errorActor": "CLIENT",<br>"errorCode": "MISSING_PARAMETER",<br>"message":
+    "Parameter ''groupId'' is mandatory but no value was specified.",<br>"parameterName": "groupId",<br>"propertyName": null,<br>"value":
+    "null"<br>}'
+  media_type: null
+  source_operation: openapi/mapp-engage-openapi.yml#GroupOverrideGroupSettings
+- api: mapp:engage
+  status: 400
+  title: Parameters Type and limit are mandatory, but missing or incorrect / given type does not exist.
+  media_type: null
+  source_operation: openapi/mapp-engage-openapi.yml#pollByType
+- api: mapp:engage
+  status: 400
+  title: The supplied DiagramData JSON failed schema validation, or no whiteboard exists for the specified id.
+  media_type: null
+  source_operation: openapi/mapp-engage-openapi.yml#publish_2
+- api: mapp:engage
+  status: 400
+  title: An invalid sort direction or status value was supplied.
+  media_type: null
+  source_operation: openapi/mapp-engage-openapi.yml#find_3
+- api: mapp:engage
+  status: 400
+  title: 'Missing parameter (messageId/recipientId) or parameter value, for example:<br><br><pre>{<br>  "errorActor": "CLIENT",<br>  "errorCode":
+    "MISSING_PARAMETER",<br>  "message": "Parameter ''messageId'' is mandatory but no value was specified.",<br>  "parameterName":
+    "messageId",<br>  "propertyName": null,'
+  media_type: null
+  source_operation: openapi/mapp-engage-openapi.yml#sendSingle
+- api: mapp:engage
+  status: 400
+  title: Parameter 'email' is not a valid email address. / User with email does not exist. / Group with id is archived.
+  media_type: null
+  source_operation: openapi/mapp-engage-openapi.yml#subscribeByEmail
+- api: mapp:engage
+  status: 400
+  title: Parameter 'userId' is mandatory but no value was specified. / User with id does not exist.
+  media_type: null
+  source_operation: openapi/mapp-engage-openapi.yml#subscribe
+- api: mapp:engage
+  status: 400
+  title: email and groupId are mandatory, but are missing or incorrect. / User with email does not exist. / Group with id
+    does not exist.
+  media_type: null
+  source_operation: openapi/mapp-engage-openapi.yml#unsubscribeByEmail
+- api: mapp:engage
+  status: 400
+  title: email, groupId and messageId are mandatory, but are missing or incorrect. / User with email does not exist. / Group
+    with id does not exist. / Message with id does not exist. / Membership with groupId does not exist.
+  media_type: null
+  source_operation: openapi/mapp-engage-openapi.yml#unsubscribeFromMessageByEmail
+- api: mapp:engage
+  status: 400
+  title: userId, groupId and unsubscriptionMode are mandatory, but are missing or incorrect. / User with id does not exist.
+    / Group with id does not exist.
+  media_type: null
+  source_operation: openapi/mapp-engage-openapi.yml#unsubscribe
+- api: mapp:engage
+  status: 400
+  title: userId, groupId and messageId are mandatory, but are missing or incorrect. / User with id does not exist. / Group
+    with id does not exist. / Message with id does not exist. / Membership with groupId does not exist.
+  media_type: null
+  source_operation: openapi/mapp-engage-openapi.yml#unsubscribeFromMessage
+- api: mapp:engage
+  status: 400
+  title: Parameter unifiedIdentifierName and identifierType are  mandatory, but are missing or incorrect.
+  media_type: null
+  source_operation: openapi/mapp-engage-openapi.yml#update
+- api: mapp:engage
+  status: 400
+  title: (PushCampaign with messageId=<id> does not exist)
+  media_type: null
+  source_operation: openapi/mapp-engage-openapi.yml#updatePushMessage
+- api: mapp:engage
+  status: 400
+  title: 'Email address not existing in the Engage system provided as a parameter.<br><br>Example:<br><pre>{<br>  "errorActor":
+    "CLIENT",<br>  "errorCode": "NO_SUCH_OBJECT",<br>  "message": "User with email=no.email@example.com does not exist.",<br>  "objectType":
+    "User",<br>  "propertyName": "email",<br>  "p'
+  media_type: null
+  source_operation: openapi/mapp-engage-openapi.yml#updateProfileByEmail
+- api: mapp:engage
+  status: 400
+  title: Parameter 'userId' is mandatory but no value was specified. / The request didn't contain a request entity. / User
+    with id does not exist.
+  media_type: null
+  source_operation: openapi/mapp-engage-openapi.yml#updateProfile
+- api: mapp:engage
+  status: 400
+  title: 'Message does not exist, for example:<br><br><pre>{<br>  "errorActor": "CLIENT",<br>  "errorCode": "NO_SUCH_OBJECT",<br>  "message":
+    "Message with id=24011454555 does not exist.",<br>  "objectType": "Message",<br>  "propertyName": "id",<br>  "propertyValue":
+    "24011454555"<br>}</pre>'
+  media_type: null
+  source_operation: openapi/mapp-engage-openapi.yml#validateMany
+- api: mapp:engage
+  status: 400
+  title: The supplied JSON could not be parsed or the payload wrapper was malformed.
+  media_type: null
+  source_operation: openapi/mapp-engage-openapi.yml#validate_2
+- api: mapp:engage
+  status: 403
+  title: Incorrect system user login credentials. Check username password, and check that the corresponding system user account
+    is Type “API” or “Hybrid”.
+  media_type: null
+  source_operation: openapi/mapp-engage-openapi.yml#get
+- api: mapp:engage
+  status: 403
+  title: Missing Log Tracker permission.
+  media_type: null
+  source_operation: openapi/mapp-engage-openapi.yml#auditLogEvents
+- api: mapp:engage
+  status: 404
+  title: 'Error response: {<br>"errorActor": "CLIENT",<br>"errorCode": "INVALID_REQUEST",<br>"message": "Not Found"<br>}'
+  media_type: null
+  source_operation: openapi/mapp-engage-openapi.yml#anonymize
+- api: mapp:engage
+  status: 404
+  title: Not Found
+  media_type: null
+  source_operation: openapi/mapp-engage-openapi.yml#deleteUser
+- api: mapp:engage
+  status: 404
+  title: Not found
+  media_type: null
+  source_operation: openapi/mapp-engage-openapi.yml#findAll
+- api: mapp:engage
+  status: 404
+  title: '{<br>"errorActor": "CLIENT",<br>"errorCode": "INVALID_REQUEST",<br>"message": "Not Found"<br>}'
+  media_type: null
+  source_operation: openapi/mapp-engage-openapi.yml#GetMembershipAttributes
+- api: mapp:engage
+  status: 404
+  title: Parameter 'userID' is mandatory, but missing or incorrect./ user with the given id does not exist.
+  media_type: null
+  source_operation: openapi/mapp-engage-openapi.yml#updateProfile
+- api: mapp:fashion
+  status: 400
+  title: oauth2 error
+  media_type: null
+  source_operation: openapi/mapp-fashion-openapi.yml#getOauthAuthorize
+- api: mapp:fashion
+  status: 400
+  title: missing client_id
+  media_type: null
+  source_operation: openapi/mapp-fashion-openapi.yml#getItemsTop
+- api: mapp:fashion
+  status: 404
+  title: missing picker
+  media_type: null
+  source_operation: openapi/mapp-fashion-openapi.yml#getItemsTop
+- api: mapp:fashion
+  status: 422
+  title: garment not found
+  media_type: null
+  source_operation: openapi/mapp-fashion-openapi.yml#getItemsId
+- api: mapp:fashion
+  status: 422
+  title: error message
+  media_type: null
+  source_operation: openapi/mapp-fashion-openapi.yml#postRecommendationsFacetted
+- api: mapp:fashion
+  status: 422
+  title: unrecognized product codes
+  media_type: null
+  source_operation: openapi/mapp-fashion-openapi.yml#getItemsIdComplementary
+- api: mapp:intelligence-analytics
+  status: 400
+  title: Bad Request
+  media_type: '*/*'
+  source_operation: openapi/mapp-intelligence-analytics-openapi.yml#deleteReportAnalysis
+- api: mapp:intelligence-analytics
+  status: 401
+  title: Unauthorized
+  media_type: '*/*'
+  source_operation: openapi/mapp-intelligence-analytics-openapi.yml#deleteReportAnalysis
+- api: mapp:intelligence-analytics
+  status: 404
+  title: Not Found
+  media_type: '*/*'
+  source_operation: openapi/mapp-intelligence-analytics-openapi.yml#deleteReportAnalysis
+- api: mapp:intelligence-analytics
+  status: 422
+  title: Unprocessable Entity
+  media_type: '*/*'
+  source_operation: openapi/mapp-intelligence-analytics-openapi.yml#deleteReportAnalysis
+- api: mapp:intelligence-analytics
+  status: 422
+  title: Invalid JSON input
+  media_type: application/json
+  source_operation: openapi/mapp-intelligence-analytics-openapi.yml#POST /analysis-query
+- api: mapp:intelligence-analytics
+  status: 500
+  title: Internal Server Error
+  media_type: '*/*'
+  source_operation: openapi/mapp-intelligence-analytics-openapi.yml#deleteReportAnalysis
+- api: mapp:product-catalog
+  status: 400
+  title: Variant add was rejected during validation.
+  media_type: application/json
+  source_operation: openapi/mapp-product-catalog-openapi.yml#addVariant
+- api: mapp:product-catalog
+  status: 400
+  title: Pagination is missing or invalid, modification date filters are invalid, or catalog attributes are not configured.
+  media_type: application/json
+  source_operation: openapi/mapp-product-catalog-openapi.yml#getPaginatedVariants
+- api: mapp:product-catalog
+  status: 400
+  title: Bulk add payload list is missing or null.
+  media_type: application/json
+  source_operation: openapi/mapp-product-catalog-openapi.yml#bulkAddVariants
+- api: mapp:product-catalog
+  status: 400
+  title: Bulk delete payload list is missing or null.
+  media_type: application/json
+  source_operation: openapi/mapp-product-catalog-openapi.yml#bulkDeleteVariants
+- api: mapp:product-catalog
+  status: 400
+  title: Bulk partial update payload list is missing or null.
+  media_type: application/json
+  source_operation: openapi/mapp-product-catalog-openapi.yml#bulkPartialUpdateVariants
+- api: mapp:product-catalog
+  status: 400
+  title: Bulk upsert payload list is missing or null.
+  media_type: application/json
+  source_operation: openapi/mapp-product-catalog-openapi.yml#bulkUpsertVariants
+- api: mapp:product-catalog
+  status: 400
+  title: Variant upsert was rejected during validation.
+  media_type: application/json
+  source_operation: openapi/mapp-product-catalog-openapi.yml#upsertVariant
+- api: mapp:product-catalog
+  status: 400
+  title: Variant delete was rejected during validation.
+  media_type: application/json
+  source_operation: openapi/mapp-product-catalog-openapi.yml#deleteVariant
+- api: mapp:product-catalog
+  status: 400
+  title: Invalid query parameters or catalog attribute configuration.
+  media_type: application/json
+  source_operation: openapi/mapp-product-catalog-openapi.yml#getVariant
+- api: mapp:product-catalog
+  status: 400
+  title: Variant partial update was rejected during validation.
+  media_type: application/json
+  source_operation: openapi/mapp-product-catalog-openapi.yml#partialUpdateVariant
+- api: mapp:product-catalog
+  status: 400
+  title: Catalog variants delete was rejected during validation.
+  media_type: application/json
+  source_operation: openapi/mapp-product-catalog-openapi.yml#deleteAllCatalogData
+- api: mapp:product-catalog
+  status: 400
+  title: Variant attributes delete was rejected during validation.
+  media_type: application/json
+  source_operation: openapi/mapp-product-catalog-openapi.yml#deleteVariantAttributes
+- api: mapp:product-catalog
+  status: 400
+  title: Invalid cursor, modification date, or catalog attribute configuration.
+  media_type: application/json
+  source_operation: openapi/mapp-product-catalog-openapi.yml#listVariants
+- api: mapp:product-catalog
+  status: 404
+  title: Catalog was not found.
+  media_type: application/json
+  source_operation: openapi/mapp-product-catalog-openapi.yml#getPaginatedVariants
+- api: mapp:product-catalog
+  status: 404
+  title: Variant delete target was not found by downstream validation.
+  media_type: application/json
+  source_operation: openapi/mapp-product-catalog-openapi.yml#deleteVariant
+- api: mapp:product-catalog
+  status: 404
+  title: Variant attributes delete target was not found by downstream validation.
+  media_type: application/json
+  source_operation: openapi/mapp-product-catalog-openapi.yml#deleteVariantAttributes
+- api: mapp:product-catalog
+  status: 404
+  title: Assigned catalog was not found.
+  media_type: application/json
+  source_operation: openapi/mapp-product-catalog-openapi.yml#getCatalogMetadataByWorkspace
+- api: mapp:product-catalog
+  status: 422
+  title: Bulk add payload exceeds the maximum allowed size of 1000 variants.
+  media_type: application/json
+  source_operation: openapi/mapp-product-catalog-openapi.yml#bulkAddVariants
+- api: mapp:product-catalog
+  status: 422
+  title: Bulk delete payload exceeds the maximum allowed size of 1000 variants.
+  media_type: application/json
+  source_operation: openapi/mapp-product-catalog-openapi.yml#bulkDeleteVariants
+- api: mapp:product-catalog
+  status: 422
+  title: Bulk partial update payload exceeds the maximum allowed size of 1000 variants.
+  media_type: application/json
+  source_operation: openapi/mapp-product-catalog-openapi.yml#bulkPartialUpdateVariants
+- api: mapp:product-catalog
+  status: 422
+  title: Bulk upsert payload exceeds the maximum allowed size of 1000 variants.
+  media_type: application/json
+  source_operation: openapi/mapp-product-catalog-openapi.yml#bulkUpsertVariants
+- api: mapp:product-catalog
+  status: 500
+  title: Variant add failed unexpectedly.
+  media_type: application/json
+  source_operation: openapi/mapp-product-catalog-openapi.yml#addVariant
+- api: mapp:product-catalog
+  status: 500
+  title: Unexpected error while fetching paginated variants.
+  media_type: application/json
+  source_operation: openapi/mapp-product-catalog-openapi.yml#getPaginatedVariants
+- api: mapp:product-catalog
+  status: 500
+  title: Unexpected error while processing bulk add.
+  media_type: application/json
+  source_operation: openapi/mapp-product-catalog-openapi.yml#bulkAddVariants
+- api: mapp:product-catalog
+  status: 500
+  title: Unexpected error while processing bulk delete.
+  media_type: application/json
+  source_operation: openapi/mapp-product-catalog-openapi.yml#bulkDeleteVariants
+- api: mapp:product-catalog
+  status: 500
+  title: Unexpected error while processing bulk partial update.
+  media_type: application/json
+  source_operation: openapi/mapp-product-catalog-openapi.yml#bulkPartialUpdateVariants
+- api: mapp:product-catalog
+  status: 500
+  title: Unexpected error while processing bulk upsert.
+  media_type: application/json
+  source_operation: openapi/mapp-product-catalog-openapi.yml#bulkUpsertVariants
+- api: mapp:product-catalog
+  status: 500
+  title: Variant upsert failed unexpectedly.
+  media_type: application/json
+  source_operation: openapi/mapp-product-catalog-openapi.yml#upsertVariant
+- api: mapp:product-catalog
+  status: 500
+  title: Variant delete failed unexpectedly.
+  media_type: application/json
+  source_operation: openapi/mapp-product-catalog-openapi.yml#deleteVariant
+- api: mapp:product-catalog
+  status: 500
+  title: Unexpected error while fetching variant data.
+  media_type: application/json
+  source_operation: openapi/mapp-product-catalog-openapi.yml#getVariant
+- api: mapp:product-catalog
+  status: 500
+  title: Variant partial update failed unexpectedly.
+  media_type: application/json
+  source_operation: openapi/mapp-product-catalog-openapi.yml#partialUpdateVariant
+- api: mapp:product-catalog
+  status: 500
+  title: Catalog variants delete failed unexpectedly.
+  media_type: application/json
+  source_operation: openapi/mapp-product-catalog-openapi.yml#deleteAllCatalogData
+- api: mapp:product-catalog
+  status: 500
+  title: Variant attributes delete failed unexpectedly.
+  media_type: application/json
+  source_operation: openapi/mapp-product-catalog-openapi.yml#deleteVariantAttributes
+- api: mapp:product-catalog
+  status: 500
+  title: Unexpected error while fetching catalog attributes.
+  media_type: application/json
+  source_operation: openapi/mapp-product-catalog-openapi.yml#getCatalogAttributes
+- api: mapp:product-catalog
+  status: 500
+  title: Unexpected error while fetching catalog metadata.
+  media_type: application/json
+  source_operation: openapi/mapp-product-catalog-openapi.yml#getCatalogMetadataByWorkspace
+- api: mapp:product-catalog
+  status: 500
+  title: Unexpected error while listing product variants.
+  media_type: application/json
+  source_operation: openapi/mapp-product-catalog-openapi.yml#listVariants

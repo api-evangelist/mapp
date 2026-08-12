@@ -1,0 +1,2465 @@
+openapi: 3.0.3
+info:
+  title: Analytics API
+  description: "OpenAPI 3.0 Specification of Mapp Intelligence AnalyticsAPI \n\n In order to use these endpoints you must\
+    \ authorize by using a valid OAuth clientID configured in Mapp Intelligence Settings section."
+  version: 1.0.0
+  contact:
+    name: Technical Support Mapp Digital
+    url: https://mapp.com/tech-support/
+servers:
+- url: https://api.mapp.com/api/analytics
+  description: Production
+security:
+- oauth_security_scheme:
+  - mapp.intelligence-api
+tags:
+- name: Analysis
+  description: Submit analysis and get data
+- name: Available Objects
+  description: Get information about available objects you can use to build Analysis
+paths:
+  /analysis-query/{correlationId}:
+    delete:
+      tags:
+      - Analysis
+      summary: Cancel query
+      description: Abort running query, if still running
+      externalDocs:
+        url: https://documentation.mapp.com
+      parameters:
+      - name: correlationId
+        in: path
+        description: ID of the query to be canceled
+        required: 'true'
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Query successfully canceled
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+    get:
+      tags:
+      - Analysis
+      summary: Get query status
+      description: "Returns status of the analysis query. \n\n Once calculation is SUCCESS, result is  available and can be\
+        \ retrieved by using the provided link (or calculationId)."
+      externalDocs:
+        url: https://documentation.mapp.com
+      parameters:
+      - name: correlationId
+        in: path
+        description: ID of the query
+        required: 'true'
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Query status
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/QueryState'
+              examples:
+                Analysis running:
+                  value:
+                    calculationId: 579d66fe984f72f7154c5f48e0d3d65741dac870eb337a0524d4d3db02f119b7_294915650484552
+                    status: RUNNING
+                    details:
+                      lastUpdatedAt: '1630430823529'
+                Analysis completed:
+                  value:
+                    calculationId: 579d66fe984f72f7154c5f48e0d3d65741dac870eb337a0524d4d3db02f119b7_294915650484552
+                    status: SUCCESS
+                    resultUrl: https://intelligence.eu.mapp.com/analytics/api/analysis-result/579d66fe984f72f7154c5f48e0d3d65741dac870eb337a0524d4d3db02f119b7_294915650484552
+                    details:
+                      lastUpdatedAt: '1630430828912'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+  /report-query/{reportCorrelationId}:
+    delete:
+      tags:
+      - Analysis
+      operationId: deleteReportAnalysis
+      summary: Cancel report calculation query
+      description: Cancel report calculation query
+      parameters:
+      - name: reportCorrelationId
+        in: path
+        required: 'true'
+        schema:
+          type: string
+      responses:
+        '500':
+          description: Internal Server Error
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/Problem'
+        '400':
+          description: Bad Request
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/Problem'
+        '404':
+          description: Not Found
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/Problem'
+        '401':
+          description: Unauthorized
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/Problem'
+        '422':
+          description: Unprocessable Entity
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/Problem'
+        '200':
+          description: OK
+    get:
+      tags:
+      - Analysis
+      summary: Get report calculation query state
+      description: Get report calculation query state
+      operationId: status
+      parameters:
+      - name: reportCorrelationId
+        in: path
+        required: 'true'
+        schema:
+          type: string
+      responses:
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ReportQueryState'
+              examples:
+                Analysis running:
+                  value:
+                    reportCorrelationId: 1ea0f0c7-b05e-47e6-8d4f-e78787dfe9ac
+                    status: RUNNING
+                    details:
+                      lastUpdatedAt: '1727114468280'
+                      reportId: '1006'
+                      reportTitle: Advertiser Overview
+                    queryStates:
+                    - calculationId: 579d66fe984f72f7154c5f48e0d3d65741dac870eb337a0524d4d3db02f119b7_294915650484552
+                      accountId: '294915650484552'
+                      correlationId: 1ba0f0c7-b05e-47e6-8d4f-e78787dfe9ab
+                      resultUrl: https://intelligence.eu.mapp.com/analytics/api/analysis-query/1ba0f0c7-b05e-47e6-8d4f-e78787dfe9ab
+                      status: RUNNING
+                      details:
+                        lastUpdatedAt: '1727114468280'
+                        reportElementId: '43946'
+                Analysis completed:
+                  value:
+                    reportCorrelationId: 1ea0f0c7-b05e-47e6-8d4f-e78787dfe9ac
+                    status: SUCCESS
+                    details:
+                      lastUpdatedAt: '1727114468280'
+                      reportId: '1006'
+                      reportTitle: Advertiser Overview
+                    queryStates:
+                    - calculationId: 579d66fe984f72f7154c5f48e0d3d65741dac870eb337a0524d4d3db02f119b7_294915650484552
+                      accountId: '294915650484552'
+                      correlationId: 1ba0f0c7-b05e-47e6-8d4f-e78787dfe9ab
+                      resultUrl: https://intelligence.eu.mapp.com/analytics/api/analysis-result/579d66fe984f72f7154c5f48e0d3d65741dac870eb337a0524d4d3db02f119b7_294915650484552
+                      status: SUCCESS
+                      details:
+                        lastUpdatedAt: '1727114468280'
+                        reportElementId: '43946'
+  /analysis-query:
+    post:
+      tags:
+      - Analysis
+      summary: Create calculation query
+      description: "Create a calculation query. \n\n Response will be either \n+ 200 if the result is already available and\
+        \ can be retrieved by using the provided link (or calculationId) \n+ 201 if the calculation is being queued. Status\
+        \ can be polled by using the provided link (or correlationId)."
+      externalDocs:
+        url: https://documentation.mapp.com
+      requestBody:
+        description: Analytics Request Format
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AnalysisQuery'
+            examples:
+              Pivot:
+                $ref: '#/components/examples/analysisQueryPivot'
+              Comparison:
+                $ref: '#/components/examples/analysisQueryComparison'
+              TimeSeries:
+                $ref: '#/components/examples/analysisQueryTimeSeries'
+              Path:
+                $ref: '#/components/examples/analysisPath'
+              CrossTable:
+                $ref: '#/components/examples/analysisCrossTable'
+      responses:
+        '200':
+          description: Analysis completed
+          content:
+            application/json:
+              schema:
+                properties:
+                  calculationId:
+                    type: string
+                  resultUrl:
+                    type: string
+              examples:
+                Calculated data available:
+                  value:
+                    calculationId: 8612fa1eaada53fbb1956402bbded4db732074e7e399645880ae6a54b99a2bd9_294915650484552
+                    resultUrl: https://intelligence.eu.mapp.com/analytics/api/analysis-result/8612fa1eaada53fbb1956402bbded4db732074e7e399645880ae6a54b99a2bd9_294915650484552
+        '201':
+          description: Analysis enqueued
+          content:
+            application/json:
+              schema:
+                properties:
+                  correlationId:
+                    type: string
+                  statusUrl:
+                    type: string
+              examples:
+                Query enqueued:
+                  value:
+                    correlationId: 94295cef-5b64-4934-ba25-011dd997aa81
+                    statusUrl: https://intelligence.eu.mapp.com/analytics/api/analysis-query/94295cef-5b64-4934-ba25-011dd997aa81
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '422':
+          description: Invalid JSON input
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+  /report-query:
+    post:
+      tags:
+      - Analysis
+      summary: Create report calculation query
+      description: Create multiple calculation queries, also known as a report.
+      operationId: createReportQuery
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ReportQueryRequest'
+            examples:
+              ANALYSIS:
+                $ref: '#/components/examples/reportQueryObject'
+        required: 'true'
+      responses:
+        '404':
+          description: Not Found
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/Problem'
+        '500':
+          description: Internal Server Error
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/Problem'
+        '422':
+          description: Unprocessable Entity
+          content:
+            '*/*':
+              schema:
+                type: object
+        '400':
+          description: Bad Request
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/Problem'
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ReportQueryState'
+  /analysis-result/{calculationId}:
+    get:
+      tags:
+      - Analysis
+      summary: Get analysis result
+      description: Retrieve the analysis data.
+      externalDocs:
+        url: https://documentation.mapp.com
+      parameters:
+      - name: calculationId
+        in: path
+        description: ID of the calculated Data
+        required: 'true'
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AnalysisResult'
+              examples:
+                Simple analysis result:
+                  $ref: '#/components/examples/analysisResultExample'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+  /analysis-usage/current:
+    get:
+      tags:
+      - Analysis
+      summary: Get number of analysis done for current month
+      description: Get number of analysis done for current month
+      externalDocs:
+        url: https://documentation.mapp.com
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AnalysisUsage'
+              examples:
+                AnalysisUsage:
+                  value:
+                    calculationsCount: '4012'
+                    maxCalculationsAllowed: '310000'
+                    month: '1'
+                    year: '2022'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+  /query-objects:
+    get:
+      tags:
+      - Available Objects
+      summary: List all available dimensions and metrics
+      description: List all available dimensions and metrics
+      externalDocs:
+        url: https://documentation.mapp.com
+      parameters:
+      - name: language
+        in: query
+        description: "Optional standard ISO-639-1 language code for translation (when applicable).\n\nOnly \"de\" and \"en\"\
+          \ supported for the moment. \n\nDefault is  \"en\""
+        required: 'false'
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/QueryObjects'
+              examples:
+                Query Objects:
+                  $ref: '#/components/examples/queryObjectExample'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+  /dynamic-timefilters:
+    get:
+      tags:
+      - Available Objects
+      summary: List all available dynamic timefilters
+      description: List all available dynamic timefilter value.
+      externalDocs:
+        url: https://documentation.mapp.com
+      parameters:
+      - name: language
+        in: query
+        description: "Optional standard ISO-639-1 language code for translation (when applicable).\n\nOnly \"de\" and \"en\"\
+          \ supported for the moment. \n\nDefault is  \"en\""
+        required: 'false'
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/DynamicTimeFilterDefinition'
+              examples:
+                DynamicTimeFilters:
+                  value:
+                  - title: Today
+                    name: today
+                    dynamicFilter:
+                      name: time_dynamic
+                      connector: AND
+                      filterPredicate: LIKE
+                      value1: today
+                      value2: ''
+                      context: NONE
+                  - title: Today, 7 days ago
+                    name: before_7_days
+                    dynamicFilter:
+                      name: time_dynamic
+                      connector: AND
+                      filterPredicate: LIKE
+                      value1: before_7_days
+                      value2: ''
+                      context: NONE
+                  - title: Today, 14 days ago
+                    name: before_14_days
+                    dynamicFilter:
+                      name: time_dynamic
+                      connector: AND
+                      filterPredicate: LIKE
+                      value1: before_14_days
+                      value2: ''
+                      context: NONE
+        '403':
+          $ref: '#/components/responses/Forbidden'
+  /segments:
+    get:
+      tags:
+      - Available Objects
+      summary: List all available segments
+      description: List all available segments
+      externalDocs:
+        url: https://documentation.mapp.com
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/SegmentDefinition'
+              examples:
+                Segments:
+                  value:
+                  - id: '67'
+                    title: Social media Visitor
+                    description: Visitor which came from Social Media
+                  - id: '95'
+                    title: Returning Visitor
+                    description: User with at least 5 Visits
+        '403':
+          $ref: '#/components/responses/Forbidden'
+components:
+  responses:
+    Forbidden:
+      description: No permission to execute operation
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          examples:
+            AnalysisNotFound:
+              summary: Invalid Token
+              value:
+                title: Invalid Token
+                status: '403'
+                detail: Token not valid
+                statusCode: INVALID_TOKEN
+    NotFound:
+      description: Entity not found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          examples:
+            AnalysisNotFound:
+              summary: CorrelationId does not exist
+              value:
+                title: Analysis not found
+                status: '404'
+                detail: Analysis not found
+                statusCode: ANALYSIS_NOT_FOUND
+  securitySchemes:
+    oauth_security_scheme:
+      type: oauth2
+      flows:
+        clientCredentials:
+          tokenUrl: https://auth.mapp.com/oauth2/token
+  schemas:
+    Problem:
+      type: object
+      properties:
+        status:
+          type: integer
+          description: HTTP Status Code
+        statusCode:
+          type: string
+          description: Specific Mapp Error Code
+        title:
+          type: string
+          description: Short description of the problem
+        detail:
+          type: string
+          description: Detailed informations about the problem
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Error'
+        warnings:
+          type: array
+          items:
+            $ref: '#/components/schemas/Warning'
+    Error:
+      type: object
+      properties:
+        name:
+          type: string
+          description: 'Each error has specific properties described in following table:
+
+
+            | Error| Description | Relevant parameters |
+
+            | ---------------- | ------------| -----------------------------------|
+
+            | UnmappedName | At least one object name cannot be found. | List of objects not found in _names_ array. |
+
+            | PivotIncompatibleMetric | Metric not usable in Pivot detected.| List of incompatible Metrics in _names_ array.
+            |
+
+            | PivotIncompatibleDimension |Dimension not usable in Pivot detected. | List of incompatible Dimensions in _names_
+            array. |
+
+            | AnalysisLogicalCubeMismatch | All Dimensions and Metrics are not compatible. | List of incompatible objects
+            in _names_ array. |
+
+            | InvalidSortingCriteria | Sorting is applied on a non-sortable object.| List of invalid sorted objects in _names_
+            array. |
+
+            | TimeFilterMissing | Each query must have a minimum of one Time Filter.| N/A |
+
+            | InvalidSegmentNoneContainer | A segment container has context set to NONE but either its connector is not set
+            to AND or its inOrNotIn property is not set to IN.| N/A |'
+          enum:
+          - UnmappedName
+          - PivotIncompatibleMetric
+          - PivotIncompatibleDimension
+          - AnalysisLogicalCubeMismatch
+          - InvalidSortingCriteria
+          - TimeFilterMissing
+          - InvalidSegmentNoneContainer
+        parameters:
+          type: object
+          properties:
+            arrangeTypes:
+              type: array
+              description: List of internal object names (dimension, metrics, filter, ...) that corresponds to the error.
+              items:
+                type: string
+            aliases:
+              type: array
+              description: List of columns aliases that corresponds to the error. See Result Header alias property.
+              items:
+                type: string
+            names:
+              type: array
+              description: List of object names (dimension, metrics, filter, ...) that corresponds to the error.
+              items:
+                type: string
+    Warning:
+      type: object
+      properties:
+        name:
+          type: string
+          description: 'Each warnings has specific properties described in following table:
+
+
+            | Warning| Description | Relevant parameters |
+
+            | ---------------- | ------------| -----------------------------------|
+
+            | FilterLogicalCubeMismatch | At least one filter is ignored due to incompatibily with Dimensions and Metrics
+            used. | List of incomptible filter objects in _names_ array. |
+
+            | InvalidMetricContext | Metric used in an invalid context. | List of metric with invalid context in _aliases_
+            array. |
+
+            | SortingEnforced |  Sorting criteria has been added automatically | List of objects that were sorted automatically
+            in _aliases_ array. |
+
+            | NoSortingDefined |  Sorting criteria is required for some dimensions. | List of dimensions requiring a sorting
+            in _names_ array. |
+
+            | SortingLimitExceeded | 3 sorting criteria are allowed. All additional sorting criteria have been omitted.| List
+            of columns ignored for sorting in _aliases_ array. |
+
+            | SortingRemoved | A requested sorting criteria has been removed | List of objects that were removed automatically
+            in _aliases_ array. |
+
+            | TodayRemoved | Today date has been removed from calculation time range because the selected datasource does
+            not contain it. | daysInDataSource, todayDate|'
+          enum:
+          - FilterLogicalCubeMismatch
+          - InvalidMetricContext
+          - SortingEnforced
+          - NoSortingDefined
+          - SortingLimitExceeded
+          - SortingRemoved
+          - TodayRemoved
+        parameters:
+          type: object
+          properties:
+            arrangeTypes:
+              type: array
+              description: List of internal object names (dimension, metrics, filter, ...) that corresponds to the warning.
+              items:
+                type: string
+            aliases:
+              type: array
+              description: List of columns aliases that corresponds to the error. See Result Header alias property.
+              items:
+                type: string
+            names:
+              type: array
+              description: List of object names (dimension, metrics, filter, ...) that corresponds to the warning.
+              items:
+                type: string
+            daysInDataSource:
+              type: string
+              description: Number of days in the datasource which is beeing cut
+            todayDate:
+              type: string
+              description: Date of the day being cut
+    AnalysisQuery:
+      type: object
+      description: Defintiona of a anaylsis query structure
+      properties:
+        resultType:
+          type: string
+          description: Type of result
+          enum:
+          - DATA_ONLY
+        queryObject:
+          description: Different type of queries are possible
+          oneOf:
+          - $ref: '#/components/schemas/TableQuery'
+          - $ref: '#/components/schemas/KpiQuery'
+      required:
+      - resultType
+      - queryObject
+    TableQuery:
+      type: object
+      description: Tabular query definition
+      properties:
+        columns:
+          type: array
+          description: Array of columns
+          items:
+            type: object
+            properties:
+              name:
+                type: string
+              sortDirection:
+                $ref: '#/components/schemas/SortDirectionEnum'
+              sortIndex:
+                type: integer
+                description: Indicates order of sorting when there is more than one sorting column. (starting from 0).
+              lowerLimit:
+                type: integer
+              upperLimit:
+                type: integer
+              inTimeSeries:
+                type: boolean
+                description: Optional property indicating if a column will be used in time series view mode; defaults to false.
+                  Can be omitted if it's value is not set to true.
+              columnPeriod:
+                $ref: '#/components/schemas/ColumnPeriodEnum'
+              scope:
+                $ref: '#/components/schemas/ScopeEnum'
+              context:
+                $ref: '#/components/schemas/ContextEnum'
+              predefinedContainer:
+                $ref: '#/components/schemas/Container'
+        variant:
+          type: string
+          description: Type of Data Structure
+          enum:
+          - LIST
+          - PIVOT
+          - PIVOT_AS_LIST
+          - COMPARISON
+        predefinedContainer:
+          $ref: '#/components/schemas/Container'
+        predefinedSegmentConnections:
+          type: array
+          items:
+            $ref: '#/components/schemas/Filter'
+        viewMode:
+          $ref: '#/components/schemas/ViewMode'
+      required:
+      - columns
+      - variant
+      - predefinedContainer
+    KpiQuery:
+      type: object
+      description: KPI query definition
+      properties:
+        elementPeriod:
+          type: string
+          description: 'One of the following periods should be used:
+
+            * ELEMENT: when the time filter is either inherited from the report or the time filter configured in the report
+            element configuration.
+
+            * MONAD: when the time filter is inherited from the custom metric configuration.'
+          enum:
+          - ELEMENT
+          - MONAD
+        type:
+          type: string
+          description: Type of the query
+          enum:
+          - KPI
+          - SPARKLINE
+        metricName:
+          type: string
+          description: name of the metric of the KPI
+        dimensionName:
+          type: string
+          description: name of the dimension of the KPI
+        comparison:
+          $ref: '#/components/schemas/Comparison'
+        predefinedContainer:
+          $ref: '#/components/schemas/Container'
+        predefinedSegmentConnections:
+          type: array
+          items:
+            $ref: '#/components/schemas/Filter'
+    SortDirectionEnum:
+      type: string
+      description: Possible sorting directions
+      enum:
+      - ASCENDING
+      - DESCENDING
+    ColumnPeriodEnum:
+      type: string
+      description: 'Indicates which Time range must be used for the column. ANALYSIS: uses the analysis time range. COLUMN:
+        uses the time filter defined inside the column. ELEMENT: uses the time filter defined inside the element configuration
+        - i.e. custom metric/formula'
+      enum:
+      - ANALYSIS
+      - COLUMN
+      - ELEMENT
+    ScopeEnum:
+      type: string
+      enum:
+      - OBJECT
+      - NONE
+    ContextEnum:
+      type: string
+      description: Context to evaluate the metric/dimension. If context property is not given or empty the default context
+        of the object will be used. The default context can be identified from the context property in the response list of
+        /query-objects.
+      enum:
+      - VISITOR
+      - SESSION
+      - PAGE
+      - ACTION
+      - ATOMIC
+      - NONE
+    Container:
+      type: object
+      properties:
+        filters:
+          type: array
+          description: Array of filters
+          items:
+            $ref: '#/components/schemas/Filter'
+        containers:
+          type: array
+          description: array of containers (recursion)
+          items:
+            $ref: '#/components/schemas/Container'
+        connector:
+          $ref: '#/components/schemas/ConnectorPredicateEnum'
+        context:
+          $ref: '#/components/schemas/ContextEnum'
+        type:
+          description: Indicates how filters must be applied. TIME_ORDER is sequential, NORMAL not
+          type: string
+          enum:
+          - NORMAL
+          - TIME_ORDER
+        inOrNotIn:
+          $ref: '#/components/schemas/InOrNotInPredicateEnum'
+    Filter:
+      type: object
+      properties:
+        name:
+          type: string
+          description: Name of the Metric or Dimension being filtered.
+        filterPredicate:
+          $ref: '#/components/schemas/FilterPredicateEnum'
+        connector:
+          $ref: '#/components/schemas/ConnectorPredicateEnum'
+        caseSensitive:
+          type: boolean
+        context:
+          $ref: '#/components/schemas/ContextEnum'
+        intern:
+          type: boolean
+          description: Indicates if filter should be prioritized (Advanced).
+          default: 'false'
+        value1:
+          type: string
+        value2:
+          type: string
+        values1:
+          type: array
+          description: Array of values
+          items:
+            type: string
+        values2:
+          type: array
+          description: Array of values
+          items:
+            type: string
+    ViewMode:
+      type: object
+      properties:
+        active:
+          type: string
+          enum:
+          - comparison
+          - timeSeries
+          - path
+          - crossTable
+        comparison:
+          type: object
+          properties:
+            type:
+              type: string
+              description: type of comparison. It can be either on *time* or *segment*. The corresponding properties must
+                be filled accordingly in *values* and *sorting*
+              enum:
+              - time
+              - segment
+            values:
+              type: object
+              properties:
+                time:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/Filter'
+                segment:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/SegmentContainer'
+            sorting:
+              type: object
+              properties:
+                time:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/ViewModeComparisonSortingItem'
+                segment:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/ViewModeComparisonSortingItem'
+        timeSeries:
+          type: object
+          properties:
+            timeName:
+              type: string
+              description: The name of the time dimension used in the time series - i.e. "time_days" for days.
+            viewType:
+              type: string
+              description: The type of the time series view mode. Set "top" for time series of the top "x" number of objects.
+                Set "values" based on specific object values populated in the values list of this configuration.
+              enum:
+              - top
+              - values
+            top:
+              type: integer
+              description: The number of top objects the time series is build upon.
+            values:
+              type: array
+              description: A list of object values - i.e. ["Seach", "Cart", "Home"] for object "pages".
+              items:
+                type: string
+        path:
+          type: object
+          properties:
+            metricName:
+              type: string
+              description: The name of the metric used in the path analysis - i.e. "visits".
+            dimensionContext:
+              type: string
+              description: The context in which the dimension for the path analysis is evaluated.
+              enum:
+              - VISITOR
+              - SESSION
+              - PAGE
+              - ACTION
+              - ATOMIC
+              - NONE
+            reverse:
+              type: boolean
+              description: Whether the path analysis should be performed in reverse order.
+            distinct:
+              type: boolean
+              description: Whether to count only unique paths in the analysis.
+            pathLength:
+              type: integer
+              description: The maximum number of steps to include in the path analysis.
+        crossTable:
+          type: object
+          properties:
+            metricName:
+              type: string
+              description: The name of the metric used for values in the cross table analysis - i.e. "pages_pageImpressions".
+            crossDimensionName:
+              type: string
+              description: The name of the dimension used for the cross-analysis - i.e. "browser_fullName".
+            mainDimensionSortDirection:
+              type: string
+              description: Sort direction for the main dimension.
+              enum:
+              - ASCENDING
+              - DESCENDING
+              - ''
+            metricSortDirection:
+              type: string
+              description: Sort direction for the metric values.
+              enum:
+              - ASCENDING
+              - DESCENDING
+              - ''
+            dimensionUpperLimit:
+              type: integer
+              description: The maximum number of dimension values to include in the analysis.
+            crossDimensionSortDirection:
+              type: string
+              description: Sort direction for the cross dimension.
+              enum:
+              - ASCENDING
+              - DESCENDING
+              - ''
+    Comparison:
+      type: object
+      description: Comparison definition
+      properties:
+        type:
+          type: string
+          description: Type of comparison
+          enum:
+          - NONE
+          - PERIOD
+          - LIMIT
+          - SLIDING_WINDOW
+        slidingWindowWeekdayAdjust:
+          type: boolean
+        slidingWindowTimeShift:
+          type: string
+          enum:
+          - PRECEDING
+          - PREVIOUS_MONTH
+          - PREVIOUS_QUARTER
+          - PREVIOUS_YEAR
+        filter:
+          $ref: '#/components/schemas/Filter'
+    ConnectorPredicateEnum:
+      type: string
+      description: Connectors
+      enum:
+      - AND
+      - OR
+    InOrNotInPredicateEnum:
+      type: string
+      enum:
+      - IN
+      - NOT_IN
+    FilterPredicateEnum:
+      type: string
+      description: Filter predicates
+      enum:
+      - EQUAL
+      - UNEQUAL
+      - LESS
+      - LESSEQUAL
+      - GREATER
+      - GREATEREQUAL
+      - BETWEEN
+      - LIKE
+      - NOT_LIKE
+    SegmentContainer:
+      type: object
+      properties:
+        segmentID:
+          type: string
+          description: ID of the Segment
+        connectorPredicate:
+          type: string
+        inOrNotInPredicate:
+          type: string
+        context:
+          $ref: '#/components/schemas/ContextEnum'
+        position:
+          type: integer
+          description: Indicates segment ordering in case of several Segment
+    ViewModeComparisonSortingItem:
+      type: object
+      description: Sorting of comparison
+      properties:
+        alias:
+          type: string
+          description: alias of the column being sorted
+        direction:
+          $ref: '#/components/schemas/SortDirectionEnum'
+    ReportQueryRequest:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          description: Id
+        elementIds:
+          type: array
+          items:
+            type: integer
+            format: int64
+            description: Element Ids
+        configuration:
+          $ref: '#/components/schemas/Report'
+        timeFilter:
+          $ref: '#/components/schemas/Filter'
+    ReportQueryState:
+      type: object
+      properties:
+        reportCorrelationId:
+          type: string
+          description: Correlation Id of the report
+        status:
+          type: string
+          description: Status of the report after complete analysis
+        details:
+          $ref: '#/components/schemas/ReportQueryStateDetails'
+        queryStates:
+          type: array
+          description: List of query state of all caculation queries
+          items:
+            $ref: '#/components/schemas/QueryState'
+    Report:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int32
+          description: Report Id
+        title:
+          type: string
+        description:
+          type: string
+        reportElements:
+          type: array
+          description: Array of columns
+          items:
+            $ref: '#/components/schemas/ReportElement'
+        timeFilter:
+          $ref: '#/components/schemas/Filter'
+        quickFilters:
+          type: array
+          items:
+            $ref: '#/components/schemas/Filter'
+    ReportQueryStateDetails:
+      type: object
+      properties:
+        lastUpdatedAt:
+          type: integer
+          description: Last updated time of report in milliseconds since the UNIX epoch
+        reportId:
+          type: integer
+          description: Report Unique Id
+        reportTitle:
+          type: string
+          description: Report Name
+    QueryState:
+      title: QueryState
+      type: object
+      properties:
+        accountId:
+          type: string
+          description: Id of the account
+        correlationId:
+          type: string
+          description: ID of the query
+        calculationId:
+          type: string
+          description: Id of the calculated data
+        resultUrl:
+          type: string
+          description: Link to get analysis data
+        status:
+          type: string
+          description: Analysis query state
+          enum:
+          - SUCCESS
+          - FAILED
+          - ABORTED
+          - RUNNING
+          - INITIATED
+        details:
+          type: object
+          properties:
+            lastUpdatedAt:
+              type: integer
+              description: Last update time in milliseconds since the UNIX epoch
+            reportElementId:
+              type: integer
+              description: ID of the report element
+    ReportElement:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int32
+          description: ID of the element
+        reportId:
+          type: integer
+          format: int32
+          description: ID of the report
+        type:
+          type: string
+          description: Type of the element for eg. Analysis, KPI, Sparkline
+        configJson:
+          type: object
+          description: Different type of queries are possible
+          oneOf:
+          - $ref: '#/components/schemas/TableQuery'
+          - $ref: '#/components/schemas/KpiQuery'
+    AnalysisResult:
+      type: object
+      properties:
+        calculationDataType:
+          type: string
+          description: DataType returned
+          enum:
+          - RAW_DATA
+          - RAW_DATA_SAMPLING
+        rows:
+          type: array
+          description: Array of rows
+          items:
+            type: array
+            description: Array of values following the strict order of the headers
+            items: {}
+        rowCount:
+          type: integer
+          description: Number of rows returned.
+        rowCountTotal:
+          type: integer
+          description: Number of rows in the whole resultSet wihtout subtotals
+        headers:
+          type: array
+          items:
+            type: object
+            properties:
+              name:
+                type: string
+                description: Name of the Dimension or Metric
+              alias:
+                type: string
+                description: Generated unique identifier of the column in the analysis.
+              arrangeType:
+                type: string
+                description: Mapp identifier of the Dimension or Metric
+              metric:
+                type: boolean
+                description: Indicates if column is a metric
+              dimension:
+                type: boolean
+                description: Indicates if column is a dimension
+              sumPositions:
+                type: array
+                description: Indicates which rows contains a (sub)total value
+                items:
+                  type: integer
+              pivotGroups:
+                type: array
+                description: Indicates which rows contains a grouping row
+                items:
+                  type: integer
+              sortIndex:
+                type: integer
+                description: Indicates order of sorting when there is more than one sorting column. (starting from 0)
+              sortDirection:
+                $ref: '#/components/schemas/SortDirectionEnum'
+        columnCount:
+          type: integer
+          description: Number of columns
+        warnings:
+          type: array
+          description: Array of warnings occurred during calculation
+          items:
+            $ref: '#/components/schemas/Warning'
+        timerange:
+          type: array
+          description: time range boundaries with format yyyy-MM-dd HH:mm:ss
+          minItems: '2'
+          maxItems: '2'
+          items:
+            type: string
+        timestamp:
+          type: string
+          format: date-time
+          description: Timestamp of the calculation
+    AnalysisUsage:
+      title: AnalysisUsage
+      description: Analysis Usage for a given period
+      type: object
+      properties:
+        calculationsCount:
+          type: integer
+          description: Number of calculation for the current period
+        maxCalculationsAllowed:
+          type: integer
+          description: Max number of allowed of calculation per Month as defined in contract
+        month:
+          type: integer
+          description: month of the current period
+        year:
+          type: integer
+          description: Year of the current period
+      required:
+      - calculationsCount
+      - maxCalculationsAllowed
+      - month
+      - year
+    QueryObjects:
+      title: QueryObjects
+      type: object
+      properties:
+        metrics:
+          type: array
+          description: List of available metrics
+          items:
+            $ref: '#/components/schemas/Metric'
+        dimensions:
+          type: array
+          description: List of available dimensions
+          items:
+            $ref: '#/components/schemas/Dimension'
+      required:
+      - metrics
+      - dimensions
+    Metric:
+      title: Metric
+      type: object
+      description: Description of a metric
+      properties:
+        name:
+          type: string
+          description: API name of the metric
+        dataType:
+          $ref: '#/components/schemas/DataTypeEnum'
+        title:
+          type: string
+          description: Human readable name of the metric. Localized
+        elementType:
+          $ref: '#/components/schemas/ElementTypeEnum'
+        metricDisplayType:
+          $ref: '#/components/schemas/DisplayTypeEnum'
+        context:
+          $ref: '#/components/schemas/ContextEnum'
+        sortable:
+          type: boolean
+          description: Indicates if object can be sorted.
+      required:
+      - name
+      - dataType
+      - title
+      - elementType
+      - metricDisplayType
+    Dimension:
+      title: Dimension
+      type: object
+      description: Description of a Dimension element
+      properties:
+        name:
+          type: string
+          description: API name of the dimension
+        dataType:
+          $ref: '#/components/schemas/DataTypeEnum'
+        title:
+          type: string
+          description: Human readable name of the metric. Localized
+        elementType:
+          $ref: '#/components/schemas/ElementTypeEnum'
+        context:
+          $ref: '#/components/schemas/ContextEnum'
+        mapping:
+          type: object
+          description: Optional list of Mapping values
+          additionalProperties:
+            type: string
+        timeFormatPattern:
+          description: Standard datetime pattern. Indicates that current STRING represents a Date
+          type: string
+        sortable:
+          type: boolean
+          description: Indicates if object can be sorted.
+      required:
+      - name
+      - dataType
+      - title
+      - elementType
+    DataTypeEnum:
+      type: string
+      description: Type of data
+      enum:
+      - STRING
+      - NUMBER
+      - GENERIC
+    ElementTypeEnum:
+      type: string
+      description: Type of element
+      enum:
+      - CAMPAIGNS_ATTRIBUTION
+      - CUSTOM_CATEGORY
+      - CUSTOM_FORMULA
+      - CUSTOM_METRIC
+      - CUSTOM_PARAMETER
+      - CUSTOM_PROCESS
+      - CUSTOM_SOURCE
+      - CUSTOM_VISITOR_GROUPS_TRAFFIC
+      - CUSTOM_WEBSITE_GOALS
+      - DEFAULT_DIMENSION
+      - DEFAULT_METRIC
+      - PREDEFINED_FORMULA
+      - PREDEFINED_METRIC
+    DisplayTypeEnum:
+      type: string
+      description: Indicate how the data should be displayed
+      enum:
+      - NORMAL
+      - TIME
+      - CURRENCY
+      - DISTRIBUTION
+      - COMPARE
+    DynamicTimeFilterDefinition:
+      title: DynamicTimeFilterDefinition
+      description: Dynamic Time Filter
+      type: object
+      properties:
+        title:
+          type: string
+          description: Human readable description of the dynamic time filter (localized)
+        name:
+          type: string
+          description: API name of the filter value
+        dynamicFilter:
+          type: object
+          description: Snippet code which can be used in analysis
+          properties:
+            name:
+              type: string
+              description: API Name of the filtered dimension
+            filterPredicate:
+              $ref: '#/components/schemas/FilterPredicateEnum'
+            connector:
+              $ref: '#/components/schemas/ConnectorPredicateEnum'
+            context:
+              $ref: '#/components/schemas/ContextEnum'
+            value1:
+              type: string
+              description: Value to be filtered on.
+            value2:
+              type: string
+              description: Second value to be filtered on. Only relevant for BETWEEN.
+          required:
+          - name
+          - connector
+          - filterPredicate
+          - value1
+          - value2
+          - context
+      required:
+      - title
+      - name
+      - dynamicFilter
+    SegmentDefinition:
+      title: SegmentDefinition
+      description: User segment
+      type: object
+      properties:
+        id:
+          type: integer
+          description: ID of the segment to be used in analysis
+        title:
+          type: string
+          description: Name of the segment
+        description:
+          type: string
+          description: Description of the segment
+      required:
+      - id
+      - title
+      - description
+  examples:
+    analysisQueryPivot:
+      value:
+        resultType: DATA_ONLY
+        queryObject:
+          columns:
+          - name: time_days
+            sortDirection: ASCENDING
+            sortIndex: '0'
+            scope: OBJECT
+            context: NONE
+            lowerLimit: '1'
+            upperLimit: '7'
+          - name: os_vendor
+            context: SESSION
+            lowerLimit: '1'
+            upperLimit: '10'
+            scope: OBJECT
+          - name: visits
+            columnPeriod: ANALYSIS
+            sortDirection: DESCENDING
+            sortIndex: '1'
+            scope: OBJECT
+            context: SESSION
+          - name: pages_pageImpressions
+            columnPeriod: ANALYSIS
+            scope: OBJECT
+            context: PAGE
+          - name: visits_newShare
+            columnPeriod: ANALYSIS
+            scope: OBJECT
+          - name: visit_duration_avg
+            columnPeriod: ANALYSIS
+            scope: OBJECT
+          - name: visits_bounceRate
+            columnPeriod: ANALYSIS
+            scope: OBJECT
+          - name: visits
+            columnPeriod: ANALYSIS
+            scope: OBJECT
+            context: SESSION
+            predefinedContainer:
+              filters:
+              - name: os_vendor
+                caseSensitive: 'false'
+                context: SESSION
+                filterPredicate: LIKE
+                connector: AND
+                value1: Apple
+                value2: ''
+              containers: []
+          variant: PIVOT
+          predefinedContainer:
+            filters:
+            - name: time_dynamic
+              filterPredicate: LIKE
+              connector: AND
+              caseSensitive: 'false'
+              context: NONE
+              intern: 'false'
+              value1: last_7_days
+              value2: ''
+            containers: []
+    analysisQueryComparison:
+      value:
+        resultType: DATA_ONLY
+        queryObject:
+          columns:
+          - name: browser_fullName
+            scope: OBJECT
+            context: SESSION
+            variant: NORMAL
+            lowerLimit: '1'
+            upperLimit: '20'
+          - name: visits
+            columnPeriod: ANALYSIS
+            sortDirection: DESCENDING
+            sortIndex: '1'
+            scope: OBJECT
+            context: SESSION
+            variant: NORMAL
+          viewMode:
+            active: comparison
+            comparison:
+              type: time
+              values:
+                time:
+                - name: time_dynamic
+                  value1: last_14_days
+                  value2: ''
+                  filterPredicate: LIKE
+                  connector: AND
+                  context: NONE
+                  caseSensitive: 'false'
+                - name: time_dynamic
+                  value1: last_14_days_previous_year
+                  value2: ''
+                  filterPredicate: LIKE
+                  connector: AND
+                  context: NONE
+                  caseSensitive: 'false'
+                segment: []
+              sorting:
+                time:
+                - resultColumn: '2'
+                  direction: DESCENDING
+                segment: []
+          variant: LIST
+          predefinedContainer:
+            filters:
+            - name: time_range
+              filterPredicate: BETWEEN
+              connector: AND
+              caseSensitive: 'false'
+              context: NONE
+              value1: '2022-12-23 00:00:00'
+              value2: '2023-01-20 00:00:00'
+            containers: []
+    analysisQueryTimeSeries:
+      value:
+        resultType: DATA_ONLY
+        queryObject:
+          columns:
+          - name: pages
+            scope: OBJECT
+            context: PAGE
+            variant: NORMAL
+            lowerLimit: '1'
+            upperLimit: '20'
+          - name: pages_pageImpressions
+            columnPeriod: ANALYSIS
+            sortDirection: DESCENDING
+            sortIndex: '1'
+            scope: OBJECT
+            context: PAGE
+            variant: NORMAL
+            inTimeSeries: 'true'
+          - name: visits
+            columnPeriod: ANALYSIS
+            scope: OBJECT
+            context: SESSION
+            variant: NORMAL
+          - name: pages_durationAvg
+            columnPeriod: ANALYSIS
+            scope: OBJECT
+            variant: NORMAL
+            inTimeSeries: 'true'
+          - name: visits_bounceRate
+            columnPeriod: ANALYSIS
+            scope: OBJECT
+            variant: NORMAL
+          - name: pages_exitRate
+            columnPeriod: ANALYSIS
+            scope: OBJECT
+            variant: NORMAL
+          viewMode:
+            active: timeSeries
+            timeSeries:
+              timeName: time_days
+              values:
+              - Search
+              - Home
+              - Cart
+              top: '3'
+              viewType: top
+          predefinedContainer:
+            filters:
+            - name: time_dynamic
+              connector: AND
+              filterPredicate: LIKE
+              value1: last_28_days
+              value2: ''
+              context: NONE
+              caseSensitive: 'false'
+            containers: []
+          variant: LIST
+    analysisPath:
+      value:
+        resultType: DATA_ONLY
+        queryObject:
+          columns:
+          - name: pages
+            scope: OBJECT
+            context: PAGE
+            variant: NORMAL
+            lowerLimit: '1'
+            upperLimit: '20'
+          - name: pages_pageImpressions
+            columnPeriod: ANALYSIS
+            sortDirection: DESCENDING
+            sortIndex: '1'
+            scope: OBJECT
+            context: PAGE
+            variant: NORMAL
+          - name: visits
+            columnPeriod: ANALYSIS
+            scope: OBJECT
+            context: SESSION
+            variant: NORMAL
+          - name: pages_durationAvg
+            columnPeriod: ANALYSIS
+            scope: OBJECT
+            variant: NORMAL
+          - name: visits_bounceRate
+            columnPeriod: ANALYSIS
+            scope: OBJECT
+            variant: NORMAL
+          - name: pages_exitRate
+            columnPeriod: ANALYSIS
+            scope: OBJECT
+            variant: NORMAL
+          viewMode:
+            active: path
+            path:
+              metricName: visits
+              dimensionContext: SESSION
+              reverse: 'false'
+              distinct: 'true'
+              pathLength: '5'
+          variant: LIST
+          predefinedContainer:
+            filters:
+            - name: time_range
+              filterPredicate: BETWEEN
+              connector: AND
+              caseSensitive: 'false'
+              context: NONE
+              value1: '2025-05-20 00:00:00'
+              value2: '2025-06-17 00:00:00'
+            containers: []
+    analysisCrossTable:
+      value:
+        resultType: DATA_ONLY
+        queryObject:
+          columns:
+          - name: pages
+            scope: OBJECT
+            context: PAGE
+            variant: NORMAL
+            lowerLimit: '1'
+            upperLimit: '20'
+          - name: pages_pageImpressions
+            columnPeriod: ANALYSIS
+            sortDirection: DESCENDING
+            sortIndex: '1'
+            scope: OBJECT
+            context: PAGE
+            variant: NORMAL
+          - name: visits
+            columnPeriod: ANALYSIS
+            scope: OBJECT
+            context: SESSION
+            variant: NORMAL
+          - name: pages_durationAvg
+            columnPeriod: ANALYSIS
+            scope: OBJECT
+            variant: NORMAL
+          - name: visits_bounceRate
+            columnPeriod: ANALYSIS
+            scope: OBJECT
+            variant: NORMAL
+          - name: pages_exitRate
+            columnPeriod: ANALYSIS
+            scope: OBJECT
+            variant: NORMAL
+          viewMode:
+            active: crossTable
+            crossTable:
+              metricName: pages_pageImpressions
+              crossDimensionName: browser_fullName
+              mainDimensionSortDirection: ''
+              metricSortDirection: DESCENDING
+              dimensionUpperLimit: '10'
+              crossDimensionSortDirection: ''
+          variant: LIST
+          predefinedContainer:
+            filters:
+            - name: time_range
+              filterPredicate: BETWEEN
+              connector: AND
+              caseSensitive: 'false'
+              context: NONE
+              value1: '2025-05-20 00:00:00'
+              value2: '2025-06-17 00:00:00'
+            containers: []
+    reportQueryObject:
+      value:
+        configuration:
+          id: '3687'
+          title: '! !!  ANALYTICS-2295'
+          description: ''
+          timeFilter:
+            arrangeType: times_internal_day
+            connector: AND
+            filterPredicate: BETWEEN
+            value1: '2022-10-15'
+            value2: '2023-12-28'
+            context: NONE
+            caseSensitive: 'false'
+            intern: 'false'
+            numberOfDays: '0'
+          reportElements:
+          - type: TEXTBOX_DESCRIPTION
+            id: '43942'
+            position: '0'
+            positionAsPoint:
+              x: '0'
+              y: '0'
+            width: '3'
+            height: '1'
+            reportId: '3687'
+            configJson: {}
+          - type: TEXTBOX_CONTENT_TABLE
+            id: '43944'
+            position: '1'
+            positionAsPoint:
+              x: '3'
+              y: '0'
+            width: '3'
+            height: '1'
+            reportId: '3687'
+            configJson: {}
+          - type: ANALYSIS
+            id: '43946'
+            position: '2'
+            positionAsPoint:
+              x: '0'
+              y: '0'
+            width: '3'
+            height: '78'
+            reportId: '3687'
+            configJson:
+              predefinedContainer:
+                filters: []
+                containers: []
+                combined: 'false'
+              title: ThisareallyreallylongtrafficanalysistitleaimingtobreakthesidemenuUI
+              realTime: 'false'
+              predefinedSegmentConnections: []
+              columns:
+              - arrangeType: time_id_categories_t_year_month_day
+                dataType: NUMBER
+                sortDirection: ASCENDING
+                title: Days
+                scope: OBJECT
+                context: NONE
+                visible: 'true'
+                dimension: 'true'
+                metric: 'false'
+                alias: time_id_categories_t_year_month_day|0
+                lowerLimit: '1'
+                upperLimit: '28'
+                sumValue: 'false'
+                predefinedSegmentConnections: []
+              - arrangeType: visits
+                dataType: NUMBER
+                title: Visits
+                scope: OBJECT
+                context: SESSION
+                variant: NORMAL
+                visible: 'true'
+                dimension: 'false'
+                metric: 'true'
+                predefinedContainer:
+                  filters: []
+                  containers: []
+                  combined: 'false'
+                alias: visits|0
+                inTimeSeries: 'false'
+                chart:
+                  visible: 'true'
+                  yAxis: '0'
+                sumValue: 'false'
+                predefinedSegmentConnections: []
+                columnPeriod: ANALYSIS
+                round: '-1'
+                roundConfig:
+                  override: 'false'
+                  round: '2'
+              - arrangeType: page_impressions
+                dataType: NUMBER
+                title: Page Impressions
+                scope: OBJECT
+                context: PAGE
+                variant: NORMAL
+                visible: 'true'
+                dimension: 'false'
+                metric: 'true'
+                predefinedContainer:
+                  filters: []
+                  containers: []
+                  combined: 'false'
+                alias: page_impressions|0
+                inTimeSeries: 'false'
+                chart:
+                  visible: 'false'
+                  yAxis: '0'
+                sumValue: 'false'
+                predefinedSegmentConnections: []
+                columnPeriod: ANALYSIS
+                round: '-1'
+                roundConfig:
+                  override: 'false'
+                  round: '2'
+              - arrangeType: predefined_formula_new_visitor_rate
+                dataType: NUMBER
+                title: New Visit Rate %
+                metricDisplayType: DISTRIBUTION
+                dataVisual: BARS
+                scope: OBJECT
+                variant: NORMAL
+                visible: 'true'
+                dimension: 'false'
+                metric: 'true'
+                predefinedContainer:
+                  filters: []
+                  containers: []
+                  combined: 'false'
+                alias: predefined_formula_new_visitor_rate|0
+                inTimeSeries: 'false'
+                chart:
+                  visible: 'true'
+                  yAxis: '1'
+                sumValue: 'false'
+                predefinedSegmentConnections: []
+                columnPeriod: ANALYSIS
+                round: '2'
+                roundConfig:
+                  override: 'false'
+                  round: '2'
+              - arrangeType: predefined_formula_avg_visit_duration
+                dataType: NUMBER
+                title: Visit Duration Avg
+                metricDisplayType: TIME
+                dataVisual: BARS
+                scope: OBJECT
+                variant: NORMAL
+                visible: 'true'
+                dimension: 'false'
+                metric: 'true'
+                predefinedContainer:
+                  filters: []
+                  containers: []
+                  combined: 'false'
+                alias: predefined_formula_avg_visit_duration|0
+                inTimeSeries: 'false'
+                chart:
+                  visible: 'false'
+                  yAxis: '0'
+                sumValue: 'false'
+                predefinedSegmentConnections: []
+                columnPeriod: ANALYSIS
+                round: '2'
+                roundConfig:
+                  override: 'false'
+                  round: '2'
+              - arrangeType: predefined_formula_bounce_rate
+                dataType: NUMBER
+                title: Bounce Rate %
+                metricDisplayType: DISTRIBUTION
+                dataVisual: TRAFFIC_LIGHT
+                dataVisualTarget: MIN
+                dataVisualTargetMax: auto
+                dataVisualTargetMin: auto
+                scope: OBJECT
+                variant: NORMAL
+                visible: 'true'
+                dimension: 'false'
+                metric: 'true'
+                predefinedContainer:
+                  filters: []
+                  containers: []
+                  combined: 'false'
+                alias: predefined_formula_bounce_rate|0
+                inTimeSeries: 'false'
+                chart:
+                  visible: 'true'
+                  yAxis: '1'
+                sumValue: 'false'
+                predefinedSegmentConnections: []
+                columnPeriod: ANALYSIS
+                round: '2'
+                roundConfig:
+                  override: 'false'
+                  round: '2'
+              variant: LIST
+              standardChart: LINE
+              showTable: 'true'
+              showPic: 'true'
+              forbidChart: 'false'
+              viewMode:
+                standard:
+                  pivotState: []
+                  sankeyConfig:
+                    reverse: 'false'
+                    pathLength: '5'
+                    chartState: []
+                timeSeries:
+                  timeArrangeType: time_id_categories_t_year_week
+                  values: []
+                  top: '3'
+                  viewType: values
+                comparison:
+                  type: time
+                  sorting:
+                    time: []
+                    segment: []
+                  values:
+                    time: []
+                    segment: []
+                  collapsed: {}
+                  primaryChangeType: {}
+                path:
+                  reverse: 'false'
+                  metricArrangeType: ''
+                  dimensionContext: NONE
+                  pathLength: '5'
+                  distinct: 'true'
+                  chartState: []
+                crossTable:
+                  metricArrangeType: ''
+                  metricSortDirection: DESCENDING
+                  crossDimensionSortDirection: ''
+                  mainDimensionSortDirection: ''
+                  dimensionUpperLimit: '10'
+                  crossDimensionArrangeType: ''
+          showInMenu: 'true'
+          predefined: 'false'
+          creatorSSOUserId: '7'
+          modifierSSOUserId: '7'
+          creationTime: '2020-11-11T07:06:55+00:00'
+          modificationTime: '2021-12-17T09:48:24+00:00'
+          showContent: 'true'
+          gridColumns: '0'
+          publicReport: 'false'
+          startDialogConfigurable: 'true'
+          startDialogEnabled: 'false'
+          quickFilters:
+          - arrangeType: custom_paras_session_generic42
+            connector: AND
+            filterPredicate: LIKE
+            value1: ''
+            value2: ''
+            context: NONE
+            caseSensitive: 'false'
+            intern: 'false'
+            numberOfDays: '0'
+          dashboardQuickFiltersCollapsed: 'false'
+          dashboardQuickFilterValues:
+            custom_paras_session_generic42:
+              configurable: 'true'
+              values: []
+          categories: []
+          autoRefresh: 'false'
+    analysisResultExample:
+      value:
+        calculationDataType: RAW_DATA
+        rows:
+        - - '20210826'
+          - Unknown
+          - '7'
+          - '8'
+          - '100'
+          - '30'
+          - '85.71428571428571'
+          - null
+        - - '20210826'
+          - Microsoft
+          - '3'
+          - '30'
+          - '0'
+          - '38.333333333333336'
+          - '0'
+          - null
+        - - '20210826'
+          - Apple
+          - '3'
+          - '15'
+          - '0'
+          - '33'
+          - '0'
+          - '3'
+        - - '20210826'
+          - null
+          - '13'
+          - '53'
+          - '53.84615384615385'
+          - '32.61538461538461'
+          - '46.15384615384615'
+          - '3'
+        - - '20210827'
+          - Unknown
+          - '7'
+          - '8'
+          - '100'
+          - '30'
+          - '85.71428571428571'
+          - null
+        - - '20210827'
+          - Microsoft
+          - '3'
+          - '30'
+          - '0'
+          - '38.333333333333336'
+          - '0'
+          - null
+        - - '20210827'
+          - Apple
+          - '3'
+          - '14'
+          - '0'
+          - '32.666666666666664'
+          - '0'
+          - '3'
+        - - '20210827'
+          - null
+          - '13'
+          - '52'
+          - '53.84615384615385'
+          - '32.53846153846154'
+          - '46.15384615384615'
+          - '3'
+        - - '20210828'
+          - Unknown
+          - '8'
+          - '8'
+          - '100'
+          - '30'
+          - '100'
+          - null
+        - - '20210828'
+          - Microsoft
+          - '7'
+          - '40'
+          - '0'
+          - '48.714285714285715'
+          - '14.285714285714285'
+          - null
+        - - '20210828'
+          - Apple
+          - '3'
+          - '15'
+          - '0'
+          - '33'
+          - '0'
+          - '3'
+        - - '20210828'
+          - null
+          - '18'
+          - '63'
+          - '44.44444444444444'
+          - '37.77777777777778'
+          - '50'
+          - '3'
+        - - '20210829'
+          - Unknown
+          - '6'
+          - '8'
+          - '100'
+          - '30'
+          - '83.33333333333334'
+          - null
+        - - '20210829'
+          - Apple
+          - '3'
+          - '30'
+          - '0'
+          - '35.333333333333336'
+          - '0'
+          - '3'
+        - - '20210829'
+          - Microsoft
+          - '2'
+          - '11'
+          - '0'
+          - '36'
+          - '0'
+          - null
+        - - '20210829'
+          - null
+          - '11'
+          - '49'
+          - '54.54545454545454'
+          - '32.54545454545455'
+          - '45.45454545454545'
+          - '3'
+        - - '20210830'
+          - Unknown
+          - '8'
+          - '8'
+          - '100'
+          - '30'
+          - '100'
+          - null
+        - - '20210830'
+          - Apple
+          - '3'
+          - '15'
+          - '0'
+          - '33.333333333333336'
+          - '0'
+          - '3'
+        - - '20210830'
+          - Microsoft
+          - '2'
+          - '24'
+          - '0'
+          - '37.5'
+          - '0'
+          - null
+        - - '20210830'
+          - null
+          - '13'
+          - '47'
+          - '61.53846153846154'
+          - '31.923076923076923'
+          - '61.53846153846154'
+          - '3'
+        - - '20210831'
+          - Unknown
+          - '7'
+          - '8'
+          - '100'
+          - '30'
+          - '85.71428571428571'
+          - null
+        - - '20210831'
+          - Microsoft
+          - '4'
+          - '31'
+          - '0'
+          - '45'
+          - '25'
+          - null
+        - - '20210831'
+          - Apple
+          - '3'
+          - '15'
+          - '0'
+          - '32.666666666666664'
+          - '0'
+          - '3'
+        - - '20210831'
+          - null
+          - '14'
+          - '54'
+          - '50'
+          - '34.857142857142854'
+          - '50'
+          - '3'
+        - - '20210901'
+          - Unknown
+          - '8'
+          - '8'
+          - '100'
+          - '30'
+          - '100'
+          - null
+        - - '20210901'
+          - Apple
+          - '5'
+          - '39'
+          - '0'
+          - '33.4'
+          - '0'
+          - '5'
+        - - '20210901'
+          - Microsoft
+          - '2'
+          - '4'
+          - '0'
+          - '80'
+          - '50'
+          - null
+        - - '20210901'
+          - null
+          - '15'
+          - '51'
+          - '53.333333333333336'
+          - '37.8'
+          - '60'
+          - '5'
+        - - null
+          - null
+          - '97'
+          - '369'
+          - '52.57731958762887'
+          - '34.58762886597938'
+          - '51.546391752577314'
+          - '23'
+        rowCount: '29'
+        rowCountTotal: '21'
+        headers:
+        - alias: time_id_categories_t_year_month_day|0
+          arrangeType: time_id_categories_t_year_month_day
+          sumPositions:
+          - '28'
+          pivotGroups:
+          - '0'
+          - '4'
+          - '8'
+          - '12'
+          - '16'
+          - '20'
+          - '24'
+          - '28'
+          name: time_days
+          metric: 'false'
+          dimension: 'true'
+          sortIndex: '0'
+          sortDirection: ASCENDING
+        - alias: platform_vendor|0
+          arrangeType: platform_vendor
+          sumPositions:
+          - '3'
+          - '7'
+          - '11'
+          - '15'
+          - '19'
+          - '23'
+          - '27'
+          - '28'
+          name: os_vendor
+          metric: 'false'
+          dimension: 'true'
+        - alias: visits|0
+          arrangeType: visits
+          name: visits
+          metric: 'true'
+          dimension: 'false'
+        - alias: page_impressions|0
+          arrangeType: page_impressions
+          name: pages_pageImpressions
+          metric: 'true'
+          dimension: 'false'
+        - alias: predefined_formula_new_visitor_rate|0
+          arrangeType: predefined_formula_new_visitor_rate
+          name: visits_newShare
+          metric: 'true'
+          dimension: 'false'
+        - alias: predefined_formula_avg_visit_duration|0
+          arrangeType: predefined_formula_avg_visit_duration
+          name: visit_duration_avg
+          metric: 'true'
+          dimension: 'false'
+        - alias: predefined_formula_bounce_rate|0
+          arrangeType: predefined_formula_bounce_rate
+          name: visits_bounceRate
+          metric: 'true'
+          dimension: 'false'
+        - alias: visits|1
+          arrangeType: visits
+          name: visits
+          metric: 'true'
+          dimension: 'false'
+        columnCount: '8'
+        warnings: []
+        timerange:
+        - '2021-08-25T22:00:00+00:00'
+        - '2021-09-01T22:00:00+00:00'
+        timestamp: '2021-09-02T07:15:43.567+00:00'
+    queryObjectExample:
+      value:
+        metrics:
+        - name: alexaRanking
+          context: NONE
+          dataType: NUMBER
+          sortable: 'true'
+          title: Alexa Ranking
+          elementType: DEFAULT_METRIC
+          metricDisplayType: NORMAL
+        - name: attribution_1_order_qty
+          context: ACTION
+          dataType: NUMBER
+          sortable: 'true'
+          title: Qty Orders (Attribution last session, external), Order
+          elementType: CAMPAIGNS_ATTRIBUTION
+          metricDisplayType: NORMAL
+        - name: custom_metric_1000853
+          context: SESSION
+          dataType: NUMBER
+          sortable: 'true'
+          title: Android Users (Segment)
+          elementType: CUSTOM_METRIC
+          metricDisplayType: NORMAL
+        - name: media_chapter_1
+          context: ATOMIC
+          dataType: NUMBER
+          sortable: 'true'
+          title: Media Chapter 1
+          elementType: DEFAULT_METRIC
+          metricDisplayType: NORMAL
+        - name: page_category_number_13_sum
+          context: NONE
+          dataType: NUMBER
+          sortable: 'true'
+          title: Social Metrics
+          elementType: CUSTOM_CATEGORY
+          metricDisplayType: NORMAL
+        - name: products_viewed_qty
+          context: ATOMIC
+          dataType: NUMBER
+          sortable: 'true'
+          title: Qty Product Views
+          elementType: DEFAULT_METRIC
+          metricDisplayType: NORMAL
+        dimensions:
+        - name: attribution_1
+          context: NONE
+          dataType: NUMBER
+          sortable: 'true'
+          title: Attribution (last session, external) of Order
+          elementType: CAMPAIGNS_ATTRIBUTION
+          mapping:
+            ? ''
+            : No Filter
+            '*': All
+        - name: attribution_2
+          context: NONE
+          dataType: NUMBER
+          sortable: 'true'
+          title: Attribution (multiple, external) of Order
+          elementType: CAMPAIGNS_ATTRIBUTION
+          mapping:
+            ? ''
+            : No Filter
+            '*': All
+        - name: device_deviceClass
+          context: SESSION
+          dataType: NUMBER
+          sortable: 'true'
+          title: Device Class
+          elementType: DEFAULT_DIMENSION
+          mapping:
+            '0': PC / Laptop
+            '1': Smartphone
+            '2': Tablet
+            '3': TV
+            '4': Console
+            '5': Smartwatch
+            '6': E-Reader
+            '7': Mediahub
+            '8': other
+            '1000': unknown
+            ? ''
+            : No filter
+        - name: device_model
+          context: SESSION
+          dataType: STRING
+          sortable: 'false'
+          title: Device Model
+          elementType: DEFAULT_DIMENSION
+        - name: user_country
+          context: SESSION
+          dataType: STRING
+          sortable: 'false'
+          title: URM - Country
+          elementType: DEFAULT_DIMENSION
+        - name: user_gender
+          context: SESSION
+          dataType: NUMBER
+          sortable: 'true'
+          title: URM - Gender
+          elementType: DEFAULT_DIMENSION
+          mapping:
+            '0': unknown
+            '1': Man
+            '2': Woman
+            ? ''
+            : No filter
+        - name: user_id
+          context: SESSION
+          dataType: STRING
+          sortable: 'false'
+          title: URM - Visitor Id
+          elementType: DEFAULT_DIMENSION
+        - name: user_lastVisit
+          context: SESSION
+          dataType: NUMBER
+          sortable: 'true'
+          title: URM - Last Visit
+          elementType: DEFAULT_DIMENSION
+          mapping:
+            '0': 'No'
+            '1': 'Yes'
+            ? ''
+            : No filter
+        - name: user_lastVisitWithPurchase
+          context: SESSION
+          dataType: NUMBER
+          sortable: 'true'
+          title: URM - Last Visit with a Purchase
+          elementType: DEFAULT_DIMENSION
+          mapping:
+            '0': 'No'
+            '1': 'Yes'
+            ? ''
+            : No filter
+        - name: user_macroStatus
+          context: SESSION
+          dataType: NUMBER
+          sortable: 'true'
+          title: URM - Customer Macro Status
+          elementType: DEFAULT_DIMENSION
+          mapping:
+            '0': unknown
+            '1': Offsite
+            '2': Onsite
+            '3': Product view
+            '4': Abandoned basket
+            '5': Registration
+            '6': New Customer
+            '7': Returning buyer
+            ? ''
+            : No filter
+        - name: visitors_newVsReturning
+          context: SESSION
+          dataType: NUMBER
+          sortable: 'true'
+          title: New vs. Returning
+          elementType: DEFAULT_DIMENSION
+          mapping:
+            '0': Returning
+            '1': New
+            '2': Unknown
+            ? ''
+            : No filter
+x-apievangelist-provenance:
+  method: searched
+  generated: '2026-08-12'
+  source: https://docs.mapp.com/apidocs/ (per-endpoint OpenAPI fragments, Analytics API)
+  note: Union of the OpenAPI 3.0.3 fragments Mapp publishes on each Analytics API endpoint page. Content verbatim.

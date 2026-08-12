@@ -1,0 +1,194 @@
+generated: '2026-08-12'
+method: searched
+source: >-
+  registry.npmjs.org, repo1.maven.org, trunk.cocoapods.org, pub.dev, repo.packagist.org,
+  api.github.com/orgs/mapp-digital
+note: >-
+  All first-party client libraries are published from the github.com/mapp-digital organization (GitHub
+  "verified" org, blog https://mapp.com). Mapp ships tracking/messaging SDKs, not API client SDKs — there
+  is no generated client for the Engage REST API, the Analytics API, the Product Catalog API or the Mapp
+  Fashion API in any registry. Two currency signals worth reading: the legacy Engage Android v6 line
+  (com.mapp.sdk:mapp-android) is still being patched while v7 (com.mapp.sdk:engage-android) is the
+  supported line, and Mapp has publicly announced v6 end-of-support; the server-side Node tracking library
+  has not shipped since 2025-10-17 and remains pre-1.0.
+packages:
+- language: kotlin
+  platform: android
+  registry: maven
+  name: com.mapp.sdk:engage-android
+  url: https://central.sonatype.com/artifact/com.mapp.sdk/engage-android
+  install: implementation("com.mapp.sdk:engage-android:7.1.2")
+  official: true
+  product: Mapp Engage
+  version: 7.1.2
+  published: '2026-07-23'
+  source_code: https://github.com/mapp-digital/Mapp-Engage-Android-SDK
+  note: Current Engage Android SDK line (v7). Date read from repo1.maven.org maven-metadata.xml lastUpdated.
+- language: kotlin
+  platform: android
+  registry: maven
+  name: com.mapp.sdk:mapp-android
+  url: https://central.sonatype.com/artifact/com.mapp.sdk/mapp-android
+  install: implementation("com.mapp.sdk:mapp-android:6.1.5")
+  official: true
+  product: Mapp Engage
+  version: 6.1.5
+  published: '2026-06-09'
+  source_code: https://github.com/mapp-digital/Mapp-Engage-Android-SDK
+  note: >-
+    Legacy Engage Android v6 line. Mapp has published an end-of-support / end-of-life notice for Android
+    SDK v6 (https://docs.mapp.com/docs/mapp-engage-android-sdk-6-end-of-support-and-end-of-life).
+- language: kotlin
+  platform: android
+  registry: maven
+  name: com.mapp.sdk:intelligence-android
+  url: https://central.sonatype.com/artifact/com.mapp.sdk/intelligence-android
+  install: implementation("com.mapp.sdk:intelligence-android:5.1.14")
+  official: true
+  product: Mapp Intelligence
+  version: 5.1.14
+  published: '2026-07-24'
+  source_code: https://github.com/mapp-digital/mapp-intelligence-android-sdk-v5
+- language: objective-c
+  platform: ios
+  registry: cocoapods
+  name: MappSDK
+  url: https://cocoapods.org/pods/MappSDK
+  install: pod 'MappSDK'
+  official: true
+  product: Mapp Engage
+  version: 6.1.3
+  published: '2026-03-25'
+  source_code: https://github.com/mapp-digital/Mapp-Engage-iOS-SDK
+  note: Also distributed via Swift Package Manager.
+- language: objective-c
+  platform: ios
+  registry: cocoapods
+  name: MappIntelligence
+  url: https://cocoapods.org/pods/MappIntelligence
+  install: pod 'MappIntelligence'
+  official: true
+  product: Mapp Intelligence
+  version: 5.1.1
+  published: '2026-04-20'
+  source_code: https://github.com/mapp-digital/MappIntelligence-iOS-v5
+- language: javascript
+  platform: react-native
+  registry: npm
+  name: react-native-mapp-plugin
+  url: https://www.npmjs.com/package/react-native-mapp-plugin
+  install: npm install react-native-mapp-plugin
+  official: true
+  product: Mapp Engage
+  version: 1.4.2
+  published: '2026-08-07'
+  source_code: https://github.com/mapp-digital/Mapp-Engage-ReactNative-Plugin
+- language: typescript
+  platform: react-native
+  registry: npm
+  name: mapp-intelligence-reactnative-plugin
+  url: https://www.npmjs.com/package/mapp-intelligence-reactnative-plugin
+  install: npm install mapp-intelligence-reactnative-plugin
+  official: true
+  product: Mapp Intelligence
+  version: 1.1.3
+  published: '2026-08-07'
+  source_code: https://github.com/mapp-digital/Mapp-Intelligence-ReactNative-Plugin
+- language: dart
+  platform: flutter
+  registry: pub.dev
+  name: mapp_sdk
+  url: https://pub.dev/packages/mapp_sdk
+  install: flutter pub add mapp_sdk
+  official: true
+  product: Mapp Engage
+  version: 0.1.2
+  published: '2026-08-11'
+  source_code: https://github.com/mapp-digital/Mapp-Engage-Flutter-Plugin
+- language: javascript
+  platform: node
+  registry: npm
+  name: '@mapp-intelligence/node'
+  url: https://www.npmjs.com/package/@mapp-intelligence/node
+  install: npm install @mapp-intelligence/node
+  official: true
+  product: Mapp Intelligence
+  version: 0.3.0
+  published: '2025-10-17'
+  source_code: https://github.com/mapp-digital/Mapp-Intelligence-Node-Tracking
+  note: Server-side tracking library. Pre-1.0 and unreleased for ~10 months as of this pass.
+- language: php
+  registry: packagist
+  name: mapp-digital/mapp-intelligence-tracking
+  url: https://packagist.org/packages/mapp-digital/mapp-intelligence-tracking
+  install: composer require mapp-digital/mapp-intelligence-tracking
+  official: true
+  product: Mapp Intelligence
+  version: 2.0.0
+  published: '2025-10-14'
+  source_code: https://github.com/mapp-digital/Mapp-Intelligence-PHP-Tracking
+- language: java
+  registry: github
+  name: Mapp-Intelligence-Java-Tracking
+  url: https://github.com/mapp-digital/Mapp-Intelligence-Java-Tracking/releases
+  install: Download the release JAR from GitHub releases; not published to Maven Central.
+  official: true
+  product: Mapp Intelligence
+  version: 1.0.0
+  published: '2025-10-14'
+  source_code: https://github.com/mapp-digital/Mapp-Intelligence-Java-Tracking
+  note: >-
+    No Maven Central coordinates exist — repo1.maven.org/maven2/com/mapp/sdk/intelligence-java/ returns
+    404 — so consumers cannot resolve this library through a dependency manager. Version and date read
+    from the GitHub release (tag v1.0.0).
+integrations:
+- language: php
+  registry: github
+  name: Mapp-Cloud-Magento
+  url: https://github.com/mapp-digital/Mapp-Cloud-Magento
+  official: true
+  product: Adobe Commerce (Magento) plugin
+  version: null
+  published: null
+  note: >-
+    Distributed from GitHub only; the repo publishes no tagged release and the package is absent from
+    Packagist (packagist.org/packages/list.json?vendor=mapp-digital lists one package, the PHP tracking
+    library). Checked, nothing to record.
+- language: javascript
+  registry: github
+  name: Mapp-Cloud-WordPress
+  url: https://github.com/mapp-digital/Mapp-Cloud-WordPress
+  official: true
+  product: WordPress / WooCommerce plugin
+  version: null
+  published: null
+  note: Not published to the WordPress.org plugin directory under this name; no registry metadata to read.
+- language: javascript
+  registry: github
+  name: Mapp-Intelligence-Shopware-6
+  url: https://github.com/mapp-digital/Mapp-Intelligence-Shopware-6
+  official: true
+  product: Shopware 6 plugin
+  version: null
+  published: null
+  note: GitHub-distributed; no Packagist entry to query.
+registries_checked:
+- registry: npm
+  found: 3
+- registry: maven-central
+  found: 3
+- registry: cocoapods
+  found: 2
+- registry: pub.dev
+  found: 1
+- registry: packagist
+  found: 1
+- registry: pypi
+  found: 0
+  note: pypi.org/pypi/mapp-intelligence/json returns 404; Mapp ships no Python client.
+- registry: crates.io
+  found: 0
+- registry: nuget
+  found: 0
+- registry: pkg.go.dev
+  found: 0

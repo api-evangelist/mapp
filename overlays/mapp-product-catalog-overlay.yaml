@@ -1,0 +1,14 @@
+overlay: 1.0.0
+info:
+  title: API Evangelist enhancements for Mapp Product Catalog Public API
+  version: 1.0.0
+extends: openapi/mapp-product-catalog-openapi.yml
+actions:
+- target: $.info
+  update:
+    x-apievangelist-aid: mapp
+    x-apievangelist-api: mapp:product-catalog
+    x-apievangelist-profile: https://apis.io/provider/mapp/
+    x-apievangelist-harvested: '2026-08-12'
+    x-apievangelist-source: https://docs.mapp.com/apidocs/ (per-endpoint OpenAPI fragments)
+    x-apievangelist-operations: 15

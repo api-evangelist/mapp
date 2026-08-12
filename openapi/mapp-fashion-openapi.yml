@@ -1,0 +1,1253 @@
+swagger: '2.0'
+info:
+  title: Mapp Fashion API
+  version: '10'
+  description: 'Mapp Fashion (Dressipi) recommendation API. Assembled verbatim from the per-operation OpenAPI fragments Mapp
+    publishes on each endpoint page of https://docs.mapp.com/apidocs/. The base URL is customer-specific: https://your-domain.com/api/{endpoint}.'
+schemes:
+- https
+security:
+- api_key: []
+  user_token: []
+tags:
+- name: recommendations
+  description: Operations about recommendations
+- name: items
+  description: Operations for retrieving recommendations or items related to one or more seed items
+- name: authorization
+  description: Operations for obtaining or refreshing JWTs
+paths:
+  /oauth/authorize:
+    get:
+      summary: start the process of obtaining a JWT
+      description: 'This is an oauth2 compliant authorize endpoint (see https://tools.ietf.org/html/rfc6749) with the following
+        limitations:
+
+
+        - Only grant code flow is allowed
+
+        - PKCE is mandatory i.e. you must generate a code_verifier (a randomly generated secret) and include its url safe
+        base64 encoded SHA256 hash as the code_challenge parameter
+
+        - Only the S256 code challenge method is supported
+
+        - The redirect URI must be set to urn:ietf:wg:oauth:2.0:oob:auto
+
+
+        This api returns a grant code that can then be exchanged for a JWT
+
+
+        This will create a new profile in the dressipi database and should therefore only be used if no refresh token is available.
+
+
+        code_challenge is constructed in the following manner:
+
+
+        - Pick a random code_verifier value, for example 1tBnEmtSImyCykPHxHYBdzpSFhKEj0Q1LuiHd4fdDlY
+
+        - code challenge = Base64-url-encode(SHA256(code_verifier)):  p7CN1Zi4o5ARn1mYNvNFvj2r5cKkr2k6y7a573eHJXQ in the example
+        above
+
+
+        For more details on PKCE see https://tools.ietf.org/html/rfc7636, appendix A has the definition of base64-url-encode
+
+        '
+      produces:
+      - application/json
+      parameters:
+      - in: query
+        name: redirect_uri
+        type: string
+        enum:
+        - urn:ietf:wg:oauth:2.0:oob:auto
+        required: true
+      - in: query
+        name: response_type
+        type: string
+        enum:
+        - code
+        required: true
+      - in: query
+        name: client_id
+        description: the api client id supplied by dressipi
+        type: string
+        required: true
+      - in: query
+        name: state
+        description: a randomly generated state value
+        type: string
+        required: true
+      - in: query
+        name: code_challenge
+        description: a urlsafe base64 encoded, SHA256 hash of the code verifier (a cryptographically secure randomly generated
+          string).
+        type: string
+        required: true
+      - in: query
+        name: code_challenge_method
+        type: string
+        enum:
+        - S256
+        required: true
+      responses:
+        '200':
+          description: Information about the authorization
+          schema:
+            $ref: '#/definitions/AuthorizationResponse'
+        '400':
+          description: oauth2 error
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+      tags:
+      - authorization
+      operationId: getOauthAuthorize
+  /oauth/token:
+    post:
+      summary: exchange a grant code or refresh token for a JWT
+      description: 'This allows the client to exchange a previously obtained grant code or refresh token for an access token
+        for immediate use and a refresh token for subsequent requests.
+
+
+        It may return an updated refresh token, in which case the stored refresh token should be updated
+
+
+        The redirect URI must be set to urn:ietf:wg:oauth:2.0:oob:auto
+
+
+        When exchanging a grant code from the authorize endpoint:
+
+        - set grant_type to authorization_code
+
+        - set code to the code returned by the authorize endpoint
+
+
+        When refreshing a token:
+
+        - set grant_type to refresh_token
+
+        - set refresh_token to the previously obtained refresh token
+
+
+        '
+      produces:
+      - application/json
+      consumes:
+      - application/x-www-form-urlencoded
+      parameters:
+      - in: formData
+        name: redirect_uri
+        type: string
+        enum:
+        - urn:ietf:wg:oauth:2.0:oob:auto
+        required: true
+      - in: formData
+        name: grant_type
+        type: string
+        enum:
+        - authorization_code
+        - refresh_token
+        required: true
+      - in: formData
+        name: code
+        description: the authorization_code previously obtained
+        type: string
+        required: false
+      - in: formData
+        name: refresh_token
+        description: the refresh_token previously obtained
+        type: string
+        required: false
+      - in: formData
+        name: client_id
+        description: the api client id supplied by dressipi
+        type: string
+        required: true
+      - in: formData
+        name: code_verifier
+        description: for authorization_code requests, the code_verifier that was used to generate the associated code_challenge
+        type: string
+        required: false
+      responses:
+        '200':
+          description: The generated tokens
+          schema:
+            $ref: '#/definitions/TokenResponse'
+        '400':
+          description: oauth2 error
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+      tags:
+      - authorization
+      operationId: postOauthToken
+  /items/{id}:
+    get:
+      summary: Get information about an item by id
+      description: 'Fetches information about a garment. The garment format is implicitly set to detailed.
+
+        '
+      produces:
+      - application/json
+      parameters:
+      - in: path
+        name: id
+        description: An identifier for the source item. The interpretation of this item is controlled by the `identifier_type`
+          parameter
+        type: string
+        required: true
+      - in: query
+        name: identifier_type
+        description: 'How dressipi should interpret the item id. Not all of these may be available, depending on the information
+          in the product feed and how it is processed. Contact dressipi for examples of these types for your specific integration.
+
+
+          In general
+
+
+          - product-code is the style + color identifier from the feed
+
+          - sku is style without color or size (can be supplemented with an extra parameter specifying the color + size variant)
+
+          '
+        type: string
+        default: product-code
+        enum:
+        - dressipi-id
+        - ean
+        - gtin
+        - product-code
+        - sku
+        - ancillary-product-code
+        required: false
+      - in: query
+        name: pretty
+        description: 'If true, pretty print Json output. This increases response size and should usually be off in production
+          environments
+
+          '
+        type: boolean
+        required: false
+      - in: query
+        name: include_dressipi_ids
+        description: 'Controls whether dressipi garment ids (raw_garment_id) are included in response
+
+          '
+        type: boolean
+        default: true
+        required: false
+      - in: query
+        name: fields
+        description: A list of garment attributes to fetch. Only supported for garment_format=document or detailed. Custom
+          fields may be available - contact dressipi for details
+        type: array
+        items:
+          type: string
+          enum:
+          - size
+          - why
+          - verdict
+          - recommendedness
+          - features
+          - occasions
+          - garment_category_id
+          - owned
+          - department
+          - eans
+        required: false
+      - in: query
+        name: locale
+        description: 'A locale parameter describing what stock information to use and what language to return text in (if
+          applicable). This parameter will only
+
+          function if the corresponding information is in the product feed & processed accordingly. If stock local and UI
+          language are not the same,
+
+          specify the language parameter in addition to this one.
+
+          '
+        type: string
+        required: false
+      - in: query
+        name: language
+        description: 'Allows you to specify a locale used for feed attributes such as product name that should be localized
+          using a different locale to price &
+
+          stock information. This parameter will only function if the corresponding information is in the product feed & processed
+          accordingly.
+
+          '
+        type: string
+        required: false
+      responses:
+        '200':
+          description: Information about the garment
+          schema:
+            $ref: '#/definitions/Garment'
+        '422':
+          description: garment not found
+          schema:
+            $ref: '#/definitions/Error'
+      tags:
+      - items
+      operationId: getItemsId
+  /items/top:
+    get:
+      summary: return top curated recommendations for a user
+      description: 'Returns curated recommendations for a user profile
+
+        without targeting a specific garment.
+
+
+        This endpoint provides personalized item recommendations based on the user''s profile
+
+        and preferences.
+
+        Currently only available for the womens department
+
+        '
+      produces:
+      - application/json
+      parameters:
+      - in: query
+        name: garment_format
+        description: 'The desired response format.
+
+
+          The response includes a description of the outfits / similar items but no data on the items themselves: since these
+          may be repeated within the response, garment data is provided separately in the response.
+
+
+          The `detailed` format includes the most amount of item metadata (name, description, price etc).
+
+
+          The `document` format only includes item identifiers, and if requested dressipi generated information about the
+          item, such as predicted size.
+
+
+          The `retailer_ids` format only returns the item identifiers.
+
+          '
+        type: string
+        default: retailer_ids
+        enum:
+        - detailed
+        - document
+        - retailer_ids
+        required: false
+      - in: query
+        name: pretty
+        description: 'If true, pretty print json output. This increases response size and should usually be off in production
+          environments
+
+          '
+        type: boolean
+        required: false
+      - in: query
+        name: include_dressipi_ids
+        description: 'Controls whether dressipi garment ids (raw_garment_id) are included in response
+
+          '
+        type: boolean
+        default: true
+        required: false
+      - in: query
+        name: fields
+        description: A list of garment attributes to fetch. Only supported for garment_format=document or detailed. Custom
+          fields may be available - contact dressipi for details
+        type: array
+        items:
+          type: string
+          enum:
+          - size
+          - recommendedness
+          - garment_category_id
+          - owned
+          - department
+        required: false
+      - in: query
+        name: locale
+        description: 'A locale parameter describing what stock information to use and what language to return text in (if
+          applicable). This parameter will only
+
+          function if the corresponding information is in the product feed & processed accordingly. If stock local and UI
+          language are not the same,
+
+          specify the language parameter in addition to this one.
+
+          '
+        type: string
+        required: false
+      - in: query
+        name: language
+        description: 'Allows you to specify a locale used for feed attributes such as product name that should be localized
+          using a different locale to price &
+
+          stock information. This parameter will only function if the corresponding information is in the product feed & processed
+          accordingly.
+
+          '
+        type: string
+        required: false
+      - in: query
+        name: department
+        description: 'The department to which the items will belong
+
+          '
+        type: string
+        default: female
+        enum:
+        - female
+        - male
+        - girls
+        - boys
+        - unisex
+        required: false
+      - in: query
+        name: excluded_ids
+        description: 'List of product identifiers to be excluded from the results.
+
+          '
+        type: array
+        items:
+          type: string
+        collectionFormat: csv
+        required: false
+      - in: query
+        name: include_user_data
+        description: 'Include information about the user in the response (if known)
+
+          '
+        type: boolean
+        required: false
+      responses:
+        '200':
+          description: Information about the curated recommendations
+          schema:
+            $ref: '#/definitions/TopRecommendationsResponse'
+        '404':
+          description: missing picker
+          schema:
+            $ref: '#/definitions/Error'
+        '400':
+          description: missing client_id
+          schema:
+            $ref: '#/definitions/Error'
+      tags:
+      - items
+      operationId: getItemsTop
+  /recommendations/facetted:
+    post:
+      summary: return facetted recommendations for a user
+      description: "The facetted recommendations api allows retrieval of the most recommended garments for a user.\nThe result\
+        \ set can be filtered by specifying one or more filters. Optionally retrieval of information\nabout the number of\
+        \ hits for other values of the filter are returned\n\nThe currently recognized aggregations are\n\n- garment_category\n\
+        - brand\n- occasion\n- must_have\n- retailer_labels (previously known as retailer_categories): significance dependent\
+        \ on retailer and data present in feed\n- store: if dressipi has been provided with per-store availability data, this\
+        \ filters or aggregates on availability by store\n- feature_ids (dressipi feature ids)\n- not_features_ids (dressipi\
+        \ feature ids). This returns results without any of the listed feature ids\n- price\n- reduced_by (range filter that\
+        \ accepts values from 0 to 100)\n- season: filters or aggregates on the season a garment belongs to. Allowed season\
+        \ codes are of the form `ss_YYYY` (spring/summer) or `aw_YYYY` (autumn/winter), e.g. `ss_2024`, `aw_2024`\n\nThe retailer_labels\
+        \ aggregation allows you to query against fields in the product feed consumed by dressipi (these should\nbe agreed\
+        \ with dressipi)\n\nFor example to request a garment category of 1 (dresses) submit\n\n```\n{\n  \"facets\": [\n \
+        \   {\n      \"name\": \"garment_category\",\n      \"value\": [1]\n    }\n  ]\n}\n```\n\nMultiple values can be passed\
+        \ for a single filter, these will be or-ed.\n\nFor example, to select garments that have all of\n\n- feature id 1\
+        \ or 2,\n- feature id 3 or 4\n\nsubmit\n```\n{\n  \"facets\": [\n    {\n      \"name\": \"feature_ids\",\n      \"\
+        filters\": [\n        {\"value\": [1,2]},\n        {\"value\": [3,4]}\n      ]\n    }\n  ]\n}\n```\n\nMultiple filters\
+        \ can be passed, these will be and-ed (Specifying multiple filters with the same name is not supported)\nFor example,\
+        \ to return items matching a specific retailer label and available from a specific store, submit\n\n```\n{\n  \"facets\"\
+        : [\n    {\n      \"name\": \"retailer_labels\",\n      \"value\": [1,2]\n    },\n    {\n      \"name\": \"store\"\
+        ,\n      \"value\": [\"storeID1\",\"storeID2\"]\n    }\n  ]\n}\n```\n\n\nIf the size for a facet is set to non 0,\
+        \ count information will be returned about other filter values. Conceptually, the count returned in an agggregation\
+        \ bucket is the number of results you would get if the query was filtered by that aggregation value.\n\nNumerical\
+        \ facets use a slightly different syntax, for example\n\n```\n{\n  \"facets\": [\n    {\n      \"name\": \"price\"\
+        ,\n      \"filters\": [\n        {\n          \"from\": 50,\n          \"to\": 100\n        }\n      ],\n      \"\
+        ranges\": [\n        {\"to\": 50},\n        {\"from\": 50, \"to\": 100},\n        {\"from\": 100}\n      ]\n    }\n\
+        \  ]\n}\n```\nreturns items whose price between 50 (inclusive) and 100 and the number of results within each of the\
+        \ indicated price ranges.\n\n\n```\n{\n  \"facets\": [\n    {\n      \"name\": \"reduced_by\",\n      \"filters\"\
+        : [\n        {\n          \"from\": 30\n        }\n      ]\n    }\n  ]\n}\n```\n\nReturns items reduced by at least\
+        \ 30%\n\n\n```\n{\n  \"facets\": [\n    {\n      \"name\": \"season\",\n      \"filters\": [\n        {\"value\":\
+        \ [\"ss_2026\"]}\n      ]\n    }\n  ]\n}\n```\n\nReturns items belonging to the Spring/Summer 2026 season\n\n\nDepending\
+        \ on the garment_format requested, extra fields may be present on the garment, however `garment_id` and `raw_garment_id`\n\
+        will always be present\n"
+      produces:
+      - application/json
+      consumes:
+      - application/json
+      parameters:
+      - in: query
+        name: garment_format
+        description: 'The desired response format.
+
+
+          The response includes a description of the outfits / similar items but no data on the items themselves: since these
+          may be repeated within the response, garment data is provided separately in the response.
+
+
+          The `detailed` format includes the most amount of item metadata (name, description, price etc).
+
+
+          The `document` format only includes item identifiers, and if requested dressipi generated information about the
+          item, such as predicted size.
+
+
+          The `retailer_ids` format only returns the item identifiers.
+
+          '
+        type: string
+        default: retailer_ids
+        enum:
+        - detailed
+        - document
+        - retailer_ids
+        required: false
+      - in: query
+        name: fields
+        description: A list of garment attributes to fetch. Only supported for garment_format=document or detailed. Custom
+          fields may be available - contact dressipi for details
+        type: array
+        items:
+          type: string
+          enum:
+          - size
+          - why
+          - verdict
+          - recommendedness
+          - features
+          - occasions
+          - garment_category_id
+          - owned
+          - department
+          - eans
+        required: false
+      - in: query
+        name: pretty
+        description: 'If true, pretty print json output. This increases response size and should usually be off in production
+          environments
+
+          '
+        type: boolean
+        required: false
+      - in: query
+        name: include_dressipi_ids
+        description: 'Controls whether dressipi garment ids (raw_garment_id) are included in response
+
+          '
+        type: boolean
+        default: true
+        required: false
+      - in: query
+        name: page
+        description: 'The page from which to start results
+
+          '
+        type: integer
+        format: int32
+        default: 1
+        required: false
+      - in: query
+        name: per_page
+        description: 'The number of result to return per page
+
+          '
+        type: integer
+        format: int32
+        default: 12
+        required: false
+      - in: query
+        name: device_type
+        description: 'A device type identifier. This allows segmenting a/b test statistics
+
+          in the same way as you do.
+
+          '
+        type: string
+        required: false
+      - in: query
+        name: locale
+        description: 'A locale parameter describing what stock information to use and what language to return text in (if
+          applicable). This parameter will only
+
+          function if the corresponding information is in the product feed & processed accordingly. If stock local and UI
+          language are not the same,
+
+          specify the language parameter in addition to this one.
+
+          '
+        type: string
+        required: false
+      - in: query
+        name: language
+        description: 'Allows you to specify a locale used for feed attributes such as product name that should be localized
+          using a different locale to price &
+
+          stock information. This parameter will only function if the corresponding information is in the product feed & processed
+          accordingly.
+
+          '
+        type: string
+        required: false
+      - name: RecommendationsFacetted
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/postRecommendationsFacetted'
+      responses:
+        '200':
+          description: Information about the recommended garments
+          schema:
+            $ref: '#/definitions/FacettedRecommendationsResponse'
+        '422':
+          description: error message
+          schema:
+            $ref: '#/definitions/Error'
+      tags:
+      - recommendations
+      operationId: postRecommendationsFacetted
+  /items/{id}/complementary:
+    get:
+      summary: return outfits or recommended items for a set of source items
+      description: 'Fetches related recommendations or outfits (items which as a set complement the source item(s)) based
+
+        on business rules agreed with Dressipi. Depending on the items passed and these rules, the result might be related
+        to some, all or none of the items specified
+
+
+        For example this could be used on the checkout page to show recommendations based on the content of the
+
+        user''s basket.
+
+
+        This is the api equivalent of the shopping basket widget
+
+        '
+      produces:
+      - application/json
+      parameters:
+      - in: query
+        name: garment_format
+        description: 'The desired response format.
+
+
+          The response includes a description of the outfits / similar items but no data on the items themselves: since these
+          may be repeated within the response, garment data is provided separately in the response.
+
+
+          The `detailed` format includes the most amount of item metadata (name, description, price etc).
+
+
+          The `document` format only includes item identifiers, and if requested Dressipi generated information about the
+          item, such as predicted size.
+
+
+          The `retailer_ids` format only returns the item identifiers.
+
+          '
+        type: string
+        default: retailer_ids
+        enum:
+        - detailed
+        - document
+        - retailer_ids
+        required: false
+      - in: query
+        name: identifier_type
+        description: 'How Dressipi should interpret the item id. Not all of these may be available, depending on the information
+          in the product feed and how it is processed. Contact Dressipi for examples of these types for your specific integration.
+
+
+          In general
+
+
+          - product-code is the style + color identifier from the feed
+
+          - sku is style without color or size (can be supplemented with an extra parameter specifying the color + size variant)
+
+          '
+        type: string
+        default: product-code
+        enum:
+        - dressipi-id
+        - ean
+        - gtin
+        - product-code
+        - sku
+        - ancillary-product-code
+        required: false
+      - in: query
+        name: pretty
+        description: 'If true, pretty print Json output. This increases response size and should usually be off in production
+          environments
+
+          '
+        type: boolean
+        required: false
+      - in: query
+        name: include_dressipi_ids
+        description: 'Controls whether Dressipi garment ids (raw_garment_id) are included in response
+
+          '
+        type: boolean
+        default: true
+        required: false
+      - in: query
+        name: locale
+        description: 'A locale parameter describing what stock information to use and what language to return text in (if
+          applicable). This parameter will only
+
+          function if the corresponding information is in the product feed & processed accordingly. If stock local and UI
+          language are not the same,
+
+          specify the language parameter in addition to this one.
+
+          '
+        type: string
+        required: false
+      - in: query
+        name: language
+        description: 'Allows you to specify a locale used for feed attributes such as product name that should be localized
+          using a different locale to price &
+
+          stock information. This parameter will only function if the corresponding information is in the product feed & processed
+          accordingly.
+
+          '
+        type: string
+        required: false
+      - in: query
+        name: excluded_ids
+        description: 'List of product identifiers to be excluded from the results
+
+          '
+        type: array
+        items:
+          type: string
+        collectionFormat: csv
+        required: false
+      - in: path
+        name: id
+        description: An identifier for one or more source item. The interpretation of this item is controlled by the `identifier_type`
+          parameter
+        type: array
+        items:
+          type: string
+        required: true
+      responses:
+        '200':
+          description: Information about the recommended garments
+          schema:
+            $ref: '#/definitions/ComplementaryItemsResponse'
+        '422':
+          description: unrecognized product codes
+          schema:
+            $ref: '#/definitions/Error'
+      tags:
+      - items
+      operationId: getItemsIdComplementary
+  /items/{id}/related:
+    get:
+      summary: return outfits or similar items for a single source item
+      description: 'Fetches either similar items (items which are related to the source item by common features)
+
+        or outfits (items which as a set complement the source item).''
+
+
+        This is the api equivalent of the outfits widget.
+
+        '
+      produces:
+      - application/json
+      parameters:
+      - in: path
+        name: id
+        description: An identifier for the source item. The interpretation of this item is controlled by the `identifier_type`
+          parameter
+        type: string
+        required: true
+      - in: query
+        name: methods
+        description: 'The methods through which related items should be generated. These are attempted in order.
+
+
+          The `partner_outfits` method is only available if Dressipi has been provided with curated outfit data for the item
+
+          '
+        type: array
+        items:
+          type: string
+          enum:
+          - similar_items
+          - outfits
+          - partner_outfits
+        default:
+        - outfits
+        - similar_items
+        collectionFormat: csv
+        required: false
+      - in: query
+        name: try_all_methods
+        description: 'If false (the default), the methods listed are attempted until one succeeds and only results for that
+          method are returned.
+
+
+          If true, results for all successful methods are returned
+
+          '
+        type: boolean
+        required: false
+      - in: query
+        name: locale
+        description: 'A locale parameter describing what stock information to use and what language to return text in (if
+          applicable). This parameter will only
+
+          function if the corresponding information is in the product feed & processed accordingly. If stock local and UI
+          language are not the same,
+
+          specify the language parameter in addition to this one.
+
+          '
+        type: string
+        required: false
+      - in: query
+        name: language
+        description: 'Allows you to specify a locale used for feed attributes such as product name that should be localized
+          using a different locale to price &
+
+          stock information. This parameter will only function if the corresponding information is in the product feed & processed
+          accordingly.
+
+          '
+        type: string
+        required: false
+      - in: query
+        name: exclude_source_garment
+        description: 'Whether to exclude the source item from any returned outfits or not
+
+          '
+        type: boolean
+        default: true
+        required: false
+      - in: query
+        name: outfits_per_occasion
+        description: 'The number of outfits to attempt to return *per occasion*. In the case of a single occasion garment,
+          this
+
+          limit is doubled internally
+
+          '
+        type: integer
+        format: int32
+        default: 2
+        required: false
+      - in: query
+        name: max_similar_items
+        description: 'The maximum number of similar items to return.
+
+          '
+        type: integer
+        format: int32
+        default: 6
+        required: false
+      - in: query
+        name: stores
+        description: 'List of stores to filter recommendations by. An item must be available in at least one of the specified
+          stores in order
+
+          to be returned.
+
+
+          This requires that per-store availability data is shared with dressipi
+
+          '
+        type: array
+        items:
+          type: string
+        collectionFormat: csv
+        required: false
+      - in: query
+        name: garment_format
+        description: 'The desired response format.
+
+
+          The response includes a description of the outfits / similar items but no data on the items themselves: since these
+          may be repeated within the response, garment data is provided separately in the response.
+
+
+          The `detailed` format includes the most amount of item metadata (name, description, price etc).
+
+
+          The `document` format only includes item identifiers, and if requested dressipi generated information about the
+          item, such as predicted size.
+
+
+          The `retailer_ids` format only returns the item identifiers.
+
+          '
+        type: string
+        default: retailer_ids
+        enum:
+        - detailed
+        - document
+        - retailer_ids
+        required: false
+      - in: query
+        name: identifier_type
+        description: 'How dressipi should interpret the item id. Not all of these may be available, depending on the information
+          in the product feed and how it is processed. Contact dressipi for examples of these types for your specific integration.
+
+
+          In general
+
+
+          - product-code is the style + color identifier from the feed
+
+          - sku is style without color or size (can be supplemented with an extra parameter specifying the color + size variant)
+
+          '
+        type: string
+        default: product-code
+        enum:
+        - dressipi-id
+        - ean
+        - gtin
+        - product-code
+        - sku
+        - ancillary-product-code
+        required: false
+      - in: query
+        name: pretty
+        description: 'If true, pretty print Json output. This increases response size and should usually be off in production
+          environments
+
+          '
+        type: boolean
+        required: false
+      - in: query
+        name: include_dressipi_ids
+        description: 'Controls whether Dressipi garment ids (raw_garment_id) are included in response
+
+          '
+        type: boolean
+        default: true
+        required: false
+      - in: query
+        name: fields
+        description: A list of garment attributes to fetch. Only supported for garment_format=document or detailed. Custom
+          fields may be available - contact Dressipi for details
+        type: array
+        items:
+          type: string
+          enum:
+          - size
+          - why
+          - verdict
+          - recommendedness
+          - features
+          - occasions
+          - garment_category_id
+          - owned
+          - department
+          - eans
+        required: false
+      - in: query
+        name: sku_refinement
+        description: 'When identifier_type is set to sku, identifies the particular size+color variant
+
+          '
+        type: string
+        required: false
+      - in: query
+        name: excluded_ids
+        description: 'List of product identifiers to be excluded from the results.
+
+          The interpretation of this item is controlled by the `identifier_type` parameter
+
+          '
+        type: array
+        items:
+          type: string
+        collectionFormat: csv
+        required: false
+      - in: query
+        name: include_user_data
+        description: 'Include information about the user in the response (if known)
+
+          '
+        type: boolean
+        required: false
+      responses:
+        '200':
+          description: Information about the related garments
+          schema:
+            $ref: '#/definitions/RelatedItemsResponse'
+        '422':
+          description: garment not found
+          schema:
+            $ref: '#/definitions/Error'
+      tags:
+      - items
+      operationId: getItemsIdRelated
+  /recommendations/themed:
+    get:
+      summary: return themed recommendations for a user
+      description: 'The themed recommendations api allows retrieval of the most recommended garments for a user matching a
+        theme.
+
+        Themes should be agreed in advance with dressipi.
+
+
+        This is the api equivalent of the plp widget.
+
+        '
+      produces:
+      - application/json
+      parameters:
+      - in: query
+        name: garment_format
+        description: 'The desired response format.
+
+
+          The response includes a description of the outfits / similar items but no data on the items themselves: since these
+          may be repeated within the response, garment data is provided separately in the response.
+
+
+          The `detailed` format includes the most amount of item metadata (name, description, price etc).
+
+
+          The `document` format only includes item identifiers, and if requested dressipi generated information about the
+          item, such as predicted size.
+
+
+          The `retailer_ids` format only returns the item identifiers.
+
+          '
+        type: string
+        default: retailer_ids
+        enum:
+        - detailed
+        - document
+        - retailer_ids
+        required: false
+      - in: query
+        name: pretty
+        description: 'If true, pretty print Json output. This increases response size and should usually be off in production
+          environments
+
+          '
+        type: boolean
+        required: false
+      - in: query
+        name: include_dressipi_ids
+        description: 'Controls whether dressipi garment ids (raw_garment_id) are included in response
+
+          '
+        type: boolean
+        default: true
+        required: false
+      - in: query
+        name: device_type
+        description: 'A device type identifier. This allows segmenting a/b test statistics
+
+          in the same way as you do.
+
+          '
+        type: string
+        required: false
+      - in: query
+        name: locale
+        description: 'A locale parameter describing what stock information to use and what language to return text in (if
+          applicable). This parameter will only
+
+          function if the corresponding information is in the product feed & processed accordingly. If stock local and UI
+          language are not the same,
+
+          specify the language parameter in addition to this one.
+
+          '
+        type: string
+        required: false
+      - in: query
+        name: language
+        description: 'Allows you to specify a locale used for feed attributes such as product name that should be localized
+          using a different locale to price &
+
+          stock information. This parameter will only function if the corresponding information is in the product feed & processed
+          accordingly.
+
+          '
+        type: string
+        required: false
+      - in: query
+        name: theme
+        description: The theme identifier, as agreed with Dressipi.
+        type: string
+        required: true
+      - in: query
+        name: count
+        description: The number of recommendations to return
+        type: integer
+        format: int32
+        default: 6
+        required: false
+      responses:
+        '200':
+          description: Information about the related garments
+          schema:
+            $ref: '#/definitions/ThemedRecommendationsResponse'
+        '422':
+          description: error message
+          schema:
+            $ref: '#/definitions/Error'
+      tags:
+      - recommendations
+      operationId: getRecommendationsThemed
+  /items/basket:
+    get:
+      summary: return top curated recommendations for a user based on their basket items
+      description: 'The basket recommendations endpoint returns curated recommendations for a user profile
+
+        based on the garments in their basket (which can be empty).
+
+
+        This endpoint provides personalized item recommendations based on the user''s profile
+
+        and preferences.
+
+        '
+      produces:
+      - application/json
+      parameters:
+      - in: query
+        name: ids
+        description: 'List of garment identifiers representing the user''s basket.
+
+          '
+        type: array
+        items:
+          type: string
+        collectionFormat: csv
+        required: false
+      - in: query
+        name: excluded_ids
+        description: 'List of garment identifiers to be excluded from the recommendations.
+
+          '
+        type: array
+        items:
+          type: string
+        collectionFormat: csv
+        required: false
+      - in: query
+        name: identifier_type
+        description: 'The type of garment identifiers provided in `ids` and `excluded_ids`.
+
+          '
+        type: string
+        enum:
+        - product-code
+        - sku
+        - dressipi-id
+        - ean
+        - gtin
+        required: false
+      - in: query
+        name: max_items
+        description: 'The desired number of recommended items to return.
+
+          '
+        type: integer
+        format: int32
+        required: false
+      - in: query
+        name: sort
+        description: 'The attribute to sort results by. Currently only ''price'' is supported.
+
+          '
+        type: string
+        enum:
+        - price
+        required: false
+      - in: query
+        name: direction
+        description: 'The direction to sort results by.
+
+          '
+        type: string
+        default: asc
+        enum:
+        - asc
+        - desc
+        required: false
+      - in: query
+        name: garment_format
+        description: 'The desired response format. If ''simple'', only basic garment identifiers are returned.
+
+          If ''detailed'', more comprehensive garment metadata is included.
+
+          '
+        type: string
+        default: simple
+        enum:
+        - simple
+        - detailed
+        required: false
+      - in: query
+        name: locale
+        description: 'A locale parameter describing what stock information to use and what language to return text in (if
+          applicable). This parameter will only
+
+          function if the corresponding information is in the product feed & processed accordingly. If stock local and UI
+          language are not the same,
+
+          specify the language parameter in addition to this one.
+
+          '
+        type: string
+        required: false
+      - in: query
+        name: language
+        description: 'Allows you to specify a locale used for feed attributes such as product name that should be localized
+          using a different locale to price &
+
+          stock information. This parameter will only function if the corresponding information is in the product feed & processed
+          accordingly.
+
+          '
+        type: string
+        required: false
+      - in: query
+        name: pretty
+        description: 'If true, pretty print json output. This increases response size and should usually be off in production
+          environments
+
+          '
+        type: boolean
+        required: false
+      - in: query
+        name: include_dressipi_ids
+        description: 'Controls whether dressipi garment ids (raw_garment_id) are included in response
+
+          '
+        type: boolean
+        default: true
+        required: false
+      - in: query
+        name: include_user_data
+        description: 'If true, user information will be included in the response where applicable
+
+          '
+        type: boolean
+        required: false
+      responses:
+        '200':
+          description: Information about the curated recommendations
+          schema:
+            $ref: '#/definitions/BasketRecommendationsResponse'
+      tags:
+      - items
+      operationId: getItemsBasket
+x-apievangelist-provenance:
+  method: searched
+  generated: '2026-08-12'
+  source: https://docs.mapp.com/apidocs/ (per-endpoint OpenAPI fragments, Mapp Fashion API)
+  note: Union of the Swagger 2.0 fragments Mapp publishes per endpoint. The swagger/schemes envelope is added by API Evangelist;
+    Mapp does not publish securityDefinitions for the api_key/user_token schemes its security block references, so they are
+    recorded in authentication/ rather than invented here.

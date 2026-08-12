@@ -1,27 +1,220 @@
 aid: mapp
 name: Mapp Marketing Cloud
-description: 'Mapp Marketing Cloud is a company surfaced via the API Evangelist harvest backlog (source:
-  marketing-integration-graph) and added to the network as a stub for full-pipeline profiling.'
+description: 'Mapp is a German-headquartered marketing technology vendor whose Mapp Marketing Cloud combines
+  cross-channel campaign execution (Mapp Engage), digital analytics and customer intelligence (Mapp Intelligence,
+  formerly Webtrekk), product catalog management, and AI fashion/retail recommendations (Mapp Fashion, formerly
+  Dressipi). The platform is API-addressable across four public surfaces: the Mapp Engage REST API (REST 2.0 /
+  v19, HTTP Basic auth, ~196 documented operations covering contacts, memberships, groups, messages, mobile push,
+  segmentation, whiteboards, attributes, e-commerce events and audit logs), the Mapp Intelligence Analytics API
+  (OAuth2 client-credentials on api.mapp.com/api/analytics), the Product Catalog Public API, and the Mapp Fashion
+  recommendation API. Mapp publishes machine-readable OpenAPI fragments for every endpoint on docs.mapp.com,
+  an llms.txt documentation index, published list pricing, and an ISO 27001/27017/27018/27701/22301 trust center.'
+image: https://mapp.com/wp-content/uploads/2026/05/mapp-default-open-graph-image-square.png
 url: https://raw.githubusercontent.com/api-evangelist/mapp/refs/heads/main/apis.yml
 x-type: company
 x-source: harvest:marketing-integration-graph
-x-tier: stub
-x-tier-reason: harvest
 specificationVersion: '0.20'
 created: '2026-08-12'
 modified: '2026-08-12'
 tags:
 - Company
-apis: []
+- Marketing
+- Marketing Automation
+- Email
+- Analytics
+- Customer Data
+- Personalization
+- Push Notifications
+- SMS
+- E-Commerce
+- Digital Analytics
+- Recommendations
 maintainers:
 - FN: Kin Lane
   email: kin@apievangelist.com
 - FN: APIs.json
   email: info@apis.io
+apis:
+- aid: mapp:engage
+  name: Mapp Engage API
+  description: 'The Mapp Engage REST API (REST 2.0, incremental version v19) exchanges data between external
+    systems and Mapp Engage: create and update contacts, manage group memberships and attributes, send single,
+    transactional and prepared messages, manage mobile push, build and publish segments and whiteboards, register
+    e-commerce events (abandoned cart/browse, wish list, transactions), and retrieve Log Tracker audit events.
+    Authentication is HTTP Basic with a system user of type API. The base URL is tenant-specific: your Engage
+    login host plus /api/rest/v19.'
+  humanURL: https://docs.mapp.com/apidocs/engage-api
+  baseURL: https://{engage-host}/api/rest/v19
+  tags:
+  - Marketing Automation
+  - Email
+  - Messaging
+  - Contacts
+  - Push Notifications
+  properties:
+  - type: OpenAPI
+    url: openapi/mapp-engage-openapi.yml
+  - type: Overlay
+    url: overlays/mapp-engage-overlay.yaml
+  - type: Documentation
+    url: https://docs.mapp.com/apidocs/engage-api
+  - type: GettingStarted
+    url: https://docs.mapp.com/apidocs/getting-started-with-engage-api
+  - type: APIReference
+    url: https://docs.mapp.com/apidocs/engage-api-calls
+- aid: mapp:intelligence-analytics
+  name: Mapp Intelligence Analytics API
+  description: 'The Mapp Intelligence Analytics API gives programmatic access to Mapp Intelligence (formerly
+    Webtrekk) digital-analytics data and functions — submit analysis queries (pivot, comparison, time series,
+    path, cross table), request reports, poll calculation status, retrieve results, list available dimensions,
+    metrics, segments and dynamic time filters, and check monthly analysis usage. OAuth2 client-credentials
+    against https://auth.mapp.com/oauth2/token; errors are returned as RFC 9457 problem+json.'
+  humanURL: https://docs.mapp.com/apidocs/analytics-api
+  baseURL: https://api.mapp.com/api/analytics
+  tags:
+  - Analytics
+  - Digital Analytics
+  - Reporting
+  - Segments
+  properties:
+  - type: OpenAPI
+    url: openapi/mapp-intelligence-analytics-openapi.yml
+  - type: Overlay
+    url: overlays/mapp-intelligence-analytics-overlay.yaml
+  - type: Documentation
+    url: https://docs.mapp.com/apidocs/analytics-api
+  - type: APIReference
+    url: https://docs.mapp.com/apidocs/analysis-analytics-api
+  - type: Postman
+    url: https://cdn.document360.io/554b9b98-6720-4d8b-9919-c7b203d72648/Images/Documentation/Analytics%20API.postman_collection.json
+- aid: mapp:product-catalog
+  name: Mapp Product Catalog Public API
+  description: 'The Product Catalog Public API manages product and variant data inside Mapp Cloud catalogs —
+    create, replace, partially update, upsert, bulk-load and delete variants, manage variant attributes, read
+    catalog and attribute metadata for a workspace, and list variants for a product. Bearer-JWT (Keycloak)
+    authentication against https://api.mapp.com/api/product-catalog/v1.'
+  humanURL: https://docs.mapp.com/apidocs/product-catalog-api
+  baseURL: https://api.mapp.com
+  tags:
+  - E-Commerce
+  - Product Catalog
+  - Data Management
+  properties:
+  - type: OpenAPI
+    url: openapi/mapp-product-catalog-openapi.yml
+  - type: Overlay
+    url: overlays/mapp-product-catalog-overlay.yaml
+  - type: Documentation
+    url: https://docs.mapp.com/apidocs/product-catalog-api
+  - type: APIReference
+    url: https://docs.mapp.com/apidocs/product-catalog-api-api-reference
+  - type: Authentication
+    url: https://docs.mapp.com/apidocs/product-catalog-api-authentification
+- aid: mapp:fashion
+  name: Mapp Fashion API
+  description: 'The Mapp Fashion (formerly Dressipi) recommendation API returns curated fashion and retail
+    recommendations: related and complementary items for a seed product, themed and facetted recommendations,
+    top items, and basket-based recommendations, plus an OAuth2 authorization-code + PKCE flow for obtaining
+    and refreshing JWTs. The base URL is delegated to a customer-owned domain (https://your-domain.com/api).'
+  humanURL: https://docs.mapp.com/apidocs/mapp-fashion-api-documentation
+  baseURL: https://{customer-domain}/api
+  tags:
+  - Recommendations
+  - Personalization
+  - Fashion
+  - E-Commerce
+  properties:
+  - type: OpenAPI
+    url: openapi/mapp-fashion-openapi.yml
+  - type: Overlay
+    url: overlays/mapp-fashion-overlay.yaml
+  - type: Documentation
+    url: https://docs.mapp.com/apidocs/mapp-fashion-api-documentation
+  - type: ChangeLog
+    url: https://docs.mapp.com/apidocs/changelog-mapp-fashion-api
 common:
+- type: TrustCenter
+  url: security/mapp-trust-center.yml
+- type: Packages
+  url: packages/mapp-packages.yml
+- type: SDKs
+  url: packages/mapp-packages.yml
+- type: WellKnown
+  url: well-known/mapp-well-known.yml
+- type: MCPServer
+  url: mcp/mapp-mcp.yml
+- type: ToolCrosswalk
+  url: mcp/mapp-tool-crosswalk.yml
+- type: Conformance
+  url: conformance/mapp-conformance.yml
+- type: ErrorCatalog
+  url: errors/mapp-problem-types.yml
+- type: Lifecycle
+  url: lifecycle/mapp-lifecycle.yml
+- type: Deprecation
+  url: https://docs.mapp.com/docs/news
+- type: Conventions
+  url: conventions/mapp-conventions.yml
+- type: ChangeLog
+  url: changelog/mapp-changelog.yml
+- type: DataModel
+  url: data-model/mapp-data-model.yml
+- type: Plans
+  url: plans/mapp-plans-pricing.yml
+- type: RateLimits
+  url: rate-limits/mapp-rate-limits.yml
+- type: AgentSkill
+  url: skills/_index.yml
+- type: Events
+  url: asyncapi/mapp-data-streams.yml
+- type: StreamingEndpoint
+  url: asyncapi/mapp-data-streams.yml
+- type: DomainSecurity
+  url: security/mapp-domain-security.yml
+- type: OAuthScopes
+  url: scopes/mapp-scopes.yml
+- type: Authentication
+  url: authentication/mapp-authentication.yml
 - type: Website
   url: https://mapp.com/
-x-vouched-by:
-- Lytics
-- Persado
-x-vouch-count: 2
+- type: DeveloperPortal
+  url: https://docs.mapp.com/
+- type: Documentation
+  url: https://docs.mapp.com/docs/api-documentation
+- type: APIReference
+  url: https://docs.mapp.com/apidocs/engage-api-calls
+- type: GettingStarted
+  url: https://docs.mapp.com/apidocs/getting-started-with-engage-api
+- type: Support
+  url: https://support.mapp.com/
+- type: HelpCenter
+  url: https://mapp.com/technical-support/
+- type: Blog
+  url: https://mapp.com/blog/
+- type: GitHubOrganization
+  url: https://github.com/mapp-digital
+- type: Pricing
+  url: https://mapp.com/mapp-marketing-cloud-pricing/
+- type: SignUp
+  url: https://mapp.com/request-demo/
+- type: TermsOfService
+  url: https://mapp.com/legal/
+- type: PrivacyPolicy
+  url: https://mapp.com/privacy-mapp-cloud/
+- type: TrustCenter
+  url: https://mapp.com/trust/
+- type: Compliance
+  url: https://mapp.com/trust/
+- type: StatusPage
+  url: https://status.webtrekk.com/
+- type: ChangeLog
+  url: https://docs.mapp.com/docs/news
+- type: Postman
+  url: https://docs.mapp.com/apidocs/postman
+- type: LLMsTxt
+  url: llms/mapp-llms.txt
+x-enrichment:
+  date: '2026-08-12'
+  status: enriched
+  artifacts_added: 37
+  pass: local-v1

@@ -1,0 +1,34 @@
+generated: '2026-08-12'
+method: searched
+source: openapi/mapp-intelligence-analytics-openapi.yml
+schemes:
+- name: oauth_security_scheme
+  source: openapi/mapp-intelligence-analytics-openapi.yml
+  flows:
+  - flow: clientCredentials
+    tokenUrl: https://auth.mapp.com/oauth2/token
+scopes:
+- scope: mapp.intelligence-api
+  api: mapp:intelligence-analytics
+  flows:
+  - clientCredentials
+  sources:
+  - openapi/mapp-intelligence-analytics-openapi.yml
+  description: Declared on the Analytics API oauth2 scheme. Documentation instructs clients not to send a scope
+    parameter.
+  status: vestigial
+- scope: mcp
+  api: mapp.com MCP endpoint
+  flows:
+  - authorizationCode
+  sources:
+  - well-known/mapp-oauth-authorization-server.json
+  - well-known/mapp-oauth-protected-resource.json
+  description: The only scope the mapp.com MCP authorization server advertises.
+docs: https://docs.mapp.com/apidocs/how-to-grant-access-to-the-intelligence-analytics-api
+note: Mapp has almost no scope surface. The Analytics API OpenAPI declares a single scope, "mapp.intelligence-api",
+  on its clientCredentials scheme — and the current documentation explicitly tells integrators NOT to send a scope
+  parameter at all, because earlier versions required one and the current token endpoint rejects it. Treat the declared
+  scope as vestigial. The only other scope published anywhere in the Mapp estate is "mcp", advertised by https://mapp.com/.well-known/oauth-authorization-server
+  for the WordPress MCP endpoint. Engage (HTTP Basic) and Product Catalog (bearer JWT) have no scope model; authorisation
+  there is by system-user role and per-account feature enablement.

@@ -1,0 +1,21 @@
+overlay: 1.0.0
+info:
+  title: API Evangelist enhancements for Mapp Engage API
+  version: 1.0.0
+extends: openapi/mapp-engage-openapi.yml
+actions:
+- target: $.info
+  update:
+    x-apievangelist-aid: mapp
+    x-apievangelist-api: mapp:engage
+    x-apievangelist-profile: https://apis.io/provider/mapp/
+    x-apievangelist-harvested: '2026-08-12'
+    x-apievangelist-source: https://docs.mapp.com/apidocs/ (per-endpoint OpenAPI fragments)
+    x-apievangelist-operations: 196
+- target: $.info
+  update:
+    x-apievangelist-base-url-note: 'Tenant-specific: your Mapp Engage login host + /api/rest/v19 (docs.mapp.com/apidocs/getting-started-with-engage-api).'
+- target: $.info
+  update:
+    x-apievangelist-rate-limit: ~10 transactions per second per account; exceeding it returns HTTP 500 "Database Access Limit
+      Exceeded" (docs.mapp.com/apidocs/engage-api-error-handling).

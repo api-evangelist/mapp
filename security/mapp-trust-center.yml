@@ -1,0 +1,68 @@
+generated: '2026-08-12'
+method: searched
+probe: true
+source: https://mapp.com/trust/
+url: https://mapp.com/trust/
+certifications:
+- ISO 27001
+- ISO 27017
+- ISO 27018
+- ISO 27701
+- ISO 22301
+- GDPR
+- CCPA
+- NIS-2
+- DORA
+- Certified Sender Alliance
+evidence:
+- source: https://mapp.com/trust/
+  fetched: '2026-08-12'
+  http_status: 200
+  keywords:
+  - iso 27001
+  - iso 27017
+  - iso 27018
+  - iso 27701
+  - iso 22301
+  - gdpr
+  - ccpa
+  - nis-2
+  - dora
+  - trust center
+  - penetration testing
+not_claimed:
+- SOC 2
+- PCI DSS
+- HIPAA
+- FedRAMP
+controls:
+- AES-256 encryption at rest
+- TLS 1.2+ in transit
+- Multi-Factor Authentication
+- Role-based access control
+- Single Sign-On (optional)
+- Regular vulnerability scans
+- Annual penetration testing
+- Independent third-party audits
+- 24/7 incident response with regular drills
+- Breach notification within 24 hours
+- Regular access-permission reviews
+hosting:
+- products:
+  - Mapp Engage
+  - Mapp Intelligence
+  location: ISO 27001 certified data centres in Germany
+- products:
+  - Mapp Fashion
+  location: AWS, EU regions by default
+documents_available:
+- ISO 27001 certificate (with 27017/27018 add-ons)
+- Data Processing Agreement (DPA)
+- Statement of Applicability (SOA)
+- Technical and Organizational Measures (TOMs)
+- Sub-Processors List
+- CAIQ security questionnaire
+- FSQS certificate
+note: Certifications and the control narrative are published openly; the underlying documents (DPA, SOA, TOMs, CAIQ,
+  sub-processor list) are behind a download form. No SOC 2 attestation is claimed — the programme is ISO-based,
+  which is consistent with a German-hosted, EU-first vendor.

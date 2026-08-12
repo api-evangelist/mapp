@@ -1,0 +1,3542 @@
+openapi: 3.0.1
+info:
+  title: Product Catalog - Public API
+  version: 1.0.1
+servers:
+- url: https://api.mapp.com
+security:
+- Keycloak: []
+tags:
+- name: Variant Data Bulk Operations
+  description: Endpoints for variant data bulk operations
+- name: Variant Data Operations
+  description: Endpoints for variant data operations
+- name: Catalog Metadata Operations
+  description: Endpoints for catalog metadata operations
+- name: Product Data Operations
+  description: Endpoints for product data operations
+paths:
+  /api/product-catalog/v1/catalogs/{catalogId}/variants:
+    post:
+      tags:
+      - Variant Data Operations
+      summary: 'Add a new variant or add missing data to an existing variant. '
+      description: If the variant does not exist it is created; if it already exists, only fields that are not yet present
+        are added and existing values remain unchanged.
+      operationId: addVariant
+      parameters:
+      - name: catalogId
+        in: path
+        description: Catalog identifier where the variant should be added.
+        required: true
+        schema:
+          type: integer
+          format: int64
+      requestBody:
+        description: Variant attributes to add. The payload must include variant_id.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AddVariantOperationFlatSchema'
+            example:
+              variant_id: V-1001
+              product_id: P-500
+              status: 1
+              availability: true
+              color:
+                en-GB: Navy Blue
+                de-DE: Marineblau
+                fr-FR: Bleu marine
+              price:
+                US: 29.99
+                GB: 24.99
+              size:
+                US: S
+                EU: '36'
+        required: true
+      responses:
+        '400':
+          description: Variant add was rejected during validation.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VariantOperationResponseDTO'
+              example:
+                variant_id: V-1001
+                catalog_id: 123
+                status: failed
+                message: 'Variant add failed: variant_id field must be provided'
+                operation: add
+                accepted_at: 1783502993000
+                accepted_attributes: {}
+                skipped_attributes: {}
+        '202':
+          description: Variant add accepted for processing
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VariantOperationResponseDTO'
+              example:
+                variant_id: V-1001
+                catalog_id: 123
+                status: accepted
+                message: Variant add accepted for processing
+                event_id: 550e8400-e29b-41d4-a716-446655440000
+                operation: add
+                accepted_at: 1783502993000
+                accepted_attributes:
+                  variant_id: V-1001
+                  product_id: P-500
+                  status: 1
+                  availability: true
+        '500':
+          description: Variant add failed unexpectedly.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                message: Unexpected error while processing request
+                httpStatus: 500
+                errorCode: 500 Internal Server Error
+                timestamp: '2026-07-08T12:00:00Z'
+    get:
+      tags:
+      - Variant Data Operations
+      summary: List variants with cursor pagination
+      description: Returns a page of variants for the given company and catalog using cursor-based pagination. Provide either
+        'lastId' (forward) or 'firstId' (backward) together with a page 'size'; the two cursors are mutually exclusive. Results
+        can additionally be filtered by attribute active status, product data layer, and a modification timestamp range. If
+        no data is found, HTTP 204 (No Content) is returned.
+      operationId: getPaginatedVariants
+      parameters:
+      - name: catalogId
+        in: path
+        description: Catalog identifier whose variants should be listed.
+        required: true
+        schema:
+          type: integer
+          format: int64
+      - name: activeStatusSearch
+        in: query
+        description: Controls whether active attributes, inactive attributes, or all attributes are included in the returned
+          variant data. Defaults to ALL.
+        required: false
+        schema:
+          type: string
+          default: ALL
+          enum:
+          - ACTIVE_ONLY
+          - INACTIVE_ONLY
+          - ALL
+      - name: catalogType
+        in: query
+        description: Selects which product data layer to query. Defaults to COMBINED.
+        required: false
+        schema:
+          type: string
+          default: COMBINED
+          enum:
+          - SOURCE
+          - ENRICHED
+          - COMBINED
+      - name: lastId
+        in: query
+        description: Forward pagination cursor. Returns variants after this document id; the cursor value itself is excluded.
+          Cannot be used together with firstId.
+        required: false
+        schema:
+          type: string
+      - name: firstId
+        in: query
+        description: Backward pagination cursor. Returns variants before this document id; the cursor value itself is excluded.
+          Cannot be used together with lastId.
+        required: false
+        schema:
+          type: string
+      - name: size
+        in: query
+        description: Maximum number of variants to return in one page. Defaults to 100; values less than 1 or greater than
+          100 are normalized to 100.
+        required: false
+        schema:
+          type: integer
+          format: int32
+          default: 100
+      - name: fromModifiedTimestamp
+        in: query
+        description: Filters variants modified at or after this timestamp. The value is epoch milliseconds and the lower bound
+          is inclusive. If this is provided, toModifiedTimestamp is required. For paginated scans, capture this value once
+          before the first page and keep it unchanged for every page.
+        required: false
+        schema:
+          type: integer
+          format: int64
+        example: 1783503393000
+      - name: toModifiedTimestamp
+        in: query
+        description: Filters variants modified at or before this timestamp. The value is epoch milliseconds, the upper bound
+          is inclusive, it must not be greater than the current server time, and it is required when fromModifiedTimestamp
+          is provided. For paginated scans, capture this value once before the first page and keep it unchanged for every
+          page.
+        required: false
+        schema:
+          type: integer
+          format: int64
+        example: 1783506993000
+      responses:
+        '200':
+          description: Paginated variants found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedVariantsResponseDTO'
+              example:
+                productViewPayloads:
+                - variant_id: V-1001
+                  product_id: P-500
+                  status:
+                    value: 1
+                    label: active
+                  availability:
+                    value: true
+                    label: available
+                  catalog_id: 123
+                  source_creation_time: 1783502993000
+                  source_update_time: 1783503093000
+                  enriched_creation_time: 1783503193000
+                  enriched_update_time: 1783503293000
+                  color:
+                    en-GB: Navy Blue
+                    de-DE: Marineblau
+                  fashion_material: leather
+                  fashion_season: summer
+                - variant_id: V-1002
+                  product_id: P-500
+                  status:
+                    value: 1
+                    label: active
+                  availability:
+                    value: true
+                    label: available
+                  catalog_id: 123
+                  source_creation_time: 1783503393000
+                  source_update_time: 1783503493000
+                  enriched_creation_time: 1783503593000
+                  enriched_update_time: 1783503693000
+                  size:
+                    US: M
+                    EU: '38'
+                  fashion_material: leather
+                  fashion_season: summer
+                paginationCursor:
+                  lastId: 687d57eb6986be26d3f7e0b4
+                  firstId: 687d57eb6986be26d3f7e0a3
+                  previousPageExists: false
+                  nextPageExists: true
+        '400':
+          description: Pagination is missing or invalid, modification date filters are invalid, or catalog attributes are
+            not configured.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                message: Cannot specify both lastId and firstId
+                httpStatus: 400
+                errorCode: 400 Bad Request
+                timestamp: '2026-07-08T12:00:00Z'
+        '404':
+          description: Catalog was not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                message: 'Product feed not found for companyId: 456 and feedId: 123'
+                httpStatus: 404
+                errorCode: 404 Not Found
+                timestamp: '2026-07-08T12:00:00Z'
+        '204':
+          description: No variants were found for the requested page and filters.
+        '500':
+          description: Unexpected error while fetching paginated variants.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                message: Unexpected error while processing request
+                httpStatus: 500
+                errorCode: 500 Internal Server Error
+                timestamp: '2026-07-08T12:00:00Z'
+  /api/product-catalog/v1/catalogs/{catalogId}/variants/bulk:
+    post:
+      tags:
+      - Variant Data Bulk Operations
+      summary: Bulk add variants
+      description: 'Adds multiple variants in a single request. Each variant in the array is processed like a single add:
+        new variants are created and missing fields are added to existing ones, without changing existing values. Up to 1000
+        variants are allowed per request.'
+      operationId: bulkAddVariants
+      parameters:
+      - name: catalogId
+        in: path
+        description: Catalog identifier where variants should be added.
+        required: true
+        schema:
+          type: integer
+          format: int64
+      requestBody:
+        description: List of variant payloads to add. Each payload must include variant_id.
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                $ref: '#/components/schemas/AddVariantOperationFlatSchema'
+        required: true
+      responses:
+        '202':
+          description: Variant add accepted for processing
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BulkVariantOperationResponseDTO'
+              example:
+                operation_id: 350e8400-e29b-41d4-a716-546655440000
+                operation: add
+                status: accepted
+                catalog_id: 123
+                total_variants_success: 2
+                total_variants_failed: 0
+                message: Variant add accepted for processing
+                accepted_at: 1783502993000
+                variant_events_success:
+                - event_id: 550e8400-e29b-41d4-a716-446655440000
+                  variant_id: V-1001
+                  status: accepted
+                  accepted_attributes:
+                    variant_id: V-1001
+                    product_id: P-500
+                    status: active
+                    availability: available
+                - event_id: 660e8400-e29b-41d4-a716-446655440000
+                  variant_id: V-1002
+                  status: accepted
+                  accepted_attributes:
+                    variant_id: V-1002
+                    product_id: P-500
+                    status: active
+                    availability: available
+                variant_events_failed: []
+        '500':
+          description: Unexpected error while processing bulk add.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                message: Unexpected error while processing request
+                httpStatus: 500
+                errorCode: 500 Internal Server Error
+                timestamp: '2026-07-08T12:00:00Z'
+        '400':
+          description: Bulk add payload list is missing or null.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BulkVariantOperationResponseDTO'
+              example:
+                operation_id: 350e8400-e29b-41d4-a716-546655440000
+                operation: add
+                status: failed
+                catalog_id: 123
+                total_variants_success: 0
+                total_variants_failed: 0
+                message: Payload list is null
+                accepted_at: 1783502993000
+                variant_events_success: []
+                variant_events_failed: []
+        '422':
+          description: Bulk add payload exceeds the maximum allowed size of 1000 variants.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BulkVariantOperationResponseDTO'
+              example:
+                operation_id: 350e8400-e29b-41d4-a716-546655440000
+                operation: add
+                status: failed
+                catalog_id: 123
+                total_variants_success: 0
+                total_variants_failed: 0
+                message: Payload list exceeds maximum allowed size of 1000
+                accepted_at: 1783502993000
+                variant_events_success: []
+                variant_events_failed: []
+    delete:
+      tags:
+      - Variant Data Bulk Operations
+      summary: Bulk delete variants
+      description: Deletes multiple variants in a single request. Each variant in the array is deleted if it exists and skipped
+        otherwise, removing both source and enriched data. Up to 1000 variants are allowed per request.
+      operationId: bulkDeleteVariants
+      parameters:
+      - name: catalogId
+        in: path
+        description: Catalog identifier containing the variants to delete.
+        required: true
+        schema:
+          type: integer
+          format: int64
+      requestBody:
+        description: List of variant identifiers to delete.
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                $ref: '#/components/schemas/BulkDeleteVariantOperationFlatSchema'
+            example:
+            - variant_id: V-1001
+            - variant_id: V-1002
+        required: true
+      responses:
+        '400':
+          description: Bulk delete payload list is missing or null.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BulkVariantOperationResponseDTO'
+              example:
+                operation_id: 350e8400-e29b-41d4-a716-546655440000
+                operation: add
+                status: failed
+                catalog_id: 123
+                total_variants_success: 0
+                total_variants_failed: 0
+                message: Payload list is null
+                accepted_at: 1783502993000
+                variant_events_success: []
+                variant_events_failed: []
+        '422':
+          description: Bulk delete payload exceeds the maximum allowed size of 1000 variants.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BulkVariantOperationResponseDTO'
+              example:
+                operation_id: 350e8400-e29b-41d4-a716-546655440000
+                operation: add
+                status: failed
+                catalog_id: 123
+                total_variants_success: 0
+                total_variants_failed: 0
+                message: Payload list exceeds maximum allowed size of 1000
+                accepted_at: 1783502993000
+                variant_events_success: []
+                variant_events_failed: []
+        '500':
+          description: Unexpected error while processing bulk delete.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                message: Unexpected error while processing request
+                httpStatus: 500
+                errorCode: 500 Internal Server Error
+                timestamp: '2026-07-08T12:00:00Z'
+        '202':
+          description: Variant delete accepted for processing
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BulkVariantOperationResponseDTO'
+              example:
+                operation_id: 350e8400-e29b-41d4-a716-546655440000
+                operation: delete
+                status: accepted
+                catalog_id: 123
+                total_variants_success: 2
+                total_variants_failed: 0
+                message: Variant delete accepted for processing
+                accepted_at: 1783502993000
+                variant_events_success:
+                - event_id: 550e8400-e29b-41d4-a716-446655440000
+                  variant_id: V-1001
+                  status: accepted
+                - event_id: 660e8400-e29b-41d4-a716-446655440000
+                  variant_id: V-1002
+                  status: accepted
+                variant_events_failed: []
+    patch:
+      tags:
+      - Variant Data Bulk Operations
+      summary: Bulk partial update variants
+      description: Partially updates multiple existing variants in a single request. For each variant, only the provided fields
+        are changed and non-existent variants are skipped. Up to 1000 variants are allowed per request.
+      operationId: bulkPartialUpdateVariants
+      parameters:
+      - name: catalogId
+        in: path
+        description: Catalog identifier containing the variants to update.
+        required: true
+        schema:
+          type: integer
+          format: int64
+      requestBody:
+        description: List of partial variant payloads. Only provided fields are changed for each variant.
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                $ref: '#/components/schemas/BulkPartialUpdateVariantOperationFlatSchema'
+        required: true
+      responses:
+        '202':
+          description: Variant partial update accepted for processing
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BulkVariantOperationResponseDTO'
+              example:
+                operation_id: 350e8400-e29b-41d4-a716-546655440000
+                operation: partial_update
+                status: accepted
+                catalog_id: 123
+                total_variants_success: 2
+                total_variants_failed: 0
+                message: Variant partial update accepted for processing
+                accepted_at: 1783502993000
+                variant_events_success:
+                - event_id: 550e8400-e29b-41d4-a716-446655440000
+                  variant_id: V-1001
+                  status: accepted
+                  accepted_attributes:
+                    status: discontinued
+                    price:
+                      US: 39.99
+                      GB: 34.99
+                - event_id: 660e8400-e29b-41d4-a716-446655440000
+                  variant_id: V-1002
+                  status: accepted
+                  accepted_attributes:
+                    availability: not_available
+                variant_events_failed: []
+        '500':
+          description: Unexpected error while processing bulk partial update.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                message: Unexpected error while processing request
+                httpStatus: 500
+                errorCode: 500 Internal Server Error
+                timestamp: '2026-07-08T12:00:00Z'
+        '422':
+          description: Bulk partial update payload exceeds the maximum allowed size of 1000 variants.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BulkVariantOperationResponseDTO'
+              example:
+                operation_id: 350e8400-e29b-41d4-a716-546655440000
+                operation: add
+                status: failed
+                catalog_id: 123
+                total_variants_success: 0
+                total_variants_failed: 0
+                message: Payload list exceeds maximum allowed size of 1000
+                accepted_at: 1783502993000
+                variant_events_success: []
+                variant_events_failed: []
+        '400':
+          description: Bulk partial update payload list is missing or null.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BulkVariantOperationResponseDTO'
+              example:
+                operation_id: 350e8400-e29b-41d4-a716-546655440000
+                operation: add
+                status: failed
+                catalog_id: 123
+                total_variants_success: 0
+                total_variants_failed: 0
+                message: Payload list is null
+                accepted_at: 1783502993000
+                variant_events_success: []
+                variant_events_failed: []
+    put:
+      tags:
+      - Variant Data Bulk Operations
+      summary: Bulk upsert variants
+      description: Creates or fully replaces multiple variants in a single request. Each variant in the array is created if
+        missing or has all of its data overwritten if it already exists. Up to 1000 variants are allowed per request.
+      operationId: bulkUpsertVariants
+      parameters:
+      - name: catalogId
+        in: path
+        description: Catalog identifier where variants should be created or replaced.
+        required: true
+        schema:
+          type: integer
+          format: int64
+      requestBody:
+        description: List of complete variant payloads that will replace existing variant data.
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                $ref: '#/components/schemas/BulkUpsertVariantOperationFlatSchema'
+        required: true
+      responses:
+        '400':
+          description: Bulk upsert payload list is missing or null.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BulkVariantOperationResponseDTO'
+              example:
+                operation_id: 350e8400-e29b-41d4-a716-546655440000
+                operation: add
+                status: failed
+                catalog_id: 123
+                total_variants_success: 0
+                total_variants_failed: 0
+                message: Payload list is null
+                accepted_at: 1783502993000
+                variant_events_success: []
+                variant_events_failed: []
+        '202':
+          description: Variant upsert accepted for processing
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BulkVariantOperationResponseDTO'
+              example:
+                operation_id: 350e8400-e29b-41d4-a716-546655440000
+                operation: upsert
+                status: accepted
+                catalog_id: 123
+                total_variants_success: 2
+                total_variants_failed: 0
+                message: Variant upsert accepted for processing
+                accepted_at: 1783502993000
+                variant_events_success:
+                - event_id: 550e8400-e29b-41d4-a716-446655440000
+                  variant_id: V-1001
+                  status: accepted
+                  accepted_attributes:
+                    variant_id: V-1001
+                    product_id: P-500
+                    status: active
+                    availability: available
+                - event_id: 660e8400-e29b-41d4-a716-446655440000
+                  variant_id: V-1002
+                  status: accepted
+                  accepted_attributes:
+                    variant_id: V-1002
+                    product_id: P-500
+                    status: discontinued
+                    availability: not_available
+                variant_events_failed: []
+        '422':
+          description: Bulk upsert payload exceeds the maximum allowed size of 1000 variants.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BulkVariantOperationResponseDTO'
+              example:
+                operation_id: 350e8400-e29b-41d4-a716-546655440000
+                operation: add
+                status: failed
+                catalog_id: 123
+                total_variants_success: 0
+                total_variants_failed: 0
+                message: Payload list exceeds maximum allowed size of 1000
+                accepted_at: 1783502993000
+                variant_events_success: []
+                variant_events_failed: []
+        '500':
+          description: Unexpected error while processing bulk upsert.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                message: Unexpected error while processing request
+                httpStatus: 500
+                errorCode: 500 Internal Server Error
+                timestamp: '2026-07-08T12:00:00Z'
+  /api/product-catalog/v1/catalogs/{catalogId}/variants/{variantId}:
+    put:
+      tags:
+      - Variant Data Operations
+      summary: Create or fully replace a variant
+      description: If the variant does not exist it is created; if it already exists, all of its data is completely overwritten
+        with the provided payload.
+      operationId: upsertVariant
+      parameters:
+      - name: catalogId
+        in: path
+        description: Catalog identifier where the variant should be created or replaced.
+        required: true
+        schema:
+          type: integer
+          format: int64
+      - name: variantId
+        in: path
+        description: Variant identifier to create or fully replace.
+        required: true
+        schema:
+          type: string
+      requestBody:
+        description: Complete variant payload that will replace existing variant data.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpsertVariantOperationFlatSchema'
+            example:
+              product_id: P-500
+              status: 1
+              availability: true
+              color:
+                en-GB: Navy Blue
+                de-DE: Marineblau
+                fr-FR: Bleu marine
+              price:
+                US: 29.99
+                GB: 24.99
+              size:
+                US: S
+                EU: '36'
+        required: true
+      responses:
+        '500':
+          description: Variant upsert failed unexpectedly.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                message: Unexpected error while processing request
+                httpStatus: 500
+                errorCode: 500 Internal Server Error
+                timestamp: '2026-07-08T12:00:00Z'
+        '400':
+          description: Variant upsert was rejected during validation.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VariantOperationResponseDTO'
+              example:
+                variant_id: V-1001
+                catalog_id: 123
+                status: failed
+                message: 'Variant upsert failed: missingMandatoryFields=[price]'
+                operation: upsert
+                accepted_at: 1783502993000
+                accepted_attributes: {}
+                skipped_attributes: {}
+        '202':
+          description: Variant upsert accepted for processing
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VariantOperationResponseDTO'
+              example:
+                variant_id: V-1001
+                catalog_id: 123
+                status: accepted
+                message: Variant upsert accepted for processing
+                event_id: 550e8400-e29b-41d4-a716-446655440000
+                operation: upsert
+                accepted_at: 1783502993000
+                accepted_attributes:
+                  variant_id: V-1001
+                  product_id: P-500
+                  status: active
+                  availability: available
+    delete:
+      tags:
+      - Variant Data Operations
+      summary: Delete a variant by ID
+      description: Both source and enriched data is removed.
+      operationId: deleteVariant
+      parameters:
+      - name: catalogId
+        in: path
+        description: Catalog identifier containing the variant to delete.
+        required: true
+        schema:
+          type: integer
+          format: int64
+      - name: variantId
+        in: path
+        description: Variant identifier to delete.
+        required: true
+        schema:
+          type: string
+      responses:
+        '202':
+          description: Variant delete accepted for processing
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VariantOperationResponseDTO'
+              example:
+                variant_id: V-1001
+                catalog_id: 123
+                status: accepted
+                message: Variant delete accepted for processing
+                event_id: 550e8400-e29b-41d4-a716-446655440000
+                operation: delete
+                accepted_at: 1783502993000
+        '400':
+          description: Variant delete was rejected during validation.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VariantOperationResponseDTO'
+              example:
+                variant_id: V-1001
+                catalog_id: 123
+                status: failed
+                message: 'Variant delete failed: price mandatory field cannot be deleted'
+                operation: delete
+                accepted_at: 1783502993000
+                accepted_attributes: {}
+                skipped_attributes: {}
+        '404':
+          description: Variant delete target was not found by downstream validation.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VariantOperationResponseDTO'
+              example:
+                variant_id: V-1001
+                catalog_id: 123
+                status: failed
+                message: 'Variant delete failed: price mandatory field cannot be deleted'
+                operation: delete
+                accepted_at: 1783502993000
+                accepted_attributes: {}
+                skipped_attributes: {}
+        '500':
+          description: Variant delete failed unexpectedly.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                message: Unexpected error while processing request
+                httpStatus: 500
+                errorCode: 500 Internal Server Error
+                timestamp: '2026-07-08T12:00:00Z'
+    get:
+      tags:
+      - Variant Data Operations
+      summary: Get a single variant by ID
+      description: Retrieves a single variant identified by its variant ID from the specified catalog. The returned attributes
+        can be filtered by active status and by the product data layer (source, enriched, or combined). Returns 204 (No Content)
+        when no variant matches the requested identifier and filters.
+      operationId: getVariant
+      parameters:
+      - name: catalogId
+        in: path
+        description: Catalog identifier that contains the variant.
+        required: true
+        schema:
+          type: integer
+          format: int64
+      - name: variantId
+        in: path
+        description: Variant identifier to retrieve from the catalog.
+        required: true
+        schema:
+          type: string
+      - name: activeStatusSearch
+        in: query
+        description: Controls whether active attributes, inactive attributes, or all attributes are included in the returned
+          variant data. Defaults to ALL.
+        required: false
+        schema:
+          type: string
+          default: ALL
+          enum:
+          - ACTIVE_ONLY
+          - INACTIVE_ONLY
+          - ALL
+      - name: catalogType
+        in: query
+        description: Selects which product data layer to query. Defaults to COMBINED.
+        required: false
+        schema:
+          type: string
+          default: COMBINED
+          enum:
+          - SOURCE
+          - ENRICHED
+          - COMBINED
+      responses:
+        '500':
+          description: Unexpected error while fetching variant data.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                message: Unexpected error while processing request
+                httpStatus: 500
+                errorCode: 500 Internal Server Error
+                timestamp: '2026-07-08T12:00:00Z'
+        '404':
+          description: Catalog was not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                message: 'Product feed not found for companyId: 456 and feedId: 123'
+                httpStatus: 404
+                errorCode: 404 Not Found
+                timestamp: '2026-07-08T12:00:00Z'
+        '200':
+          description: Variant found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VariantFlatViewResponse'
+              example:
+                variant_id: V-1001
+                product_id: P-500
+                status:
+                  value: 1
+                  label: active
+                availability:
+                  value: true
+                  label: available
+                catalog_id: 123
+                source_creation_time: 1783502993000
+                source_update_time: 1783503093000
+                enriched_creation_time: 1783503193000
+                enriched_update_time: 1783503293000
+                color:
+                  en-GB: Navy Blue
+                  de-DE: Marineblau
+                  fr-FR: Bleu marine
+                price:
+                  US: 29.99
+                  GB: 24.99
+                size:
+                  US: S
+                  EU: '36'
+                fashion_material: leather
+                fashion_season: summer
+        '204':
+          description: Variant was not found for the requested catalog and filters.
+        '400':
+          description: Invalid query parameters or catalog attribute configuration.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                message: Cannot specify both lastId and firstId
+                httpStatus: 400
+                errorCode: 400 Bad Request
+                timestamp: '2026-07-08T12:00:00Z'
+    patch:
+      tags:
+      - Variant Data Operations
+      summary: Partially update a variant
+      description: 'Updates selected fields of an existing variant. Only the fields present in the payload are changed; all
+        other fields are left untouched. If the variant does not exist, no action is taken. '
+      operationId: partialUpdateVariant
+      parameters:
+      - name: catalogId
+        in: path
+        description: Catalog identifier containing the variant to update.
+        required: true
+        schema:
+          type: integer
+          format: int64
+      - name: variantId
+        in: path
+        description: Variant identifier to partially update.
+        required: true
+        schema:
+          type: string
+      requestBody:
+        description: Variant attributes to update. Only provided fields are changed.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PartialUpdateVariantOperationFlatSchema'
+            example:
+              status: 2
+              price:
+                US: 39.99
+                GB: 34.99
+        required: true
+      responses:
+        '400':
+          description: Variant partial update was rejected during validation.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VariantOperationResponseDTO'
+              example:
+                variant_id: V-1001
+                catalog_id: 123
+                status: failed
+                message: 'Variant partial update failed: status value ''archived'' is not a valid VariantStatus'
+                operation: partial_update
+                accepted_at: 1783502993000
+                accepted_attributes: {}
+                skipped_attributes: {}
+        '202':
+          description: Variant partial update accepted for processing
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VariantOperationResponseDTO'
+              example:
+                variant_id: V-1001
+                catalog_id: 123
+                status: accepted
+                message: Variant partial update accepted for processing
+                event_id: 550e8400-e29b-41d4-a716-446655440000
+                operation: partial_update
+                accepted_at: 1783502993000
+                accepted_attributes:
+                  variant_id: V-1001
+                  status: discontinued
+                  price:
+                    US: 39.99
+                    GB: 34.99
+        '500':
+          description: Variant partial update failed unexpectedly.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                message: Unexpected error while processing request
+                httpStatus: 500
+                errorCode: 500 Internal Server Error
+                timestamp: '2026-07-08T12:00:00Z'
+  /api/product-catalog/v1/catalogs/{catalogId}/variants/:
+    delete:
+      tags:
+      - Variant Data Operations
+      summary: Delete all variants in a catalog
+      description: Deletes every variant in the specified catalog, removing both source and enriched data. This clears the
+        entire catalog contents and cannot be undone.
+      operationId: deleteAllCatalogData
+      parameters:
+      - name: catalogId
+        in: path
+        description: Catalog identifier whose variants should be deleted.
+        required: true
+        schema:
+          type: integer
+          format: int64
+      responses:
+        '500':
+          description: Catalog variants delete failed unexpectedly.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                message: Unexpected error while processing request
+                httpStatus: 500
+                errorCode: 500 Internal Server Error
+                timestamp: '2026-07-08T12:00:00Z'
+        '202':
+          description: Catalog variants delete accepted for processing
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CatalogOperationResponseDTO'
+              example:
+                catalog_id: 123
+                status: accepted
+                message: Catalog variants delete accepted for processing
+                event_id: 550e8400-e29b-41d4-a716-446655440000
+                operation: delete
+                accepted_at: 1783502993000
+        '400':
+          description: Catalog variants delete was rejected during validation.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CatalogOperationResponseDTO'
+              example:
+                catalog_id: 123
+                status: failed
+                message: 'Catalog variants delete failed: Product Catalog by catalogId 123 not found'
+                operation: delete
+                accepted_at: 1783502993000
+  /api/product-catalog/v1/catalogs/{catalogId}/variants/{variantId}/attributes:
+    delete:
+      tags:
+      - Variant Data Operations
+      summary: Delete attributes from a variant
+      description: Deletes the named attributes from the variant identified by its variant ID in the specified catalog. Only
+        the attributes listed in the request body are removed; the rest of the variant is left unchanged.
+      operationId: deleteVariantAttributes
+      parameters:
+      - name: catalogId
+        in: path
+        description: Catalog identifier containing the variant.
+        required: true
+        schema:
+          type: integer
+          format: int64
+      - name: variantId
+        in: path
+        description: Variant identifier whose attributes should be deleted.
+        required: true
+        schema:
+          type: string
+      requestBody:
+        description: Names of attributes to delete from the variant.
+        content:
+          application/json:
+            schema:
+              type: array
+            example:
+            - custom_attributeA
+            - custom_attribute_B
+        required: true
+      responses:
+        '404':
+          description: Variant attributes delete target was not found by downstream validation.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VariantOperationResponseDTO'
+              example:
+                variant_id: V-1001
+                catalog_id: 123
+                status: failed
+                message: 'Variant attributes delete failed: attributeNames cannot be parsed'
+                operation: delete_attributes
+                accepted_at: 1783502993000
+                accepted_attributes: {}
+                skipped_attributes: {}
+        '500':
+          description: Variant attributes delete failed unexpectedly.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                message: Unexpected error while processing request
+                httpStatus: 500
+                errorCode: 500 Internal Server Error
+                timestamp: '2026-07-08T12:00:00Z'
+        '202':
+          description: Variant attributes delete accepted for processing
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VariantOperationResponseDTO'
+              example:
+                variant_id: V-1001
+                catalog_id: 123
+                status: accepted
+                message: Variant attributes delete accepted for processing
+                event_id: 550e8400-e29b-41d4-a716-446655440000
+                operation: delete_attributes
+                accepted_at: 1783502993000
+                accepted_attributes:
+                  variant_id: V-1001
+                  attributeNames: custom_attributeA, custom_attribute_B
+        '400':
+          description: Variant attributes delete was rejected during validation.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VariantOperationResponseDTO'
+              example:
+                variant_id: V-1001
+                catalog_id: 123
+                status: failed
+                message: 'Variant attributes delete failed: attributeNames cannot be parsed'
+                operation: delete_attributes
+                accepted_at: 1783502993000
+                accepted_attributes: {}
+                skipped_attributes: {}
+  /api/product-catalog/v1/catalogs/metadata/attribute/{catalogId}:
+    get:
+      tags:
+      - Catalog Metadata Operations
+      summary: Get all attributes assigned to a catalog
+      description: Returns all active attributes assigned to the specified catalog. Inactive attributes are not returned by
+        this endpoint.
+      operationId: getCatalogAttributes
+      parameters:
+      - name: catalogId
+        in: path
+        description: Catalog identifier whose assigned attributes should be returned.
+        required: true
+        schema:
+          type: integer
+          format: int64
+      responses:
+        '200':
+          description: Catalog attributes found
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CatalogAttributeDTO'
+              example:
+              - name: color
+                dataType: MAP
+                localizedAttributeKeyType: LANGUAGE_COUNTRY
+                localizedAttributeValueType: STRING
+                catalogType: SOURCE
+              - name: price
+                dataType: MAP
+                localizedAttributeKeyType: COUNTRY
+                localizedAttributeValueType: DECIMAL
+                catalogType: SOURCE
+              - name: fashion_material
+                dataType: STRING
+                localizedAttributeKeyType: null
+                localizedAttributeValueType: null
+                catalogType: ENRICHED
+        '500':
+          description: Unexpected error while fetching catalog attributes.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                message: Unexpected error while processing request
+                httpStatus: 500
+                errorCode: 500 Internal Server Error
+                timestamp: '2026-07-08T12:00:00Z'
+        '204':
+          description: No active attributes are assigned to the catalog.
+  /api/product-catalog/v1/catalogs/metadata/catalog/workspace:
+    get:
+      tags:
+      - Catalog Metadata Operations
+      summary: Get catalog metadata for a workspace
+      description: Returns the metadata of the catalog assigned to a workspace,  which a token you authorize with belongs
+        to
+      operationId: getCatalogMetadataByWorkspace
+      parameters: []
+      responses:
+        '204':
+          description: No catalog is assigned to the requested workspace, or the assigned catalog lookup returned an empty
+            body.
+        '404':
+          description: Assigned catalog was not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                message: 'Product feed not found for companyId: 456 and feedId: 123'
+                httpStatus: 404
+                errorCode: 404 Not Found
+                timestamp: '2026-07-08T12:00:00Z'
+        '200':
+          description: Catalog metadata found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CatalogDTO'
+              example:
+                id: 123
+                name: Spring Fashion Catalog
+                description: Primary product catalog for spring assortment
+                enrichReady: true
+                createDate: '2026-07-08T12:00:00Z'
+                modifyDate: '2026-07-08T13:30:00Z'
+                creatorId: 789
+        '500':
+          description: Unexpected error while fetching catalog metadata.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                message: Unexpected error while processing request
+                httpStatus: 500
+                errorCode: 500 Internal Server Error
+                timestamp: '2026-07-08T12:00:00Z'
+  /api/product-catalog/v1/catalogs/{catalogId}/products/{productId}/variants:
+    get:
+      tags:
+      - Product Data Operations
+      summary: List variants of a product
+      description: Returns all variants belonging to the specified product within the catalog. For products with many variants,
+        cursor-based pagination can be used by supplying 'lastId' (forward) or 'firstId' (backward) together with a page 'size'.
+        Results can additionally be filtered by attribute active status, product data layer, and a modification timestamp
+        range.
+      operationId: listVariants
+      parameters:
+      - name: catalogId
+        in: path
+        description: Catalog identifier that contains the product and its variants.
+        required: true
+        schema:
+          type: integer
+          format: int64
+      - name: productId
+        in: path
+        description: Product identifier whose variants should be listed.
+        required: true
+        schema:
+          type: string
+      - name: activeStatusSearch
+        in: query
+        description: Controls whether active attributes, inactive attributes, or all attributes are included in the returned
+          variant data. Defaults to ALL.
+        required: false
+        schema:
+          type: string
+          default: ALL
+          enum:
+          - ACTIVE_ONLY
+          - INACTIVE_ONLY
+          - ALL
+      - name: catalogType
+        in: query
+        description: Selects which product data layer to query. Defaults to COMBINED.
+        required: false
+        schema:
+          type: string
+          default: COMBINED
+          enum:
+          - SOURCE
+          - ENRICHED
+          - COMBINED
+      - name: lastId
+        in: query
+        description: Forward pagination cursor. Returns variants after this document id; the cursor value itself is excluded.
+          Cannot be used together with firstId.
+        required: false
+        schema:
+          type: string
+      - name: firstId
+        in: query
+        description: Backward pagination cursor. Returns variants before this document id; the cursor value itself is excluded.
+          Cannot be used together with lastId.
+        required: false
+        schema:
+          type: string
+      - name: size
+        in: query
+        description: Maximum number of variants to return in one page. Required when lastId or firstId is provided; values
+          less than 1 or greater than 100 are normalized to 100.
+        required: false
+        schema:
+          type: integer
+          format: int32
+      - name: fromModifiedTimestamp
+        in: query
+        description: Filters variants modified at or after this timestamp. The value is epoch milliseconds and the lower bound
+          is inclusive. If this is provided, toModifiedTimestamp is required. For paginated scans, capture this value once
+          before the first page and keep it unchanged for every page.
+        required: false
+        schema:
+          type: integer
+          format: int64
+        example: 1783503393000
+      - name: toModifiedTimestamp
+        in: query
+        description: Filters variants modified at or before this timestamp. The value is epoch milliseconds, the upper bound
+          is inclusive, it must not be greater than the current server time, and it is required when fromModifiedTimestamp
+          is provided. For paginated scans, capture this value once before the first page and keep it unchanged for every
+          page.
+        required: false
+        schema:
+          type: integer
+          format: int64
+        example: 1783506993000
+      responses:
+        '400':
+          description: Invalid cursor, modification date, or catalog attribute configuration.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                message: Cannot specify both lastId and firstId
+                httpStatus: 400
+                errorCode: 400 Bad Request
+                timestamp: '2026-07-08T12:00:00Z'
+        '204':
+          description: No variants were found for the requested product and filters.
+        '404':
+          description: Catalog was not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                message: 'Product feed not found for companyId: 456 and feedId: 123'
+                httpStatus: 404
+                errorCode: 404 Not Found
+                timestamp: '2026-07-08T12:00:00Z'
+        '200':
+          description: Product variants found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProductVariantsResponseDTO'
+              example:
+                catalog_id: 123
+                view: flat
+                product_id: P-500
+                total_variants: 2
+                variants:
+                - variant_id: V-1001
+                  product_id: P-500
+                  catalog_id: 123
+                  status:
+                    value: 1
+                    label: active
+                  availability:
+                    value: true
+                    label: available
+                  color:
+                    en-GB: Navy Blue
+                    de-DE: Marineblau
+                  price:
+                    US: 29.99
+                    GB: 24.99
+                - variant_id: V-1002
+                  product_id: P-500
+                  catalog_id: 123
+                  status:
+                    value: 1
+                    label: active
+                  availability:
+                    value: true
+                    label: available
+                  size:
+                    US: M
+                    EU: '38'
+        '500':
+          description: Unexpected error while listing product variants.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                message: Unexpected error while processing request
+                httpStatus: 500
+                errorCode: 500 Internal Server Error
+                timestamp: '2026-07-08T12:00:00Z'
+components:
+  schemas:
+    AddVariantOperationFlatSchema:
+      required:
+      - variant_id
+      type: object
+      properties:
+        brand:
+          type: string
+          description: Product brand name.
+          example: AnnTaylor
+        price:
+          type: object
+          additionalProperties:
+            type: number
+            description: Current selling price keyed by ISO 3166-1 alpha-2 country code or '*' fallback.
+          description: Current selling price keyed by ISO 3166-1 alpha-2 country code or '*' fallback.
+          example:
+            US: 29.99
+            GB: 24.99
+            DE: 27.5
+            FR: 28.0
+        currency:
+          type: object
+          additionalProperties:
+            type: string
+            description: Currency keyed by the same country codes as price. Values are ISO 4217 currency codes.
+            example: '{"US":"USD","GB":"GBP","DE":"EUR","FR":"EUR","*":"USD"}'
+          description: Currency keyed by the same country codes as price. Values are ISO 4217 currency codes.
+          example:
+            US: USD
+            GB: GBP
+            DE: EUR
+            FR: EUR
+            '*': USD
+        size:
+          type: object
+          additionalProperties:
+            type: string
+            description: Size keyed by ISO 3166-1 alpha-2 country code or '*' fallback.
+            example: '{"US":"S","GB":"8","EU":"36"}'
+          description: Size keyed by ISO 3166-1 alpha-2 country code or '*' fallback.
+          example:
+            US: S
+            GB: '8'
+            EU: '36'
+        color:
+          type: object
+          additionalProperties:
+            type: string
+            description: Localized colour keyed by BCP 47 locale or '*' fallback.
+            example: '{"en-GB":"Navy Blue","de-DE":"Marineblau","fr-FR":"Bleu marine"}'
+          description: Localized colour keyed by BCP 47 locale or '*' fallback.
+          example:
+            en-GB: Navy Blue
+            de-DE: Marineblau
+            fr-FR: Bleu marine
+        mpn:
+          type: string
+          description: Manufacturer Part Number. Maximum length is 70 characters.
+          example: DRESS-BLK-M-2023
+        gtin:
+          type: string
+          description: Global Trade Item Number. Expected length is 8-14 digits.
+          example: '1234567890123'
+        status:
+          type: integer
+          description: 'Variant status value: 0 = pre_order, 1 = active, 2 = discontinued.'
+          format: int32
+          example: 1
+          enum:
+          - 0
+          - 1
+          - 2
+        availability:
+          type: boolean
+          description: Variant availability value.
+          example: true
+        material:
+          type: string
+          description: Material of the product.
+          example: cotton
+        gender:
+          type: string
+          description: Gender value for fashion catalogs.
+          example: female
+          enum:
+          - female
+          - male
+          - girls
+          - boys
+          - unisex
+        category:
+          type: array
+          description: Category hierarchy.
+          example:
+          - ladies
+          - dresses
+          - short
+          items:
+            type: string
+            description: Category hierarchy.
+            example: '["ladies","dresses","short"]'
+        locale:
+          type: array
+          description: Supported locales for this variant.
+          example:
+          - en-GB
+          - de-DE
+          items:
+            type: string
+            description: Supported locales for this variant.
+            example: '["en-GB","de-DE"]'
+        ean:
+          type: string
+          description: Standardised article number.
+          example: '8076809513456'
+        multipack:
+          type: integer
+          description: Multipack quantity.
+          format: int32
+          example: 3
+        collaboration:
+          type: array
+          description: Retailer-specific collaboration values.
+          example:
+          - designer-capsule
+          - summer-edit
+          items:
+            type: string
+            description: Retailer-specific collaboration values.
+            example: '["designer-capsule","summer-edit"]'
+        variant_id:
+          type: string
+          description: Client-defined unique identifier of the purchasable variant. Maximum length is 255 characters.
+          example: V-1001
+        product_id:
+          type: string
+          description: Identifier used for grouping all variants belonging to the same product. Provide it when creating a
+            new variant.
+          example: P-500
+        style_id:
+          type: string
+          description: Groups variants that share colour or style but differ by option attributes such as size.
+          example: S-1000
+        variant_title:
+          type: string
+          description: Human-readable title of the variant.
+          example: Basic t-shirt, size L
+        style_title:
+          type: string
+          description: Human-readable title of the style.
+          example: Black basic t-shirt
+        product_title:
+          type: object
+          additionalProperties:
+            type: string
+            description: Localized product title keyed by BCP 47 locale or '*' fallback.
+            example: '{"en-GB":"Summer dress","de-DE":"Sommerkleid","fr-FR":"Robe d''ete","*":"Summer dress"}'
+          description: Localized product title keyed by BCP 47 locale or '*' fallback.
+          example:
+            en-GB: Summer dress
+            de-DE: Sommerkleid
+            fr-FR: Robe d'ete
+            '*': Summer dress
+        product_description:
+          type: object
+          additionalProperties:
+            type: string
+            description: Localized product description keyed by BCP 47 locale or '*' fallback.
+            example: '{"en-GB":"Light dress","de-DE":"Leichtes Kleid"}'
+          description: Localized product description keyed by BCP 47 locale or '*' fallback.
+          example:
+            en-GB: Light dress
+            de-DE: Leichtes Kleid
+        image_url:
+          type: array
+          description: List of product image URLs.
+          example:
+          - https://cdn.com/photo1.jpg
+          - https://cdn.com/photo2.jpg
+          - https://cdn.com/photo3.jpg
+          items:
+            type: string
+            description: List of product image URLs.
+            example: '["https://cdn.com/photo1.jpg","https://cdn.com/photo2.jpg","https://cdn.com/photo3.jpg"]'
+        pdp_url:
+          type: object
+          additionalProperties:
+            type: string
+            description: Localized product detail page URL keyed by BCP 47 locale or '*' fallback.
+            example: '{"en-GB":"https://shop.example/gb/basic-tshirt-001","de-DE":"https://shop.example/de/basic-tshirt-001"}'
+          description: Localized product detail page URL keyed by BCP 47 locale or '*' fallback.
+          example:
+            en-GB: https://shop.example/gb/basic-tshirt-001
+            de-DE: https://shop.example/de/basic-tshirt-001
+        season_code:
+          type: boolean
+          description: Indicates whether the product belongs to a seasonal assortment.
+          example: true
+        old_price:
+          type: object
+          additionalProperties:
+            type: number
+            description: Former selling price keyed by ISO 3166-1 alpha-2 country code or '*' fallback.
+          description: Former selling price keyed by ISO 3166-1 alpha-2 country code or '*' fallback.
+          example:
+            US: 39.99
+            GB: 34.99
+        set_id:
+          type: string
+          description: Identifier for products sold as a set.
+          example: BIKINI-SET-001
+        extra_id:
+          type: object
+          additionalProperties:
+            type: string
+            description: Additional localized or country-specific product identifier.
+            example: '{"US":"EXTRA-US-1001","GB":"EXTRA-GB-1001"}'
+          description: Additional localized or country-specific product identifier.
+          example:
+            US: EXTRA-US-1001
+            GB: EXTRA-GB-1001
+        ancillary_product_code:
+          type: string
+          description: Additional product identifier.
+          example: ANC-1001
+        min_age:
+          type: integer
+          description: Minimal age in months for children's wear.
+          format: int32
+          example: 12
+        max_age:
+          type: integer
+          description: Maximum age in months for children's wear.
+          format: int32
+          example: 24
+        best_model_image:
+          type: string
+          description: Best model image URL.
+          example: https://cdn.com/best_model_image.jpg
+        best_product_image:
+          type: string
+          description: Best product-only image URL.
+          example: https://cdn.com/best_product_image.jpg
+      description: 'Flat request payload for adding a SOURCE variant, where: <br>- predefined SOURCE attributes are documented
+        as fields here.<br>- custom SOURCE attributes are added dynamically on top-level as fields.<br>- ENRICHED attributes
+        are not accepted by this endpoint; this endpoint writes SOURCE data only.<br>The field variant_id is always required.
+        product_id should be provided when creating a new variant.'
+    VariantOperationResponseDTO:
+      type: object
+      properties:
+        variant_id:
+          type: string
+          example: V-1001
+        catalog_id:
+          type: integer
+          format: int64
+          example: 123
+        status:
+          type: string
+          example: accepted
+          enum:
+          - accepted
+          - failed
+        message:
+          type: string
+          example: Variant add accepted for processing
+        event_id:
+          type: string
+          description: 'Unique generated UUID assigned to the event and preserved throughout its whole lifecycle.
+
+            The event_id is used in logs and is also sent back to the client with webhook events when
+
+            webhooks are configured, so clients are advised to log/save it on their side.'
+          example: 550e8400-e29b-41d4-a716-446655440000
+        operation:
+          type: string
+          example: add
+          enum:
+          - add
+          - upsert
+          - partial_update
+          - delete
+          - delete_attributes
+          - add_existing_only
+          - overwrite
+          - overwrite_existing_only
+          - update
+          - update_existing_only
+          - update_localized_attribute
+          - update_localized_attribute_existing_only
+          - clean
+        accepted_at:
+          type: integer
+          format: int64
+          example: 1783502993000
+        accepted_attributes:
+          type: object
+          additionalProperties:
+            type: object
+            example:
+              color:
+                en-GB: Navy Blue
+                de-DE: Marineblau
+                fr-FR: Bleu marine
+              size:
+                US: S
+                EU: '36'
+          example:
+            color:
+              en-GB: Navy Blue
+              de-DE: Marineblau
+              fr-FR: Bleu marine
+            size:
+              US: S
+              EU: '36'
+        skipped_attributes:
+          $ref: '#/components/schemas/SkippedAttributesDTO'
+    ErrorResponse:
+      type: object
+      properties:
+        message:
+          type: string
+        httpStatus:
+          type: integer
+          format: int32
+        errorCode:
+          type: string
+        timestamp:
+          type: string
+          format: date-time
+    SkippedAttributesDTO:
+      type: object
+      properties:
+        non_existing_attributes:
+          uniqueItems: true
+          type: array
+          example:
+          - custom_attribute_abc
+          items:
+            type: string
+            example: '["custom_attribute_abc"]'
+        inactive_attributes:
+          uniqueItems: true
+          type: array
+          example:
+          - custom_attribute_def
+          items:
+            type: string
+            example: '["custom_attribute_def"]'
+        invalid_data_type_attributes:
+          type: object
+          additionalProperties:
+            type: string
+            example: '{"price":"price map value must be a number","gtin":"gtin field must be 8-14 digits","min_age":"min_age
+              value must be a number"}'
+          example:
+            price: price map value must be a number
+            gtin: gtin field must be 8-14 digits
+            min_age: min_age value must be a number
+    BulkVariantOperationResponseDTO:
+      type: object
+      properties:
+        operation_id:
+          type: string
+          example: 350e8400-dgwe-41d4-a716-546655440000
+        status:
+          type: string
+          example: accepted
+          enum:
+          - accepted
+          - failed
+        catalog_id:
+          type: integer
+          format: int64
+          example: 123
+        operation:
+          type: string
+          example: add
+          enum:
+          - add
+          - upsert
+          - partial_update
+          - delete
+          - delete_attributes
+          - add_existing_only
+          - overwrite
+          - overwrite_existing_only
+          - update
+          - update_existing_only
+          - update_localized_attribute
+          - update_localized_attribute_existing_only
+          - clean
+        total_variants_success:
+          type: integer
+          format: int32
+          example: 1
+        total_variants_failed:
+          type: integer
+          format: int32
+          example: 1
+        message:
+          type: string
+          example: Variant add accepted for processing"
+        accepted_at:
+          type: string
+          format: date-time
+        variant_events_success:
+          type: array
+          items:
+            $ref: '#/components/schemas/VariantEventResult'
+        variant_events_failed:
+          type: array
+          items:
+            $ref: '#/components/schemas/VariantEventResult'
+    VariantEventResult:
+      type: object
+      properties:
+        event_id:
+          type: string
+          description: 'Unique generated UUID assigned to the event and preserved throughout its whole lifecycle.
+
+            The event_id is used in logs and is also sent back to the client with webhook events when
+
+            webhooks are configured, so clients are advised to log/save it on their side.'
+          example: 550e8400-e29b-41d4-a716-446655440000
+        variant_id:
+          type: string
+          example: V-1001
+        status:
+          type: string
+          example: accepted
+          enum:
+          - accepted
+          - failed
+        accepted_attributes:
+          type: object
+          additionalProperties:
+            type: object
+            example:
+              color:
+                en-GB: Navy Blue
+                de-DE: Marineblau
+                fr-FR: Bleu marine
+              size:
+                US: S
+                EU: '36'
+          example:
+            color:
+              en-GB: Navy Blue
+              de-DE: Marineblau
+              fr-FR: Bleu marine
+            size:
+              US: S
+              EU: '36'
+        skipped_attributes:
+          $ref: '#/components/schemas/SkippedAttributesDTO'
+        failure_reason:
+          type: string
+          description: Filled in only when variant could not be processed.
+          example: price mandatory field cannot be deleted
+    BulkDeleteVariantOperationFlatSchema:
+      required:
+      - variant_id
+      type: object
+      properties:
+        variant_id:
+          type: string
+          description: Client-defined unique identifier of the purchasable variant. Maximum length is 255 characters.
+          example: V-1001
+      description: 'Flat request payload for bulk deleting a SOURCE variant. '
+    BulkPartialUpdateVariantOperationFlatSchema:
+      required:
+      - variant_id
+      type: object
+      properties:
+        brand:
+          type: string
+          description: Product brand name.
+          example: AnnTaylor
+        price:
+          type: object
+          additionalProperties:
+            type: number
+            description: Current selling price keyed by ISO 3166-1 alpha-2 country code or '*' fallback.
+          description: Current selling price keyed by ISO 3166-1 alpha-2 country code or '*' fallback.
+          example:
+            US: 29.99
+            GB: 24.99
+            DE: 27.5
+            FR: 28.0
+        currency:
+          type: object
+          additionalProperties:
+            type: string
+            description: Currency keyed by the same country codes as price. Values are ISO 4217 currency codes.
+            example: '{"US":"USD","GB":"GBP","DE":"EUR","FR":"EUR","*":"USD"}'
+          description: Currency keyed by the same country codes as price. Values are ISO 4217 currency codes.
+          example:
+            US: USD
+            GB: GBP
+            DE: EUR
+            FR: EUR
+            '*': USD
+        size:
+          type: object
+          additionalProperties:
+            type: string
+            description: Size keyed by ISO 3166-1 alpha-2 country code or '*' fallback.
+            example: '{"US":"S","GB":"8","EU":"36"}'
+          description: Size keyed by ISO 3166-1 alpha-2 country code or '*' fallback.
+          example:
+            US: S
+            GB: '8'
+            EU: '36'
+        color:
+          type: object
+          additionalProperties:
+            type: string
+            description: Localized colour keyed by BCP 47 locale or '*' fallback.
+            example: '{"en-GB":"Navy Blue","de-DE":"Marineblau","fr-FR":"Bleu marine"}'
+          description: Localized colour keyed by BCP 47 locale or '*' fallback.
+          example:
+            en-GB: Navy Blue
+            de-DE: Marineblau
+            fr-FR: Bleu marine
+        mpn:
+          type: string
+          description: Manufacturer Part Number. Maximum length is 70 characters.
+          example: DRESS-BLK-M-2023
+        gtin:
+          type: string
+          description: Global Trade Item Number. Expected length is 8-14 digits.
+          example: '1234567890123'
+        status:
+          type: integer
+          description: 'Variant status value: 0 = pre_order, 1 = active, 2 = discontinued.'
+          format: int32
+          example: 1
+          enum:
+          - 0
+          - 1
+          - 2
+        availability:
+          type: boolean
+          description: Variant availability value.
+          example: true
+        material:
+          type: string
+          description: Material of the product.
+          example: cotton
+        gender:
+          type: string
+          description: Gender value for fashion catalogs.
+          example: female
+          enum:
+          - female
+          - male
+          - girls
+          - boys
+          - unisex
+        category:
+          type: array
+          description: Category hierarchy.
+          example:
+          - ladies
+          - dresses
+          - short
+          items:
+            type: string
+            description: Category hierarchy.
+            example: '["ladies","dresses","short"]'
+        locale:
+          type: array
+          description: Supported locales for this variant.
+          example:
+          - en-GB
+          - de-DE
+          items:
+            type: string
+            description: Supported locales for this variant.
+            example: '["en-GB","de-DE"]'
+        ean:
+          type: string
+          description: Standardised article number.
+          example: '8076809513456'
+        multipack:
+          type: integer
+          description: Multipack quantity.
+          format: int32
+          example: 3
+        collaboration:
+          type: array
+          description: Retailer-specific collaboration values.
+          example:
+          - designer-capsule
+          - summer-edit
+          items:
+            type: string
+            description: Retailer-specific collaboration values.
+            example: '["designer-capsule","summer-edit"]'
+        product_id:
+          type: string
+          description: Identifier used for grouping all variants belonging to the same product.
+          example: P-500
+        style_id:
+          type: string
+          description: Groups variants that share colour or style but differ by option attributes such as size.
+          example: S-1000
+        variant_title:
+          type: string
+          description: Human-readable title of the variant.
+          example: Basic t-shirt, size L
+        style_title:
+          type: string
+          description: Human-readable title of the style.
+          example: Black basic t-shirt
+        product_title:
+          type: object
+          additionalProperties:
+            type: string
+            description: Localized product title keyed by BCP 47 locale or '*' fallback.
+            example: '{"en-GB":"Summer dress","de-DE":"Sommerkleid","fr-FR":"Robe d''ete","*":"Summer dress"}'
+          description: Localized product title keyed by BCP 47 locale or '*' fallback.
+          example:
+            en-GB: Summer dress
+            de-DE: Sommerkleid
+            fr-FR: Robe d'ete
+            '*': Summer dress
+        product_description:
+          type: object
+          additionalProperties:
+            type: string
+            description: Localized product description keyed by BCP 47 locale or '*' fallback.
+            example: '{"en-GB":"Light dress","de-DE":"Leichtes Kleid"}'
+          description: Localized product description keyed by BCP 47 locale or '*' fallback.
+          example:
+            en-GB: Light dress
+            de-DE: Leichtes Kleid
+        image_url:
+          type: array
+          description: List of product image URLs.
+          example:
+          - https://cdn.com/photo1.jpg
+          - https://cdn.com/photo2.jpg
+          - https://cdn.com/photo3.jpg
+          items:
+            type: string
+            description: List of product image URLs.
+            example: '["https://cdn.com/photo1.jpg","https://cdn.com/photo2.jpg","https://cdn.com/photo3.jpg"]'
+        pdp_url:
+          type: object
+          additionalProperties:
+            type: string
+            description: Localized product detail page URL keyed by BCP 47 locale or '*' fallback.
+            example: '{"en-GB":"https://shop.example/gb/basic-tshirt-001","de-DE":"https://shop.example/de/basic-tshirt-001"}'
+          description: Localized product detail page URL keyed by BCP 47 locale or '*' fallback.
+          example:
+            en-GB: https://shop.example/gb/basic-tshirt-001
+            de-DE: https://shop.example/de/basic-tshirt-001
+        season_code:
+          type: boolean
+          description: Indicates whether the product belongs to a seasonal assortment.
+          example: true
+        old_price:
+          type: object
+          additionalProperties:
+            type: number
+            description: Former selling price keyed by ISO 3166-1 alpha-2 country code or '*' fallback.
+          description: Former selling price keyed by ISO 3166-1 alpha-2 country code or '*' fallback.
+          example:
+            US: 39.99
+            GB: 34.99
+        set_id:
+          type: string
+          description: Identifier for products sold as a set.
+          example: BIKINI-SET-001
+        extra_id:
+          type: object
+          additionalProperties:
+            type: string
+            description: Additional localized or country-specific product identifier.
+            example: '{"US":"EXTRA-US-1001","GB":"EXTRA-GB-1001"}'
+          description: Additional localized or country-specific product identifier.
+          example:
+            US: EXTRA-US-1001
+            GB: EXTRA-GB-1001
+        ancillary_product_code:
+          type: string
+          description: Additional product identifier.
+          example: ANC-1001
+        min_age:
+          type: integer
+          description: Minimal age in months for children's wear.
+          format: int32
+          example: 12
+        max_age:
+          type: integer
+          description: Maximum age in months for children's wear.
+          format: int32
+          example: 24
+        best_model_image:
+          type: string
+          description: Best model image URL.
+          example: https://cdn.com/best_model_image.jpg
+        best_product_image:
+          type: string
+          description: Best product-only image URL.
+          example: https://cdn.com/best_product_image.jpg
+        variant_id:
+          type: string
+          description: Client-defined unique identifier of the purchasable variant. Maximum length is 255 characters.
+          example: V-1001
+      description: 'Flat request payload for bulk partially updating a SOURCE variant, where: <br>- predefined SOURCE attributes
+        are documented as fields here.<br>- custom SOURCE attributes are added dynamically on top-level as fields.<br>- ENRICHED
+        attributes are not accepted by this endpoint; this endpoint writes SOURCE data only.<br>Only the provided fields will
+        be updated. If the variant doesn''t exist, no action is taken. '
+    BulkUpsertVariantOperationFlatSchema:
+      required:
+      - variant_id
+      type: object
+      properties:
+        brand:
+          type: string
+          description: Product brand name.
+          example: AnnTaylor
+        price:
+          type: object
+          additionalProperties:
+            type: number
+            description: Current selling price keyed by ISO 3166-1 alpha-2 country code or '*' fallback.
+          description: Current selling price keyed by ISO 3166-1 alpha-2 country code or '*' fallback.
+          example:
+            US: 29.99
+            GB: 24.99
+            DE: 27.5
+            FR: 28.0
+        currency:
+          type: object
+          additionalProperties:
+            type: string
+            description: Currency keyed by the same country codes as price. Values are ISO 4217 currency codes.
+            example: '{"US":"USD","GB":"GBP","DE":"EUR","FR":"EUR","*":"USD"}'
+          description: Currency keyed by the same country codes as price. Values are ISO 4217 currency codes.
+          example:
+            US: USD
+            GB: GBP
+            DE: EUR
+            FR: EUR
+            '*': USD
+        size:
+          type: object
+          additionalProperties:
+            type: string
+            description: Size keyed by ISO 3166-1 alpha-2 country code or '*' fallback.
+            example: '{"US":"S","GB":"8","EU":"36"}'
+          description: Size keyed by ISO 3166-1 alpha-2 country code or '*' fallback.
+          example:
+            US: S
+            GB: '8'
+            EU: '36'
+        color:
+          type: object
+          additionalProperties:
+            type: string
+            description: Localized colour keyed by BCP 47 locale or '*' fallback.
+            example: '{"en-GB":"Navy Blue","de-DE":"Marineblau","fr-FR":"Bleu marine"}'
+          description: Localized colour keyed by BCP 47 locale or '*' fallback.
+          example:
+            en-GB: Navy Blue
+            de-DE: Marineblau
+            fr-FR: Bleu marine
+        mpn:
+          type: string
+          description: Manufacturer Part Number. Maximum length is 70 characters.
+          example: DRESS-BLK-M-2023
+        gtin:
+          type: string
+          description: Global Trade Item Number. Expected length is 8-14 digits.
+          example: '1234567890123'
+        status:
+          type: integer
+          description: 'Variant status value: 0 = pre_order, 1 = active, 2 = discontinued.'
+          format: int32
+          example: 1
+          enum:
+          - 0
+          - 1
+          - 2
+        availability:
+          type: boolean
+          description: Variant availability value.
+          example: true
+        material:
+          type: string
+          description: Material of the product.
+          example: cotton
+        gender:
+          type: string
+          description: Gender value for fashion catalogs.
+          example: female
+          enum:
+          - female
+          - male
+          - girls
+          - boys
+          - unisex
+        category:
+          type: array
+          description: Category hierarchy.
+          example:
+          - ladies
+          - dresses
+          - short
+          items:
+            type: string
+            description: Category hierarchy.
+            example: '["ladies","dresses","short"]'
+        locale:
+          type: array
+          description: Supported locales for this variant.
+          example:
+          - en-GB
+          - de-DE
+          items:
+            type: string
+            description: Supported locales for this variant.
+            example: '["en-GB","de-DE"]'
+        ean:
+          type: string
+          description: Standardised article number.
+          example: '8076809513456'
+        multipack:
+          type: integer
+          description: Multipack quantity.
+          format: int32
+          example: 3
+        collaboration:
+          type: array
+          description: Retailer-specific collaboration values.
+          example:
+          - designer-capsule
+          - summer-edit
+          items:
+            type: string
+            description: Retailer-specific collaboration values.
+            example: '["designer-capsule","summer-edit"]'
+        product_id:
+          type: string
+          description: Identifier used for grouping all variants belonging to the same product. Provide it when creating a
+            new variant.
+          example: P-500
+        style_id:
+          type: string
+          description: Groups variants that share colour or style but differ by option attributes such as size.
+          example: S-1000
+        variant_title:
+          type: string
+          description: Human-readable title of the variant.
+          example: Basic t-shirt, size L
+        style_title:
+          type: string
+          description: Human-readable title of the style.
+          example: Black basic t-shirt
+        product_title:
+          type: object
+          additionalProperties:
+            type: string
+            description: Localized product title keyed by BCP 47 locale or '*' fallback.
+            example: '{"en-GB":"Summer dress","de-DE":"Sommerkleid","fr-FR":"Robe d''ete","*":"Summer dress"}'
+          description: Localized product title keyed by BCP 47 locale or '*' fallback.
+          example:
+            en-GB: Summer dress
+            de-DE: Sommerkleid
+            fr-FR: Robe d'ete
+            '*': Summer dress
+        product_description:
+          type: object
+          additionalProperties:
+            type: string
+            description: Localized product description keyed by BCP 47 locale or '*' fallback.
+            example: '{"en-GB":"Light dress","de-DE":"Leichtes Kleid"}'
+          description: Localized product description keyed by BCP 47 locale or '*' fallback.
+          example:
+            en-GB: Light dress
+            de-DE: Leichtes Kleid
+        image_url:
+          type: array
+          description: List of product image URLs.
+          example:
+          - https://cdn.com/photo1.jpg
+          - https://cdn.com/photo2.jpg
+          - https://cdn.com/photo3.jpg
+          items:
+            type: string
+            description: List of product image URLs.
+            example: '["https://cdn.com/photo1.jpg","https://cdn.com/photo2.jpg","https://cdn.com/photo3.jpg"]'
+        pdp_url:
+          type: object
+          additionalProperties:
+            type: string
+            description: Localized product detail page URL keyed by BCP 47 locale or '*' fallback.
+            example: '{"en-GB":"https://shop.example/gb/basic-tshirt-001","de-DE":"https://shop.example/de/basic-tshirt-001"}'
+          description: Localized product detail page URL keyed by BCP 47 locale or '*' fallback.
+          example:
+            en-GB: https://shop.example/gb/basic-tshirt-001
+            de-DE: https://shop.example/de/basic-tshirt-001
+        season_code:
+          type: boolean
+          description: Indicates whether the product belongs to a seasonal assortment.
+          example: true
+        old_price:
+          type: object
+          additionalProperties:
+            type: number
+            description: Former selling price keyed by ISO 3166-1 alpha-2 country code or '*' fallback.
+          description: Former selling price keyed by ISO 3166-1 alpha-2 country code or '*' fallback.
+          example:
+            US: 39.99
+            GB: 34.99
+        set_id:
+          type: string
+          description: Identifier for products sold as a set.
+          example: BIKINI-SET-001
+        extra_id:
+          type: object
+          additionalProperties:
+            type: string
+            description: Additional localized or country-specific product identifier.
+            example: '{"US":"EXTRA-US-1001","GB":"EXTRA-GB-1001"}'
+          description: Additional localized or country-specific product identifier.
+          example:
+            US: EXTRA-US-1001
+            GB: EXTRA-GB-1001
+        ancillary_product_code:
+          type: string
+          description: Additional product identifier.
+          example: ANC-1001
+        min_age:
+          type: integer
+          description: Minimal age in months for children's wear.
+          format: int32
+          example: 12
+        max_age:
+          type: integer
+          description: Maximum age in months for children's wear.
+          format: int32
+          example: 24
+        best_model_image:
+          type: string
+          description: Best model image URL.
+          example: https://cdn.com/best_model_image.jpg
+        best_product_image:
+          type: string
+          description: Best product-only image URL.
+          example: https://cdn.com/best_product_image.jpg
+        variant_id:
+          type: string
+          description: Client-defined unique identifier of the purchasable variant. Maximum length is 255 characters.
+          example: V-1001
+      description: 'Flat request payload for bulk creating or fully replacing a SOURCE variant, where: <br>- predefined SOURCE
+        attributes are documented as fields here.<br>- custom SOURCE attributes are added dynamically on top-level as fields.<br>-
+        ENRICHED attributes are not accepted by this endpoint; this endpoint writes SOURCE data only.<br>If the variant doesn''t
+        exist, it will be created. If it exists, all data will be completely replaced with the provided payload. '
+    UpsertVariantOperationFlatSchema:
+      type: object
+      properties:
+        brand:
+          type: string
+          description: Product brand name.
+          example: AnnTaylor
+        price:
+          type: object
+          additionalProperties:
+            type: number
+            description: Current selling price keyed by ISO 3166-1 alpha-2 country code or '*' fallback.
+          description: Current selling price keyed by ISO 3166-1 alpha-2 country code or '*' fallback.
+          example:
+            US: 29.99
+            GB: 24.99
+            DE: 27.5
+            FR: 28.0
+        currency:
+          type: object
+          additionalProperties:
+            type: string
+            description: Currency keyed by the same country codes as price. Values are ISO 4217 currency codes.
+            example: '{"US":"USD","GB":"GBP","DE":"EUR","FR":"EUR","*":"USD"}'
+          description: Currency keyed by the same country codes as price. Values are ISO 4217 currency codes.
+          example:
+            US: USD
+            GB: GBP
+            DE: EUR
+            FR: EUR
+            '*': USD
+        size:
+          type: object
+          additionalProperties:
+            type: string
+            description: Size keyed by ISO 3166-1 alpha-2 country code or '*' fallback.
+            example: '{"US":"S","GB":"8","EU":"36"}'
+          description: Size keyed by ISO 3166-1 alpha-2 country code or '*' fallback.
+          example:
+            US: S
+            GB: '8'
+            EU: '36'
+        color:
+          type: object
+          additionalProperties:
+            type: string
+            description: Localized colour keyed by BCP 47 locale or '*' fallback.
+            example: '{"en-GB":"Navy Blue","de-DE":"Marineblau","fr-FR":"Bleu marine"}'
+          description: Localized colour keyed by BCP 47 locale or '*' fallback.
+          example:
+            en-GB: Navy Blue
+            de-DE: Marineblau
+            fr-FR: Bleu marine
+        mpn:
+          type: string
+          description: Manufacturer Part Number. Maximum length is 70 characters.
+          example: DRESS-BLK-M-2023
+        gtin:
+          type: string
+          description: Global Trade Item Number. Expected length is 8-14 digits.
+          example: '1234567890123'
+        status:
+          type: integer
+          description: 'Variant status value: 0 = pre_order, 1 = active, 2 = discontinued.'
+          format: int32
+          example: 1
+          enum:
+          - 0
+          - 1
+          - 2
+        availability:
+          type: boolean
+          description: Variant availability value.
+          example: true
+        material:
+          type: string
+          description: Material of the product.
+          example: cotton
+        gender:
+          type: string
+          description: Gender value for fashion catalogs.
+          example: female
+          enum:
+          - female
+          - male
+          - girls
+          - boys
+          - unisex
+        category:
+          type: array
+          description: Category hierarchy.
+          example:
+          - ladies
+          - dresses
+          - short
+          items:
+            type: string
+            description: Category hierarchy.
+            example: '["ladies","dresses","short"]'
+        locale:
+          type: array
+          description: Supported locales for this variant.
+          example:
+          - en-GB
+          - de-DE
+          items:
+            type: string
+            description: Supported locales for this variant.
+            example: '["en-GB","de-DE"]'
+        ean:
+          type: string
+          description: Standardised article number.
+          example: '8076809513456'
+        multipack:
+          type: integer
+          description: Multipack quantity.
+          format: int32
+          example: 3
+        collaboration:
+          type: array
+          description: Retailer-specific collaboration values.
+          example:
+          - designer-capsule
+          - summer-edit
+          items:
+            type: string
+            description: Retailer-specific collaboration values.
+            example: '["designer-capsule","summer-edit"]'
+        product_id:
+          type: string
+          description: Identifier used for grouping all variants belonging to the same product. Provide it when creating a
+            new variant.
+          example: P-500
+        style_id:
+          type: string
+          description: Groups variants that share colour or style but differ by option attributes such as size.
+          example: S-1000
+        variant_title:
+          type: string
+          description: Human-readable title of the variant.
+          example: Basic t-shirt, size L
+        style_title:
+          type: string
+          description: Human-readable title of the style.
+          example: Black basic t-shirt
+        product_title:
+          type: object
+          additionalProperties:
+            type: string
+            description: Localized product title keyed by BCP 47 locale or '*' fallback.
+            example: '{"en-GB":"Summer dress","de-DE":"Sommerkleid","fr-FR":"Robe d''ete","*":"Summer dress"}'
+          description: Localized product title keyed by BCP 47 locale or '*' fallback.
+          example:
+            en-GB: Summer dress
+            de-DE: Sommerkleid
+            fr-FR: Robe d'ete
+            '*': Summer dress
+        product_description:
+          type: object
+          additionalProperties:
+            type: string
+            description: Localized product description keyed by BCP 47 locale or '*' fallback.
+            example: '{"en-GB":"Light dress","de-DE":"Leichtes Kleid"}'
+          description: Localized product description keyed by BCP 47 locale or '*' fallback.
+          example:
+            en-GB: Light dress
+            de-DE: Leichtes Kleid
+        image_url:
+          type: array
+          description: List of product image URLs.
+          example:
+          - https://cdn.com/photo1.jpg
+          - https://cdn.com/photo2.jpg
+          - https://cdn.com/photo3.jpg
+          items:
+            type: string
+            description: List of product image URLs.
+            example: '["https://cdn.com/photo1.jpg","https://cdn.com/photo2.jpg","https://cdn.com/photo3.jpg"]'
+        pdp_url:
+          type: object
+          additionalProperties:
+            type: string
+            description: Localized product detail page URL keyed by BCP 47 locale or '*' fallback.
+            example: '{"en-GB":"https://shop.example/gb/basic-tshirt-001","de-DE":"https://shop.example/de/basic-tshirt-001"}'
+          description: Localized product detail page URL keyed by BCP 47 locale or '*' fallback.
+          example:
+            en-GB: https://shop.example/gb/basic-tshirt-001
+            de-DE: https://shop.example/de/basic-tshirt-001
+        season_code:
+          type: boolean
+          description: Indicates whether the product belongs to a seasonal assortment.
+          example: true
+        old_price:
+          type: object
+          additionalProperties:
+            type: number
+            description: Former selling price keyed by ISO 3166-1 alpha-2 country code or '*' fallback.
+          description: Former selling price keyed by ISO 3166-1 alpha-2 country code or '*' fallback.
+          example:
+            US: 39.99
+            GB: 34.99
+        set_id:
+          type: string
+          description: Identifier for products sold as a set.
+          example: BIKINI-SET-001
+        extra_id:
+          type: object
+          additionalProperties:
+            type: string
+            description: Additional localized or country-specific product identifier.
+            example: '{"US":"EXTRA-US-1001","GB":"EXTRA-GB-1001"}'
+          description: Additional localized or country-specific product identifier.
+          example:
+            US: EXTRA-US-1001
+            GB: EXTRA-GB-1001
+        ancillary_product_code:
+          type: string
+          description: Additional product identifier.
+          example: ANC-1001
+        min_age:
+          type: integer
+          description: Minimal age in months for children's wear.
+          format: int32
+          example: 12
+        max_age:
+          type: integer
+          description: Maximum age in months for children's wear.
+          format: int32
+          example: 24
+        best_model_image:
+          type: string
+          description: Best model image URL.
+          example: https://cdn.com/best_model_image.jpg
+        best_product_image:
+          type: string
+          description: Best product-only image URL.
+          example: https://cdn.com/best_product_image.jpg
+      description: 'Flat request payload for creating or fully replacing a SOURCE variant, where: <br>- predefined SOURCE
+        attributes are documented as fields here.<br>- custom SOURCE attributes are added dynamically on top-level as fields.<br>-
+        ENRICHED attributes are not accepted by this endpoint; this endpoint writes SOURCE data only.<br>If the variant doesn''t
+        exist, it will be created. If it exists, all data will be completely replaced with the provided payload.'
+    CatalogOperationResponseDTO:
+      type: object
+      properties:
+        catalog_id:
+          type: integer
+          format: int64
+          example: 123
+        status:
+          type: string
+          enum:
+          - accepted
+          - failed
+        message:
+          type: string
+        event_id:
+          type: string
+          description: 'Unique generated UUID assigned to the event and preserved throughout its whole lifecycle.
+
+            The event_id is used in logs and is also sent back to the client with webhook events when
+
+            webhooks are configured, so clients are advised to log/save it on their side.'
+          example: 550e8400-e29b-41d4-a716-446655440000
+        operation:
+          type: string
+          example: delete
+          enum:
+          - add
+          - upsert
+          - partial_update
+          - delete
+          - delete_attributes
+          - add_existing_only
+          - overwrite
+          - overwrite_existing_only
+          - update
+          - update_existing_only
+          - update_localized_attribute
+          - update_localized_attribute_existing_only
+          - clean
+        accepted_at:
+          type: string
+          format: date-time
+    VariantFlatViewResponse:
+      required:
+      - availability
+      - catalog_id
+      - product_id
+      - status
+      - variant_id
+      type: object
+      properties:
+        variant_id:
+          type: string
+          description: Client-defined unique identifier of the purchasable variant.
+          example: V-1001
+        product_id:
+          type: string
+          description: Identifier used for grouping all variants belonging to the same product.
+          example: P-500
+        style_id:
+          type: string
+          description: Groups variants that share colour or style but differ by option attributes such as size.
+          example: S-1000
+        status:
+          type: string
+          example: '{"value":1,"label":"active"}'
+          enum:
+          - PRE_ORDER
+          - ACTIVE
+          - DISCONTINUED
+        availability:
+          type: string
+          example: '{"value":true,"label":"available"}'
+          enum:
+          - AVAILABLE
+          - NOT_AVAILABLE
+        catalog_id:
+          type: integer
+          description: Catalog identifier.
+          format: int64
+          example: 123
+        source_creation_time:
+          type: integer
+          description: SOURCE data creation timestamp in milliseconds. Present when SOURCE data is available.
+          format: int64
+          example: 1783502993000
+        source_update_time:
+          type: integer
+          description: SOURCE data last update timestamp in milliseconds. Present when SOURCE data is available.
+          format: int64
+          example: 1783503093000
+        enriched_creation_time:
+          type: integer
+          description: ENRICHED data creation timestamp in milliseconds. Present when ENRICHED data is available.
+          format: int64
+          example: 1783503193000
+        enriched_update_time:
+          type: integer
+          description: ENRICHED data last update timestamp in milliseconds. Present when ENRICHED data is available.
+          format: int64
+          example: 1783503293000
+        brand:
+          type: string
+          description: Product brand name.
+          example: AnnTaylor
+        price:
+          type: object
+          additionalProperties:
+            type: number
+            description: Current selling price keyed by ISO 3166-1 alpha-2 country code or '*' fallback.
+          description: Current selling price keyed by ISO 3166-1 alpha-2 country code or '*' fallback.
+          example:
+            US: 29.99
+            GB: 24.99
+            DE: 27.5
+            FR: 28.0
+        currency:
+          type: object
+          additionalProperties:
+            type: string
+            description: Currency keyed by the same country codes as price. Values are ISO 4217 currency codes.
+            example: '{"US":"USD","GB":"GBP","DE":"EUR","FR":"EUR","*":"USD"}'
+          description: Currency keyed by the same country codes as price. Values are ISO 4217 currency codes.
+          example:
+            US: USD
+            GB: GBP
+            DE: EUR
+            FR: EUR
+            '*': USD
+        size:
+          type: object
+          additionalProperties:
+            type: string
+            description: Size keyed by ISO 3166-1 alpha-2 country code or '*' fallback.
+            example: '{"US":"S","GB":"8","EU":"36"}'
+          description: Size keyed by ISO 3166-1 alpha-2 country code or '*' fallback.
+          example:
+            US: S
+            GB: '8'
+            EU: '36'
+        color:
+          type: object
+          additionalProperties:
+            type: string
+            description: Localized colour keyed by BCP 47 locale or '*' fallback.
+            example: '{"en-GB":"Navy Blue","de-DE":"Marineblau","fr-FR":"Bleu marine"}'
+          description: Localized colour keyed by BCP 47 locale or '*' fallback.
+          example:
+            en-GB: Navy Blue
+            de-DE: Marineblau
+            fr-FR: Bleu marine
+        mpn:
+          type: string
+          description: Manufacturer Part Number. Maximum length is 70 characters.
+          example: DRESS-BLK-M-2023
+        gtin:
+          type: string
+          description: Global Trade Item Number. Expected length is 8-14 digits.
+          example: '1234567890123'
+        material:
+          type: string
+          description: Material of the product.
+          example: cotton
+        gender:
+          type: string
+          description: Gender value for fashion catalogs.
+          example: female
+          enum:
+          - female
+          - male
+          - girls
+          - boys
+          - unisex
+        category:
+          type: array
+          description: Category hierarchy.
+          example:
+          - ladies
+          - dresses
+          - short
+          items:
+            type: string
+            description: Category hierarchy.
+            example: '["ladies","dresses","short"]'
+        locale:
+          type: array
+          description: Supported locales for this variant.
+          example:
+          - en-GB
+          - de-DE
+          items:
+            type: string
+            description: Supported locales for this variant.
+            example: '["en-GB","de-DE"]'
+        ean:
+          type: string
+          description: Standardised article number.
+          example: '8076809513456'
+        multipack:
+          type: integer
+          description: Multipack quantity.
+          format: int32
+          example: 3
+        collaboration:
+          type: array
+          description: Retailer-specific collaboration values.
+          example:
+          - designer-capsule
+          - summer-edit
+          items:
+            type: string
+            description: Retailer-specific collaboration values.
+            example: '["designer-capsule","summer-edit"]'
+        variant_title:
+          type: string
+          description: Human-readable title of the variant.
+          example: Basic t-shirt, size L
+        style_title:
+          type: string
+          description: Human-readable title of the style.
+          example: Black basic t-shirt
+        product_title:
+          type: object
+          additionalProperties:
+            type: string
+            description: Localized product title keyed by BCP 47 locale or '*' fallback.
+            example: '{"en-GB":"Summer dress","de-DE":"Sommerkleid","fr-FR":"Robe d''ete","*":"Summer dress"}'
+          description: Localized product title keyed by BCP 47 locale or '*' fallback.
+          example:
+            en-GB: Summer dress
+            de-DE: Sommerkleid
+            fr-FR: Robe d'ete
+            '*': Summer dress
+        product_description:
+          type: object
+          additionalProperties:
+            type: string
+            description: Localized product description keyed by BCP 47 locale or '*' fallback.
+            example: '{"en-GB":"Light dress","de-DE":"Leichtes Kleid"}'
+          description: Localized product description keyed by BCP 47 locale or '*' fallback.
+          example:
+            en-GB: Light dress
+            de-DE: Leichtes Kleid
+        image_url:
+          type: array
+          description: List of product image URLs.
+          example:
+          - https://cdn.com/photo1.jpg
+          - https://cdn.com/photo2.jpg
+          - https://cdn.com/photo3.jpg
+          items:
+            type: string
+            description: List of product image URLs.
+            example: '["https://cdn.com/photo1.jpg","https://cdn.com/photo2.jpg","https://cdn.com/photo3.jpg"]'
+        pdp_url:
+          type: object
+          additionalProperties:
+            type: string
+            description: Localized product detail page URL keyed by BCP 47 locale or '*' fallback.
+            example: '{"en-GB":"https://shop.example/gb/basic-tshirt-001","de-DE":"https://shop.example/de/basic-tshirt-001"}'
+          description: Localized product detail page URL keyed by BCP 47 locale or '*' fallback.
+          example:
+            en-GB: https://shop.example/gb/basic-tshirt-001
+            de-DE: https://shop.example/de/basic-tshirt-001
+        season_code:
+          type: boolean
+          description: Indicates whether the product belongs to a seasonal assortment.
+          example: true
+        old_price:
+          type: object
+          additionalProperties:
+            type: number
+            description: Former selling price keyed by ISO 3166-1 alpha-2 country code or '*' fallback.
+          description: Former selling price keyed by ISO 3166-1 alpha-2 country code or '*' fallback.
+          example:
+            US: 39.99
+            GB: 34.99
+        set_id:
+          type: string
+          description: Identifier for products sold as a set.
+          example: BIKINI-SET-001
+        extra_id:
+          type: object
+          additionalProperties:
+            type: string
+            description: Additional localized or country-specific product identifier.
+            example: '{"US":"EXTRA-US-1001","GB":"EXTRA-GB-1001"}'
+          description: Additional localized or country-specific product identifier.
+          example:
+            US: EXTRA-US-1001
+            GB: EXTRA-GB-1001
+        ancillary_product_code:
+          type: string
+          description: Additional product identifier.
+          example: ANC-1001
+        min_age:
+          type: integer
+          description: Minimal age in months for children's wear.
+          format: int32
+          example: 12
+        max_age:
+          type: integer
+          description: Maximum age in months for children's wear.
+          format: int32
+          example: 24
+        best_model_image:
+          type: string
+          description: Best model image URL.
+          example: https://cdn.com/best_model_image.jpg
+        best_product_image:
+          type: string
+          description: Best product-only image URL.
+          example: https://cdn.com/best_product_image.jpg
+      description: 'Flat variant payload based on the unified product catalog schema, where: <br>- predefined SOURCE attributes
+        are documented as fields here.<br>- custom SOURCE attributes are added dynamically on top-level as fields. <br>- ENRICHED
+        attributes are added dynamically on top-level as fields.<br> - SOURCE attributes have no prefix, while ENRICHED attributes
+        have the ''fashion_'' prefix. <br>'
+      example:
+      - variant_id: V-1001
+        product_id: P-500
+        style_id: S-42
+        status:
+          value: 1
+          label: active
+        availability:
+          value: true
+          label: available
+        catalog_id: 12345
+        source_creation_time: 1783502993000
+        source_update_time: 1783503093000
+        enriched_creation_time: 1783503193000
+        enriched_update_time: 1783503293000
+        color:
+          en-GB: Navy Blue
+          de-DE: Marineblau
+          fr-FR: Bleu marine
+        price:
+          US: 29.99
+          GB: 24.99
+        size:
+          US: S
+          EU: '36'
+        fashion_material: leather
+        fashion_season: summer
+      - variant_id: V-1002
+        product_id: P-500
+        style_id: S-42
+        status:
+          value: 1
+          label: active
+        availability:
+          value: true
+          label: available
+        catalog_id: 12345
+        source_creation_time: 1783503393000
+        source_update_time: 1783503493000
+        enriched_creation_time: 1783503593000
+        enriched_update_time: 1783503693000
+        color:
+          en-GB: Navy Blue
+          de-DE: Marineblau
+          fr-FR: Bleu marine
+        price:
+          US: 29.99
+          GB: 24.99
+        size:
+          US: M
+          EU: '38'
+        fashion_material: leather
+        fashion_season: summer
+    CatalogAttributeDTO:
+      type: object
+      properties:
+        name:
+          type: string
+          description: Unique attribute name as defined in the catalog
+        dataType:
+          type: string
+          description: 'Data type of a catalog attribute value:
+
+            - `STRING` — plain text value (e.g. `"blue"`)
+
+            - `NUMBER` — integer or decimal value (e.g. `42`, `3.14`)
+
+            - `BOOLEAN` — boolean value (`true` or `false`)
+
+            - `JSON` — arbitrary JSON object (e.g. `{"key": "value"}`)
+
+            - `MAP` — flat key-value map (e.g. `{"en": "blue", "de": "blau"}`)
+
+            - `LIST` — ordered list of scalar values (e.g. `["S", "M", "L"]`)
+
+            - `LIST_OF_MAPS` — list of key-value maps (e.g. `[{"color": "red"}, {"color": "blue"}]`)
+
+            - `MAP_OF_LISTS` — map where each key holds a list of values (e.g. `{"sizes": ["S", "M"], "colors": ["red"]}`)'
+          enum:
+          - STRING
+          - NUMBER
+          - BOOLEAN
+          - JSON
+          - MAP
+          - LIST
+          - LIST_OF_MAPS
+          - MAP_OF_LISTS
+        localizedAttributeKeyType:
+          type: string
+          description: 'Type of localized attribute key, determining the expected key format:
+
+            - `COUNTRY_CODE` — ISO 3166-1 alpha-2 two-letter country code (e.g. `US`, `DE`)
+
+            - `LANGUAGE_CODE` — ISO 639-1 two-letter language code (e.g. `en`, `de`)
+
+            - `LANGUAGE_CODE_COUNTRY_CODE` — BCP 47 language-country tag, hyphen-separated (e.g. `en-US`, `de-DE`)
+
+            - `CURRENCY` — ISO 4217 three-letter currency code (e.g. `USD`, `EUR`)
+
+            - `NUMBER` — numeric value, integer or decimal (e.g. `42`, `3.14`)
+
+            - `STRING` — arbitrary string value'
+          enum:
+          - COUNTRY_CODE
+          - LANGUAGE_CODE
+          - LANGUAGE_CODE_COUNTRY_CODE
+          - CURRENCY
+          - NUMBER
+          - STRING
+        localizedAttributeValueType:
+          type: string
+          description: 'Type of localized attribute value, determining the expected value format:
+
+            - `STRING` — arbitrary string value (e.g. `sample text`)
+
+            - `NUMBER` — numeric value, integer or decimal (e.g. `42`, `3.14`)
+
+            - `BOOLEAN` — boolean value (`true` or `false`)
+
+            - `COUNTRY_CODE` — ISO 3166-1 alpha-2 two-letter country code (e.g. `US`, `DE`)
+
+            - `LANGUAGE_CODE` — ISO 639-1 two-letter language code (e.g. `en`, `de`)
+
+            - `CURRENCY` — ISO 4217 three-letter currency code (e.g. `USD`, `EUR`)
+
+            - `LANGUAGE_CODE_COUNTRY_CODE` — BCP 47 language-country tag, hyphen-separated (e.g. `en-US`, `de-DE`)'
+          enum:
+          - STRING
+          - NUMBER
+          - BOOLEAN
+          - COUNTRY_CODE
+          - LANGUAGE_CODE
+          - CURRENCY
+          - LANGUAGE_CODE_COUNTRY_CODE
+        catalogType:
+          type: string
+          description: Catalog data layer this attribute originates from
+          enum:
+          - SOURCE
+          - ENRICHED
+          - COMBINED
+      description: Represents a single product catalog attribute with its data type and optional localization metadata
+    CatalogDTO:
+      type: object
+      properties:
+        id:
+          type: integer
+          description: Catalog identifier
+          format: int64
+          readOnly: true
+        name:
+          type: string
+          description: Catalog name
+        description:
+          type: string
+          description: Catalog description
+        enrichReady:
+          type: boolean
+          description: Whether enriched catalog data is ready
+        createDate:
+          type: string
+          description: Catalog creation date
+          format: date-time
+          readOnly: true
+        modifyDate:
+          type: string
+          description: Catalog last modification date
+          format: date-time
+          readOnly: true
+        creatorId:
+          type: integer
+          description: Identifier of the user who created the catalog
+          format: int64
+          readOnly: true
+      description: Public catalog metadata
+    ProductVariantsResponseDTO:
+      type: object
+      properties:
+        paginationCursor:
+          $ref: '#/components/schemas/PaginationCursorDTO'
+        catalog_id:
+          type: integer
+          format: int64
+        view:
+          type: string
+          example: flat
+        product_id:
+          type: string
+        total_variants:
+          type: integer
+          description: Only set when pagination is not used
+          format: int32
+        variants:
+          type: array
+          example:
+          - variant_id: V-1001
+            product_id: P-500
+            style_id: S-42
+            status:
+              value: 1
+              label: active
+            availability:
+              value: true
+              label: available
+            catalog_id: 12345
+            source_creation_time: 1783502993000
+            source_update_time: 1783503093000
+            enriched_creation_time: 1783503193000
+            enriched_update_time: 1783503293000
+            color:
+              en-GB: Navy Blue
+              de-DE: Marineblau
+              fr-FR: Bleu marine
+            price:
+              US: 29.99
+              GB: 24.99
+            size:
+              US: S
+              EU: '36'
+            fashion_material: leather
+            fashion_season: summer
+          - variant_id: V-1002
+            product_id: P-500
+            style_id: S-42
+            status:
+              value: 1
+              label: active
+            availability:
+              value: true
+              label: available
+            catalog_id: 12345
+            source_creation_time: 1783503393000
+            source_update_time: 1783503493000
+            enriched_creation_time: 1783503593000
+            enriched_update_time: 1783503693000
+            color:
+              en-GB: Navy Blue
+              de-DE: Marineblau
+              fr-FR: Bleu marine
+            price:
+              US: 29.99
+              GB: 24.99
+            size:
+              US: M
+              EU: '38'
+            fashion_material: leather
+            fashion_season: summer
+          items:
+            $ref: '#/components/schemas/VariantFlatViewResponse'
+    PaginationCursorDTO:
+      type: object
+      properties:
+        nextPageExists:
+          type: boolean
+        previousPageExists:
+          type: boolean
+        firstId:
+          type: string
+          example: V-1001
+        lastId:
+          type: string
+          example: V-1010
+      description: Only set when pagination is used
+    PaginatedVariantsResponseDTO:
+      type: object
+      properties:
+        productViewPayloads:
+          type: array
+          example:
+          - variant_id: V-1001
+            product_id: P-500
+            status:
+              value: 1
+              label: active
+            availability:
+              value: true
+              label: available
+            catalog_id: 12345
+            source_creation_time: 1783502993000
+            source_update_time: 1783503093000
+            enriched_creation_time: 1783503193000
+            enriched_update_time: 1783503293000
+            color:
+              en-GB: Navy Blue
+              de-DE: Marineblau
+              fr-FR: Bleu marine
+            price:
+              US: 29.99
+              GB: 24.99
+            size:
+              US: S
+              EU: '36'
+            fashion_material: leather
+            fashion_season: summer
+          - variant_id: V-1002
+            product_id: P-500
+            status:
+              value: 1
+              label: active
+            availability:
+              value: true
+              label: available
+            catalog_id: 12345
+            source_creation_time: 1783503393000
+            source_update_time: 1783503493000
+            enriched_creation_time: 1783503593000
+            enriched_update_time: 1783503693000
+            color:
+              en-GB: Navy Blue
+              de-DE: Marineblau
+              fr-FR: Bleu marine
+            price:
+              US: 29.99
+              GB: 24.99
+            size:
+              US: M
+              EU: '38'
+            fashion_material: leather
+            fashion_season: summer
+          items:
+            $ref: '#/components/schemas/VariantFlatViewResponse'
+        paginationCursor:
+          $ref: '#/components/schemas/PaginationCursorDTO'
+    PartialUpdateVariantOperationFlatSchema:
+      type: object
+      properties:
+        brand:
+          type: string
+          description: Product brand name.
+          example: AnnTaylor
+        price:
+          type: object
+          additionalProperties:
+            type: number
+            description: Current selling price keyed by ISO 3166-1 alpha-2 country code or '*' fallback.
+          description: Current selling price keyed by ISO 3166-1 alpha-2 country code or '*' fallback.
+          example:
+            US: 29.99
+            GB: 24.99
+            DE: 27.5
+            FR: 28.0
+        currency:
+          type: object
+          additionalProperties:
+            type: string
+            description: Currency keyed by the same country codes as price. Values are ISO 4217 currency codes.
+            example: '{"US":"USD","GB":"GBP","DE":"EUR","FR":"EUR","*":"USD"}'
+          description: Currency keyed by the same country codes as price. Values are ISO 4217 currency codes.
+          example:
+            US: USD
+            GB: GBP
+            DE: EUR
+            FR: EUR
+            '*': USD
+        size:
+          type: object
+          additionalProperties:
+            type: string
+            description: Size keyed by ISO 3166-1 alpha-2 country code or '*' fallback.
+            example: '{"US":"S","GB":"8","EU":"36"}'
+          description: Size keyed by ISO 3166-1 alpha-2 country code or '*' fallback.
+          example:
+            US: S
+            GB: '8'
+            EU: '36'
+        color:
+          type: object
+          additionalProperties:
+            type: string
+            description: Localized colour keyed by BCP 47 locale or '*' fallback.
+            example: '{"en-GB":"Navy Blue","de-DE":"Marineblau","fr-FR":"Bleu marine"}'
+          description: Localized colour keyed by BCP 47 locale or '*' fallback.
+          example:
+            en-GB: Navy Blue
+            de-DE: Marineblau
+            fr-FR: Bleu marine
+        mpn:
+          type: string
+          description: Manufacturer Part Number. Maximum length is 70 characters.
+          example: DRESS-BLK-M-2023
+        gtin:
+          type: string
+          description: Global Trade Item Number. Expected length is 8-14 digits.
+          example: '1234567890123'
+        status:
+          type: integer
+          description: 'Variant status value: 0 = pre_order, 1 = active, 2 = discontinued.'
+          format: int32
+          example: 1
+          enum:
+          - 0
+          - 1
+          - 2
+        availability:
+          type: boolean
+          description: Variant availability value.
+          example: true
+        material:
+          type: string
+          description: Material of the product.
+          example: cotton
+        gender:
+          type: string
+          description: Gender value for fashion catalogs.
+          example: female
+          enum:
+          - female
+          - male
+          - girls
+          - boys
+          - unisex
+        category:
+          type: array
+          description: Category hierarchy.
+          example:
+          - ladies
+          - dresses
+          - short
+          items:
+            type: string
+            description: Category hierarchy.
+            example: '["ladies","dresses","short"]'
+        locale:
+          type: array
+          description: Supported locales for this variant.
+          example:
+          - en-GB
+          - de-DE
+          items:
+            type: string
+            description: Supported locales for this variant.
+            example: '["en-GB","de-DE"]'
+        ean:
+          type: string
+          description: Standardised article number.
+          example: '8076809513456'
+        multipack:
+          type: integer
+          description: Multipack quantity.
+          format: int32
+          example: 3
+        collaboration:
+          type: array
+          description: Retailer-specific collaboration values.
+          example:
+          - designer-capsule
+          - summer-edit
+          items:
+            type: string
+            description: Retailer-specific collaboration values.
+            example: '["designer-capsule","summer-edit"]'
+        product_id:
+          type: string
+          description: Identifier used for grouping all variants belonging to the same product.
+          example: P-500
+        style_id:
+          type: string
+          description: Groups variants that share colour or style but differ by option attributes such as size.
+          example: S-1000
+        variant_title:
+          type: string
+          description: Human-readable title of the variant.
+          example: Basic t-shirt, size L
+        style_title:
+          type: string
+          description: Human-readable title of the style.
+          example: Black basic t-shirt
+        product_title:
+          type: object
+          additionalProperties:
+            type: string
+            description: Localized product title keyed by BCP 47 locale or '*' fallback.
+            example: '{"en-GB":"Summer dress","de-DE":"Sommerkleid","fr-FR":"Robe d''ete","*":"Summer dress"}'
+          description: Localized product title keyed by BCP 47 locale or '*' fallback.
+          example:
+            en-GB: Summer dress
+            de-DE: Sommerkleid
+            fr-FR: Robe d'ete
+            '*': Summer dress
+        product_description:
+          type: object
+          additionalProperties:
+            type: string
+            description: Localized product description keyed by BCP 47 locale or '*' fallback.
+            example: '{"en-GB":"Light dress","de-DE":"Leichtes Kleid"}'
+          description: Localized product description keyed by BCP 47 locale or '*' fallback.
+          example:
+            en-GB: Light dress
+            de-DE: Leichtes Kleid
+        image_url:
+          type: array
+          description: List of product image URLs.
+          example:
+          - https://cdn.com/photo1.jpg
+          - https://cdn.com/photo2.jpg
+          - https://cdn.com/photo3.jpg
+          items:
+            type: string
+            description: List of product image URLs.
+            example: '["https://cdn.com/photo1.jpg","https://cdn.com/photo2.jpg","https://cdn.com/photo3.jpg"]'
+        pdp_url:
+          type: object
+          additionalProperties:
+            type: string
+            description: Localized product detail page URL keyed by BCP 47 locale or '*' fallback.
+            example: '{"en-GB":"https://shop.example/gb/basic-tshirt-001","de-DE":"https://shop.example/de/basic-tshirt-001"}'
+          description: Localized product detail page URL keyed by BCP 47 locale or '*' fallback.
+          example:
+            en-GB: https://shop.example/gb/basic-tshirt-001
+            de-DE: https://shop.example/de/basic-tshirt-001
+        season_code:
+          type: boolean
+          description: Indicates whether the product belongs to a seasonal assortment.
+          example: true
+        old_price:
+          type: object
+          additionalProperties:
+            type: number
+            description: Former selling price keyed by ISO 3166-1 alpha-2 country code or '*' fallback.
+          description: Former selling price keyed by ISO 3166-1 alpha-2 country code or '*' fallback.
+          example:
+            US: 39.99
+            GB: 34.99
+        set_id:
+          type: string
+          description: Identifier for products sold as a set.
+          example: BIKINI-SET-001
+        extra_id:
+          type: object
+          additionalProperties:
+            type: string
+            description: Additional localized or country-specific product identifier.
+            example: '{"US":"EXTRA-US-1001","GB":"EXTRA-GB-1001"}'
+          description: Additional localized or country-specific product identifier.
+          example:
+            US: EXTRA-US-1001
+            GB: EXTRA-GB-1001
+        ancillary_product_code:
+          type: string
+          description: Additional product identifier.
+          example: ANC-1001
+        min_age:
+          type: integer
+          description: Minimal age in months for children's wear.
+          format: int32
+          example: 12
+        max_age:
+          type: integer
+          description: Maximum age in months for children's wear.
+          format: int32
+          example: 24
+        best_model_image:
+          type: string
+          description: Best model image URL.
+          example: https://cdn.com/best_model_image.jpg
+        best_product_image:
+          type: string
+          description: Best product-only image URL.
+          example: https://cdn.com/best_product_image.jpg
+      description: 'Flat request payload for partially updating a SOURCE variant, where: <br>- predefined SOURCE attributes
+        are documented as fields here.<br>- custom SOURCE attributes are added dynamically on top-level as fields.<br>- ENRICHED
+        attributes are not accepted by this endpoint; this endpoint writes SOURCE data only.<br>Only the provided fields will
+        be updated. If the variant doesn''t exist, no action is taken.'
+  securitySchemes:
+    Keycloak:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+x-apievangelist-provenance:
+  method: searched
+  generated: '2026-08-12'
+  source: https://docs.mapp.com/apidocs/ (per-endpoint OpenAPI fragments, Product Catalog API)
+  note: Union of the OpenAPI 3.0.1 fragments Mapp publishes on each Product Catalog endpoint page. Content verbatim.

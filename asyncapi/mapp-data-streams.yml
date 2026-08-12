@@ -1,0 +1,46 @@
+generated: '2026-08-12'
+method: searched
+source: https://docs.mapp.com/docs/data-streams
+spec_type: null
+note: 'Mapp has a real event surface and publishes NO machine-readable description of it. Mapp Intelligence Data
+  Streams is a standard Apache Kafka deployment that a customer consumes directly with the Kafka Consumer API or
+  Kafka Streams API over SASL/JAAS, in JSON or Avro. There is no AsyncAPI document, no public channel/topic catalogue
+  and no published message schema — topics and credentials are provisioned per tenant — so nothing is recorded here
+  as a spec. Mapp also publishes no webhooks: nothing in the four API surfaces or the documentation index registers
+  a callback URL, and the closest equivalents (API-triggered Whiteboard automations, transactional message triggers)
+  are inbound calls to Mapp, not outbound deliveries from it. Recorded as an event surface without a contract, and
+  deliberately NOT wired as AsyncAPI or Webhooks.'
+event_surface:
+  name: Mapp Intelligence Data Streams
+  protocol: kafka
+  availability: Custom pricing tier only
+  formats:
+  - json
+  - avro
+  authentication: SASL over JAAS (Java Authentication and Authorization Service) configuration supplied per tenant
+  consumption_methods:
+  - Kafka Consumer API
+  - Kafka Streams API
+  - Kafka binary distribution CLI tools
+  client_dependencies:
+  - org.apache.kafka:kafka-clients
+  - io.confluent:kafka-avro-serializer (Avro topics only)
+  schema_registry: Confluent-compatible (Avro deserializer required for Avro topics)
+  monitoring: https://docs.mapp.com/docs/data-streams-monitoring
+  docs:
+  - https://docs.mapp.com/docs/data-streams
+  - https://docs.mapp.com/docs/consuming-data-streams
+  - https://docs.mapp.com/docs/consume-data-through-the-kafka-consumer-api
+  - https://docs.mapp.com/docs/consume-data-through-the-kafka-stream-api
+  - https://docs.mapp.com/docs/configuration-properties-for-the-kafka-clients
+  - https://docs.mapp.com/docs/mapp-intelligence-avro-as-alternative-data-stream-format
+  example_code: https://github.com/mapp-digital/webtrekk-data-streams-examples
+webhooks:
+  published: false
+  note: No webhook/callback registration exists on any Mapp API surface as of 2026-08-12.
+asyncapi_document:
+  published: false
+  searched:
+  - https://docs.mapp.com/llms.txt (3,895 entries, no asyncapi page)
+  - github.com/mapp-digital (36 public repos, none carrying an .asyncapi/asyncapi.yaml)
+  - https://api.mapp.com/asyncapi.yaml (marketing-site soft-404)

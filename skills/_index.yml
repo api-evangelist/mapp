@@ -1,0 +1,98 @@
+generated: '2026-08-12'
+method: generated
+source: openapi/*.yml (operationIds verified against the harvested specs) + docs.mapp.com
+note: Mapp publishes no AGENTS.md and no provider-authored agent skills. These are generated from the harvested
+  OpenAPI surfaces and the published conventions; every operationId is verified to exist verbatim in the referenced
+  spec. Where Mapp ships no operationId (most Analytics API operations), the skill addresses the operation by method
+  + path and says so.
+skill_count: 7
+skills:
+- file: mapp-subscribe-and-send-transactional.md
+  name: Subscribe a contact and send a transactional message
+  api: openapi/mapp-engage-openapi.yml
+  operations:
+  - create
+  - update
+  - subscribeByEmail
+  - sendTransactional
+  - sendTransactionalWithEventDetails
+  - getStatisticsByExternalMessageId
+  - unsubscribeByEmail
+- file: mapp-build-and-publish-segment.md
+  name: Build, preview and publish a Mapp Engage segment
+  api: openapi/mapp-engage-openapi.yml
+  operations:
+  - schema
+  - create_5
+  - find_2
+  - get_2
+  - preview
+  - triggerCount
+  - getCount
+  - update_5
+  - publish
+  - delete_3
+- file: mapp-ecommerce-events.md
+  name: Feed e-commerce behaviour into Mapp Engage
+  api: openapi/mapp-engage-openapi.yml
+  operations:
+  - createAbandonedCartItem
+  - createAbandonedBrowseItem
+  - createWishlistItem
+  - registerTransaction
+  - removeAbandonedCartItem
+  - removeAbandonedBrowseItem
+  - removeWishlistItem
+  - removeTransaction
+- file: mapp-mobile-push-campaign.md
+  name: Schedule and control a Mapp Engage mobile push campaign
+  api: openapi/mapp-engage-openapi.yml
+  operations:
+  - createAndSchedulePushMessage
+  - getPushMessage
+  - updatePushMessage
+  - SendSingleMobilePush
+  - MultiTenantSendSingleMobilePush
+  - pausePushSend
+  - resumePushSend
+  - cancelPushSend
+  - deletePushMessage
+- file: mapp-audit-log-to-siem.md
+  name: Pull Mapp Engage audit events into a SIEM
+  api: openapi/mapp-engage-openapi.yml
+  operations:
+  - auditLogEvents
+  - getUsageStatistics
+  - ExportGetUsageStatistics
+- file: mapp-analytics-run-analysis.md
+  name: Run a Mapp Intelligence analysis through the Analytics API
+  api: openapi/mapp-intelligence-analytics-openapi.yml
+  operations:
+  - POST /analysis-query
+  - GET /analysis-query/{correlationId}
+  - GET /analysis-result/{calculationId}
+  - GET /query-objects
+  - GET /segments
+  - GET /dynamic-timefilters
+  - GET /analysis-usage/current
+  - createReportQuery
+  - status
+  - deleteReportAnalysis
+- file: mapp-product-catalog-sync.md
+  name: Sync a product catalog into Mapp Cloud
+  api: openapi/mapp-product-catalog-openapi.yml
+  operations:
+  - getCatalogMetadataByWorkspace
+  - getCatalogAttributes
+  - bulkUpsertVariants
+  - bulkAddVariants
+  - bulkPartialUpdateVariants
+  - bulkDeleteVariants
+  - upsertVariant
+  - partialUpdateVariant
+  - getVariant
+  - getPaginatedVariants
+  - listVariants
+  - deleteVariant
+  - deleteVariantAttributes
+  - deleteAllCatalogData

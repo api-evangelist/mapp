@@ -1,0 +1,69 @@
+generated: '2026-08-12'
+method: searched
+source: https://docs.mapp.com/apidocs/engage-api, https://docs.mapp.com/docs/news, https://status.webtrekk.com/
+versioning:
+- api: mapp:engage
+  scheme: uri-path
+  current: v19
+  generation: REST 2.0
+  policy: Additive. Every prior version (v1-v19) keeps all earlier operations and only adds new ones; a version
+    can be pinned in the URL as /api/rest/v19/. GET /system/getApiVersion reports the version a tenant exposes.
+  docs: https://docs.mapp.com/apidocs/engage-api
+  availability_matrix: https://docs.mapp.com/apidocs/engage-api-method-availability-by-version
+- api: mapp:intelligence-analytics
+  scheme: none-in-path
+  current: 1.0.0
+  policy: The Analytics API is versioned in the OpenAPI info.version only; the path carries no version segment.
+  docs: https://docs.mapp.com/apidocs/analytics-api
+- api: mapp:product-catalog
+  scheme: uri-path
+  current: v1
+  spec_version: 1.0.1
+  docs: https://docs.mapp.com/apidocs/product-catalog-api
+- api: mapp:fashion
+  scheme: spec-version
+  current: '10'
+  docs: https://docs.mapp.com/apidocs/mapp-fashion-api-documentation
+deprecation:
+  policy_url: https://docs.mapp.com/docs/news
+  sunset_header: false
+  deprecation_header: false
+  note: Mapp does not publish a standing deprecation policy page and does not advertise RFC 8594 Sunset / Deprecation
+    response headers. Deprecations are announced as dated news posts on docs.mapp.com with an explicit end-of-support
+    and end-of-life date, which is a real and datable practice even though it is not a machine-readable one.
+  announced:
+  - item: Mapp Intelligence JSON/RPC API (Q3 API)
+    announced: '2025-03-20'
+    sunset: end of June 2025
+    replacement: Mapp Intelligence Analytics API
+    url: https://docs.mapp.com/docs/json-rpc-q3-api-sunset
+  - item: HTTP (non-TLS) connections to the Intelligence JSON API
+    announced: '2024-06-28'
+    url: https://docs.mapp.com/docs/mapp-intelligence-sunset-json-http
+  - item: Mapp Engage Android SDK v6
+    announced: '2026-04-15'
+    end_of_support: '2026-10-15'
+    end_of_life: '2027-04-15'
+    replacement: Mapp Engage Android SDK v7
+    url: https://docs.mapp.com/docs/mapp-engage-android-sdk-6-end-of-support-and-end-of-life
+  - item: Cordova and Xamarin mobile frameworks
+    announced: '2023-06-01'
+    url: https://docs.mapp.com/docs/mapp-cloud-end-of-support-for-cordova-and-xamarin-mobile-frameworks
+  - item: Mapp Engage API 1 (REST and SOAP, first generation)
+    announced: null
+    note: Documented as deprecated in the Engage error-handling guide, which recommends migrating to REST 2.0.
+    url: https://docs.mapp.com/apidocs/engage-api-error-handling
+status_page: https://status.webtrekk.com/
+status_page_note: The Mapp Intelligence Status Page is served from the legacy Webtrekk domain and covers Mapp Intelligence
+  only. It exposes no Statuspage v2 JSON API (/api/v2/summary.json returns 404), so it is human-readable only. No
+  status page was found for Mapp Engage, the Product Catalog API or Mapp Fashion.
+sla:
+  url: null
+  uptime_target: null
+  note: No public SLA or uptime commitment is published; commercial terms sit behind https://mapp.com/legal/.
+support:
+  portal: https://support.mapp.com/
+  email: support@mapp.com
+  page: https://mapp.com/technical-support/
+deprecated_operations: []
+deprecated_operations_note: 'No operation in any of the four harvested specs carries deprecated: true.'

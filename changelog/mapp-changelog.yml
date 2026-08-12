@@ -1,0 +1,82 @@
+generated: '2026-08-12'
+method: searched
+source: https://docs.mapp.com/docs/news
+scheme: dated news posts on the documentation site (no semantic release feed, no RSS)
+current_versions:
+  mapp:engage: v19 (REST 2.0)
+  mapp:intelligence-analytics: 1.0.0
+  mapp:product-catalog: v1 / 1.0.1
+  mapp:fashion: '10'
+per_api_changelog:
+  mapp:fashion: https://docs.mapp.com/apidocs/changelog-mapp-fashion-api
+entries:
+- date: '2026-07-31'
+  title: 'Mapp Engage: new API endpoints for Segments, Attributes, Whiteboards and Audit Log'
+  breaking: false
+  additions: true
+  highlights:
+  - Segments can now be created, retrieved, updated, published and deleted via the API.
+  - Profile, member, group and address attributes are now fully manageable via the API.
+  - Whiteboards (marketing automations) can be created, updated, validated, published and deleted.
+  - A new Log Tracker audit-log endpoint returns login, message, group, import/export and automation events for
+    SIEM ingestion.
+  - Mapp frames these additions explicitly as support for "automated, headless, and agent-driven integrations".
+  url: https://docs.mapp.com/docs/mapp-engage-new-public-api-endpoints-in-api-v19
+- date: '2026-07-23'
+  title: 'Product Catalog API: new capabilities for building integrations'
+  breaking: false
+  additions: true
+  url: https://docs.mapp.com/docs/product-catalog-api-new-capabilities-for-building-integrations
+- date: '2026-07-09'
+  title: 'Mapp Intelligence: new Analytics API domains'
+  breaking: false
+  additions: false
+  highlights:
+  - Analytics API requests move to api.mapp.com under /api/analytics.
+  - Token issuance moves to https://auth.mapp.com/oauth2/token.
+  - Old endpoints still redirect, but API responses reference the new domains regardless of which host was called,
+    so host-allowlisted integrations can fail on result retrieval.
+  - Existing Client IDs and Secrets were migrated automatically.
+  url: https://docs.mapp.com/docs/mapp-intelligence-new-analytics-api-domains
+- date: '2026-05-28'
+  title: 'Mapp Cloud: centralized API Client management'
+  breaking: false
+  additions: false
+  highlights:
+  - API Client IDs and Secrets are now managed in one place and apply across all Mapp APIs, current and future.
+  - Settings moved from the Mapp Intelligence area to a new Mapp Cloud section.
+  url: https://docs.mapp.com/docs/mapp-cloud-centralized-api-client-management
+- date: '2026-05-22'
+  title: 'Mapp Engage: new API endpoints for Related Data and Process information'
+  breaking: false
+  additions: true
+  url: https://docs.mapp.com/docs/mapp-engage-api-related-data-and-process-endpoints
+- date: '2026-04-15'
+  title: 'Mapp Engage: Android SDK v6 end of support and end of life'
+  breaking: true
+  additions: false
+  highlights:
+  - End of Support 2026-10-15, End of Life 2027-04-15. SDK 7 is the replacement.
+  url: https://docs.mapp.com/docs/mapp-engage-android-sdk-6-end-of-support-and-end-of-life
+- date: '2026-02-24'
+  title: 'Mapp Fashion: items/basket curated recommendations'
+  breaking: false
+  additions: true
+  url: https://docs.mapp.com/apidocs/changelog-mapp-fashion-api
+- date: '2025-12-01'
+  title: 'Mapp Fashion: items/top curated recommendations'
+  breaking: false
+  additions: true
+  url: https://docs.mapp.com/apidocs/changelog-mapp-fashion-api
+- date: '2025-03-20'
+  title: 'Mapp Intelligence: JSON/RPC (Q3) API sunset'
+  breaking: true
+  additions: false
+  highlights:
+  - Sunset from end of June 2025; the Analytics API is the replacement.
+  url: https://docs.mapp.com/docs/json-rpc-q3-api-sunset
+- date: '2024-06-28'
+  title: 'Mapp Intelligence: sunset of HTTP connections to the JSON API'
+  breaking: true
+  additions: false
+  url: https://docs.mapp.com/docs/mapp-intelligence-sunset-json-http

@@ -1,0 +1,55 @@
+generated: '2026-08-12'
+method: searched
+source: https://docs.mapp.com/apidocs/engage-api-error-handling, https://docs.mapp.com/apidocs/product-catalog-api-data-limits-and-validation-rules
+note: Mapp publishes one real throughput ceiling and no runtime rate-limit signalling at all. There is no 429, no
+  RateLimit-* or X-RateLimit-* header, and no Retry-After. A client that exceeds the Engage ceiling receives HTTP
+  500 with the description "Database Access Limit Exceeded" — a server-error status carrying a client-throttling
+  meaning, which no generic HTTP client and no agent will back off from correctly. Retry guidance is a fixed human
+  ladder (30 seconds, then 15 minutes, then contact support) rather than a returned value.
+limit_count: 1
+limits:
+- api: mapp:engage
+  scope: per-account
+  window: per second
+  limit: 10
+  unit: transactions per second
+  burst: null
+  status_code_on_exhaustion: 500
+  error_description: Database Access Limit Exceeded
+  documented_action: Reduce the load to ~10 tps or contact Technical Support.
+  source: https://docs.mapp.com/apidocs/engage-api-error-handling
+  note: Stated as an approximate ceiling ("~10 tps") in the response-code table, not as a contract.
+response_headers: []
+response_headers_note: None published and none observed on the unauthenticated 401 responses from api.mapp.com.
+retry_policy:
+  documented: true
+  style: fixed ladder
+  steps:
+  - retry after at least 30 seconds
+  - retry after at least 15 minutes
+  - log failure and contact Technical Support
+  timeout_advice: Some calls return large payloads and can take more than 30 seconds; set client timeouts accordingly.
+  source: https://docs.mapp.com/apidocs/engage-api-error-handling
+other_quotas:
+- api: mapp:product-catalog
+  kind: payload validation
+  details:
+  - 'Product/Variant/Style ID: max 255 characters'
+  - 'Title: max 255 characters'
+  - 'Description: max 5000 characters'
+  - 'Brand: max 100 characters'
+  - 'MPN: max 70 characters'
+  - 'GTIN: 8-14 digits'
+  - 'Color: max 40 characters'
+  - 'Size: max 100 characters'
+  - 'Price / sales_price: 0.01 to 9,999,999.99, two decimal places'
+  - 'Attribute name: max 64 characters, pattern [a-zA-Z0-9_-]*'
+  - 'Display name: max 255 characters'
+  - 'Feed name pattern: ^[a-zA-Z0-9_-]*$'
+  source: https://docs.mapp.com/apidocs/product-catalog-api-data-limits-and-validation-rules
+- api: mapp:intelligence-analytics
+  kind: usage counter
+  details:
+  - GET /analysis-usage/current returns the number of analyses run in the current month, implying a contractual
+    monthly analysis allowance that is not published as a number.
+  source: openapi/mapp-intelligence-analytics-openapi.yml

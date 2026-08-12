@@ -1,0 +1,103 @@
+generated: '2026-08-12'
+method: searched
+source: https://docs.mapp.com/apidocs/getting-started-with-engage-api, https://docs.mapp.com/apidocs/engage-api-error-handling,
+  https://docs.mapp.com/apidocs/how-to-grant-access-to-the-intelligence-analytics-api, openapi/*.yml
+authentication:
+  mapp:engage: HTTP Basic (RFC 7617). Base64 of "<system-user-email>:<password>" in an Authorization header on every
+    request. No cookies, no session tokens, no login/logout methods. Only system users of type API or Hybrid may
+    authenticate; Mapp recommends a dedicated API user over a hybrid user in production.
+  mapp:intelligence-analytics: 'OAuth 2.0 client credentials. POST to https://auth.mapp.com/oauth2/token with HTTP
+    Basic client-id:client-secret and grant_type=client_credentials; send the result as Authorization: Bearer. Do
+    NOT send a scope parameter — the current token endpoint rejects the scope that earlier versions required. Default
+    token validity is 60 minutes and is configurable per Client ID.'
+  mapp:product-catalog: Bearer JWT (Keycloak) issued from the same Mapp Cloud API Client ID / Secret.
+  mapp:fashion: OAuth 2.0 authorization code with mandatory PKCE (S256 only), redirect_uri fixed to urn:ietf:wg:oauth:2.0:oob:auto;
+    the grant code is exchanged for a JWT plus a refresh token.
+  credential_management: A single Client ID grants access across the Mapp Cloud APIs (Connect, Intelligence, Engage,
+    Fashion), managed centrally in Settings > Mapp Cloud > API Client IDs since 2026-05-28. Per-service API access
+    still has to be enabled by a Customer Success Manager.
+idempotency:
+  supported: false
+  header: null
+  note: 'No idempotency contract exists on any Mapp surface. There is no Idempotency-Key header or parameter in
+    any of the four specs and no deduplication guarantee in the docs. The published guidance is the opposite of
+    idempotent: Mapp explicitly warns against "fire-and-forget" clients and tells integrators to build their own
+    queue, log, and retry ladder (retry after 30 seconds, then after 15 minutes, then contact support). For write
+    operations such as /message/sendTransactional or /contact/create this leaves duplicate-suppression entirely
+    to the caller. This is the single largest agent-readiness gap in the Mapp API surface.'
+  source: https://docs.mapp.com/apidocs/engage-api-error-handling
+pagination:
+  mapp:engage:
+    style: offset
+    params:
+    - startIndex
+    - maxResults
+    note: Find/list operations take startIndex and maxResults query parameters; the Async topic-polling operations
+      page by result index instead (getNextResultIndex / pollByIndex).
+  mapp:intelligence-analytics:
+    style: none
+    note: Analysis results are returned whole; large calculations are asynchronous (202/201 + correlationId + statusUrl)
+      rather than paged.
+  mapp:product-catalog:
+    style: page-number
+    note: Variant listing operations accept page/size query parameters.
+async_pattern:
+  mapp:intelligence-analytics: 'Long calculations are queued: POST /analysis-query returns 200 with calculationId
+    + resultUrl when the answer is already cached, or 201 with correlationId + statusUrl when it is queued. Poll
+    GET /analysis-query/{correlationId} until a resultUrl appears, then GET the result. The same pattern applies
+    to /report-query.'
+  mapp:engage: 'A generic async job facility exists under the Async tag: submit a job for a topic, then poll results
+    by topic, by index, by event type, or within a time range.'
+request_headers:
+  mapp:engage:
+  - Host
+  - Accept
+  - Content-Type
+  - Authorization
+  note: Mapp requires an explicit Host header matching the request URL — without it, requests may misroute or trip
+    Mapp anti-intrusion systems.
+content_negotiation:
+  mapp:engage:
+  - application/json
+  - application/xml
+  others:
+  - application/json
+  note: Engage is the only surface that still supports XML, inherited from its SOAP-era design.
+request_id_tracing:
+  supported: false
+  note: No request-id / correlation header is documented for the REST surfaces. The Analytics API returns a correlationId
+    in the body for queued calculations, which is a job identifier rather than a trace id.
+error_envelope:
+  mapp:engage:
+    fields:
+    - errorActor
+    - errorCode
+    - message
+    media_type: application/json
+  mapp:intelligence-analytics:
+    format: rfc9457
+    media_type: application/problem+json
+    fields:
+    - type
+    - title
+    - status
+    - detail
+    - instance
+    - code
+  see: errors/mapp-problem-types.yml
+rate_limit_signaling:
+  headers: []
+  status_code: 500
+  note: Mapp does not return 429 and publishes no RateLimit-* or Retry-After headers. Exceeding the Engage throughput
+    ceiling surfaces as HTTP 500 "Database Access Limit Exceeded" — a server-error status for a client-throttling
+    condition, which no generic client or agent will interpret correctly. See rate-limits/mapp-rate-limits.yml.
+versioning:
+  see: lifecycle/mapp-lifecycle.yml
+bulk_and_import:
+  note: For very large imports Mapp directs integrators away from the API to a Control XML "capsule" uploaded over
+    SFTP and processed by a scheduled task, and recommends parallelised requests over sequential ones so load is
+    balanced across the API cluster.
+  source: https://docs.mapp.com/apidocs/engage-api-error-handling
+cors:
+  supported: on request
+  note: CORS origins for third-party applications are configured per account by Mapp support; no public default.
