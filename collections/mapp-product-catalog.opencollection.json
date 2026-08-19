@@ -1,0 +1,489 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Product Catalog - Public API",
+    "version": "1.0.1"
+  },
+  "request": {
+    "auth": {
+      "type": "bearer",
+      "token": "{{bearerToken}}"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Variant Data Operations",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List variants with cursor pagination",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.mapp.com/api/product-catalog/v1/catalogs/:catalogId/variants",
+            "params": [
+              {
+                "name": "catalogId",
+                "value": "",
+                "type": "path",
+                "description": "Catalog identifier whose variants should be listed."
+              },
+              {
+                "name": "activeStatusSearch",
+                "value": "",
+                "type": "query",
+                "description": "Controls whether active attributes, inactive attributes, or all attributes are included in the returned variant data. Defaults to ALL."
+              },
+              {
+                "name": "catalogType",
+                "value": "",
+                "type": "query",
+                "description": "Selects which product data layer to query. Defaults to COMBINED."
+              },
+              {
+                "name": "lastId",
+                "value": "",
+                "type": "query",
+                "description": "Forward pagination cursor. Returns variants after this document id; the cursor value itself is excluded. Cannot be used together with firstId."
+              },
+              {
+                "name": "firstId",
+                "value": "",
+                "type": "query",
+                "description": "Backward pagination cursor. Returns variants before this document id; the cursor value itself is excluded. Cannot be used together with lastId."
+              },
+              {
+                "name": "size",
+                "value": "",
+                "type": "query",
+                "description": "Maximum number of variants to return in one page. Defaults to 100; values less than 1 or greater than 100 are normalized to 100."
+              },
+              {
+                "name": "fromModifiedTimestamp",
+                "value": "1783503393000",
+                "type": "query",
+                "description": "Filters variants modified at or after this timestamp. The value is epoch milliseconds and the lower bound is inclusive. If this is provided, toModifiedTimestamp is required. For paginated scans, capture this value once before the first page and keep it unchanged for every page."
+              },
+              {
+                "name": "toModifiedTimestamp",
+                "value": "1783506993000",
+                "type": "query",
+                "description": "Filters variants modified at or before this timestamp. The value is epoch milliseconds, the upper bound is inclusive, it must not be greater than the current server time, and it is required when fromModifiedTimestamp is provided. For paginated scans, capture this value once before the first page and keep it unchanged for every page."
+              }
+            ]
+          },
+          "docs": "Returns a page of variants for the given company and catalog using cursor-based pagination. Provide either 'lastId' (forward) or 'firstId' (backward) together with a page 'size'; the two cursors are mutually exclusive. Results can additionally be filtered by attribute active status, product data layer, and a modification timestamp range. If no data is found, HTTP 204 (No Content) is returned."
+        },
+        {
+          "info": {
+            "name": "Add a new variant or add missing data to an existing variant. ",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.mapp.com/api/product-catalog/v1/catalogs/:catalogId/variants",
+            "params": [
+              {
+                "name": "catalogId",
+                "value": "",
+                "type": "path",
+                "description": "Catalog identifier where the variant should be added."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "If the variant does not exist it is created; if it already exists, only fields that are not yet present are added and existing values remain unchanged."
+        },
+        {
+          "info": {
+            "name": "Get a single variant by ID",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.mapp.com/api/product-catalog/v1/catalogs/:catalogId/variants/:variantId",
+            "params": [
+              {
+                "name": "catalogId",
+                "value": "",
+                "type": "path",
+                "description": "Catalog identifier that contains the variant."
+              },
+              {
+                "name": "variantId",
+                "value": "",
+                "type": "path",
+                "description": "Variant identifier to retrieve from the catalog."
+              },
+              {
+                "name": "activeStatusSearch",
+                "value": "",
+                "type": "query",
+                "description": "Controls whether active attributes, inactive attributes, or all attributes are included in the returned variant data. Defaults to ALL."
+              },
+              {
+                "name": "catalogType",
+                "value": "",
+                "type": "query",
+                "description": "Selects which product data layer to query. Defaults to COMBINED."
+              }
+            ]
+          },
+          "docs": "Retrieves a single variant identified by its variant ID from the specified catalog. The returned attributes can be filtered by active status and by the product data layer (source, enriched, or combined). Returns 204 (No Content) when no variant matches the requested identifier and filters."
+        },
+        {
+          "info": {
+            "name": "Create or fully replace a variant",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "https://api.mapp.com/api/product-catalog/v1/catalogs/:catalogId/variants/:variantId",
+            "params": [
+              {
+                "name": "catalogId",
+                "value": "",
+                "type": "path",
+                "description": "Catalog identifier where the variant should be created or replaced."
+              },
+              {
+                "name": "variantId",
+                "value": "",
+                "type": "path",
+                "description": "Variant identifier to create or fully replace."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "If the variant does not exist it is created; if it already exists, all of its data is completely overwritten with the provided payload."
+        },
+        {
+          "info": {
+            "name": "Partially update a variant",
+            "type": "http"
+          },
+          "http": {
+            "method": "PATCH",
+            "url": "https://api.mapp.com/api/product-catalog/v1/catalogs/:catalogId/variants/:variantId",
+            "params": [
+              {
+                "name": "catalogId",
+                "value": "",
+                "type": "path",
+                "description": "Catalog identifier containing the variant to update."
+              },
+              {
+                "name": "variantId",
+                "value": "",
+                "type": "path",
+                "description": "Variant identifier to partially update."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Updates selected fields of an existing variant. Only the fields present in the payload are changed; all other fields are left untouched. If the variant does not exist, no action is taken. "
+        },
+        {
+          "info": {
+            "name": "Delete a variant by ID",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://api.mapp.com/api/product-catalog/v1/catalogs/:catalogId/variants/:variantId",
+            "params": [
+              {
+                "name": "catalogId",
+                "value": "",
+                "type": "path",
+                "description": "Catalog identifier containing the variant to delete."
+              },
+              {
+                "name": "variantId",
+                "value": "",
+                "type": "path",
+                "description": "Variant identifier to delete."
+              }
+            ]
+          },
+          "docs": "Both source and enriched data is removed."
+        },
+        {
+          "info": {
+            "name": "Delete all variants in a catalog",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://api.mapp.com/api/product-catalog/v1/catalogs/:catalogId/variants/",
+            "params": [
+              {
+                "name": "catalogId",
+                "value": "",
+                "type": "path",
+                "description": "Catalog identifier whose variants should be deleted."
+              }
+            ]
+          },
+          "docs": "Deletes every variant in the specified catalog, removing both source and enriched data. This clears the entire catalog contents and cannot be undone."
+        },
+        {
+          "info": {
+            "name": "Delete attributes from a variant",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://api.mapp.com/api/product-catalog/v1/catalogs/:catalogId/variants/:variantId/attributes",
+            "params": [
+              {
+                "name": "catalogId",
+                "value": "",
+                "type": "path",
+                "description": "Catalog identifier containing the variant."
+              },
+              {
+                "name": "variantId",
+                "value": "",
+                "type": "path",
+                "description": "Variant identifier whose attributes should be deleted."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Deletes the named attributes from the variant identified by its variant ID in the specified catalog. Only the attributes listed in the request body are removed; the rest of the variant is left unchanged."
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Variant Data Bulk Operations",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Bulk add variants",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.mapp.com/api/product-catalog/v1/catalogs/:catalogId/variants/bulk",
+            "params": [
+              {
+                "name": "catalogId",
+                "value": "",
+                "type": "path",
+                "description": "Catalog identifier where variants should be added."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Adds multiple variants in a single request. Each variant in the array is processed like a single add: new variants are created and missing fields are added to existing ones, without changing existing values. Up to 1000 variants are allowed per request."
+        },
+        {
+          "info": {
+            "name": "Bulk upsert variants",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "https://api.mapp.com/api/product-catalog/v1/catalogs/:catalogId/variants/bulk",
+            "params": [
+              {
+                "name": "catalogId",
+                "value": "",
+                "type": "path",
+                "description": "Catalog identifier where variants should be created or replaced."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Creates or fully replaces multiple variants in a single request. Each variant in the array is created if missing or has all of its data overwritten if it already exists. Up to 1000 variants are allowed per request."
+        },
+        {
+          "info": {
+            "name": "Bulk partial update variants",
+            "type": "http"
+          },
+          "http": {
+            "method": "PATCH",
+            "url": "https://api.mapp.com/api/product-catalog/v1/catalogs/:catalogId/variants/bulk",
+            "params": [
+              {
+                "name": "catalogId",
+                "value": "",
+                "type": "path",
+                "description": "Catalog identifier containing the variants to update."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Partially updates multiple existing variants in a single request. For each variant, only the provided fields are changed and non-existent variants are skipped. Up to 1000 variants are allowed per request."
+        },
+        {
+          "info": {
+            "name": "Bulk delete variants",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://api.mapp.com/api/product-catalog/v1/catalogs/:catalogId/variants/bulk",
+            "params": [
+              {
+                "name": "catalogId",
+                "value": "",
+                "type": "path",
+                "description": "Catalog identifier containing the variants to delete."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Deletes multiple variants in a single request. Each variant in the array is deleted if it exists and skipped otherwise, removing both source and enriched data. Up to 1000 variants are allowed per request."
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Catalog Metadata Operations",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Get all attributes assigned to a catalog",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.mapp.com/api/product-catalog/v1/catalogs/metadata/attribute/:catalogId",
+            "params": [
+              {
+                "name": "catalogId",
+                "value": "",
+                "type": "path",
+                "description": "Catalog identifier whose assigned attributes should be returned."
+              }
+            ]
+          },
+          "docs": "Returns all active attributes assigned to the specified catalog. Inactive attributes are not returned by this endpoint."
+        },
+        {
+          "info": {
+            "name": "Get catalog metadata for a workspace",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.mapp.com/api/product-catalog/v1/catalogs/metadata/catalog/workspace"
+          },
+          "docs": "Returns the metadata of the catalog assigned to a workspace,  which a token you authorize with belongs to"
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Product Data Operations",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List variants of a product",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.mapp.com/api/product-catalog/v1/catalogs/:catalogId/products/:productId/variants",
+            "params": [
+              {
+                "name": "catalogId",
+                "value": "",
+                "type": "path",
+                "description": "Catalog identifier that contains the product and its variants."
+              },
+              {
+                "name": "productId",
+                "value": "",
+                "type": "path",
+                "description": "Product identifier whose variants should be listed."
+              },
+              {
+                "name": "activeStatusSearch",
+                "value": "",
+                "type": "query",
+                "description": "Controls whether active attributes, inactive attributes, or all attributes are included in the returned variant data. Defaults to ALL."
+              },
+              {
+                "name": "catalogType",
+                "value": "",
+                "type": "query",
+                "description": "Selects which product data layer to query. Defaults to COMBINED."
+              },
+              {
+                "name": "lastId",
+                "value": "",
+                "type": "query",
+                "description": "Forward pagination cursor. Returns variants after this document id; the cursor value itself is excluded. Cannot be used together with firstId."
+              },
+              {
+                "name": "firstId",
+                "value": "",
+                "type": "query",
+                "description": "Backward pagination cursor. Returns variants before this document id; the cursor value itself is excluded. Cannot be used together with lastId."
+              },
+              {
+                "name": "size",
+                "value": "",
+                "type": "query",
+                "description": "Maximum number of variants to return in one page. Required when lastId or firstId is provided; values less than 1 or greater than 100 are normalized to 100."
+              },
+              {
+                "name": "fromModifiedTimestamp",
+                "value": "1783503393000",
+                "type": "query",
+                "description": "Filters variants modified at or after this timestamp. The value is epoch milliseconds and the lower bound is inclusive. If this is provided, toModifiedTimestamp is required. For paginated scans, capture this value once before the first page and keep it unchanged for every page."
+              },
+              {
+                "name": "toModifiedTimestamp",
+                "value": "1783506993000",
+                "type": "query",
+                "description": "Filters variants modified at or before this timestamp. The value is epoch milliseconds, the upper bound is inclusive, it must not be greater than the current server time, and it is required when fromModifiedTimestamp is provided. For paginated scans, capture this value once before the first page and keep it unchanged for every page."
+              }
+            ]
+          },
+          "docs": "Returns all variants belonging to the specified product within the catalog. For products with many variants, cursor-based pagination can be used by supplying 'lastId' (forward) or 'firstId' (backward) together with a page 'size'. Results can additionally be filtered by attribute active status, product data layer, and a modification timestamp range."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

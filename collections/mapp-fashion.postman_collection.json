@@ -1,0 +1,2328 @@
+{
+  "item": [
+    {
+      "id": "6fa2365f-a5dc-4a85-9730-98d504874064",
+      "name": "recommendations",
+      "description": {
+        "content": "Operations about recommendations",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "8fb13281-cdea-4455-8165-32ea18b172c5",
+          "name": "return facetted recommendations for a user",
+          "request": {
+            "name": "return facetted recommendations for a user",
+            "description": {
+              "content": "The facetted recommendations api allows retrieval of the most recommended garments for a user.\nThe result set can be filtered by specifying one or more filters. Optionally retrieval of information\nabout the number of hits for other values of the filter are returned\n\nThe currently recognized aggregations are\n\n- garment_category\n- brand\n- occasion\n- must_have\n- retailer_labels (previously known as retailer_categories): significance dependent on retailer and data present in feed\n- store: if dressipi has been provided with per-store availability data, this filters or aggregates on availability by store\n- feature_ids (dressipi feature ids)\n- not_features_ids (dressipi feature ids). This returns results without any of the listed feature ids\n- price\n- reduced_by (range filter that accepts values from 0 to 100)\n- season: filters or aggregates on the season a garment belongs to. Allowed season codes are of the form `ss_YYYY` (spring/summer) or `aw_YYYY` (autumn/winter), e.g. `ss_2024`, `aw_2024`\n\nThe retailer_labels aggregation allows you to query against fields in the product feed consumed by dressipi (these should\nbe agreed with dressipi)\n\nFor example to request a garment category of 1 (dresses) submit\n\n```\n{\n  \"facets\": [\n    {\n      \"name\": \"garment_category\",\n      \"value\": [1]\n    }\n  ]\n}\n```\n\nMultiple values can be passed for a single filter, these will be or-ed.\n\nFor example, to select garments that have all of\n\n- feature id 1 or 2,\n- feature id 3 or 4\n\nsubmit\n```\n{\n  \"facets\": [\n    {\n      \"name\": \"feature_ids\",\n      \"filters\": [\n        {\"value\": [1,2]},\n        {\"value\": [3,4]}\n      ]\n    }\n  ]\n}\n```\n\nMultiple filters can be passed, these will be and-ed (Specifying multiple filters with the same name is not supported)\nFor example, to return items matching a specific retailer label and available from a specific store, submit\n\n```\n{\n  \"facets\": [\n    {\n      \"name\": \"retailer_labels\",\n      \"value\": [1,2]\n    },\n    {\n      \"name\": \"store\",\n      \"value\": [\"storeID1\",\"storeID2\"]\n    }\n  ]\n}\n```\n\n\nIf the size for a facet is set to non 0, count information will be returned about other filter values. Conceptually, the count returned in an agggregation bucket is the number of results you would get if the query was filtered by that aggregation value.\n\nNumerical facets use a slightly different syntax, for example\n\n```\n{\n  \"facets\": [\n    {\n      \"name\": \"price\",\n      \"filters\": [\n        {\n          \"from\": 50,\n          \"to\": 100\n        }\n      ],\n      \"ranges\": [\n        {\"to\": 50},\n        {\"from\": 50, \"to\": 100},\n        {\"from\": 100}\n      ]\n    }\n  ]\n}\n```\nreturns items whose price between 50 (inclusive) and 100 and the number of results within each of the indicated price ranges.\n\n\n```\n{\n  \"facets\": [\n    {\n      \"name\": \"reduced_by\",\n      \"filters\": [\n        {\n          \"from\": 30\n        }\n      ]\n    }\n  ]\n}\n```\n\nReturns items reduced by at least 30%\n\n\n```\n{\n  \"facets\": [\n    {\n      \"name\": \"season\",\n      \"filters\": [\n        {\"value\": [\"ss_2026\"]}\n      ]\n    }\n  ]\n}\n```\n\nReturns items belonging to the Spring/Summer 2026 season\n\n\nDepending on the garment_format requested, extra fields may be present on the garment, however `garment_id` and `raw_garment_id`\nwill always be present\n",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "recommendations",
+                "facetted"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "garment_format",
+                  "value": "retailer_ids",
+                  "description": "The desired response format.\n\nThe response includes a description of the outfits / similar items but no data on the items themselves: since these may be repeated within the response, garment data is provided separately in the response.\n\nThe `detailed` format includes the most amount of item metadata (name, description, price etc).\n\nThe `document` format only includes item identifiers, and if requested dressipi generated information about the item, such as predicted size.\n\nThe `retailer_ids` format only returns the item identifiers.\n"
+                },
+                {
+                  "disabled": false,
+                  "key": "fields",
+                  "value": "<string>,<string>",
+                  "description": "A list of garment attributes to fetch. Only supported for garment_format=document or detailed. Custom fields may be available - contact dressipi for details"
+                },
+                {
+                  "disabled": false,
+                  "key": "pretty",
+                  "value": "<boolean>",
+                  "description": "If true, pretty print json output. This increases response size and should usually be off in production environments\n"
+                },
+                {
+                  "disabled": false,
+                  "key": "include_dressipi_ids",
+                  "value": "true",
+                  "description": "Controls whether dressipi garment ids (raw_garment_id) are included in response\n"
+                },
+                {
+                  "disabled": false,
+                  "key": "page",
+                  "value": "1",
+                  "description": "The page from which to start results\n"
+                },
+                {
+                  "disabled": false,
+                  "key": "per_page",
+                  "value": "12",
+                  "description": "The number of result to return per page\n"
+                },
+                {
+                  "disabled": false,
+                  "key": "device_type",
+                  "value": "<string>",
+                  "description": "A device type identifier. This allows segmenting a/b test statistics\nin the same way as you do.\n"
+                },
+                {
+                  "disabled": false,
+                  "key": "locale",
+                  "value": "<string>",
+                  "description": "A locale parameter describing what stock information to use and what language to return text in (if applicable). This parameter will only\nfunction if the corresponding information is in the product feed & processed accordingly. If stock local and UI language are not the same,\nspecify the language parameter in addition to this one.\n"
+                },
+                {
+                  "disabled": false,
+                  "key": "language",
+                  "value": "<string>",
+                  "description": "Allows you to specify a locale used for feed attributes such as product name that should be localized using a different locale to price &\nstock information. This parameter will only function if the corresponding information is in the product feed & processed accordingly.\n"
+                }
+              ],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "f0ffa6a4-198b-4d13-8ea4-ae4345379651",
+              "name": "Information about the recommended garments",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "recommendations",
+                    "facetted"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "garment_format",
+                      "value": "retailer_ids"
+                    },
+                    {
+                      "key": "fields",
+                      "value": "<string>,<string>"
+                    },
+                    {
+                      "key": "pretty",
+                      "value": "<boolean>"
+                    },
+                    {
+                      "key": "include_dressipi_ids",
+                      "value": "true"
+                    },
+                    {
+                      "key": "page",
+                      "value": "1"
+                    },
+                    {
+                      "key": "per_page",
+                      "value": "12"
+                    },
+                    {
+                      "key": "device_type",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "locale",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "language",
+                      "value": "<string>"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "79ff25d5-d6bb-40e7-aa70-e05ef0c91377",
+              "name": "error message",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "recommendations",
+                    "facetted"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "garment_format",
+                      "value": "retailer_ids"
+                    },
+                    {
+                      "key": "fields",
+                      "value": "<string>,<string>"
+                    },
+                    {
+                      "key": "pretty",
+                      "value": "<boolean>"
+                    },
+                    {
+                      "key": "include_dressipi_ids",
+                      "value": "true"
+                    },
+                    {
+                      "key": "page",
+                      "value": "1"
+                    },
+                    {
+                      "key": "per_page",
+                      "value": "12"
+                    },
+                    {
+                      "key": "device_type",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "locale",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "language",
+                      "value": "<string>"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Unprocessable Entity (WebDAV) (RFC 4918)",
+              "code": 422,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "4a2992a6-5606-469d-ab35-817051aadfa8",
+          "name": "return themed recommendations for a user",
+          "request": {
+            "name": "return themed recommendations for a user",
+            "description": {
+              "content": "The themed recommendations api allows retrieval of the most recommended garments for a user matching a theme.\nThemes should be agreed in advance with dressipi.\n\nThis is the api equivalent of the plp widget.\n",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "recommendations",
+                "themed"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "garment_format",
+                  "value": "retailer_ids",
+                  "description": "The desired response format.\n\nThe response includes a description of the outfits / similar items but no data on the items themselves: since these may be repeated within the response, garment data is provided separately in the response.\n\nThe `detailed` format includes the most amount of item metadata (name, description, price etc).\n\nThe `document` format only includes item identifiers, and if requested dressipi generated information about the item, such as predicted size.\n\nThe `retailer_ids` format only returns the item identifiers.\n"
+                },
+                {
+                  "disabled": false,
+                  "key": "pretty",
+                  "value": "<boolean>",
+                  "description": "If true, pretty print Json output. This increases response size and should usually be off in production environments\n"
+                },
+                {
+                  "disabled": false,
+                  "key": "include_dressipi_ids",
+                  "value": "true",
+                  "description": "Controls whether dressipi garment ids (raw_garment_id) are included in response\n"
+                },
+                {
+                  "disabled": false,
+                  "key": "device_type",
+                  "value": "<string>",
+                  "description": "A device type identifier. This allows segmenting a/b test statistics\nin the same way as you do.\n"
+                },
+                {
+                  "disabled": false,
+                  "key": "locale",
+                  "value": "<string>",
+                  "description": "A locale parameter describing what stock information to use and what language to return text in (if applicable). This parameter will only\nfunction if the corresponding information is in the product feed & processed accordingly. If stock local and UI language are not the same,\nspecify the language parameter in addition to this one.\n"
+                },
+                {
+                  "disabled": false,
+                  "key": "language",
+                  "value": "<string>",
+                  "description": "Allows you to specify a locale used for feed attributes such as product name that should be localized using a different locale to price &\nstock information. This parameter will only function if the corresponding information is in the product feed & processed accordingly.\n"
+                },
+                {
+                  "disabled": false,
+                  "key": "theme",
+                  "value": "<string>",
+                  "description": "(Required) The theme identifier, as agreed with Dressipi."
+                },
+                {
+                  "disabled": false,
+                  "key": "count",
+                  "value": "6",
+                  "description": "The number of recommendations to return"
+                }
+              ],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "59294b55-87dd-49c5-a3b5-ff89a7b86cc7",
+              "name": "Information about the related garments",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "recommendations",
+                    "themed"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "garment_format",
+                      "value": "retailer_ids"
+                    },
+                    {
+                      "key": "pretty",
+                      "value": "<boolean>"
+                    },
+                    {
+                      "key": "include_dressipi_ids",
+                      "value": "true"
+                    },
+                    {
+                      "key": "device_type",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "locale",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "language",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "theme",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "count",
+                      "value": "6"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "d1c6d772-bf8d-4bc4-93d5-b601b372ba4e",
+              "name": "error message",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "recommendations",
+                    "themed"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "garment_format",
+                      "value": "retailer_ids"
+                    },
+                    {
+                      "key": "pretty",
+                      "value": "<boolean>"
+                    },
+                    {
+                      "key": "include_dressipi_ids",
+                      "value": "true"
+                    },
+                    {
+                      "key": "device_type",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "locale",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "language",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "theme",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "count",
+                      "value": "6"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Unprocessable Entity (WebDAV) (RFC 4918)",
+              "code": 422,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    },
+    {
+      "id": "7cc62270-7397-499c-b1e4-175baad3ac8e",
+      "name": "items",
+      "description": {
+        "content": "Operations for retrieving recommendations or items related to one or more seed items",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "8c35d635-3800-4485-9843-197926606131",
+          "name": "Get information about an item by id",
+          "request": {
+            "name": "Get information about an item by id",
+            "description": {
+              "content": "Fetches information about a garment. The garment format is implicitly set to detailed.\n",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "items",
+                ":id"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "identifier_type",
+                  "value": "product-code",
+                  "description": "How dressipi should interpret the item id. Not all of these may be available, depending on the information in the product feed and how it is processed. Contact dressipi for examples of these types for your specific integration.\n\nIn general\n\n- product-code is the style + color identifier from the feed\n- sku is style without color or size (can be supplemented with an extra parameter specifying the color + size variant)\n"
+                },
+                {
+                  "disabled": false,
+                  "key": "pretty",
+                  "value": "<boolean>",
+                  "description": "If true, pretty print Json output. This increases response size and should usually be off in production environments\n"
+                },
+                {
+                  "disabled": false,
+                  "key": "include_dressipi_ids",
+                  "value": "true",
+                  "description": "Controls whether dressipi garment ids (raw_garment_id) are included in response\n"
+                },
+                {
+                  "disabled": false,
+                  "key": "fields",
+                  "value": "<string>,<string>",
+                  "description": "A list of garment attributes to fetch. Only supported for garment_format=document or detailed. Custom fields may be available - contact dressipi for details"
+                },
+                {
+                  "disabled": false,
+                  "key": "locale",
+                  "value": "<string>",
+                  "description": "A locale parameter describing what stock information to use and what language to return text in (if applicable). This parameter will only\nfunction if the corresponding information is in the product feed & processed accordingly. If stock local and UI language are not the same,\nspecify the language parameter in addition to this one.\n"
+                },
+                {
+                  "disabled": false,
+                  "key": "language",
+                  "value": "<string>",
+                  "description": "Allows you to specify a locale used for feed attributes such as product name that should be localized using a different locale to price &\nstock information. This parameter will only function if the corresponding information is in the product feed & processed accordingly.\n"
+                }
+              ],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "id",
+                  "description": "(Required) An identifier for the source item. The interpretation of this item is controlled by the `identifier_type` parameter"
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "0bc877b2-4ff2-4c8b-984a-0aa746edebc8",
+              "name": "Information about the garment",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "items",
+                    ":id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "identifier_type",
+                      "value": "product-code"
+                    },
+                    {
+                      "key": "pretty",
+                      "value": "<boolean>"
+                    },
+                    {
+                      "key": "include_dressipi_ids",
+                      "value": "true"
+                    },
+                    {
+                      "key": "fields",
+                      "value": "<string>,<string>"
+                    },
+                    {
+                      "key": "locale",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "language",
+                      "value": "<string>"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "id",
+                      "description": "(Required) An identifier for the source item. The interpretation of this item is controlled by the `identifier_type` parameter"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "dc9f164f-890f-48f4-8273-f0752dfd202e",
+              "name": "garment not found",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "items",
+                    ":id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "identifier_type",
+                      "value": "product-code"
+                    },
+                    {
+                      "key": "pretty",
+                      "value": "<boolean>"
+                    },
+                    {
+                      "key": "include_dressipi_ids",
+                      "value": "true"
+                    },
+                    {
+                      "key": "fields",
+                      "value": "<string>,<string>"
+                    },
+                    {
+                      "key": "locale",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "language",
+                      "value": "<string>"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "id",
+                      "description": "(Required) An identifier for the source item. The interpretation of this item is controlled by the `identifier_type` parameter"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Unprocessable Entity (WebDAV) (RFC 4918)",
+              "code": 422,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "9667c0c3-42aa-44ae-b250-00a555579640",
+          "name": "return top curated recommendations for a user",
+          "request": {
+            "name": "return top curated recommendations for a user",
+            "description": {
+              "content": "Returns curated recommendations for a user profile\nwithout targeting a specific garment.\n\nThis endpoint provides personalized item recommendations based on the user's profile\nand preferences.\nCurrently only available for the womens department\n",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "items",
+                "top"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "garment_format",
+                  "value": "retailer_ids",
+                  "description": "The desired response format.\n\nThe response includes a description of the outfits / similar items but no data on the items themselves: since these may be repeated within the response, garment data is provided separately in the response.\n\nThe `detailed` format includes the most amount of item metadata (name, description, price etc).\n\nThe `document` format only includes item identifiers, and if requested dressipi generated information about the item, such as predicted size.\n\nThe `retailer_ids` format only returns the item identifiers.\n"
+                },
+                {
+                  "disabled": false,
+                  "key": "pretty",
+                  "value": "<boolean>",
+                  "description": "If true, pretty print json output. This increases response size and should usually be off in production environments\n"
+                },
+                {
+                  "disabled": false,
+                  "key": "include_dressipi_ids",
+                  "value": "true",
+                  "description": "Controls whether dressipi garment ids (raw_garment_id) are included in response\n"
+                },
+                {
+                  "disabled": false,
+                  "key": "fields",
+                  "value": "<string>,<string>",
+                  "description": "A list of garment attributes to fetch. Only supported for garment_format=document or detailed. Custom fields may be available - contact dressipi for details"
+                },
+                {
+                  "disabled": false,
+                  "key": "locale",
+                  "value": "<string>",
+                  "description": "A locale parameter describing what stock information to use and what language to return text in (if applicable). This parameter will only\nfunction if the corresponding information is in the product feed & processed accordingly. If stock local and UI language are not the same,\nspecify the language parameter in addition to this one.\n"
+                },
+                {
+                  "disabled": false,
+                  "key": "language",
+                  "value": "<string>",
+                  "description": "Allows you to specify a locale used for feed attributes such as product name that should be localized using a different locale to price &\nstock information. This parameter will only function if the corresponding information is in the product feed & processed accordingly.\n"
+                },
+                {
+                  "disabled": false,
+                  "key": "department",
+                  "value": "female",
+                  "description": "The department to which the items will belong\n"
+                },
+                {
+                  "disabled": false,
+                  "key": "excluded_ids",
+                  "value": "<string>,<string>",
+                  "description": "List of product identifiers to be excluded from the results.\n"
+                },
+                {
+                  "disabled": false,
+                  "key": "include_user_data",
+                  "value": "<boolean>",
+                  "description": "Include information about the user in the response (if known)\n"
+                }
+              ],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "851df3fd-9fe4-4b85-b768-e507526b9ac7",
+              "name": "Information about the curated recommendations",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "items",
+                    "top"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "garment_format",
+                      "value": "retailer_ids"
+                    },
+                    {
+                      "key": "pretty",
+                      "value": "<boolean>"
+                    },
+                    {
+                      "key": "include_dressipi_ids",
+                      "value": "true"
+                    },
+                    {
+                      "key": "fields",
+                      "value": "<string>,<string>"
+                    },
+                    {
+                      "key": "locale",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "language",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "department",
+                      "value": "female"
+                    },
+                    {
+                      "key": "excluded_ids",
+                      "value": "<string>,<string>"
+                    },
+                    {
+                      "key": "include_user_data",
+                      "value": "<boolean>"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "317c283a-49f6-488a-8ff7-3ce41cab29d9",
+              "name": "missing client_id",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "items",
+                    "top"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "garment_format",
+                      "value": "retailer_ids"
+                    },
+                    {
+                      "key": "pretty",
+                      "value": "<boolean>"
+                    },
+                    {
+                      "key": "include_dressipi_ids",
+                      "value": "true"
+                    },
+                    {
+                      "key": "fields",
+                      "value": "<string>,<string>"
+                    },
+                    {
+                      "key": "locale",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "language",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "department",
+                      "value": "female"
+                    },
+                    {
+                      "key": "excluded_ids",
+                      "value": "<string>,<string>"
+                    },
+                    {
+                      "key": "include_user_data",
+                      "value": "<boolean>"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "dbf4e939-4364-4b1c-93fd-f254b95c3d1a",
+              "name": "missing picker",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "items",
+                    "top"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "garment_format",
+                      "value": "retailer_ids"
+                    },
+                    {
+                      "key": "pretty",
+                      "value": "<boolean>"
+                    },
+                    {
+                      "key": "include_dressipi_ids",
+                      "value": "true"
+                    },
+                    {
+                      "key": "fields",
+                      "value": "<string>,<string>"
+                    },
+                    {
+                      "key": "locale",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "language",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "department",
+                      "value": "female"
+                    },
+                    {
+                      "key": "excluded_ids",
+                      "value": "<string>,<string>"
+                    },
+                    {
+                      "key": "include_user_data",
+                      "value": "<boolean>"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "694f2639-d4b3-4066-b614-a0c80474c86f",
+          "name": "return outfits or recommended items for a set of source items",
+          "request": {
+            "name": "return outfits or recommended items for a set of source items",
+            "description": {
+              "content": "Fetches related recommendations or outfits (items which as a set complement the source item(s)) based\non business rules agreed with Dressipi. Depending on the items passed and these rules, the result might be related to some, all or none of the items specified\n\nFor example this could be used on the checkout page to show recommendations based on the content of the\nuser's basket.\n\nThis is the api equivalent of the shopping basket widget\n",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "items",
+                ":id",
+                "complementary"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "garment_format",
+                  "value": "retailer_ids",
+                  "description": "The desired response format.\n\nThe response includes a description of the outfits / similar items but no data on the items themselves: since these may be repeated within the response, garment data is provided separately in the response.\n\nThe `detailed` format includes the most amount of item metadata (name, description, price etc).\n\nThe `document` format only includes item identifiers, and if requested Dressipi generated information about the item, such as predicted size.\n\nThe `retailer_ids` format only returns the item identifiers.\n"
+                },
+                {
+                  "disabled": false,
+                  "key": "identifier_type",
+                  "value": "product-code",
+                  "description": "How Dressipi should interpret the item id. Not all of these may be available, depending on the information in the product feed and how it is processed. Contact Dressipi for examples of these types for your specific integration.\n\nIn general\n\n- product-code is the style + color identifier from the feed\n- sku is style without color or size (can be supplemented with an extra parameter specifying the color + size variant)\n"
+                },
+                {
+                  "disabled": false,
+                  "key": "pretty",
+                  "value": "<boolean>",
+                  "description": "If true, pretty print Json output. This increases response size and should usually be off in production environments\n"
+                },
+                {
+                  "disabled": false,
+                  "key": "include_dressipi_ids",
+                  "value": "true",
+                  "description": "Controls whether Dressipi garment ids (raw_garment_id) are included in response\n"
+                },
+                {
+                  "disabled": false,
+                  "key": "locale",
+                  "value": "<string>",
+                  "description": "A locale parameter describing what stock information to use and what language to return text in (if applicable). This parameter will only\nfunction if the corresponding information is in the product feed & processed accordingly. If stock local and UI language are not the same,\nspecify the language parameter in addition to this one.\n"
+                },
+                {
+                  "disabled": false,
+                  "key": "language",
+                  "value": "<string>",
+                  "description": "Allows you to specify a locale used for feed attributes such as product name that should be localized using a different locale to price &\nstock information. This parameter will only function if the corresponding information is in the product feed & processed accordingly.\n"
+                },
+                {
+                  "disabled": false,
+                  "key": "excluded_ids",
+                  "value": "<string>,<string>",
+                  "description": "List of product identifiers to be excluded from the results\n"
+                }
+              ],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>,<string>",
+                  "key": "id",
+                  "description": "(Required) An identifier for one or more source item. The interpretation of this item is controlled by the `identifier_type` parameter"
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "10ed182e-e26f-42e2-86e7-215669b76605",
+              "name": "Information about the recommended garments",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "items",
+                    ":id",
+                    "complementary"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "garment_format",
+                      "value": "retailer_ids"
+                    },
+                    {
+                      "key": "identifier_type",
+                      "value": "product-code"
+                    },
+                    {
+                      "key": "pretty",
+                      "value": "<boolean>"
+                    },
+                    {
+                      "key": "include_dressipi_ids",
+                      "value": "true"
+                    },
+                    {
+                      "key": "locale",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "language",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "excluded_ids",
+                      "value": "<string>,<string>"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>,<string>",
+                      "key": "id",
+                      "description": "(Required) An identifier for one or more source item. The interpretation of this item is controlled by the `identifier_type` parameter"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "434de1d8-55b2-4f3c-8e28-5a65cb5c625e",
+              "name": "unrecognized product codes",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "items",
+                    ":id",
+                    "complementary"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "garment_format",
+                      "value": "retailer_ids"
+                    },
+                    {
+                      "key": "identifier_type",
+                      "value": "product-code"
+                    },
+                    {
+                      "key": "pretty",
+                      "value": "<boolean>"
+                    },
+                    {
+                      "key": "include_dressipi_ids",
+                      "value": "true"
+                    },
+                    {
+                      "key": "locale",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "language",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "excluded_ids",
+                      "value": "<string>,<string>"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>,<string>",
+                      "key": "id",
+                      "description": "(Required) An identifier for one or more source item. The interpretation of this item is controlled by the `identifier_type` parameter"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Unprocessable Entity (WebDAV) (RFC 4918)",
+              "code": 422,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "d5597512-f6f4-4a1b-b8e8-0f93e02bfa1d",
+          "name": "return outfits or similar items for a single source item",
+          "request": {
+            "name": "return outfits or similar items for a single source item",
+            "description": {
+              "content": "Fetches either similar items (items which are related to the source item by common features)\nor outfits (items which as a set complement the source item).'\n\nThis is the api equivalent of the outfits widget.\n",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "items",
+                ":id",
+                "related"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "methods",
+                  "value": "outfits,similar_items",
+                  "description": "The methods through which related items should be generated. These are attempted in order.\n\nThe `partner_outfits` method is only available if Dressipi has been provided with curated outfit data for the item\n"
+                },
+                {
+                  "disabled": false,
+                  "key": "try_all_methods",
+                  "value": "<boolean>",
+                  "description": "If false (the default), the methods listed are attempted until one succeeds and only results for that method are returned.\n\nIf true, results for all successful methods are returned\n"
+                },
+                {
+                  "disabled": false,
+                  "key": "locale",
+                  "value": "<string>",
+                  "description": "A locale parameter describing what stock information to use and what language to return text in (if applicable). This parameter will only\nfunction if the corresponding information is in the product feed & processed accordingly. If stock local and UI language are not the same,\nspecify the language parameter in addition to this one.\n"
+                },
+                {
+                  "disabled": false,
+                  "key": "language",
+                  "value": "<string>",
+                  "description": "Allows you to specify a locale used for feed attributes such as product name that should be localized using a different locale to price &\nstock information. This parameter will only function if the corresponding information is in the product feed & processed accordingly.\n"
+                },
+                {
+                  "disabled": false,
+                  "key": "exclude_source_garment",
+                  "value": "true",
+                  "description": "Whether to exclude the source item from any returned outfits or not\n"
+                },
+                {
+                  "disabled": false,
+                  "key": "outfits_per_occasion",
+                  "value": "2",
+                  "description": "The number of outfits to attempt to return *per occasion*. In the case of a single occasion garment, this\nlimit is doubled internally\n"
+                },
+                {
+                  "disabled": false,
+                  "key": "max_similar_items",
+                  "value": "6",
+                  "description": "The maximum number of similar items to return.\n"
+                },
+                {
+                  "disabled": false,
+                  "key": "stores",
+                  "value": "<string>,<string>",
+                  "description": "List of stores to filter recommendations by. An item must be available in at least one of the specified stores in order\nto be returned.\n\nThis requires that per-store availability data is shared with dressipi\n"
+                },
+                {
+                  "disabled": false,
+                  "key": "garment_format",
+                  "value": "retailer_ids",
+                  "description": "The desired response format.\n\nThe response includes a description of the outfits / similar items but no data on the items themselves: since these may be repeated within the response, garment data is provided separately in the response.\n\nThe `detailed` format includes the most amount of item metadata (name, description, price etc).\n\nThe `document` format only includes item identifiers, and if requested dressipi generated information about the item, such as predicted size.\n\nThe `retailer_ids` format only returns the item identifiers.\n"
+                },
+                {
+                  "disabled": false,
+                  "key": "identifier_type",
+                  "value": "product-code",
+                  "description": "How dressipi should interpret the item id. Not all of these may be available, depending on the information in the product feed and how it is processed. Contact dressipi for examples of these types for your specific integration.\n\nIn general\n\n- product-code is the style + color identifier from the feed\n- sku is style without color or size (can be supplemented with an extra parameter specifying the color + size variant)\n"
+                },
+                {
+                  "disabled": false,
+                  "key": "pretty",
+                  "value": "<boolean>",
+                  "description": "If true, pretty print Json output. This increases response size and should usually be off in production environments\n"
+                },
+                {
+                  "disabled": false,
+                  "key": "include_dressipi_ids",
+                  "value": "true",
+                  "description": "Controls whether Dressipi garment ids (raw_garment_id) are included in response\n"
+                },
+                {
+                  "disabled": false,
+                  "key": "fields",
+                  "value": "<string>,<string>",
+                  "description": "A list of garment attributes to fetch. Only supported for garment_format=document or detailed. Custom fields may be available - contact Dressipi for details"
+                },
+                {
+                  "disabled": false,
+                  "key": "sku_refinement",
+                  "value": "<string>",
+                  "description": "When identifier_type is set to sku, identifies the particular size+color variant\n"
+                },
+                {
+                  "disabled": false,
+                  "key": "excluded_ids",
+                  "value": "<string>,<string>",
+                  "description": "List of product identifiers to be excluded from the results.\nThe interpretation of this item is controlled by the `identifier_type` parameter\n"
+                },
+                {
+                  "disabled": false,
+                  "key": "include_user_data",
+                  "value": "<boolean>",
+                  "description": "Include information about the user in the response (if known)\n"
+                }
+              ],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "id",
+                  "description": "(Required) An identifier for the source item. The interpretation of this item is controlled by the `identifier_type` parameter"
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "1c0fb094-010f-469e-9c4c-2a5e0ebfa376",
+              "name": "Information about the related garments",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "items",
+                    ":id",
+                    "related"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "methods",
+                      "value": "outfits,similar_items"
+                    },
+                    {
+                      "key": "try_all_methods",
+                      "value": "<boolean>"
+                    },
+                    {
+                      "key": "locale",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "language",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "exclude_source_garment",
+                      "value": "true"
+                    },
+                    {
+                      "key": "outfits_per_occasion",
+                      "value": "2"
+                    },
+                    {
+                      "key": "max_similar_items",
+                      "value": "6"
+                    },
+                    {
+                      "key": "stores",
+                      "value": "<string>,<string>"
+                    },
+                    {
+                      "key": "garment_format",
+                      "value": "retailer_ids"
+                    },
+                    {
+                      "key": "identifier_type",
+                      "value": "product-code"
+                    },
+                    {
+                      "key": "pretty",
+                      "value": "<boolean>"
+                    },
+                    {
+                      "key": "include_dressipi_ids",
+                      "value": "true"
+                    },
+                    {
+                      "key": "fields",
+                      "value": "<string>,<string>"
+                    },
+                    {
+                      "key": "sku_refinement",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "excluded_ids",
+                      "value": "<string>,<string>"
+                    },
+                    {
+                      "key": "include_user_data",
+                      "value": "<boolean>"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "id",
+                      "description": "(Required) An identifier for the source item. The interpretation of this item is controlled by the `identifier_type` parameter"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "62d52ece-c200-4b9d-adee-ce0aa708ff79",
+              "name": "garment not found",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "items",
+                    ":id",
+                    "related"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "methods",
+                      "value": "outfits,similar_items"
+                    },
+                    {
+                      "key": "try_all_methods",
+                      "value": "<boolean>"
+                    },
+                    {
+                      "key": "locale",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "language",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "exclude_source_garment",
+                      "value": "true"
+                    },
+                    {
+                      "key": "outfits_per_occasion",
+                      "value": "2"
+                    },
+                    {
+                      "key": "max_similar_items",
+                      "value": "6"
+                    },
+                    {
+                      "key": "stores",
+                      "value": "<string>,<string>"
+                    },
+                    {
+                      "key": "garment_format",
+                      "value": "retailer_ids"
+                    },
+                    {
+                      "key": "identifier_type",
+                      "value": "product-code"
+                    },
+                    {
+                      "key": "pretty",
+                      "value": "<boolean>"
+                    },
+                    {
+                      "key": "include_dressipi_ids",
+                      "value": "true"
+                    },
+                    {
+                      "key": "fields",
+                      "value": "<string>,<string>"
+                    },
+                    {
+                      "key": "sku_refinement",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "excluded_ids",
+                      "value": "<string>,<string>"
+                    },
+                    {
+                      "key": "include_user_data",
+                      "value": "<boolean>"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "id",
+                      "description": "(Required) An identifier for the source item. The interpretation of this item is controlled by the `identifier_type` parameter"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Unprocessable Entity (WebDAV) (RFC 4918)",
+              "code": 422,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "81d081aa-480b-45b1-984e-bb1ed6dc4eaf",
+          "name": "return top curated recommendations for a user based on their basket items",
+          "request": {
+            "name": "return top curated recommendations for a user based on their basket items",
+            "description": {
+              "content": "The basket recommendations endpoint returns curated recommendations for a user profile\nbased on the garments in their basket (which can be empty).\n\nThis endpoint provides personalized item recommendations based on the user's profile\nand preferences.\n",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "items",
+                "basket"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "ids",
+                  "value": "<string>,<string>",
+                  "description": "List of garment identifiers representing the user's basket.\n"
+                },
+                {
+                  "disabled": false,
+                  "key": "excluded_ids",
+                  "value": "<string>,<string>",
+                  "description": "List of garment identifiers to be excluded from the recommendations.\n"
+                },
+                {
+                  "disabled": false,
+                  "key": "identifier_type",
+                  "value": "<string>",
+                  "description": "The type of garment identifiers provided in `ids` and `excluded_ids`.\n"
+                },
+                {
+                  "disabled": false,
+                  "key": "max_items",
+                  "value": "<integer>",
+                  "description": "The desired number of recommended items to return.\n"
+                },
+                {
+                  "disabled": false,
+                  "key": "sort",
+                  "value": "<string>",
+                  "description": "The attribute to sort results by. Currently only 'price' is supported.\n"
+                },
+                {
+                  "disabled": false,
+                  "key": "direction",
+                  "value": "asc",
+                  "description": "The direction to sort results by.\n"
+                },
+                {
+                  "disabled": false,
+                  "key": "garment_format",
+                  "value": "simple",
+                  "description": "The desired response format. If 'simple', only basic garment identifiers are returned.\nIf 'detailed', more comprehensive garment metadata is included.\n"
+                },
+                {
+                  "disabled": false,
+                  "key": "locale",
+                  "value": "<string>",
+                  "description": "A locale parameter describing what stock information to use and what language to return text in (if applicable). This parameter will only\nfunction if the corresponding information is in the product feed & processed accordingly. If stock local and UI language are not the same,\nspecify the language parameter in addition to this one.\n"
+                },
+                {
+                  "disabled": false,
+                  "key": "language",
+                  "value": "<string>",
+                  "description": "Allows you to specify a locale used for feed attributes such as product name that should be localized using a different locale to price &\nstock information. This parameter will only function if the corresponding information is in the product feed & processed accordingly.\n"
+                },
+                {
+                  "disabled": false,
+                  "key": "pretty",
+                  "value": "<boolean>",
+                  "description": "If true, pretty print json output. This increases response size and should usually be off in production environments\n"
+                },
+                {
+                  "disabled": false,
+                  "key": "include_dressipi_ids",
+                  "value": "true",
+                  "description": "Controls whether dressipi garment ids (raw_garment_id) are included in response\n"
+                },
+                {
+                  "disabled": false,
+                  "key": "include_user_data",
+                  "value": "<boolean>",
+                  "description": "If true, user information will be included in the response where applicable\n"
+                }
+              ],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "037d6bb2-50ab-4e13-a37b-cd0316820787",
+              "name": "Information about the curated recommendations",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "items",
+                    "basket"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "ids",
+                      "value": "<string>,<string>"
+                    },
+                    {
+                      "key": "excluded_ids",
+                      "value": "<string>,<string>"
+                    },
+                    {
+                      "key": "identifier_type",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "max_items",
+                      "value": "<integer>"
+                    },
+                    {
+                      "key": "sort",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "direction",
+                      "value": "asc"
+                    },
+                    {
+                      "key": "garment_format",
+                      "value": "simple"
+                    },
+                    {
+                      "key": "locale",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "language",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "pretty",
+                      "value": "<boolean>"
+                    },
+                    {
+                      "key": "include_dressipi_ids",
+                      "value": "true"
+                    },
+                    {
+                      "key": "include_user_data",
+                      "value": "<boolean>"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    },
+    {
+      "id": "90c718bb-27d7-400e-9038-5e282f0eb808",
+      "name": "authorization",
+      "description": {
+        "content": "Operations for obtaining or refreshing JWTs",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "d076deeb-0f51-4b49-9d36-e087043bb67d",
+          "name": "start the process of obtaining a JWT",
+          "request": {
+            "name": "start the process of obtaining a JWT",
+            "description": {
+              "content": "This is an oauth2 compliant authorize endpoint (see https://tools.ietf.org/html/rfc6749) with the following limitations:\n\n- Only grant code flow is allowed\n- PKCE is mandatory i.e. you must generate a code_verifier (a randomly generated secret) and include its url safe base64 encoded SHA256 hash as the code_challenge parameter\n- Only the S256 code challenge method is supported\n- The redirect URI must be set to urn:ietf:wg:oauth:2.0:oob:auto\n\nThis api returns a grant code that can then be exchanged for a JWT\n\nThis will create a new profile in the dressipi database and should therefore only be used if no refresh token is available.\n\ncode_challenge is constructed in the following manner:\n\n- Pick a random code_verifier value, for example 1tBnEmtSImyCykPHxHYBdzpSFhKEj0Q1LuiHd4fdDlY\n- code challenge = Base64-url-encode(SHA256(code_verifier)):  p7CN1Zi4o5ARn1mYNvNFvj2r5cKkr2k6y7a573eHJXQ in the example above\n\nFor more details on PKCE see https://tools.ietf.org/html/rfc7636, appendix A has the definition of base64-url-encode\n",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "oauth",
+                "authorize"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "redirect_uri",
+                  "value": "<string>",
+                  "description": "(Required) "
+                },
+                {
+                  "disabled": false,
+                  "key": "response_type",
+                  "value": "<string>",
+                  "description": "(Required) "
+                },
+                {
+                  "disabled": false,
+                  "key": "client_id",
+                  "value": "<string>",
+                  "description": "(Required) the api client id supplied by dressipi"
+                },
+                {
+                  "disabled": false,
+                  "key": "state",
+                  "value": "<string>",
+                  "description": "(Required) a randomly generated state value"
+                },
+                {
+                  "disabled": false,
+                  "key": "code_challenge",
+                  "value": "<string>",
+                  "description": "(Required) a urlsafe base64 encoded, SHA256 hash of the code verifier (a cryptographically secure randomly generated string)."
+                },
+                {
+                  "disabled": false,
+                  "key": "code_challenge_method",
+                  "value": "<string>",
+                  "description": "(Required) "
+                }
+              ],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "251fe180-b074-4152-9bbf-12efd7c34e45",
+              "name": "Information about the authorization",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "oauth",
+                    "authorize"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "redirect_uri",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "response_type",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "client_id",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "state",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "code_challenge",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "code_challenge_method",
+                      "value": "<string>"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "b49c7d77-e873-4d1c-adbb-54311fb65a19",
+              "name": "oauth2 error",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "oauth",
+                    "authorize"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "redirect_uri",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "response_type",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "client_id",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "state",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "code_challenge",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "code_challenge_method",
+                      "value": "<string>"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "113b0753-bdfc-4242-8d60-9111cc2691f6",
+          "name": "exchange a grant code or refresh token for a JWT",
+          "request": {
+            "name": "exchange a grant code or refresh token for a JWT",
+            "description": {
+              "content": "This allows the client to exchange a previously obtained grant code or refresh token for an access token for immediate use and a refresh token for subsequent requests.\n\nIt may return an updated refresh token, in which case the stored refresh token should be updated\n\nThe redirect URI must be set to urn:ietf:wg:oauth:2.0:oob:auto\n\nWhen exchanging a grant code from the authorize endpoint:\n- set grant_type to authorization_code\n- set code to the code returned by the authorize endpoint\n\nWhen refreshing a token:\n- set grant_type to refresh_token\n- set refresh_token to the previously obtained refresh token\n\n",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "oauth",
+                "token"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/x-www-form-urlencoded"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": null,
+            "body": {
+              "mode": "urlencoded",
+              "urlencoded": [
+                {
+                  "disabled": false,
+                  "key": "redirect_uri",
+                  "value": "<string>",
+                  "description": "(Required) "
+                },
+                {
+                  "disabled": false,
+                  "key": "grant_type",
+                  "value": "<string>",
+                  "description": "(Required) "
+                },
+                {
+                  "disabled": false,
+                  "key": "client_id",
+                  "value": "<string>",
+                  "description": "(Required) the api client id supplied by dressipi"
+                },
+                {
+                  "disabled": false,
+                  "key": "code",
+                  "value": "<string>",
+                  "description": "the authorization_code previously obtained"
+                },
+                {
+                  "disabled": false,
+                  "key": "refresh_token",
+                  "value": "<string>",
+                  "description": "the refresh_token previously obtained"
+                },
+                {
+                  "disabled": false,
+                  "key": "code_verifier",
+                  "value": "<string>",
+                  "description": "for authorization_code requests, the code_verifier that was used to generate the associated code_challenge"
+                }
+              ]
+            }
+          },
+          "response": [
+            {
+              "id": "3cdd7936-ff22-43ac-88d6-f9cf77507d09",
+              "name": "The generated tokens",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "oauth",
+                    "token"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "urlencoded",
+                  "urlencoded": [
+                    {
+                      "disabled": false,
+                      "description": {
+                        "content": "(Required) ",
+                        "type": "text/plain"
+                      },
+                      "key": "redirect_uri",
+                      "value": "<string>"
+                    },
+                    {
+                      "disabled": false,
+                      "description": {
+                        "content": "(Required) ",
+                        "type": "text/plain"
+                      },
+                      "key": "grant_type",
+                      "value": "<string>"
+                    },
+                    {
+                      "disabled": false,
+                      "description": {
+                        "content": "(Required) the api client id supplied by dressipi",
+                        "type": "text/plain"
+                      },
+                      "key": "client_id",
+                      "value": "<string>"
+                    },
+                    {
+                      "disabled": false,
+                      "description": {
+                        "content": "the authorization_code previously obtained",
+                        "type": "text/plain"
+                      },
+                      "key": "code",
+                      "value": "<string>"
+                    },
+                    {
+                      "disabled": false,
+                      "description": {
+                        "content": "the refresh_token previously obtained",
+                        "type": "text/plain"
+                      },
+                      "key": "refresh_token",
+                      "value": "<string>"
+                    },
+                    {
+                      "disabled": false,
+                      "description": {
+                        "content": "for authorization_code requests, the code_verifier that was used to generate the associated code_challenge",
+                        "type": "text/plain"
+                      },
+                      "key": "code_verifier",
+                      "value": "<string>"
+                    }
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "38e743b5-6ee6-4335-84d8-e81b453c6d22",
+              "name": "oauth2 error",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "oauth",
+                    "token"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "urlencoded",
+                  "urlencoded": [
+                    {
+                      "disabled": false,
+                      "description": {
+                        "content": "(Required) ",
+                        "type": "text/plain"
+                      },
+                      "key": "redirect_uri",
+                      "value": "<string>"
+                    },
+                    {
+                      "disabled": false,
+                      "description": {
+                        "content": "(Required) ",
+                        "type": "text/plain"
+                      },
+                      "key": "grant_type",
+                      "value": "<string>"
+                    },
+                    {
+                      "disabled": false,
+                      "description": {
+                        "content": "(Required) the api client id supplied by dressipi",
+                        "type": "text/plain"
+                      },
+                      "key": "client_id",
+                      "value": "<string>"
+                    },
+                    {
+                      "disabled": false,
+                      "description": {
+                        "content": "the authorization_code previously obtained",
+                        "type": "text/plain"
+                      },
+                      "key": "code",
+                      "value": "<string>"
+                    },
+                    {
+                      "disabled": false,
+                      "description": {
+                        "content": "the refresh_token previously obtained",
+                        "type": "text/plain"
+                      },
+                      "key": "refresh_token",
+                      "value": "<string>"
+                    },
+                    {
+                      "disabled": false,
+                      "description": {
+                        "content": "for authorization_code requests, the code_verifier that was used to generate the associated code_challenge",
+                        "type": "text/plain"
+                      },
+                      "key": "code_verifier",
+                      "value": "<string>"
+                    }
+                  ]
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "/",
+      "key": "baseUrl"
+    }
+  ],
+  "info": {
+    "_postman_id": "8a6fbd58-f281-404a-8d24-a0e6d25e8011",
+    "name": "Mapp Fashion API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "Mapp Fashion (Dressipi) recommendation API. Assembled verbatim from the per-operation OpenAPI fragments Mapp publishes on each endpoint page of https://docs.mapp.com/apidocs/. The base URL is customer-specific: https://your-domain.com/api/{endpoint}.",
+      "type": "text/plain"
+    }
+  }
+}

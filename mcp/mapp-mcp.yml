@@ -2,23 +2,24 @@ generated: '2026-08-12'
 method: probed
 status: published
 source: https://mapp.com/.well-known/oauth-protected-resource
-note: >-
-  Mapp serves a live, standards-conformant MCP endpoint from its own host. Discovery is complete: the RFC
-  9728 protected-resource document at https://mapp.com/.well-known/oauth-protected-resource names the
-  resource, and the RFC 8414 authorization-server document at
-  https://mapp.com/.well-known/oauth-authorization-server names the authorization/token/revocation
-  endpoints. An unauthenticated POST of tools/list returns 401 with a correct RFC 9728
-  WWW-Authenticate challenge, so the live tool schemas require an authenticated introspection. No tool
-  list is recorded here because none is published anonymously — nothing was invented to fill the gap.
-  This MCP surface is served by the mapp.com WordPress content platform, not by the Mapp Engage /
-  Intelligence / Product Catalog APIs; there is no MCP server in front of those product APIs.
+note: 'Mapp serves a live, standards-conformant MCP endpoint from its own host. Discovery is complete:
+  the RFC 9728 protected-resource document at https://mapp.com/.well-known/oauth-protected-resource names
+  the resource, and the RFC 8414 authorization-server document at https://mapp.com/.well-known/oauth-authorization-server
+  names the authorization/token/revocation endpoints. An unauthenticated POST of tools/list returns 401
+  with a correct RFC 9728 WWW-Authenticate challenge, so the live tool schemas require an authenticated
+  introspection. No tool list is recorded here because none is published anonymously — nothing was invented
+  to fill the gap. This MCP surface is served by the mapp.com WordPress content platform, not by the Mapp
+  Engage / Intelligence / Product Catalog APIs; there is no MCP server in front of those product APIs.'
 server:
   name: mapp
   transport: http
   url: https://mapp.com/wp-json/mcp/mcp-oauth-server
   additional_endpoints:
   - url: https://mapp.com/wp-json/mcp/mcp-adapter-default-server
-    methods: [POST, GET, DELETE]
+    methods:
+    - POST
+    - GET
+    - DELETE
   route_index: https://mapp.com/wp-json/mcp
 authorization:
   protected_resource_metadata: https://mapp.com/.well-known/oauth-protected-resource
@@ -27,11 +28,17 @@ authorization:
   authorization_endpoint: https://mapp.com/oauth/authorize
   token_endpoint: https://mapp.com/oauth/token
   revocation_endpoint: https://mapp.com/oauth/revoke
-  grant_types_supported: [authorization_code, refresh_token]
-  code_challenge_methods_supported: [S256]
-  scopes_supported: [mcp]
-  bearer_methods_supported: [header]
-  token_endpoint_auth_methods_supported: [none]
+  grant_types_supported:
+  - authorization_code
+  - refresh_token
+  code_challenge_methods_supported:
+  - S256
+  scopes_supported:
+  - mcp
+  bearer_methods_supported:
+  - header
+  token_endpoint_auth_methods_supported:
+  - none
   client_id_metadata_document_supported: true
 tools: []
 tools_gated: true
@@ -51,8 +58,15 @@ x-evidence:
   note: Route index lists /mcp/mcp-oauth-server and /mcp/mcp-adapter-default-server.
 - fetched: '2026-08-12'
   url: https://mapp.com/wp-json/mcp/mcp-oauth-server
-  method: 'POST {"jsonrpc":"2.0","id":1,"method":"tools/list"}'
+  method: POST {"jsonrpc":"2.0","id":1,"method":"tools/list"}
   http_status: 401
   content_type: application/json
   body: '{"code":"mcp_unauthorized","message":"MCP authentication required.","data":{"status":401}}'
   www_authenticate: Bearer realm="https://mapp.com", resource_metadata="https://mapp.com/.well-known/oauth-protected-resource"
+deployment:
+  mode: remote
+  endpoint: https://mapp.com/wp-json/mcp/mcp-oauth-server
+  verified: probed
+  probe: gated
+  checked: '2026-08-12'
+  source: catalog MCP census

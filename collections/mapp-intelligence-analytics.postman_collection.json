@@ -1,0 +1,2384 @@
+{
+  "item": [
+    {
+      "id": "0adca389-68b2-45b4-80dd-2656ef508af2",
+      "name": "Analysis",
+      "description": {
+        "content": "Submit analysis and get data",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "343650e9-2189-4a9c-bb0a-55517d2719e9",
+          "name": "Cancel query",
+          "request": {
+            "name": "Cancel query",
+            "description": {
+              "content": "Abort running query, if still running",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "analysis-query",
+                ":correlationId"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "correlationId",
+                  "description": "(Required) ID of the query to be canceled"
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "DELETE",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "60a2d3d5-eae0-4ec2-95d2-b4efaf495198",
+              "name": "Query successfully canceled",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "analysis-query",
+                    ":correlationId"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "correlationId",
+                      "description": "(Required) ID of the query to be canceled"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  }
+                ],
+                "method": "DELETE",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            },
+            {
+              "id": "ffe648b8-c7d3-4cc2-b687-b1f23a22c670",
+              "name": "No permission to execute operation",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "analysis-query",
+                    ":correlationId"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "correlationId",
+                      "description": "(Required) ID of the query to be canceled"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "DELETE",
+                "body": {}
+              },
+              "status": "Forbidden",
+              "code": 403,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"title\": \"Invalid Token\",\n  \"status\": \"403\",\n  \"detail\": \"Token not valid\",\n  \"statusCode\": \"INVALID_TOKEN\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "cdca9792-73b3-4428-a4b2-f28d099cd64e",
+              "name": "Entity not found",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "analysis-query",
+                    ":correlationId"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "correlationId",
+                      "description": "(Required) ID of the query to be canceled"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "DELETE",
+                "body": {}
+              },
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"title\": \"Analysis not found\",\n  \"status\": \"404\",\n  \"detail\": \"Analysis not found\",\n  \"statusCode\": \"ANALYSIS_NOT_FOUND\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "61d9809a-6fb6-4aaf-afe8-0afd5f2e5d09",
+          "name": "Get query status",
+          "request": {
+            "name": "Get query status",
+            "description": {
+              "content": "Returns status of the analysis query. \n\n Once calculation is SUCCESS, result is  available and can be retrieved by using the provided link (or calculationId).",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "analysis-query",
+                ":correlationId"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "correlationId",
+                  "description": "(Required) ID of the query"
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "f274f707-2d60-4ce0-a609-0defca648df0",
+              "name": "Query status",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "analysis-query",
+                    ":correlationId"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "correlationId",
+                      "description": "(Required) ID of the query"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"calculationId\": \"579d66fe984f72f7154c5f48e0d3d65741dac870eb337a0524d4d3db02f119b7_294915650484552\",\n  \"status\": \"RUNNING\",\n  \"details\": {\n    \"lastUpdatedAt\": \"1630430823529\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "1d2f443c-a517-449f-a539-7a4fde54563a",
+              "name": "No permission to execute operation",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "analysis-query",
+                    ":correlationId"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "correlationId",
+                      "description": "(Required) ID of the query"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Forbidden",
+              "code": 403,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"title\": \"Invalid Token\",\n  \"status\": \"403\",\n  \"detail\": \"Token not valid\",\n  \"statusCode\": \"INVALID_TOKEN\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "9a9ea990-d675-40dd-86bf-d69e410bebbf",
+              "name": "Entity not found",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "analysis-query",
+                    ":correlationId"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "correlationId",
+                      "description": "(Required) ID of the query"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"title\": \"Analysis not found\",\n  \"status\": \"404\",\n  \"detail\": \"Analysis not found\",\n  \"statusCode\": \"ANALYSIS_NOT_FOUND\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "c12d8ed9-9caa-40a6-968f-7555e312d926",
+          "name": "Cancel report calculation query",
+          "request": {
+            "name": "Cancel report calculation query",
+            "description": {
+              "content": "Cancel report calculation query",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "report-query",
+                ":reportCorrelationId"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "reportCorrelationId",
+                  "description": "(Required) "
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "*/*"
+              }
+            ],
+            "method": "DELETE",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "e0495463-4220-4062-97b0-22e62457bb22",
+              "name": "OK",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "report-query",
+                    ":reportCorrelationId"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "reportCorrelationId",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  }
+                ],
+                "method": "DELETE",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            },
+            {
+              "id": "5c388ef9-cf91-463c-ae9d-07231f71a1d5",
+              "name": "Bad Request",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "report-query",
+                    ":reportCorrelationId"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "reportCorrelationId",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "*/*"
+                  }
+                ],
+                "method": "DELETE",
+                "body": {}
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "*/*"
+                }
+              ],
+              "body": "{\n  \"status\": 6757,\n  \"statusCode\": \"string\",\n  \"title\": \"string\",\n  \"detail\": \"string\",\n  \"errors\": [\n    {\n      \"name\": \"TimeFilterMissing\",\n      \"parameters\": {\n        \"arrangeTypes\": [\n          \"string\",\n          \"string\"\n        ],\n        \"aliases\": [\n          \"string\",\n          \"string\"\n        ],\n        \"names\": [\n          \"string\",\n          \"string\"\n        ]\n      }\n    },\n    {\n      \"name\": \"InvalidSortingCriteria\",\n      \"parameters\": {\n        \"arrangeTypes\": [\n          \"string\",\n          \"string\"\n        ],\n        \"aliases\": [\n          \"string\",\n          \"string\"\n        ],\n        \"names\": [\n          \"string\",\n          \"string\"\n        ]\n      }\n    }\n  ],\n  \"warnings\": [\n    {\n      \"name\": \"TodayRemoved\",\n      \"parameters\": {\n        \"arrangeTypes\": [\n          \"string\",\n          \"string\"\n        ],\n        \"aliases\": [\n          \"string\",\n          \"string\"\n        ],\n        \"names\": [\n          \"string\",\n          \"string\"\n        ],\n        \"daysInDataSource\": \"string\",\n        \"todayDate\": \"string\"\n      }\n    },\n    {\n      \"name\": \"SortingEnforced\",\n      \"parameters\": {\n        \"arrangeTypes\": [\n          \"string\",\n          \"string\"\n        ],\n        \"aliases\": [\n          \"string\",\n          \"string\"\n        ],\n        \"names\": [\n          \"string\",\n          \"string\"\n        ],\n        \"daysInDataSource\": \"string\",\n        \"todayDate\": \"string\"\n      }\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "9de4290e-1080-4d2e-896c-3177de191eb1",
+              "name": "Unauthorized",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "report-query",
+                    ":reportCorrelationId"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "reportCorrelationId",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "*/*"
+                  }
+                ],
+                "method": "DELETE",
+                "body": {}
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "*/*"
+                }
+              ],
+              "body": "{\n  \"status\": 2144,\n  \"statusCode\": \"string\",\n  \"title\": \"string\",\n  \"detail\": \"string\",\n  \"errors\": [\n    {\n      \"name\": \"InvalidSegmentNoneContainer\",\n      \"parameters\": {\n        \"arrangeTypes\": [\n          \"string\",\n          \"string\"\n        ],\n        \"aliases\": [\n          \"string\",\n          \"string\"\n        ],\n        \"names\": [\n          \"string\",\n          \"string\"\n        ]\n      }\n    },\n    {\n      \"name\": \"PivotIncompatibleDimension\",\n      \"parameters\": {\n        \"arrangeTypes\": [\n          \"string\",\n          \"string\"\n        ],\n        \"aliases\": [\n          \"string\",\n          \"string\"\n        ],\n        \"names\": [\n          \"string\",\n          \"string\"\n        ]\n      }\n    }\n  ],\n  \"warnings\": [\n    {\n      \"name\": \"NoSortingDefined\",\n      \"parameters\": {\n        \"arrangeTypes\": [\n          \"string\",\n          \"string\"\n        ],\n        \"aliases\": [\n          \"string\",\n          \"string\"\n        ],\n        \"names\": [\n          \"string\",\n          \"string\"\n        ],\n        \"daysInDataSource\": \"string\",\n        \"todayDate\": \"string\"\n      }\n    },\n    {\n      \"name\": \"TodayRemoved\",\n      \"parameters\": {\n        \"arrangeTypes\": [\n          \"string\",\n          \"string\"\n        ],\n        \"aliases\": [\n          \"string\",\n          \"string\"\n        ],\n        \"names\": [\n          \"string\",\n          \"string\"\n        ],\n        \"daysInDataSource\": \"string\",\n        \"todayDate\": \"string\"\n      }\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "e1206d8e-4b92-408d-bd41-d3a53ab2634f",
+              "name": "Not Found",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "report-query",
+                    ":reportCorrelationId"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "reportCorrelationId",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "*/*"
+                  }
+                ],
+                "method": "DELETE",
+                "body": {}
+              },
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "*/*"
+                }
+              ],
+              "body": "{\n  \"status\": 2144,\n  \"statusCode\": \"string\",\n  \"title\": \"string\",\n  \"detail\": \"string\",\n  \"errors\": [\n    {\n      \"name\": \"InvalidSegmentNoneContainer\",\n      \"parameters\": {\n        \"arrangeTypes\": [\n          \"string\",\n          \"string\"\n        ],\n        \"aliases\": [\n          \"string\",\n          \"string\"\n        ],\n        \"names\": [\n          \"string\",\n          \"string\"\n        ]\n      }\n    },\n    {\n      \"name\": \"PivotIncompatibleDimension\",\n      \"parameters\": {\n        \"arrangeTypes\": [\n          \"string\",\n          \"string\"\n        ],\n        \"aliases\": [\n          \"string\",\n          \"string\"\n        ],\n        \"names\": [\n          \"string\",\n          \"string\"\n        ]\n      }\n    }\n  ],\n  \"warnings\": [\n    {\n      \"name\": \"NoSortingDefined\",\n      \"parameters\": {\n        \"arrangeTypes\": [\n          \"string\",\n          \"string\"\n        ],\n        \"aliases\": [\n          \"string\",\n          \"string\"\n        ],\n        \"names\": [\n          \"string\",\n          \"string\"\n        ],\n        \"daysInDataSource\": \"string\",\n        \"todayDate\": \"string\"\n      }\n    },\n    {\n      \"name\": \"TodayRemoved\",\n      \"parameters\": {\n        \"arrangeTypes\": [\n          \"string\",\n          \"string\"\n        ],\n        \"aliases\": [\n          \"string\",\n          \"string\"\n        ],\n        \"names\": [\n          \"string\",\n          \"string\"\n        ],\n        \"daysInDataSource\": \"string\",\n        \"todayDate\": \"string\"\n      }\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "cee94a73-80c4-4bd9-a756-958542a47a54",
+              "name": "Unprocessable Entity",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "report-query",
+                    ":reportCorrelationId"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "reportCorrelationId",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "*/*"
+                  }
+                ],
+                "method": "DELETE",
+                "body": {}
+              },
+              "status": "Unprocessable Entity (WebDAV) (RFC 4918)",
+              "code": 422,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "*/*"
+                }
+              ],
+              "body": "{\n  \"status\": 2144,\n  \"statusCode\": \"string\",\n  \"title\": \"string\",\n  \"detail\": \"string\",\n  \"errors\": [\n    {\n      \"name\": \"InvalidSegmentNoneContainer\",\n      \"parameters\": {\n        \"arrangeTypes\": [\n          \"string\",\n          \"string\"\n        ],\n        \"aliases\": [\n          \"string\",\n          \"string\"\n        ],\n        \"names\": [\n          \"string\",\n          \"string\"\n        ]\n      }\n    },\n    {\n      \"name\": \"PivotIncompatibleDimension\",\n      \"parameters\": {\n        \"arrangeTypes\": [\n          \"string\",\n          \"string\"\n        ],\n        \"aliases\": [\n          \"string\",\n          \"string\"\n        ],\n        \"names\": [\n          \"string\",\n          \"string\"\n        ]\n      }\n    }\n  ],\n  \"warnings\": [\n    {\n      \"name\": \"NoSortingDefined\",\n      \"parameters\": {\n        \"arrangeTypes\": [\n          \"string\",\n          \"string\"\n        ],\n        \"aliases\": [\n          \"string\",\n          \"string\"\n        ],\n        \"names\": [\n          \"string\",\n          \"string\"\n        ],\n        \"daysInDataSource\": \"string\",\n        \"todayDate\": \"string\"\n      }\n    },\n    {\n      \"name\": \"TodayRemoved\",\n      \"parameters\": {\n        \"arrangeTypes\": [\n          \"string\",\n          \"string\"\n        ],\n        \"aliases\": [\n          \"string\",\n          \"string\"\n        ],\n        \"names\": [\n          \"string\",\n          \"string\"\n        ],\n        \"daysInDataSource\": \"string\",\n        \"todayDate\": \"string\"\n      }\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "003f8826-84dd-4726-a7b8-10a1030adf01",
+              "name": "Internal Server Error",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "report-query",
+                    ":reportCorrelationId"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "reportCorrelationId",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "*/*"
+                  }
+                ],
+                "method": "DELETE",
+                "body": {}
+              },
+              "status": "Internal Server Error",
+              "code": 500,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "*/*"
+                }
+              ],
+              "body": "{\n  \"status\": 2144,\n  \"statusCode\": \"string\",\n  \"title\": \"string\",\n  \"detail\": \"string\",\n  \"errors\": [\n    {\n      \"name\": \"InvalidSegmentNoneContainer\",\n      \"parameters\": {\n        \"arrangeTypes\": [\n          \"string\",\n          \"string\"\n        ],\n        \"aliases\": [\n          \"string\",\n          \"string\"\n        ],\n        \"names\": [\n          \"string\",\n          \"string\"\n        ]\n      }\n    },\n    {\n      \"name\": \"PivotIncompatibleDimension\",\n      \"parameters\": {\n        \"arrangeTypes\": [\n          \"string\",\n          \"string\"\n        ],\n        \"aliases\": [\n          \"string\",\n          \"string\"\n        ],\n        \"names\": [\n          \"string\",\n          \"string\"\n        ]\n      }\n    }\n  ],\n  \"warnings\": [\n    {\n      \"name\": \"NoSortingDefined\",\n      \"parameters\": {\n        \"arrangeTypes\": [\n          \"string\",\n          \"string\"\n        ],\n        \"aliases\": [\n          \"string\",\n          \"string\"\n        ],\n        \"names\": [\n          \"string\",\n          \"string\"\n        ],\n        \"daysInDataSource\": \"string\",\n        \"todayDate\": \"string\"\n      }\n    },\n    {\n      \"name\": \"TodayRemoved\",\n      \"parameters\": {\n        \"arrangeTypes\": [\n          \"string\",\n          \"string\"\n        ],\n        \"aliases\": [\n          \"string\",\n          \"string\"\n        ],\n        \"names\": [\n          \"string\",\n          \"string\"\n        ],\n        \"daysInDataSource\": \"string\",\n        \"todayDate\": \"string\"\n      }\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "e8c68345-1536-4846-bbaf-b611113a5240",
+          "name": "Get report calculation query state",
+          "request": {
+            "name": "Get report calculation query state",
+            "description": {
+              "content": "Get report calculation query state",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "report-query",
+                ":reportCorrelationId"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "reportCorrelationId",
+                  "description": "(Required) "
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "c1f4740a-316a-425c-a67e-0008e325c72f",
+              "name": "OK",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "report-query",
+                    ":reportCorrelationId"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "reportCorrelationId",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"reportCorrelationId\": \"1ea0f0c7-b05e-47e6-8d4f-e78787dfe9ac\",\n  \"status\": \"RUNNING\",\n  \"details\": {\n    \"lastUpdatedAt\": \"1727114468280\",\n    \"reportId\": \"1006\",\n    \"reportTitle\": \"Advertiser Overview\"\n  },\n  \"queryStates\": [\n    {\n      \"calculationId\": \"579d66fe984f72f7154c5f48e0d3d65741dac870eb337a0524d4d3db02f119b7_294915650484552\",\n      \"accountId\": \"294915650484552\",\n      \"correlationId\": \"1ba0f0c7-b05e-47e6-8d4f-e78787dfe9ab\",\n      \"resultUrl\": \"https://intelligence.eu.mapp.com/analytics/api/analysis-query/1ba0f0c7-b05e-47e6-8d4f-e78787dfe9ab\",\n      \"status\": \"RUNNING\",\n      \"details\": {\n        \"lastUpdatedAt\": \"1727114468280\",\n        \"reportElementId\": \"43946\"\n      }\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "78106425-5e26-4fd8-9527-60e18bce9998",
+              "name": "Bad Request",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "report-query",
+                    ":reportCorrelationId"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "reportCorrelationId",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"status\": 2144,\n  \"statusCode\": \"string\",\n  \"title\": \"string\",\n  \"detail\": \"string\",\n  \"errors\": [\n    {\n      \"name\": \"InvalidSegmentNoneContainer\",\n      \"parameters\": {\n        \"arrangeTypes\": [\n          \"string\",\n          \"string\"\n        ],\n        \"aliases\": [\n          \"string\",\n          \"string\"\n        ],\n        \"names\": [\n          \"string\",\n          \"string\"\n        ]\n      }\n    },\n    {\n      \"name\": \"PivotIncompatibleDimension\",\n      \"parameters\": {\n        \"arrangeTypes\": [\n          \"string\",\n          \"string\"\n        ],\n        \"aliases\": [\n          \"string\",\n          \"string\"\n        ],\n        \"names\": [\n          \"string\",\n          \"string\"\n        ]\n      }\n    }\n  ],\n  \"warnings\": [\n    {\n      \"name\": \"NoSortingDefined\",\n      \"parameters\": {\n        \"arrangeTypes\": [\n          \"string\",\n          \"string\"\n        ],\n        \"aliases\": [\n          \"string\",\n          \"string\"\n        ],\n        \"names\": [\n          \"string\",\n          \"string\"\n        ],\n        \"daysInDataSource\": \"string\",\n        \"todayDate\": \"string\"\n      }\n    },\n    {\n      \"name\": \"TodayRemoved\",\n      \"parameters\": {\n        \"arrangeTypes\": [\n          \"string\",\n          \"string\"\n        ],\n        \"aliases\": [\n          \"string\",\n          \"string\"\n        ],\n        \"names\": [\n          \"string\",\n          \"string\"\n        ],\n        \"daysInDataSource\": \"string\",\n        \"todayDate\": \"string\"\n      }\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "0b111fb7-a8f5-4421-9218-73e013e006c3",
+              "name": "No permission to execute operation",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "report-query",
+                    ":reportCorrelationId"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "reportCorrelationId",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Forbidden",
+              "code": 403,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"title\": \"Invalid Token\",\n  \"status\": \"403\",\n  \"detail\": \"Token not valid\",\n  \"statusCode\": \"INVALID_TOKEN\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "eac35adf-e066-4c64-85da-63cdf97aebe1",
+              "name": "Entity not found",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "report-query",
+                    ":reportCorrelationId"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "reportCorrelationId",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"title\": \"Analysis not found\",\n  \"status\": \"404\",\n  \"detail\": \"Analysis not found\",\n  \"statusCode\": \"ANALYSIS_NOT_FOUND\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "642b6230-c5e2-405d-84c6-2ae997f611f5",
+              "name": "Internal Server Error",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "report-query",
+                    ":reportCorrelationId"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "reportCorrelationId",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Internal Server Error",
+              "code": 500,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"status\": 2144,\n  \"statusCode\": \"string\",\n  \"title\": \"string\",\n  \"detail\": \"string\",\n  \"errors\": [\n    {\n      \"name\": \"InvalidSegmentNoneContainer\",\n      \"parameters\": {\n        \"arrangeTypes\": [\n          \"string\",\n          \"string\"\n        ],\n        \"aliases\": [\n          \"string\",\n          \"string\"\n        ],\n        \"names\": [\n          \"string\",\n          \"string\"\n        ]\n      }\n    },\n    {\n      \"name\": \"PivotIncompatibleDimension\",\n      \"parameters\": {\n        \"arrangeTypes\": [\n          \"string\",\n          \"string\"\n        ],\n        \"aliases\": [\n          \"string\",\n          \"string\"\n        ],\n        \"names\": [\n          \"string\",\n          \"string\"\n        ]\n      }\n    }\n  ],\n  \"warnings\": [\n    {\n      \"name\": \"NoSortingDefined\",\n      \"parameters\": {\n        \"arrangeTypes\": [\n          \"string\",\n          \"string\"\n        ],\n        \"aliases\": [\n          \"string\",\n          \"string\"\n        ],\n        \"names\": [\n          \"string\",\n          \"string\"\n        ],\n        \"daysInDataSource\": \"string\",\n        \"todayDate\": \"string\"\n      }\n    },\n    {\n      \"name\": \"TodayRemoved\",\n      \"parameters\": {\n        \"arrangeTypes\": [\n          \"string\",\n          \"string\"\n        ],\n        \"aliases\": [\n          \"string\",\n          \"string\"\n        ],\n        \"names\": [\n          \"string\",\n          \"string\"\n        ],\n        \"daysInDataSource\": \"string\",\n        \"todayDate\": \"string\"\n      }\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "1ca309de-a66f-4294-98f9-582119cfe5ba",
+          "name": "Create calculation query",
+          "request": {
+            "name": "Create calculation query",
+            "description": {
+              "content": "Create a calculation query. \n\n Response will be either \n+ 200 if the result is already available and can be retrieved by using the provided link (or calculationId) \n+ 201 if the calculation is being queued. Status can be polled by using the provided link (or correlationId).",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "analysis-query"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"resultType\": \"<string>\",\n  \"queryObject\": {\n    \"columns\": [\n      {\n        \"name\": \"<string>\",\n        \"sortDirection\": \"<string>\",\n        \"sortIndex\": \"<integer>\",\n        \"lowerLimit\": \"<integer>\",\n        \"upperLimit\": \"<integer>\",\n        \"inTimeSeries\": \"<boolean>\",\n        \"columnPeriod\": \"<string>\",\n        \"scope\": \"<string>\",\n        \"context\": \"<string>\",\n        \"predefinedContainer\": {\n          \"filters\": [\n            {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            }\n          ],\n          \"containers\": [\n            {\n              \"value\": \"<Circular reference to #/components/schemas/Container detected>\"\n            },\n            {\n              \"value\": \"<Circular reference to #/components/schemas/Container detected>\"\n            }\n          ],\n          \"connector\": \"<string>\",\n          \"context\": \"<string>\",\n          \"type\": \"<string>\",\n          \"inOrNotIn\": \"<string>\"\n        }\n      },\n      {\n        \"name\": \"<string>\",\n        \"sortDirection\": \"<string>\",\n        \"sortIndex\": \"<integer>\",\n        \"lowerLimit\": \"<integer>\",\n        \"upperLimit\": \"<integer>\",\n        \"inTimeSeries\": \"<boolean>\",\n        \"columnPeriod\": \"<string>\",\n        \"scope\": \"<string>\",\n        \"context\": \"<string>\",\n        \"predefinedContainer\": {\n          \"filters\": [\n            {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            }\n          ],\n          \"containers\": [\n            {\n              \"value\": \"<Circular reference to #/components/schemas/Container detected>\"\n            },\n            {\n              \"value\": \"<Circular reference to #/components/schemas/Container detected>\"\n            }\n          ],\n          \"connector\": \"<string>\",\n          \"context\": \"<string>\",\n          \"type\": \"<string>\",\n          \"inOrNotIn\": \"<string>\"\n        }\n      }\n    ],\n    \"variant\": \"<string>\",\n    \"predefinedContainer\": {\n      \"filters\": [\n        {\n          \"name\": \"<string>\",\n          \"filterPredicate\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"connector\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"caseSensitive\": \"<boolean>\",\n          \"context\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"intern\": \"false\",\n          \"value1\": \"<string>\",\n          \"value2\": \"<string>\",\n          \"values1\": [\n            {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            }\n          ],\n          \"values2\": [\n            {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            }\n          ]\n        },\n        {\n          \"name\": \"<string>\",\n          \"filterPredicate\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"connector\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"caseSensitive\": \"<boolean>\",\n          \"context\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"intern\": \"false\",\n          \"value1\": \"<string>\",\n          \"value2\": \"<string>\",\n          \"values1\": [\n            {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            }\n          ],\n          \"values2\": [\n            {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            }\n          ]\n        }\n      ],\n      \"containers\": [\n        {\n          \"value\": \"<Circular reference to #/components/schemas/Container detected>\"\n        },\n        {\n          \"value\": \"<Circular reference to #/components/schemas/Container detected>\"\n        }\n      ],\n      \"connector\": \"<string>\",\n      \"context\": \"<string>\",\n      \"type\": \"<string>\",\n      \"inOrNotIn\": \"<string>\"\n    },\n    \"predefinedSegmentConnections\": [\n      {\n        \"name\": \"<string>\",\n        \"filterPredicate\": \"<string>\",\n        \"connector\": \"<string>\",\n        \"caseSensitive\": \"<boolean>\",\n        \"context\": \"<string>\",\n        \"intern\": \"false\",\n        \"value1\": \"<string>\",\n        \"value2\": \"<string>\",\n        \"values1\": [\n          \"<string>\",\n          \"<string>\"\n        ],\n        \"values2\": [\n          \"<string>\",\n          \"<string>\"\n        ]\n      },\n      {\n        \"name\": \"<string>\",\n        \"filterPredicate\": \"<string>\",\n        \"connector\": \"<string>\",\n        \"caseSensitive\": \"<boolean>\",\n        \"context\": \"<string>\",\n        \"intern\": \"false\",\n        \"value1\": \"<string>\",\n        \"value2\": \"<string>\",\n        \"values1\": [\n          \"<string>\",\n          \"<string>\"\n        ],\n        \"values2\": [\n          \"<string>\",\n          \"<string>\"\n        ]\n      }\n    ],\n    \"viewMode\": {\n      \"active\": \"<string>\",\n      \"comparison\": {\n        \"type\": \"<string>\",\n        \"values\": {\n          \"time\": [\n            {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            }\n          ],\n          \"segment\": [\n            {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            }\n          ]\n        },\n        \"sorting\": {\n          \"time\": [\n            {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            }\n          ],\n          \"segment\": [\n            {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            }\n          ]\n        }\n      },\n      \"timeSeries\": {\n        \"timeName\": \"<string>\",\n        \"viewType\": \"<string>\",\n        \"top\": \"<integer>\",\n        \"values\": [\n          \"<string>\",\n          \"<string>\"\n        ]\n      },\n      \"path\": {\n        \"metricName\": \"<string>\",\n        \"dimensionContext\": \"<string>\",\n        \"reverse\": \"<boolean>\",\n        \"distinct\": \"<boolean>\",\n        \"pathLength\": \"<integer>\"\n      },\n      \"crossTable\": {\n        \"metricName\": \"<string>\",\n        \"crossDimensionName\": \"<string>\",\n        \"mainDimensionSortDirection\": \"<string>\",\n        \"metricSortDirection\": \"<string>\",\n        \"dimensionUpperLimit\": \"<integer>\",\n        \"crossDimensionSortDirection\": \"<string>\"\n      }\n    }\n  }\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "2b7d4472-7c79-493b-82e5-f9725189718d",
+              "name": "Analysis completed",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "analysis-query"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"resultType\": \"DATA_ONLY\",\n  \"queryObject\": {\n    \"columns\": [\n      {\n        \"name\": \"time_days\",\n        \"sortDirection\": \"ASCENDING\",\n        \"sortIndex\": \"0\",\n        \"scope\": \"OBJECT\",\n        \"context\": \"NONE\",\n        \"lowerLimit\": \"1\",\n        \"upperLimit\": \"7\"\n      },\n      {\n        \"name\": \"os_vendor\",\n        \"context\": \"SESSION\",\n        \"lowerLimit\": \"1\",\n        \"upperLimit\": \"10\",\n        \"scope\": \"OBJECT\"\n      },\n      {\n        \"name\": \"visits\",\n        \"columnPeriod\": \"ANALYSIS\",\n        \"sortDirection\": \"DESCENDING\",\n        \"sortIndex\": \"1\",\n        \"scope\": \"OBJECT\",\n        \"context\": \"SESSION\"\n      },\n      {\n        \"name\": \"pages_pageImpressions\",\n        \"columnPeriod\": \"ANALYSIS\",\n        \"scope\": \"OBJECT\",\n        \"context\": \"PAGE\"\n      },\n      {\n        \"name\": \"visits_newShare\",\n        \"columnPeriod\": \"ANALYSIS\",\n        \"scope\": \"OBJECT\"\n      },\n      {\n        \"name\": \"visit_duration_avg\",\n        \"columnPeriod\": \"ANALYSIS\",\n        \"scope\": \"OBJECT\"\n      },\n      {\n        \"name\": \"visits_bounceRate\",\n        \"columnPeriod\": \"ANALYSIS\",\n        \"scope\": \"OBJECT\"\n      },\n      {\n        \"name\": \"visits\",\n        \"columnPeriod\": \"ANALYSIS\",\n        \"scope\": \"OBJECT\",\n        \"context\": \"SESSION\",\n        \"predefinedContainer\": {\n          \"filters\": [\n            {\n              \"name\": \"os_vendor\",\n              \"caseSensitive\": \"false\",\n              \"context\": \"SESSION\",\n              \"filterPredicate\": \"LIKE\",\n              \"connector\": \"AND\",\n              \"value1\": \"Apple\",\n              \"value2\": \"\"\n            }\n          ],\n          \"containers\": []\n        }\n      }\n    ],\n    \"variant\": \"PIVOT\",\n    \"predefinedContainer\": {\n      \"filters\": [\n        {\n          \"name\": \"time_dynamic\",\n          \"filterPredicate\": \"LIKE\",\n          \"connector\": \"AND\",\n          \"caseSensitive\": \"false\",\n          \"context\": \"NONE\",\n          \"intern\": \"false\",\n          \"value1\": \"last_7_days\",\n          \"value2\": \"\"\n        }\n      ],\n      \"containers\": []\n    }\n  }\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"calculationId\": \"8612fa1eaada53fbb1956402bbded4db732074e7e399645880ae6a54b99a2bd9_294915650484552\",\n  \"resultUrl\": \"https://intelligence.eu.mapp.com/analytics/api/analysis-result/8612fa1eaada53fbb1956402bbded4db732074e7e399645880ae6a54b99a2bd9_294915650484552\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "772c656d-8a06-4f8e-966a-6b7026ea9a3d",
+              "name": "Analysis enqueued",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "analysis-query"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"resultType\": \"DATA_ONLY\",\n  \"queryObject\": {\n    \"columns\": [\n      {\n        \"name\": \"time_days\",\n        \"sortDirection\": \"ASCENDING\",\n        \"sortIndex\": \"0\",\n        \"scope\": \"OBJECT\",\n        \"context\": \"NONE\",\n        \"lowerLimit\": \"1\",\n        \"upperLimit\": \"7\"\n      },\n      {\n        \"name\": \"os_vendor\",\n        \"context\": \"SESSION\",\n        \"lowerLimit\": \"1\",\n        \"upperLimit\": \"10\",\n        \"scope\": \"OBJECT\"\n      },\n      {\n        \"name\": \"visits\",\n        \"columnPeriod\": \"ANALYSIS\",\n        \"sortDirection\": \"DESCENDING\",\n        \"sortIndex\": \"1\",\n        \"scope\": \"OBJECT\",\n        \"context\": \"SESSION\"\n      },\n      {\n        \"name\": \"pages_pageImpressions\",\n        \"columnPeriod\": \"ANALYSIS\",\n        \"scope\": \"OBJECT\",\n        \"context\": \"PAGE\"\n      },\n      {\n        \"name\": \"visits_newShare\",\n        \"columnPeriod\": \"ANALYSIS\",\n        \"scope\": \"OBJECT\"\n      },\n      {\n        \"name\": \"visit_duration_avg\",\n        \"columnPeriod\": \"ANALYSIS\",\n        \"scope\": \"OBJECT\"\n      },\n      {\n        \"name\": \"visits_bounceRate\",\n        \"columnPeriod\": \"ANALYSIS\",\n        \"scope\": \"OBJECT\"\n      },\n      {\n        \"name\": \"visits\",\n        \"columnPeriod\": \"ANALYSIS\",\n        \"scope\": \"OBJECT\",\n        \"context\": \"SESSION\",\n        \"predefinedContainer\": {\n          \"filters\": [\n            {\n              \"name\": \"os_vendor\",\n              \"caseSensitive\": \"false\",\n              \"context\": \"SESSION\",\n              \"filterPredicate\": \"LIKE\",\n              \"connector\": \"AND\",\n              \"value1\": \"Apple\",\n              \"value2\": \"\"\n            }\n          ],\n          \"containers\": []\n        }\n      }\n    ],\n    \"variant\": \"PIVOT\",\n    \"predefinedContainer\": {\n      \"filters\": [\n        {\n          \"name\": \"time_dynamic\",\n          \"filterPredicate\": \"LIKE\",\n          \"connector\": \"AND\",\n          \"caseSensitive\": \"false\",\n          \"context\": \"NONE\",\n          \"intern\": \"false\",\n          \"value1\": \"last_7_days\",\n          \"value2\": \"\"\n        }\n      ],\n      \"containers\": []\n    }\n  }\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Created",
+              "code": 201,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"correlationId\": \"94295cef-5b64-4934-ba25-011dd997aa81\",\n  \"statusUrl\": \"https://intelligence.eu.mapp.com/analytics/api/analysis-query/94295cef-5b64-4934-ba25-011dd997aa81\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "4cfb2c74-5903-44cf-977b-cd48ad20723d",
+              "name": "No permission to execute operation",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "analysis-query"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"resultType\": \"DATA_ONLY\",\n  \"queryObject\": {\n    \"columns\": [\n      {\n        \"name\": \"time_days\",\n        \"sortDirection\": \"ASCENDING\",\n        \"sortIndex\": \"0\",\n        \"scope\": \"OBJECT\",\n        \"context\": \"NONE\",\n        \"lowerLimit\": \"1\",\n        \"upperLimit\": \"7\"\n      },\n      {\n        \"name\": \"os_vendor\",\n        \"context\": \"SESSION\",\n        \"lowerLimit\": \"1\",\n        \"upperLimit\": \"10\",\n        \"scope\": \"OBJECT\"\n      },\n      {\n        \"name\": \"visits\",\n        \"columnPeriod\": \"ANALYSIS\",\n        \"sortDirection\": \"DESCENDING\",\n        \"sortIndex\": \"1\",\n        \"scope\": \"OBJECT\",\n        \"context\": \"SESSION\"\n      },\n      {\n        \"name\": \"pages_pageImpressions\",\n        \"columnPeriod\": \"ANALYSIS\",\n        \"scope\": \"OBJECT\",\n        \"context\": \"PAGE\"\n      },\n      {\n        \"name\": \"visits_newShare\",\n        \"columnPeriod\": \"ANALYSIS\",\n        \"scope\": \"OBJECT\"\n      },\n      {\n        \"name\": \"visit_duration_avg\",\n        \"columnPeriod\": \"ANALYSIS\",\n        \"scope\": \"OBJECT\"\n      },\n      {\n        \"name\": \"visits_bounceRate\",\n        \"columnPeriod\": \"ANALYSIS\",\n        \"scope\": \"OBJECT\"\n      },\n      {\n        \"name\": \"visits\",\n        \"columnPeriod\": \"ANALYSIS\",\n        \"scope\": \"OBJECT\",\n        \"context\": \"SESSION\",\n        \"predefinedContainer\": {\n          \"filters\": [\n            {\n              \"name\": \"os_vendor\",\n              \"caseSensitive\": \"false\",\n              \"context\": \"SESSION\",\n              \"filterPredicate\": \"LIKE\",\n              \"connector\": \"AND\",\n              \"value1\": \"Apple\",\n              \"value2\": \"\"\n            }\n          ],\n          \"containers\": []\n        }\n      }\n    ],\n    \"variant\": \"PIVOT\",\n    \"predefinedContainer\": {\n      \"filters\": [\n        {\n          \"name\": \"time_dynamic\",\n          \"filterPredicate\": \"LIKE\",\n          \"connector\": \"AND\",\n          \"caseSensitive\": \"false\",\n          \"context\": \"NONE\",\n          \"intern\": \"false\",\n          \"value1\": \"last_7_days\",\n          \"value2\": \"\"\n        }\n      ],\n      \"containers\": []\n    }\n  }\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Forbidden",
+              "code": 403,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"title\": \"Invalid Token\",\n  \"status\": \"403\",\n  \"detail\": \"Token not valid\",\n  \"statusCode\": \"INVALID_TOKEN\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "1c7edb3a-66cd-4ad1-8dd4-c83d02015c30",
+              "name": "Invalid JSON input",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "analysis-query"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"resultType\": \"DATA_ONLY\",\n  \"queryObject\": {\n    \"columns\": [\n      {\n        \"name\": \"time_days\",\n        \"sortDirection\": \"ASCENDING\",\n        \"sortIndex\": \"0\",\n        \"scope\": \"OBJECT\",\n        \"context\": \"NONE\",\n        \"lowerLimit\": \"1\",\n        \"upperLimit\": \"7\"\n      },\n      {\n        \"name\": \"os_vendor\",\n        \"context\": \"SESSION\",\n        \"lowerLimit\": \"1\",\n        \"upperLimit\": \"10\",\n        \"scope\": \"OBJECT\"\n      },\n      {\n        \"name\": \"visits\",\n        \"columnPeriod\": \"ANALYSIS\",\n        \"sortDirection\": \"DESCENDING\",\n        \"sortIndex\": \"1\",\n        \"scope\": \"OBJECT\",\n        \"context\": \"SESSION\"\n      },\n      {\n        \"name\": \"pages_pageImpressions\",\n        \"columnPeriod\": \"ANALYSIS\",\n        \"scope\": \"OBJECT\",\n        \"context\": \"PAGE\"\n      },\n      {\n        \"name\": \"visits_newShare\",\n        \"columnPeriod\": \"ANALYSIS\",\n        \"scope\": \"OBJECT\"\n      },\n      {\n        \"name\": \"visit_duration_avg\",\n        \"columnPeriod\": \"ANALYSIS\",\n        \"scope\": \"OBJECT\"\n      },\n      {\n        \"name\": \"visits_bounceRate\",\n        \"columnPeriod\": \"ANALYSIS\",\n        \"scope\": \"OBJECT\"\n      },\n      {\n        \"name\": \"visits\",\n        \"columnPeriod\": \"ANALYSIS\",\n        \"scope\": \"OBJECT\",\n        \"context\": \"SESSION\",\n        \"predefinedContainer\": {\n          \"filters\": [\n            {\n              \"name\": \"os_vendor\",\n              \"caseSensitive\": \"false\",\n              \"context\": \"SESSION\",\n              \"filterPredicate\": \"LIKE\",\n              \"connector\": \"AND\",\n              \"value1\": \"Apple\",\n              \"value2\": \"\"\n            }\n          ],\n          \"containers\": []\n        }\n      }\n    ],\n    \"variant\": \"PIVOT\",\n    \"predefinedContainer\": {\n      \"filters\": [\n        {\n          \"name\": \"time_dynamic\",\n          \"filterPredicate\": \"LIKE\",\n          \"connector\": \"AND\",\n          \"caseSensitive\": \"false\",\n          \"context\": \"NONE\",\n          \"intern\": \"false\",\n          \"value1\": \"last_7_days\",\n          \"value2\": \"\"\n        }\n      ],\n      \"containers\": []\n    }\n  }\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Unprocessable Entity (WebDAV) (RFC 4918)",
+              "code": 422,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"status\": 2144,\n  \"statusCode\": \"string\",\n  \"title\": \"string\",\n  \"detail\": \"string\",\n  \"errors\": [\n    {\n      \"name\": \"InvalidSegmentNoneContainer\",\n      \"parameters\": {\n        \"arrangeTypes\": [\n          \"string\",\n          \"string\"\n        ],\n        \"aliases\": [\n          \"string\",\n          \"string\"\n        ],\n        \"names\": [\n          \"string\",\n          \"string\"\n        ]\n      }\n    },\n    {\n      \"name\": \"PivotIncompatibleDimension\",\n      \"parameters\": {\n        \"arrangeTypes\": [\n          \"string\",\n          \"string\"\n        ],\n        \"aliases\": [\n          \"string\",\n          \"string\"\n        ],\n        \"names\": [\n          \"string\",\n          \"string\"\n        ]\n      }\n    }\n  ],\n  \"warnings\": [\n    {\n      \"name\": \"NoSortingDefined\",\n      \"parameters\": {\n        \"arrangeTypes\": [\n          \"string\",\n          \"string\"\n        ],\n        \"aliases\": [\n          \"string\",\n          \"string\"\n        ],\n        \"names\": [\n          \"string\",\n          \"string\"\n        ],\n        \"daysInDataSource\": \"string\",\n        \"todayDate\": \"string\"\n      }\n    },\n    {\n      \"name\": \"TodayRemoved\",\n      \"parameters\": {\n        \"arrangeTypes\": [\n          \"string\",\n          \"string\"\n        ],\n        \"aliases\": [\n          \"string\",\n          \"string\"\n        ],\n        \"names\": [\n          \"string\",\n          \"string\"\n        ],\n        \"daysInDataSource\": \"string\",\n        \"todayDate\": \"string\"\n      }\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "f6cc4abf-216e-4324-852f-8e5e1b97130e",
+          "name": "Create report calculation query",
+          "request": {
+            "name": "Create report calculation query",
+            "description": {
+              "content": "Create multiple calculation queries, also known as a report.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "report-query"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "*/*"
+              }
+            ],
+            "method": "POST",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"id\": \"<long>\",\n  \"elementIds\": [\n    \"<long>\",\n    \"<long>\"\n  ],\n  \"configuration\": {\n    \"id\": \"<integer>\",\n    \"title\": \"<string>\",\n    \"description\": \"<string>\",\n    \"reportElements\": [\n      {\n        \"id\": \"<integer>\",\n        \"reportId\": \"<integer>\",\n        \"type\": \"<string>\",\n        \"configJson\": {\n          \"columns\": [\n            {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            }\n          ],\n          \"variant\": \"<string>\",\n          \"predefinedContainer\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"predefinedSegmentConnections\": [\n            {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            }\n          ],\n          \"viewMode\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          }\n        }\n      },\n      {\n        \"id\": \"<integer>\",\n        \"reportId\": \"<integer>\",\n        \"type\": \"<string>\",\n        \"configJson\": {\n          \"columns\": [\n            {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            }\n          ],\n          \"variant\": \"<string>\",\n          \"predefinedContainer\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"predefinedSegmentConnections\": [\n            {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            }\n          ],\n          \"viewMode\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          }\n        }\n      }\n    ],\n    \"timeFilter\": {\n      \"name\": \"<string>\",\n      \"filterPredicate\": \"<string>\",\n      \"connector\": \"<string>\",\n      \"caseSensitive\": \"<boolean>\",\n      \"context\": \"<string>\",\n      \"intern\": \"false\",\n      \"value1\": \"<string>\",\n      \"value2\": \"<string>\",\n      \"values1\": [\n        \"<string>\",\n        \"<string>\"\n      ],\n      \"values2\": [\n        \"<string>\",\n        \"<string>\"\n      ]\n    },\n    \"quickFilters\": [\n      {\n        \"name\": \"<string>\",\n        \"filterPredicate\": \"<string>\",\n        \"connector\": \"<string>\",\n        \"caseSensitive\": \"<boolean>\",\n        \"context\": \"<string>\",\n        \"intern\": \"false\",\n        \"value1\": \"<string>\",\n        \"value2\": \"<string>\",\n        \"values1\": [\n          \"<string>\",\n          \"<string>\"\n        ],\n        \"values2\": [\n          \"<string>\",\n          \"<string>\"\n        ]\n      },\n      {\n        \"name\": \"<string>\",\n        \"filterPredicate\": \"<string>\",\n        \"connector\": \"<string>\",\n        \"caseSensitive\": \"<boolean>\",\n        \"context\": \"<string>\",\n        \"intern\": \"false\",\n        \"value1\": \"<string>\",\n        \"value2\": \"<string>\",\n        \"values1\": [\n          \"<string>\",\n          \"<string>\"\n        ],\n        \"values2\": [\n          \"<string>\",\n          \"<string>\"\n        ]\n      }\n    ]\n  },\n  \"timeFilter\": {\n    \"name\": \"<string>\",\n    \"filterPredicate\": \"<string>\",\n    \"connector\": \"<string>\",\n    \"caseSensitive\": \"<boolean>\",\n    \"context\": \"<string>\",\n    \"intern\": \"false\",\n    \"value1\": \"<string>\",\n    \"value2\": \"<string>\",\n    \"values1\": [\n      \"<string>\",\n      \"<string>\"\n    ],\n    \"values2\": [\n      \"<string>\",\n      \"<string>\"\n    ]\n  }\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "8abf64a6-9f46-4047-a2ea-2f74b345c786",
+              "name": "OK",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "report-query"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "*/*"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"configuration\": {\n    \"id\": \"3687\",\n    \"title\": \"! !!  ANALYTICS-2295\",\n    \"description\": \"\",\n    \"timeFilter\": {\n      \"arrangeType\": \"times_internal_day\",\n      \"connector\": \"AND\",\n      \"filterPredicate\": \"BETWEEN\",\n      \"value1\": \"2022-10-15\",\n      \"value2\": \"2023-12-28\",\n      \"context\": \"NONE\",\n      \"caseSensitive\": \"false\",\n      \"intern\": \"false\",\n      \"numberOfDays\": \"0\"\n    },\n    \"reportElements\": [\n      {\n        \"type\": \"TEXTBOX_DESCRIPTION\",\n        \"id\": \"43942\",\n        \"position\": \"0\",\n        \"positionAsPoint\": {\n          \"x\": \"0\",\n          \"y\": \"0\"\n        },\n        \"width\": \"3\",\n        \"height\": \"1\",\n        \"reportId\": \"3687\",\n        \"configJson\": {}\n      },\n      {\n        \"type\": \"TEXTBOX_CONTENT_TABLE\",\n        \"id\": \"43944\",\n        \"position\": \"1\",\n        \"positionAsPoint\": {\n          \"x\": \"3\",\n          \"y\": \"0\"\n        },\n        \"width\": \"3\",\n        \"height\": \"1\",\n        \"reportId\": \"3687\",\n        \"configJson\": {}\n      },\n      {\n        \"type\": \"ANALYSIS\",\n        \"id\": \"43946\",\n        \"position\": \"2\",\n        \"positionAsPoint\": {\n          \"x\": \"0\",\n          \"y\": \"0\"\n        },\n        \"width\": \"3\",\n        \"height\": \"78\",\n        \"reportId\": \"3687\",\n        \"configJson\": {\n          \"predefinedContainer\": {\n            \"filters\": [],\n            \"containers\": [],\n            \"combined\": \"false\"\n          },\n          \"title\": \"ThisareallyreallylongtrafficanalysistitleaimingtobreakthesidemenuUI\",\n          \"realTime\": \"false\",\n          \"predefinedSegmentConnections\": [],\n          \"columns\": [\n            {\n              \"arrangeType\": \"time_id_categories_t_year_month_day\",\n              \"dataType\": \"NUMBER\",\n              \"sortDirection\": \"ASCENDING\",\n              \"title\": \"Days\",\n              \"scope\": \"OBJECT\",\n              \"context\": \"NONE\",\n              \"visible\": \"true\",\n              \"dimension\": \"true\",\n              \"metric\": \"false\",\n              \"alias\": \"time_id_categories_t_year_month_day|0\",\n              \"lowerLimit\": \"1\",\n              \"upperLimit\": \"28\",\n              \"sumValue\": \"false\",\n              \"predefinedSegmentConnections\": []\n            },\n            {\n              \"arrangeType\": \"visits\",\n              \"dataType\": \"NUMBER\",\n              \"title\": \"Visits\",\n              \"scope\": \"OBJECT\",\n              \"context\": \"SESSION\",\n              \"variant\": \"NORMAL\",\n              \"visible\": \"true\",\n              \"dimension\": \"false\",\n              \"metric\": \"true\",\n              \"predefinedContainer\": {\n                \"filters\": [],\n                \"containers\": [],\n                \"combined\": \"false\"\n              },\n              \"alias\": \"visits|0\",\n              \"inTimeSeries\": \"false\",\n              \"chart\": {\n                \"visible\": \"true\",\n                \"yAxis\": \"0\"\n              },\n              \"sumValue\": \"false\",\n              \"predefinedSegmentConnections\": [],\n              \"columnPeriod\": \"ANALYSIS\",\n              \"round\": \"-1\",\n              \"roundConfig\": {\n                \"override\": \"false\",\n                \"round\": \"2\"\n              }\n            },\n            {\n              \"arrangeType\": \"page_impressions\",\n              \"dataType\": \"NUMBER\",\n              \"title\": \"Page Impressions\",\n              \"scope\": \"OBJECT\",\n              \"context\": \"PAGE\",\n              \"variant\": \"NORMAL\",\n              \"visible\": \"true\",\n              \"dimension\": \"false\",\n              \"metric\": \"true\",\n              \"predefinedContainer\": {\n                \"filters\": [],\n                \"containers\": [],\n                \"combined\": \"false\"\n              },\n              \"alias\": \"page_impressions|0\",\n              \"inTimeSeries\": \"false\",\n              \"chart\": {\n                \"visible\": \"false\",\n                \"yAxis\": \"0\"\n              },\n              \"sumValue\": \"false\",\n              \"predefinedSegmentConnections\": [],\n              \"columnPeriod\": \"ANALYSIS\",\n              \"round\": \"-1\",\n              \"roundConfig\": {\n                \"override\": \"false\",\n                \"round\": \"2\"\n              }\n            },\n            {\n              \"arrangeType\": \"predefined_formula_new_visitor_rate\",\n              \"dataType\": \"NUMBER\",\n              \"title\": \"New Visit Rate %\",\n              \"metricDisplayType\": \"DISTRIBUTION\",\n              \"dataVisual\": \"BARS\",\n              \"scope\": \"OBJECT\",\n              \"variant\": \"NORMAL\",\n              \"visible\": \"true\",\n              \"dimension\": \"false\",\n              \"metric\": \"true\",\n              \"predefinedContainer\": {\n                \"filters\": [],\n                \"containers\": [],\n                \"combined\": \"false\"\n              },\n              \"alias\": \"predefined_formula_new_visitor_rate|0\",\n              \"inTimeSeries\": \"false\",\n              \"chart\": {\n                \"visible\": \"true\",\n                \"yAxis\": \"1\"\n              },\n              \"sumValue\": \"false\",\n              \"predefinedSegmentConnections\": [],\n              \"columnPeriod\": \"ANALYSIS\",\n              \"round\": \"2\",\n              \"roundConfig\": {\n                \"override\": \"false\",\n                \"round\": \"2\"\n              }\n            },\n            {\n              \"arrangeType\": \"predefined_formula_avg_visit_duration\",\n              \"dataType\": \"NUMBER\",\n              \"title\": \"Visit Duration Avg\",\n              \"metricDisplayType\": \"TIME\",\n              \"dataVisual\": \"BARS\",\n              \"scope\": \"OBJECT\",\n              \"variant\": \"NORMAL\",\n              \"visible\": \"true\",\n              \"dimension\": \"false\",\n              \"metric\": \"true\",\n              \"predefinedContainer\": {\n                \"filters\": [],\n                \"containers\": [],\n                \"combined\": \"false\"\n              },\n              \"alias\": \"predefined_formula_avg_visit_duration|0\",\n              \"inTimeSeries\": \"false\",\n              \"chart\": {\n                \"visible\": \"false\",\n                \"yAxis\": \"0\"\n              },\n              \"sumValue\": \"false\",\n              \"predefinedSegmentConnections\": [],\n              \"columnPeriod\": \"ANALYSIS\",\n              \"round\": \"2\",\n              \"roundConfig\": {\n                \"override\": \"false\",\n                \"round\": \"2\"\n              }\n            },\n            {\n              \"arrangeType\": \"predefined_formula_bounce_rate\",\n              \"dataType\": \"NUMBER\",\n              \"title\": \"Bounce Rate %\",\n              \"metricDisplayType\": \"DISTRIBUTION\",\n              \"dataVisual\": \"TRAFFIC_LIGHT\",\n              \"dataVisualTarget\": \"MIN\",\n              \"dataVisualTargetMax\": \"auto\",\n              \"dataVisualTargetMin\": \"auto\",\n              \"scope\": \"OBJECT\",\n              \"variant\": \"NORMAL\",\n              \"visible\": \"true\",\n              \"dimension\": \"false\",\n              \"metric\": \"true\",\n              \"predefinedContainer\": {\n                \"filters\": [],\n                \"containers\": [],\n                \"combined\": \"false\"\n              },\n              \"alias\": \"predefined_formula_bounce_rate|0\",\n              \"inTimeSeries\": \"false\",\n              \"chart\": {\n                \"visible\": \"true\",\n                \"yAxis\": \"1\"\n              },\n              \"sumValue\": \"false\",\n              \"predefinedSegmentConnections\": [],\n              \"columnPeriod\": \"ANALYSIS\",\n              \"round\": \"2\",\n              \"roundConfig\": {\n                \"override\": \"false\",\n                \"round\": \"2\"\n              }\n            }\n          ],\n          \"variant\": \"LIST\",\n          \"standardChart\": \"LINE\",\n          \"showTable\": \"true\",\n          \"showPic\": \"true\",\n          \"forbidChart\": \"false\",\n          \"viewMode\": {\n            \"standard\": {\n              \"pivotState\": [],\n              \"sankeyConfig\": {\n                \"reverse\": \"false\",\n                \"pathLength\": \"5\",\n                \"chartState\": []\n              }\n            },\n            \"timeSeries\": {\n              \"timeArrangeType\": \"time_id_categories_t_year_week\",\n              \"values\": [],\n              \"top\": \"3\",\n              \"viewType\": \"values\"\n            },\n            \"comparison\": {\n              \"type\": \"time\",\n              \"sorting\": {\n                \"time\": [],\n                \"segment\": []\n              },\n              \"values\": {\n                \"time\": [],\n                \"segment\": []\n              },\n              \"collapsed\": {},\n              \"primaryChangeType\": {}\n            },\n            \"path\": {\n              \"reverse\": \"false\",\n              \"metricArrangeType\": \"\",\n              \"dimensionContext\": \"NONE\",\n              \"pathLength\": \"5\",\n              \"distinct\": \"true\",\n              \"chartState\": []\n            },\n            \"crossTable\": {\n              \"metricArrangeType\": \"\",\n              \"metricSortDirection\": \"DESCENDING\",\n              \"crossDimensionSortDirection\": \"\",\n              \"mainDimensionSortDirection\": \"\",\n              \"dimensionUpperLimit\": \"10\",\n              \"crossDimensionArrangeType\": \"\"\n            }\n          }\n        }\n      }\n    ],\n    \"showInMenu\": \"true\",\n    \"predefined\": \"false\",\n    \"creatorSSOUserId\": \"7\",\n    \"modifierSSOUserId\": \"7\",\n    \"creationTime\": \"2020-11-11T07:06:55+00:00\",\n    \"modificationTime\": \"2021-12-17T09:48:24+00:00\",\n    \"showContent\": \"true\",\n    \"gridColumns\": \"0\",\n    \"publicReport\": \"false\",\n    \"startDialogConfigurable\": \"true\",\n    \"startDialogEnabled\": \"false\",\n    \"quickFilters\": [\n      {\n        \"arrangeType\": \"custom_paras_session_generic42\",\n        \"connector\": \"AND\",\n        \"filterPredicate\": \"LIKE\",\n        \"value1\": \"\",\n        \"value2\": \"\",\n        \"context\": \"NONE\",\n        \"caseSensitive\": \"false\",\n        \"intern\": \"false\",\n        \"numberOfDays\": \"0\"\n      }\n    ],\n    \"dashboardQuickFiltersCollapsed\": \"false\",\n    \"dashboardQuickFilterValues\": {\n      \"custom_paras_session_generic42\": {\n        \"configurable\": \"true\",\n        \"values\": []\n      }\n    },\n    \"categories\": [],\n    \"autoRefresh\": \"false\"\n  }\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "*/*"
+                }
+              ],
+              "body": "{\n  \"reportCorrelationId\": \"string\",\n  \"status\": \"string\",\n  \"details\": {\n    \"lastUpdatedAt\": 2633,\n    \"reportId\": 7978,\n    \"reportTitle\": \"string\"\n  },\n  \"queryStates\": [\n    {\n      \"accountId\": \"string\",\n      \"correlationId\": \"string\",\n      \"calculationId\": \"string\",\n      \"resultUrl\": \"string\",\n      \"status\": \"ABORTED\",\n      \"details\": {\n        \"lastUpdatedAt\": 40,\n        \"reportElementId\": 5392\n      }\n    },\n    {\n      \"accountId\": \"string\",\n      \"correlationId\": \"string\",\n      \"calculationId\": \"string\",\n      \"resultUrl\": \"string\",\n      \"status\": \"INITIATED\",\n      \"details\": {\n        \"lastUpdatedAt\": 7589,\n        \"reportElementId\": 6125\n      }\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "d5704418-26fd-456d-ac18-d5a6ef9bf9b2",
+              "name": "Bad Request",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "report-query"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "*/*"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"configuration\": {\n    \"id\": \"3687\",\n    \"title\": \"! !!  ANALYTICS-2295\",\n    \"description\": \"\",\n    \"timeFilter\": {\n      \"arrangeType\": \"times_internal_day\",\n      \"connector\": \"AND\",\n      \"filterPredicate\": \"BETWEEN\",\n      \"value1\": \"2022-10-15\",\n      \"value2\": \"2023-12-28\",\n      \"context\": \"NONE\",\n      \"caseSensitive\": \"false\",\n      \"intern\": \"false\",\n      \"numberOfDays\": \"0\"\n    },\n    \"reportElements\": [\n      {\n        \"type\": \"TEXTBOX_DESCRIPTION\",\n        \"id\": \"43942\",\n        \"position\": \"0\",\n        \"positionAsPoint\": {\n          \"x\": \"0\",\n          \"y\": \"0\"\n        },\n        \"width\": \"3\",\n        \"height\": \"1\",\n        \"reportId\": \"3687\",\n        \"configJson\": {}\n      },\n      {\n        \"type\": \"TEXTBOX_CONTENT_TABLE\",\n        \"id\": \"43944\",\n        \"position\": \"1\",\n        \"positionAsPoint\": {\n          \"x\": \"3\",\n          \"y\": \"0\"\n        },\n        \"width\": \"3\",\n        \"height\": \"1\",\n        \"reportId\": \"3687\",\n        \"configJson\": {}\n      },\n      {\n        \"type\": \"ANALYSIS\",\n        \"id\": \"43946\",\n        \"position\": \"2\",\n        \"positionAsPoint\": {\n          \"x\": \"0\",\n          \"y\": \"0\"\n        },\n        \"width\": \"3\",\n        \"height\": \"78\",\n        \"reportId\": \"3687\",\n        \"configJson\": {\n          \"predefinedContainer\": {\n            \"filters\": [],\n            \"containers\": [],\n            \"combined\": \"false\"\n          },\n          \"title\": \"ThisareallyreallylongtrafficanalysistitleaimingtobreakthesidemenuUI\",\n          \"realTime\": \"false\",\n          \"predefinedSegmentConnections\": [],\n          \"columns\": [\n            {\n              \"arrangeType\": \"time_id_categories_t_year_month_day\",\n              \"dataType\": \"NUMBER\",\n              \"sortDirection\": \"ASCENDING\",\n              \"title\": \"Days\",\n              \"scope\": \"OBJECT\",\n              \"context\": \"NONE\",\n              \"visible\": \"true\",\n              \"dimension\": \"true\",\n              \"metric\": \"false\",\n              \"alias\": \"time_id_categories_t_year_month_day|0\",\n              \"lowerLimit\": \"1\",\n              \"upperLimit\": \"28\",\n              \"sumValue\": \"false\",\n              \"predefinedSegmentConnections\": []\n            },\n            {\n              \"arrangeType\": \"visits\",\n              \"dataType\": \"NUMBER\",\n              \"title\": \"Visits\",\n              \"scope\": \"OBJECT\",\n              \"context\": \"SESSION\",\n              \"variant\": \"NORMAL\",\n              \"visible\": \"true\",\n              \"dimension\": \"false\",\n              \"metric\": \"true\",\n              \"predefinedContainer\": {\n                \"filters\": [],\n                \"containers\": [],\n                \"combined\": \"false\"\n              },\n              \"alias\": \"visits|0\",\n              \"inTimeSeries\": \"false\",\n              \"chart\": {\n                \"visible\": \"true\",\n                \"yAxis\": \"0\"\n              },\n              \"sumValue\": \"false\",\n              \"predefinedSegmentConnections\": [],\n              \"columnPeriod\": \"ANALYSIS\",\n              \"round\": \"-1\",\n              \"roundConfig\": {\n                \"override\": \"false\",\n                \"round\": \"2\"\n              }\n            },\n            {\n              \"arrangeType\": \"page_impressions\",\n              \"dataType\": \"NUMBER\",\n              \"title\": \"Page Impressions\",\n              \"scope\": \"OBJECT\",\n              \"context\": \"PAGE\",\n              \"variant\": \"NORMAL\",\n              \"visible\": \"true\",\n              \"dimension\": \"false\",\n              \"metric\": \"true\",\n              \"predefinedContainer\": {\n                \"filters\": [],\n                \"containers\": [],\n                \"combined\": \"false\"\n              },\n              \"alias\": \"page_impressions|0\",\n              \"inTimeSeries\": \"false\",\n              \"chart\": {\n                \"visible\": \"false\",\n                \"yAxis\": \"0\"\n              },\n              \"sumValue\": \"false\",\n              \"predefinedSegmentConnections\": [],\n              \"columnPeriod\": \"ANALYSIS\",\n              \"round\": \"-1\",\n              \"roundConfig\": {\n                \"override\": \"false\",\n                \"round\": \"2\"\n              }\n            },\n            {\n              \"arrangeType\": \"predefined_formula_new_visitor_rate\",\n              \"dataType\": \"NUMBER\",\n              \"title\": \"New Visit Rate %\",\n              \"metricDisplayType\": \"DISTRIBUTION\",\n              \"dataVisual\": \"BARS\",\n              \"scope\": \"OBJECT\",\n              \"variant\": \"NORMAL\",\n              \"visible\": \"true\",\n              \"dimension\": \"false\",\n              \"metric\": \"true\",\n              \"predefinedContainer\": {\n                \"filters\": [],\n                \"containers\": [],\n                \"combined\": \"false\"\n              },\n              \"alias\": \"predefined_formula_new_visitor_rate|0\",\n              \"inTimeSeries\": \"false\",\n              \"chart\": {\n                \"visible\": \"true\",\n                \"yAxis\": \"1\"\n              },\n              \"sumValue\": \"false\",\n              \"predefinedSegmentConnections\": [],\n              \"columnPeriod\": \"ANALYSIS\",\n              \"round\": \"2\",\n              \"roundConfig\": {\n                \"override\": \"false\",\n                \"round\": \"2\"\n              }\n            },\n            {\n              \"arrangeType\": \"predefined_formula_avg_visit_duration\",\n              \"dataType\": \"NUMBER\",\n              \"title\": \"Visit Duration Avg\",\n              \"metricDisplayType\": \"TIME\",\n              \"dataVisual\": \"BARS\",\n              \"scope\": \"OBJECT\",\n              \"variant\": \"NORMAL\",\n              \"visible\": \"true\",\n              \"dimension\": \"false\",\n              \"metric\": \"true\",\n              \"predefinedContainer\": {\n                \"filters\": [],\n                \"containers\": [],\n                \"combined\": \"false\"\n              },\n              \"alias\": \"predefined_formula_avg_visit_duration|0\",\n              \"inTimeSeries\": \"false\",\n              \"chart\": {\n                \"visible\": \"false\",\n                \"yAxis\": \"0\"\n              },\n              \"sumValue\": \"false\",\n              \"predefinedSegmentConnections\": [],\n              \"columnPeriod\": \"ANALYSIS\",\n              \"round\": \"2\",\n              \"roundConfig\": {\n                \"override\": \"false\",\n                \"round\": \"2\"\n              }\n            },\n            {\n              \"arrangeType\": \"predefined_formula_bounce_rate\",\n              \"dataType\": \"NUMBER\",\n              \"title\": \"Bounce Rate %\",\n              \"metricDisplayType\": \"DISTRIBUTION\",\n              \"dataVisual\": \"TRAFFIC_LIGHT\",\n              \"dataVisualTarget\": \"MIN\",\n              \"dataVisualTargetMax\": \"auto\",\n              \"dataVisualTargetMin\": \"auto\",\n              \"scope\": \"OBJECT\",\n              \"variant\": \"NORMAL\",\n              \"visible\": \"true\",\n              \"dimension\": \"false\",\n              \"metric\": \"true\",\n              \"predefinedContainer\": {\n                \"filters\": [],\n                \"containers\": [],\n                \"combined\": \"false\"\n              },\n              \"alias\": \"predefined_formula_bounce_rate|0\",\n              \"inTimeSeries\": \"false\",\n              \"chart\": {\n                \"visible\": \"true\",\n                \"yAxis\": \"1\"\n              },\n              \"sumValue\": \"false\",\n              \"predefinedSegmentConnections\": [],\n              \"columnPeriod\": \"ANALYSIS\",\n              \"round\": \"2\",\n              \"roundConfig\": {\n                \"override\": \"false\",\n                \"round\": \"2\"\n              }\n            }\n          ],\n          \"variant\": \"LIST\",\n          \"standardChart\": \"LINE\",\n          \"showTable\": \"true\",\n          \"showPic\": \"true\",\n          \"forbidChart\": \"false\",\n          \"viewMode\": {\n            \"standard\": {\n              \"pivotState\": [],\n              \"sankeyConfig\": {\n                \"reverse\": \"false\",\n                \"pathLength\": \"5\",\n                \"chartState\": []\n              }\n            },\n            \"timeSeries\": {\n              \"timeArrangeType\": \"time_id_categories_t_year_week\",\n              \"values\": [],\n              \"top\": \"3\",\n              \"viewType\": \"values\"\n            },\n            \"comparison\": {\n              \"type\": \"time\",\n              \"sorting\": {\n                \"time\": [],\n                \"segment\": []\n              },\n              \"values\": {\n                \"time\": [],\n                \"segment\": []\n              },\n              \"collapsed\": {},\n              \"primaryChangeType\": {}\n            },\n            \"path\": {\n              \"reverse\": \"false\",\n              \"metricArrangeType\": \"\",\n              \"dimensionContext\": \"NONE\",\n              \"pathLength\": \"5\",\n              \"distinct\": \"true\",\n              \"chartState\": []\n            },\n            \"crossTable\": {\n              \"metricArrangeType\": \"\",\n              \"metricSortDirection\": \"DESCENDING\",\n              \"crossDimensionSortDirection\": \"\",\n              \"mainDimensionSortDirection\": \"\",\n              \"dimensionUpperLimit\": \"10\",\n              \"crossDimensionArrangeType\": \"\"\n            }\n          }\n        }\n      }\n    ],\n    \"showInMenu\": \"true\",\n    \"predefined\": \"false\",\n    \"creatorSSOUserId\": \"7\",\n    \"modifierSSOUserId\": \"7\",\n    \"creationTime\": \"2020-11-11T07:06:55+00:00\",\n    \"modificationTime\": \"2021-12-17T09:48:24+00:00\",\n    \"showContent\": \"true\",\n    \"gridColumns\": \"0\",\n    \"publicReport\": \"false\",\n    \"startDialogConfigurable\": \"true\",\n    \"startDialogEnabled\": \"false\",\n    \"quickFilters\": [\n      {\n        \"arrangeType\": \"custom_paras_session_generic42\",\n        \"connector\": \"AND\",\n        \"filterPredicate\": \"LIKE\",\n        \"value1\": \"\",\n        \"value2\": \"\",\n        \"context\": \"NONE\",\n        \"caseSensitive\": \"false\",\n        \"intern\": \"false\",\n        \"numberOfDays\": \"0\"\n      }\n    ],\n    \"dashboardQuickFiltersCollapsed\": \"false\",\n    \"dashboardQuickFilterValues\": {\n      \"custom_paras_session_generic42\": {\n        \"configurable\": \"true\",\n        \"values\": []\n      }\n    },\n    \"categories\": [],\n    \"autoRefresh\": \"false\"\n  }\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "*/*"
+                }
+              ],
+              "body": "{\n  \"status\": 2144,\n  \"statusCode\": \"string\",\n  \"title\": \"string\",\n  \"detail\": \"string\",\n  \"errors\": [\n    {\n      \"name\": \"InvalidSegmentNoneContainer\",\n      \"parameters\": {\n        \"arrangeTypes\": [\n          \"string\",\n          \"string\"\n        ],\n        \"aliases\": [\n          \"string\",\n          \"string\"\n        ],\n        \"names\": [\n          \"string\",\n          \"string\"\n        ]\n      }\n    },\n    {\n      \"name\": \"PivotIncompatibleDimension\",\n      \"parameters\": {\n        \"arrangeTypes\": [\n          \"string\",\n          \"string\"\n        ],\n        \"aliases\": [\n          \"string\",\n          \"string\"\n        ],\n        \"names\": [\n          \"string\",\n          \"string\"\n        ]\n      }\n    }\n  ],\n  \"warnings\": [\n    {\n      \"name\": \"NoSortingDefined\",\n      \"parameters\": {\n        \"arrangeTypes\": [\n          \"string\",\n          \"string\"\n        ],\n        \"aliases\": [\n          \"string\",\n          \"string\"\n        ],\n        \"names\": [\n          \"string\",\n          \"string\"\n        ],\n        \"daysInDataSource\": \"string\",\n        \"todayDate\": \"string\"\n      }\n    },\n    {\n      \"name\": \"TodayRemoved\",\n      \"parameters\": {\n        \"arrangeTypes\": [\n          \"string\",\n          \"string\"\n        ],\n        \"aliases\": [\n          \"string\",\n          \"string\"\n        ],\n        \"names\": [\n          \"string\",\n          \"string\"\n        ],\n        \"daysInDataSource\": \"string\",\n        \"todayDate\": \"string\"\n      }\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "ae70068a-2739-4bc8-8bc9-37dc2a1ee65c",
+              "name": "Not Found",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "report-query"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "*/*"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"configuration\": {\n    \"id\": \"3687\",\n    \"title\": \"! !!  ANALYTICS-2295\",\n    \"description\": \"\",\n    \"timeFilter\": {\n      \"arrangeType\": \"times_internal_day\",\n      \"connector\": \"AND\",\n      \"filterPredicate\": \"BETWEEN\",\n      \"value1\": \"2022-10-15\",\n      \"value2\": \"2023-12-28\",\n      \"context\": \"NONE\",\n      \"caseSensitive\": \"false\",\n      \"intern\": \"false\",\n      \"numberOfDays\": \"0\"\n    },\n    \"reportElements\": [\n      {\n        \"type\": \"TEXTBOX_DESCRIPTION\",\n        \"id\": \"43942\",\n        \"position\": \"0\",\n        \"positionAsPoint\": {\n          \"x\": \"0\",\n          \"y\": \"0\"\n        },\n        \"width\": \"3\",\n        \"height\": \"1\",\n        \"reportId\": \"3687\",\n        \"configJson\": {}\n      },\n      {\n        \"type\": \"TEXTBOX_CONTENT_TABLE\",\n        \"id\": \"43944\",\n        \"position\": \"1\",\n        \"positionAsPoint\": {\n          \"x\": \"3\",\n          \"y\": \"0\"\n        },\n        \"width\": \"3\",\n        \"height\": \"1\",\n        \"reportId\": \"3687\",\n        \"configJson\": {}\n      },\n      {\n        \"type\": \"ANALYSIS\",\n        \"id\": \"43946\",\n        \"position\": \"2\",\n        \"positionAsPoint\": {\n          \"x\": \"0\",\n          \"y\": \"0\"\n        },\n        \"width\": \"3\",\n        \"height\": \"78\",\n        \"reportId\": \"3687\",\n        \"configJson\": {\n          \"predefinedContainer\": {\n            \"filters\": [],\n            \"containers\": [],\n            \"combined\": \"false\"\n          },\n          \"title\": \"ThisareallyreallylongtrafficanalysistitleaimingtobreakthesidemenuUI\",\n          \"realTime\": \"false\",\n          \"predefinedSegmentConnections\": [],\n          \"columns\": [\n            {\n              \"arrangeType\": \"time_id_categories_t_year_month_day\",\n              \"dataType\": \"NUMBER\",\n              \"sortDirection\": \"ASCENDING\",\n              \"title\": \"Days\",\n              \"scope\": \"OBJECT\",\n              \"context\": \"NONE\",\n              \"visible\": \"true\",\n              \"dimension\": \"true\",\n              \"metric\": \"false\",\n              \"alias\": \"time_id_categories_t_year_month_day|0\",\n              \"lowerLimit\": \"1\",\n              \"upperLimit\": \"28\",\n              \"sumValue\": \"false\",\n              \"predefinedSegmentConnections\": []\n            },\n            {\n              \"arrangeType\": \"visits\",\n              \"dataType\": \"NUMBER\",\n              \"title\": \"Visits\",\n              \"scope\": \"OBJECT\",\n              \"context\": \"SESSION\",\n              \"variant\": \"NORMAL\",\n              \"visible\": \"true\",\n              \"dimension\": \"false\",\n              \"metric\": \"true\",\n              \"predefinedContainer\": {\n                \"filters\": [],\n                \"containers\": [],\n                \"combined\": \"false\"\n              },\n              \"alias\": \"visits|0\",\n              \"inTimeSeries\": \"false\",\n              \"chart\": {\n                \"visible\": \"true\",\n                \"yAxis\": \"0\"\n              },\n              \"sumValue\": \"false\",\n              \"predefinedSegmentConnections\": [],\n              \"columnPeriod\": \"ANALYSIS\",\n              \"round\": \"-1\",\n              \"roundConfig\": {\n                \"override\": \"false\",\n                \"round\": \"2\"\n              }\n            },\n            {\n              \"arrangeType\": \"page_impressions\",\n              \"dataType\": \"NUMBER\",\n              \"title\": \"Page Impressions\",\n              \"scope\": \"OBJECT\",\n              \"context\": \"PAGE\",\n              \"variant\": \"NORMAL\",\n              \"visible\": \"true\",\n              \"dimension\": \"false\",\n              \"metric\": \"true\",\n              \"predefinedContainer\": {\n                \"filters\": [],\n                \"containers\": [],\n                \"combined\": \"false\"\n              },\n              \"alias\": \"page_impressions|0\",\n              \"inTimeSeries\": \"false\",\n              \"chart\": {\n                \"visible\": \"false\",\n                \"yAxis\": \"0\"\n              },\n              \"sumValue\": \"false\",\n              \"predefinedSegmentConnections\": [],\n              \"columnPeriod\": \"ANALYSIS\",\n              \"round\": \"-1\",\n              \"roundConfig\": {\n                \"override\": \"false\",\n                \"round\": \"2\"\n              }\n            },\n            {\n              \"arrangeType\": \"predefined_formula_new_visitor_rate\",\n              \"dataType\": \"NUMBER\",\n              \"title\": \"New Visit Rate %\",\n              \"metricDisplayType\": \"DISTRIBUTION\",\n              \"dataVisual\": \"BARS\",\n              \"scope\": \"OBJECT\",\n              \"variant\": \"NORMAL\",\n              \"visible\": \"true\",\n              \"dimension\": \"false\",\n              \"metric\": \"true\",\n              \"predefinedContainer\": {\n                \"filters\": [],\n                \"containers\": [],\n                \"combined\": \"false\"\n              },\n              \"alias\": \"predefined_formula_new_visitor_rate|0\",\n              \"inTimeSeries\": \"false\",\n              \"chart\": {\n                \"visible\": \"true\",\n                \"yAxis\": \"1\"\n              },\n              \"sumValue\": \"false\",\n              \"predefinedSegmentConnections\": [],\n              \"columnPeriod\": \"ANALYSIS\",\n              \"round\": \"2\",\n              \"roundConfig\": {\n                \"override\": \"false\",\n                \"round\": \"2\"\n              }\n            },\n            {\n              \"arrangeType\": \"predefined_formula_avg_visit_duration\",\n              \"dataType\": \"NUMBER\",\n              \"title\": \"Visit Duration Avg\",\n              \"metricDisplayType\": \"TIME\",\n              \"dataVisual\": \"BARS\",\n              \"scope\": \"OBJECT\",\n              \"variant\": \"NORMAL\",\n              \"visible\": \"true\",\n              \"dimension\": \"false\",\n              \"metric\": \"true\",\n              \"predefinedContainer\": {\n                \"filters\": [],\n                \"containers\": [],\n                \"combined\": \"false\"\n              },\n              \"alias\": \"predefined_formula_avg_visit_duration|0\",\n              \"inTimeSeries\": \"false\",\n              \"chart\": {\n                \"visible\": \"false\",\n                \"yAxis\": \"0\"\n              },\n              \"sumValue\": \"false\",\n              \"predefinedSegmentConnections\": [],\n              \"columnPeriod\": \"ANALYSIS\",\n              \"round\": \"2\",\n              \"roundConfig\": {\n                \"override\": \"false\",\n                \"round\": \"2\"\n              }\n            },\n            {\n              \"arrangeType\": \"predefined_formula_bounce_rate\",\n              \"dataType\": \"NUMBER\",\n              \"title\": \"Bounce Rate %\",\n              \"metricDisplayType\": \"DISTRIBUTION\",\n              \"dataVisual\": \"TRAFFIC_LIGHT\",\n              \"dataVisualTarget\": \"MIN\",\n              \"dataVisualTargetMax\": \"auto\",\n              \"dataVisualTargetMin\": \"auto\",\n              \"scope\": \"OBJECT\",\n              \"variant\": \"NORMAL\",\n              \"visible\": \"true\",\n              \"dimension\": \"false\",\n              \"metric\": \"true\",\n              \"predefinedContainer\": {\n                \"filters\": [],\n                \"containers\": [],\n                \"combined\": \"false\"\n              },\n              \"alias\": \"predefined_formula_bounce_rate|0\",\n              \"inTimeSeries\": \"false\",\n              \"chart\": {\n                \"visible\": \"true\",\n                \"yAxis\": \"1\"\n              },\n              \"sumValue\": \"false\",\n              \"predefinedSegmentConnections\": [],\n              \"columnPeriod\": \"ANALYSIS\",\n              \"round\": \"2\",\n              \"roundConfig\": {\n                \"override\": \"false\",\n                \"round\": \"2\"\n              }\n            }\n          ],\n          \"variant\": \"LIST\",\n          \"standardChart\": \"LINE\",\n          \"showTable\": \"true\",\n          \"showPic\": \"true\",\n          \"forbidChart\": \"false\",\n          \"viewMode\": {\n            \"standard\": {\n              \"pivotState\": [],\n              \"sankeyConfig\": {\n                \"reverse\": \"false\",\n                \"pathLength\": \"5\",\n                \"chartState\": []\n              }\n            },\n            \"timeSeries\": {\n              \"timeArrangeType\": \"time_id_categories_t_year_week\",\n              \"values\": [],\n              \"top\": \"3\",\n              \"viewType\": \"values\"\n            },\n            \"comparison\": {\n              \"type\": \"time\",\n              \"sorting\": {\n                \"time\": [],\n                \"segment\": []\n              },\n              \"values\": {\n                \"time\": [],\n                \"segment\": []\n              },\n              \"collapsed\": {},\n              \"primaryChangeType\": {}\n            },\n            \"path\": {\n              \"reverse\": \"false\",\n              \"metricArrangeType\": \"\",\n              \"dimensionContext\": \"NONE\",\n              \"pathLength\": \"5\",\n              \"distinct\": \"true\",\n              \"chartState\": []\n            },\n            \"crossTable\": {\n              \"metricArrangeType\": \"\",\n              \"metricSortDirection\": \"DESCENDING\",\n              \"crossDimensionSortDirection\": \"\",\n              \"mainDimensionSortDirection\": \"\",\n              \"dimensionUpperLimit\": \"10\",\n              \"crossDimensionArrangeType\": \"\"\n            }\n          }\n        }\n      }\n    ],\n    \"showInMenu\": \"true\",\n    \"predefined\": \"false\",\n    \"creatorSSOUserId\": \"7\",\n    \"modifierSSOUserId\": \"7\",\n    \"creationTime\": \"2020-11-11T07:06:55+00:00\",\n    \"modificationTime\": \"2021-12-17T09:48:24+00:00\",\n    \"showContent\": \"true\",\n    \"gridColumns\": \"0\",\n    \"publicReport\": \"false\",\n    \"startDialogConfigurable\": \"true\",\n    \"startDialogEnabled\": \"false\",\n    \"quickFilters\": [\n      {\n        \"arrangeType\": \"custom_paras_session_generic42\",\n        \"connector\": \"AND\",\n        \"filterPredicate\": \"LIKE\",\n        \"value1\": \"\",\n        \"value2\": \"\",\n        \"context\": \"NONE\",\n        \"caseSensitive\": \"false\",\n        \"intern\": \"false\",\n        \"numberOfDays\": \"0\"\n      }\n    ],\n    \"dashboardQuickFiltersCollapsed\": \"false\",\n    \"dashboardQuickFilterValues\": {\n      \"custom_paras_session_generic42\": {\n        \"configurable\": \"true\",\n        \"values\": []\n      }\n    },\n    \"categories\": [],\n    \"autoRefresh\": \"false\"\n  }\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "*/*"
+                }
+              ],
+              "body": "{\n  \"status\": 2144,\n  \"statusCode\": \"string\",\n  \"title\": \"string\",\n  \"detail\": \"string\",\n  \"errors\": [\n    {\n      \"name\": \"InvalidSegmentNoneContainer\",\n      \"parameters\": {\n        \"arrangeTypes\": [\n          \"string\",\n          \"string\"\n        ],\n        \"aliases\": [\n          \"string\",\n          \"string\"\n        ],\n        \"names\": [\n          \"string\",\n          \"string\"\n        ]\n      }\n    },\n    {\n      \"name\": \"PivotIncompatibleDimension\",\n      \"parameters\": {\n        \"arrangeTypes\": [\n          \"string\",\n          \"string\"\n        ],\n        \"aliases\": [\n          \"string\",\n          \"string\"\n        ],\n        \"names\": [\n          \"string\",\n          \"string\"\n        ]\n      }\n    }\n  ],\n  \"warnings\": [\n    {\n      \"name\": \"NoSortingDefined\",\n      \"parameters\": {\n        \"arrangeTypes\": [\n          \"string\",\n          \"string\"\n        ],\n        \"aliases\": [\n          \"string\",\n          \"string\"\n        ],\n        \"names\": [\n          \"string\",\n          \"string\"\n        ],\n        \"daysInDataSource\": \"string\",\n        \"todayDate\": \"string\"\n      }\n    },\n    {\n      \"name\": \"TodayRemoved\",\n      \"parameters\": {\n        \"arrangeTypes\": [\n          \"string\",\n          \"string\"\n        ],\n        \"aliases\": [\n          \"string\",\n          \"string\"\n        ],\n        \"names\": [\n          \"string\",\n          \"string\"\n        ],\n        \"daysInDataSource\": \"string\",\n        \"todayDate\": \"string\"\n      }\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "d56c93a0-f0f8-473f-823d-6f616ee7a8b3",
+              "name": "Unprocessable Entity",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "report-query"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "*/*"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"configuration\": {\n    \"id\": \"3687\",\n    \"title\": \"! !!  ANALYTICS-2295\",\n    \"description\": \"\",\n    \"timeFilter\": {\n      \"arrangeType\": \"times_internal_day\",\n      \"connector\": \"AND\",\n      \"filterPredicate\": \"BETWEEN\",\n      \"value1\": \"2022-10-15\",\n      \"value2\": \"2023-12-28\",\n      \"context\": \"NONE\",\n      \"caseSensitive\": \"false\",\n      \"intern\": \"false\",\n      \"numberOfDays\": \"0\"\n    },\n    \"reportElements\": [\n      {\n        \"type\": \"TEXTBOX_DESCRIPTION\",\n        \"id\": \"43942\",\n        \"position\": \"0\",\n        \"positionAsPoint\": {\n          \"x\": \"0\",\n          \"y\": \"0\"\n        },\n        \"width\": \"3\",\n        \"height\": \"1\",\n        \"reportId\": \"3687\",\n        \"configJson\": {}\n      },\n      {\n        \"type\": \"TEXTBOX_CONTENT_TABLE\",\n        \"id\": \"43944\",\n        \"position\": \"1\",\n        \"positionAsPoint\": {\n          \"x\": \"3\",\n          \"y\": \"0\"\n        },\n        \"width\": \"3\",\n        \"height\": \"1\",\n        \"reportId\": \"3687\",\n        \"configJson\": {}\n      },\n      {\n        \"type\": \"ANALYSIS\",\n        \"id\": \"43946\",\n        \"position\": \"2\",\n        \"positionAsPoint\": {\n          \"x\": \"0\",\n          \"y\": \"0\"\n        },\n        \"width\": \"3\",\n        \"height\": \"78\",\n        \"reportId\": \"3687\",\n        \"configJson\": {\n          \"predefinedContainer\": {\n            \"filters\": [],\n            \"containers\": [],\n            \"combined\": \"false\"\n          },\n          \"title\": \"ThisareallyreallylongtrafficanalysistitleaimingtobreakthesidemenuUI\",\n          \"realTime\": \"false\",\n          \"predefinedSegmentConnections\": [],\n          \"columns\": [\n            {\n              \"arrangeType\": \"time_id_categories_t_year_month_day\",\n              \"dataType\": \"NUMBER\",\n              \"sortDirection\": \"ASCENDING\",\n              \"title\": \"Days\",\n              \"scope\": \"OBJECT\",\n              \"context\": \"NONE\",\n              \"visible\": \"true\",\n              \"dimension\": \"true\",\n              \"metric\": \"false\",\n              \"alias\": \"time_id_categories_t_year_month_day|0\",\n              \"lowerLimit\": \"1\",\n              \"upperLimit\": \"28\",\n              \"sumValue\": \"false\",\n              \"predefinedSegmentConnections\": []\n            },\n            {\n              \"arrangeType\": \"visits\",\n              \"dataType\": \"NUMBER\",\n              \"title\": \"Visits\",\n              \"scope\": \"OBJECT\",\n              \"context\": \"SESSION\",\n              \"variant\": \"NORMAL\",\n              \"visible\": \"true\",\n              \"dimension\": \"false\",\n              \"metric\": \"true\",\n              \"predefinedContainer\": {\n                \"filters\": [],\n                \"containers\": [],\n                \"combined\": \"false\"\n              },\n              \"alias\": \"visits|0\",\n              \"inTimeSeries\": \"false\",\n              \"chart\": {\n                \"visible\": \"true\",\n                \"yAxis\": \"0\"\n              },\n              \"sumValue\": \"false\",\n              \"predefinedSegmentConnections\": [],\n              \"columnPeriod\": \"ANALYSIS\",\n              \"round\": \"-1\",\n              \"roundConfig\": {\n                \"override\": \"false\",\n                \"round\": \"2\"\n              }\n            },\n            {\n              \"arrangeType\": \"page_impressions\",\n              \"dataType\": \"NUMBER\",\n              \"title\": \"Page Impressions\",\n              \"scope\": \"OBJECT\",\n              \"context\": \"PAGE\",\n              \"variant\": \"NORMAL\",\n              \"visible\": \"true\",\n              \"dimension\": \"false\",\n              \"metric\": \"true\",\n              \"predefinedContainer\": {\n                \"filters\": [],\n                \"containers\": [],\n                \"combined\": \"false\"\n              },\n              \"alias\": \"page_impressions|0\",\n              \"inTimeSeries\": \"false\",\n              \"chart\": {\n                \"visible\": \"false\",\n                \"yAxis\": \"0\"\n              },\n              \"sumValue\": \"false\",\n              \"predefinedSegmentConnections\": [],\n              \"columnPeriod\": \"ANALYSIS\",\n              \"round\": \"-1\",\n              \"roundConfig\": {\n                \"override\": \"false\",\n                \"round\": \"2\"\n              }\n            },\n            {\n              \"arrangeType\": \"predefined_formula_new_visitor_rate\",\n              \"dataType\": \"NUMBER\",\n              \"title\": \"New Visit Rate %\",\n              \"metricDisplayType\": \"DISTRIBUTION\",\n              \"dataVisual\": \"BARS\",\n              \"scope\": \"OBJECT\",\n              \"variant\": \"NORMAL\",\n              \"visible\": \"true\",\n              \"dimension\": \"false\",\n              \"metric\": \"true\",\n              \"predefinedContainer\": {\n                \"filters\": [],\n                \"containers\": [],\n                \"combined\": \"false\"\n              },\n              \"alias\": \"predefined_formula_new_visitor_rate|0\",\n              \"inTimeSeries\": \"false\",\n              \"chart\": {\n                \"visible\": \"true\",\n                \"yAxis\": \"1\"\n              },\n              \"sumValue\": \"false\",\n              \"predefinedSegmentConnections\": [],\n              \"columnPeriod\": \"ANALYSIS\",\n              \"round\": \"2\",\n              \"roundConfig\": {\n                \"override\": \"false\",\n                \"round\": \"2\"\n              }\n            },\n            {\n              \"arrangeType\": \"predefined_formula_avg_visit_duration\",\n              \"dataType\": \"NUMBER\",\n              \"title\": \"Visit Duration Avg\",\n              \"metricDisplayType\": \"TIME\",\n              \"dataVisual\": \"BARS\",\n              \"scope\": \"OBJECT\",\n              \"variant\": \"NORMAL\",\n              \"visible\": \"true\",\n              \"dimension\": \"false\",\n              \"metric\": \"true\",\n              \"predefinedContainer\": {\n                \"filters\": [],\n                \"containers\": [],\n                \"combined\": \"false\"\n              },\n              \"alias\": \"predefined_formula_avg_visit_duration|0\",\n              \"inTimeSeries\": \"false\",\n              \"chart\": {\n                \"visible\": \"false\",\n                \"yAxis\": \"0\"\n              },\n              \"sumValue\": \"false\",\n              \"predefinedSegmentConnections\": [],\n              \"columnPeriod\": \"ANALYSIS\",\n              \"round\": \"2\",\n              \"roundConfig\": {\n                \"override\": \"false\",\n                \"round\": \"2\"\n              }\n            },\n            {\n              \"arrangeType\": \"predefined_formula_bounce_rate\",\n              \"dataType\": \"NUMBER\",\n              \"title\": \"Bounce Rate %\",\n              \"metricDisplayType\": \"DISTRIBUTION\",\n              \"dataVisual\": \"TRAFFIC_LIGHT\",\n              \"dataVisualTarget\": \"MIN\",\n              \"dataVisualTargetMax\": \"auto\",\n              \"dataVisualTargetMin\": \"auto\",\n              \"scope\": \"OBJECT\",\n              \"variant\": \"NORMAL\",\n              \"visible\": \"true\",\n              \"dimension\": \"false\",\n              \"metric\": \"true\",\n              \"predefinedContainer\": {\n                \"filters\": [],\n                \"containers\": [],\n                \"combined\": \"false\"\n              },\n              \"alias\": \"predefined_formula_bounce_rate|0\",\n              \"inTimeSeries\": \"false\",\n              \"chart\": {\n                \"visible\": \"true\",\n                \"yAxis\": \"1\"\n              },\n              \"sumValue\": \"false\",\n              \"predefinedSegmentConnections\": [],\n              \"columnPeriod\": \"ANALYSIS\",\n              \"round\": \"2\",\n              \"roundConfig\": {\n                \"override\": \"false\",\n                \"round\": \"2\"\n              }\n            }\n          ],\n          \"variant\": \"LIST\",\n          \"standardChart\": \"LINE\",\n          \"showTable\": \"true\",\n          \"showPic\": \"true\",\n          \"forbidChart\": \"false\",\n          \"viewMode\": {\n            \"standard\": {\n              \"pivotState\": [],\n              \"sankeyConfig\": {\n                \"reverse\": \"false\",\n                \"pathLength\": \"5\",\n                \"chartState\": []\n              }\n            },\n            \"timeSeries\": {\n              \"timeArrangeType\": \"time_id_categories_t_year_week\",\n              \"values\": [],\n              \"top\": \"3\",\n              \"viewType\": \"values\"\n            },\n            \"comparison\": {\n              \"type\": \"time\",\n              \"sorting\": {\n                \"time\": [],\n                \"segment\": []\n              },\n              \"values\": {\n                \"time\": [],\n                \"segment\": []\n              },\n              \"collapsed\": {},\n              \"primaryChangeType\": {}\n            },\n            \"path\": {\n              \"reverse\": \"false\",\n              \"metricArrangeType\": \"\",\n              \"dimensionContext\": \"NONE\",\n              \"pathLength\": \"5\",\n              \"distinct\": \"true\",\n              \"chartState\": []\n            },\n            \"crossTable\": {\n              \"metricArrangeType\": \"\",\n              \"metricSortDirection\": \"DESCENDING\",\n              \"crossDimensionSortDirection\": \"\",\n              \"mainDimensionSortDirection\": \"\",\n              \"dimensionUpperLimit\": \"10\",\n              \"crossDimensionArrangeType\": \"\"\n            }\n          }\n        }\n      }\n    ],\n    \"showInMenu\": \"true\",\n    \"predefined\": \"false\",\n    \"creatorSSOUserId\": \"7\",\n    \"modifierSSOUserId\": \"7\",\n    \"creationTime\": \"2020-11-11T07:06:55+00:00\",\n    \"modificationTime\": \"2021-12-17T09:48:24+00:00\",\n    \"showContent\": \"true\",\n    \"gridColumns\": \"0\",\n    \"publicReport\": \"false\",\n    \"startDialogConfigurable\": \"true\",\n    \"startDialogEnabled\": \"false\",\n    \"quickFilters\": [\n      {\n        \"arrangeType\": \"custom_paras_session_generic42\",\n        \"connector\": \"AND\",\n        \"filterPredicate\": \"LIKE\",\n        \"value1\": \"\",\n        \"value2\": \"\",\n        \"context\": \"NONE\",\n        \"caseSensitive\": \"false\",\n        \"intern\": \"false\",\n        \"numberOfDays\": \"0\"\n      }\n    ],\n    \"dashboardQuickFiltersCollapsed\": \"false\",\n    \"dashboardQuickFilterValues\": {\n      \"custom_paras_session_generic42\": {\n        \"configurable\": \"true\",\n        \"values\": []\n      }\n    },\n    \"categories\": [],\n    \"autoRefresh\": \"false\"\n  }\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Unprocessable Entity (WebDAV) (RFC 4918)",
+              "code": 422,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "*/*"
+                }
+              ],
+              "body": "{}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "b500881f-4a50-484e-ac66-30b944cd964b",
+              "name": "Internal Server Error",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "report-query"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "*/*"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"configuration\": {\n    \"id\": \"3687\",\n    \"title\": \"! !!  ANALYTICS-2295\",\n    \"description\": \"\",\n    \"timeFilter\": {\n      \"arrangeType\": \"times_internal_day\",\n      \"connector\": \"AND\",\n      \"filterPredicate\": \"BETWEEN\",\n      \"value1\": \"2022-10-15\",\n      \"value2\": \"2023-12-28\",\n      \"context\": \"NONE\",\n      \"caseSensitive\": \"false\",\n      \"intern\": \"false\",\n      \"numberOfDays\": \"0\"\n    },\n    \"reportElements\": [\n      {\n        \"type\": \"TEXTBOX_DESCRIPTION\",\n        \"id\": \"43942\",\n        \"position\": \"0\",\n        \"positionAsPoint\": {\n          \"x\": \"0\",\n          \"y\": \"0\"\n        },\n        \"width\": \"3\",\n        \"height\": \"1\",\n        \"reportId\": \"3687\",\n        \"configJson\": {}\n      },\n      {\n        \"type\": \"TEXTBOX_CONTENT_TABLE\",\n        \"id\": \"43944\",\n        \"position\": \"1\",\n        \"positionAsPoint\": {\n          \"x\": \"3\",\n          \"y\": \"0\"\n        },\n        \"width\": \"3\",\n        \"height\": \"1\",\n        \"reportId\": \"3687\",\n        \"configJson\": {}\n      },\n      {\n        \"type\": \"ANALYSIS\",\n        \"id\": \"43946\",\n        \"position\": \"2\",\n        \"positionAsPoint\": {\n          \"x\": \"0\",\n          \"y\": \"0\"\n        },\n        \"width\": \"3\",\n        \"height\": \"78\",\n        \"reportId\": \"3687\",\n        \"configJson\": {\n          \"predefinedContainer\": {\n            \"filters\": [],\n            \"containers\": [],\n            \"combined\": \"false\"\n          },\n          \"title\": \"ThisareallyreallylongtrafficanalysistitleaimingtobreakthesidemenuUI\",\n          \"realTime\": \"false\",\n          \"predefinedSegmentConnections\": [],\n          \"columns\": [\n            {\n              \"arrangeType\": \"time_id_categories_t_year_month_day\",\n              \"dataType\": \"NUMBER\",\n              \"sortDirection\": \"ASCENDING\",\n              \"title\": \"Days\",\n              \"scope\": \"OBJECT\",\n              \"context\": \"NONE\",\n              \"visible\": \"true\",\n              \"dimension\": \"true\",\n              \"metric\": \"false\",\n              \"alias\": \"time_id_categories_t_year_month_day|0\",\n              \"lowerLimit\": \"1\",\n              \"upperLimit\": \"28\",\n              \"sumValue\": \"false\",\n              \"predefinedSegmentConnections\": []\n            },\n            {\n              \"arrangeType\": \"visits\",\n              \"dataType\": \"NUMBER\",\n              \"title\": \"Visits\",\n              \"scope\": \"OBJECT\",\n              \"context\": \"SESSION\",\n              \"variant\": \"NORMAL\",\n              \"visible\": \"true\",\n              \"dimension\": \"false\",\n              \"metric\": \"true\",\n              \"predefinedContainer\": {\n                \"filters\": [],\n                \"containers\": [],\n                \"combined\": \"false\"\n              },\n              \"alias\": \"visits|0\",\n              \"inTimeSeries\": \"false\",\n              \"chart\": {\n                \"visible\": \"true\",\n                \"yAxis\": \"0\"\n              },\n              \"sumValue\": \"false\",\n              \"predefinedSegmentConnections\": [],\n              \"columnPeriod\": \"ANALYSIS\",\n              \"round\": \"-1\",\n              \"roundConfig\": {\n                \"override\": \"false\",\n                \"round\": \"2\"\n              }\n            },\n            {\n              \"arrangeType\": \"page_impressions\",\n              \"dataType\": \"NUMBER\",\n              \"title\": \"Page Impressions\",\n              \"scope\": \"OBJECT\",\n              \"context\": \"PAGE\",\n              \"variant\": \"NORMAL\",\n              \"visible\": \"true\",\n              \"dimension\": \"false\",\n              \"metric\": \"true\",\n              \"predefinedContainer\": {\n                \"filters\": [],\n                \"containers\": [],\n                \"combined\": \"false\"\n              },\n              \"alias\": \"page_impressions|0\",\n              \"inTimeSeries\": \"false\",\n              \"chart\": {\n                \"visible\": \"false\",\n                \"yAxis\": \"0\"\n              },\n              \"sumValue\": \"false\",\n              \"predefinedSegmentConnections\": [],\n              \"columnPeriod\": \"ANALYSIS\",\n              \"round\": \"-1\",\n              \"roundConfig\": {\n                \"override\": \"false\",\n                \"round\": \"2\"\n              }\n            },\n            {\n              \"arrangeType\": \"predefined_formula_new_visitor_rate\",\n              \"dataType\": \"NUMBER\",\n              \"title\": \"New Visit Rate %\",\n              \"metricDisplayType\": \"DISTRIBUTION\",\n              \"dataVisual\": \"BARS\",\n              \"scope\": \"OBJECT\",\n              \"variant\": \"NORMAL\",\n              \"visible\": \"true\",\n              \"dimension\": \"false\",\n              \"metric\": \"true\",\n              \"predefinedContainer\": {\n                \"filters\": [],\n                \"containers\": [],\n                \"combined\": \"false\"\n              },\n              \"alias\": \"predefined_formula_new_visitor_rate|0\",\n              \"inTimeSeries\": \"false\",\n              \"chart\": {\n                \"visible\": \"true\",\n                \"yAxis\": \"1\"\n              },\n              \"sumValue\": \"false\",\n              \"predefinedSegmentConnections\": [],\n              \"columnPeriod\": \"ANALYSIS\",\n              \"round\": \"2\",\n              \"roundConfig\": {\n                \"override\": \"false\",\n                \"round\": \"2\"\n              }\n            },\n            {\n              \"arrangeType\": \"predefined_formula_avg_visit_duration\",\n              \"dataType\": \"NUMBER\",\n              \"title\": \"Visit Duration Avg\",\n              \"metricDisplayType\": \"TIME\",\n              \"dataVisual\": \"BARS\",\n              \"scope\": \"OBJECT\",\n              \"variant\": \"NORMAL\",\n              \"visible\": \"true\",\n              \"dimension\": \"false\",\n              \"metric\": \"true\",\n              \"predefinedContainer\": {\n                \"filters\": [],\n                \"containers\": [],\n                \"combined\": \"false\"\n              },\n              \"alias\": \"predefined_formula_avg_visit_duration|0\",\n              \"inTimeSeries\": \"false\",\n              \"chart\": {\n                \"visible\": \"false\",\n                \"yAxis\": \"0\"\n              },\n              \"sumValue\": \"false\",\n              \"predefinedSegmentConnections\": [],\n              \"columnPeriod\": \"ANALYSIS\",\n              \"round\": \"2\",\n              \"roundConfig\": {\n                \"override\": \"false\",\n                \"round\": \"2\"\n              }\n            },\n            {\n              \"arrangeType\": \"predefined_formula_bounce_rate\",\n              \"dataType\": \"NUMBER\",\n              \"title\": \"Bounce Rate %\",\n              \"metricDisplayType\": \"DISTRIBUTION\",\n              \"dataVisual\": \"TRAFFIC_LIGHT\",\n              \"dataVisualTarget\": \"MIN\",\n              \"dataVisualTargetMax\": \"auto\",\n              \"dataVisualTargetMin\": \"auto\",\n              \"scope\": \"OBJECT\",\n              \"variant\": \"NORMAL\",\n              \"visible\": \"true\",\n              \"dimension\": \"false\",\n              \"metric\": \"true\",\n              \"predefinedContainer\": {\n                \"filters\": [],\n                \"containers\": [],\n                \"combined\": \"false\"\n              },\n              \"alias\": \"predefined_formula_bounce_rate|0\",\n              \"inTimeSeries\": \"false\",\n              \"chart\": {\n                \"visible\": \"true\",\n                \"yAxis\": \"1\"\n              },\n              \"sumValue\": \"false\",\n              \"predefinedSegmentConnections\": [],\n              \"columnPeriod\": \"ANALYSIS\",\n              \"round\": \"2\",\n              \"roundConfig\": {\n                \"override\": \"false\",\n                \"round\": \"2\"\n              }\n            }\n          ],\n          \"variant\": \"LIST\",\n          \"standardChart\": \"LINE\",\n          \"showTable\": \"true\",\n          \"showPic\": \"true\",\n          \"forbidChart\": \"false\",\n          \"viewMode\": {\n            \"standard\": {\n              \"pivotState\": [],\n              \"sankeyConfig\": {\n                \"reverse\": \"false\",\n                \"pathLength\": \"5\",\n                \"chartState\": []\n              }\n            },\n            \"timeSeries\": {\n              \"timeArrangeType\": \"time_id_categories_t_year_week\",\n              \"values\": [],\n              \"top\": \"3\",\n              \"viewType\": \"values\"\n            },\n            \"comparison\": {\n              \"type\": \"time\",\n              \"sorting\": {\n                \"time\": [],\n                \"segment\": []\n              },\n              \"values\": {\n                \"time\": [],\n                \"segment\": []\n              },\n              \"collapsed\": {},\n              \"primaryChangeType\": {}\n            },\n            \"path\": {\n              \"reverse\": \"false\",\n              \"metricArrangeType\": \"\",\n              \"dimensionContext\": \"NONE\",\n              \"pathLength\": \"5\",\n              \"distinct\": \"true\",\n              \"chartState\": []\n            },\n            \"crossTable\": {\n              \"metricArrangeType\": \"\",\n              \"metricSortDirection\": \"DESCENDING\",\n              \"crossDimensionSortDirection\": \"\",\n              \"mainDimensionSortDirection\": \"\",\n              \"dimensionUpperLimit\": \"10\",\n              \"crossDimensionArrangeType\": \"\"\n            }\n          }\n        }\n      }\n    ],\n    \"showInMenu\": \"true\",\n    \"predefined\": \"false\",\n    \"creatorSSOUserId\": \"7\",\n    \"modifierSSOUserId\": \"7\",\n    \"creationTime\": \"2020-11-11T07:06:55+00:00\",\n    \"modificationTime\": \"2021-12-17T09:48:24+00:00\",\n    \"showContent\": \"true\",\n    \"gridColumns\": \"0\",\n    \"publicReport\": \"false\",\n    \"startDialogConfigurable\": \"true\",\n    \"startDialogEnabled\": \"false\",\n    \"quickFilters\": [\n      {\n        \"arrangeType\": \"custom_paras_session_generic42\",\n        \"connector\": \"AND\",\n        \"filterPredicate\": \"LIKE\",\n        \"value1\": \"\",\n        \"value2\": \"\",\n        \"context\": \"NONE\",\n        \"caseSensitive\": \"false\",\n        \"intern\": \"false\",\n        \"numberOfDays\": \"0\"\n      }\n    ],\n    \"dashboardQuickFiltersCollapsed\": \"false\",\n    \"dashboardQuickFilterValues\": {\n      \"custom_paras_session_generic42\": {\n        \"configurable\": \"true\",\n        \"values\": []\n      }\n    },\n    \"categories\": [],\n    \"autoRefresh\": \"false\"\n  }\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Internal Server Error",
+              "code": 500,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "*/*"
+                }
+              ],
+              "body": "{\n  \"status\": 2144,\n  \"statusCode\": \"string\",\n  \"title\": \"string\",\n  \"detail\": \"string\",\n  \"errors\": [\n    {\n      \"name\": \"InvalidSegmentNoneContainer\",\n      \"parameters\": {\n        \"arrangeTypes\": [\n          \"string\",\n          \"string\"\n        ],\n        \"aliases\": [\n          \"string\",\n          \"string\"\n        ],\n        \"names\": [\n          \"string\",\n          \"string\"\n        ]\n      }\n    },\n    {\n      \"name\": \"PivotIncompatibleDimension\",\n      \"parameters\": {\n        \"arrangeTypes\": [\n          \"string\",\n          \"string\"\n        ],\n        \"aliases\": [\n          \"string\",\n          \"string\"\n        ],\n        \"names\": [\n          \"string\",\n          \"string\"\n        ]\n      }\n    }\n  ],\n  \"warnings\": [\n    {\n      \"name\": \"NoSortingDefined\",\n      \"parameters\": {\n        \"arrangeTypes\": [\n          \"string\",\n          \"string\"\n        ],\n        \"aliases\": [\n          \"string\",\n          \"string\"\n        ],\n        \"names\": [\n          \"string\",\n          \"string\"\n        ],\n        \"daysInDataSource\": \"string\",\n        \"todayDate\": \"string\"\n      }\n    },\n    {\n      \"name\": \"TodayRemoved\",\n      \"parameters\": {\n        \"arrangeTypes\": [\n          \"string\",\n          \"string\"\n        ],\n        \"aliases\": [\n          \"string\",\n          \"string\"\n        ],\n        \"names\": [\n          \"string\",\n          \"string\"\n        ],\n        \"daysInDataSource\": \"string\",\n        \"todayDate\": \"string\"\n      }\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "0d77d79f-4b04-4a7d-ac2f-2cc2f630da4b",
+          "name": "Get analysis result",
+          "request": {
+            "name": "Get analysis result",
+            "description": {
+              "content": "Retrieve the analysis data.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "analysis-result",
+                ":calculationId"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "calculationId",
+                  "description": "(Required) ID of the calculated Data"
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "0157a4c4-7ee7-4d7b-952d-037f9113cf26",
+              "name": "OK",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "analysis-result",
+                    ":calculationId"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "calculationId",
+                      "description": "(Required) ID of the calculated Data"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"calculationDataType\": \"RAW_DATA\",\n  \"rows\": [\n    [\n      \"20210826\",\n      \"Unknown\",\n      \"7\",\n      \"8\",\n      \"100\",\n      \"30\",\n      \"85.71428571428571\",\n      null\n    ],\n    [\n      \"20210826\",\n      \"Microsoft\",\n      \"3\",\n      \"30\",\n      \"0\",\n      \"38.333333333333336\",\n      \"0\",\n      null\n    ],\n    [\n      \"20210826\",\n      \"Apple\",\n      \"3\",\n      \"15\",\n      \"0\",\n      \"33\",\n      \"0\",\n      \"3\"\n    ],\n    [\n      \"20210826\",\n      null,\n      \"13\",\n      \"53\",\n      \"53.84615384615385\",\n      \"32.61538461538461\",\n      \"46.15384615384615\",\n      \"3\"\n    ],\n    [\n      \"20210827\",\n      \"Unknown\",\n      \"7\",\n      \"8\",\n      \"100\",\n      \"30\",\n      \"85.71428571428571\",\n      null\n    ],\n    [\n      \"20210827\",\n      \"Microsoft\",\n      \"3\",\n      \"30\",\n      \"0\",\n      \"38.333333333333336\",\n      \"0\",\n      null\n    ],\n    [\n      \"20210827\",\n      \"Apple\",\n      \"3\",\n      \"14\",\n      \"0\",\n      \"32.666666666666664\",\n      \"0\",\n      \"3\"\n    ],\n    [\n      \"20210827\",\n      null,\n      \"13\",\n      \"52\",\n      \"53.84615384615385\",\n      \"32.53846153846154\",\n      \"46.15384615384615\",\n      \"3\"\n    ],\n    [\n      \"20210828\",\n      \"Unknown\",\n      \"8\",\n      \"8\",\n      \"100\",\n      \"30\",\n      \"100\",\n      null\n    ],\n    [\n      \"20210828\",\n      \"Microsoft\",\n      \"7\",\n      \"40\",\n      \"0\",\n      \"48.714285714285715\",\n      \"14.285714285714285\",\n      null\n    ],\n    [\n      \"20210828\",\n      \"Apple\",\n      \"3\",\n      \"15\",\n      \"0\",\n      \"33\",\n      \"0\",\n      \"3\"\n    ],\n    [\n      \"20210828\",\n      null,\n      \"18\",\n      \"63\",\n      \"44.44444444444444\",\n      \"37.77777777777778\",\n      \"50\",\n      \"3\"\n    ],\n    [\n      \"20210829\",\n      \"Unknown\",\n      \"6\",\n      \"8\",\n      \"100\",\n      \"30\",\n      \"83.33333333333334\",\n      null\n    ],\n    [\n      \"20210829\",\n      \"Apple\",\n      \"3\",\n      \"30\",\n      \"0\",\n      \"35.333333333333336\",\n      \"0\",\n      \"3\"\n    ],\n    [\n      \"20210829\",\n      \"Microsoft\",\n      \"2\",\n      \"11\",\n      \"0\",\n      \"36\",\n      \"0\",\n      null\n    ],\n    [\n      \"20210829\",\n      null,\n      \"11\",\n      \"49\",\n      \"54.54545454545454\",\n      \"32.54545454545455\",\n      \"45.45454545454545\",\n      \"3\"\n    ],\n    [\n      \"20210830\",\n      \"Unknown\",\n      \"8\",\n      \"8\",\n      \"100\",\n      \"30\",\n      \"100\",\n      null\n    ],\n    [\n      \"20210830\",\n      \"Apple\",\n      \"3\",\n      \"15\",\n      \"0\",\n      \"33.333333333333336\",\n      \"0\",\n      \"3\"\n    ],\n    [\n      \"20210830\",\n      \"Microsoft\",\n      \"2\",\n      \"24\",\n      \"0\",\n      \"37.5\",\n      \"0\",\n      null\n    ],\n    [\n      \"20210830\",\n      null,\n      \"13\",\n      \"47\",\n      \"61.53846153846154\",\n      \"31.923076923076923\",\n      \"61.53846153846154\",\n      \"3\"\n    ],\n    [\n      \"20210831\",\n      \"Unknown\",\n      \"7\",\n      \"8\",\n      \"100\",\n      \"30\",\n      \"85.71428571428571\",\n      null\n    ],\n    [\n      \"20210831\",\n      \"Microsoft\",\n      \"4\",\n      \"31\",\n      \"0\",\n      \"45\",\n      \"25\",\n      null\n    ],\n    [\n      \"20210831\",\n      \"Apple\",\n      \"3\",\n      \"15\",\n      \"0\",\n      \"32.666666666666664\",\n      \"0\",\n      \"3\"\n    ],\n    [\n      \"20210831\",\n      null,\n      \"14\",\n      \"54\",\n      \"50\",\n      \"34.857142857142854\",\n      \"50\",\n      \"3\"\n    ],\n    [\n      \"20210901\",\n      \"Unknown\",\n      \"8\",\n      \"8\",\n      \"100\",\n      \"30\",\n      \"100\",\n      null\n    ],\n    [\n      \"20210901\",\n      \"Apple\",\n      \"5\",\n      \"39\",\n      \"0\",\n      \"33.4\",\n      \"0\",\n      \"5\"\n    ],\n    [\n      \"20210901\",\n      \"Microsoft\",\n      \"2\",\n      \"4\",\n      \"0\",\n      \"80\",\n      \"50\",\n      null\n    ],\n    [\n      \"20210901\",\n      null,\n      \"15\",\n      \"51\",\n      \"53.333333333333336\",\n      \"37.8\",\n      \"60\",\n      \"5\"\n    ],\n    [\n      null,\n      null,\n      \"97\",\n      \"369\",\n      \"52.57731958762887\",\n      \"34.58762886597938\",\n      \"51.546391752577314\",\n      \"23\"\n    ]\n  ],\n  \"rowCount\": \"29\",\n  \"rowCountTotal\": \"21\",\n  \"headers\": [\n    {\n      \"alias\": \"time_id_categories_t_year_month_day|0\",\n      \"arrangeType\": \"time_id_categories_t_year_month_day\",\n      \"sumPositions\": [\n        \"28\"\n      ],\n      \"pivotGroups\": [\n        \"0\",\n        \"4\",\n        \"8\",\n        \"12\",\n        \"16\",\n        \"20\",\n        \"24\",\n        \"28\"\n      ],\n      \"name\": \"time_days\",\n      \"metric\": \"false\",\n      \"dimension\": \"true\",\n      \"sortIndex\": \"0\",\n      \"sortDirection\": \"ASCENDING\"\n    },\n    {\n      \"alias\": \"platform_vendor|0\",\n      \"arrangeType\": \"platform_vendor\",\n      \"sumPositions\": [\n        \"3\",\n        \"7\",\n        \"11\",\n        \"15\",\n        \"19\",\n        \"23\",\n        \"27\",\n        \"28\"\n      ],\n      \"name\": \"os_vendor\",\n      \"metric\": \"false\",\n      \"dimension\": \"true\"\n    },\n    {\n      \"alias\": \"visits|0\",\n      \"arrangeType\": \"visits\",\n      \"name\": \"visits\",\n      \"metric\": \"true\",\n      \"dimension\": \"false\"\n    },\n    {\n      \"alias\": \"page_impressions|0\",\n      \"arrangeType\": \"page_impressions\",\n      \"name\": \"pages_pageImpressions\",\n      \"metric\": \"true\",\n      \"dimension\": \"false\"\n    },\n    {\n      \"alias\": \"predefined_formula_new_visitor_rate|0\",\n      \"arrangeType\": \"predefined_formula_new_visitor_rate\",\n      \"name\": \"visits_newShare\",\n      \"metric\": \"true\",\n      \"dimension\": \"false\"\n    },\n    {\n      \"alias\": \"predefined_formula_avg_visit_duration|0\",\n      \"arrangeType\": \"predefined_formula_avg_visit_duration\",\n      \"name\": \"visit_duration_avg\",\n      \"metric\": \"true\",\n      \"dimension\": \"false\"\n    },\n    {\n      \"alias\": \"predefined_formula_bounce_rate|0\",\n      \"arrangeType\": \"predefined_formula_bounce_rate\",\n      \"name\": \"visits_bounceRate\",\n      \"metric\": \"true\",\n      \"dimension\": \"false\"\n    },\n    {\n      \"alias\": \"visits|1\",\n      \"arrangeType\": \"visits\",\n      \"name\": \"visits\",\n      \"metric\": \"true\",\n      \"dimension\": \"false\"\n    }\n  ],\n  \"columnCount\": \"8\",\n  \"warnings\": [],\n  \"timerange\": [\n    \"2021-08-25T22:00:00+00:00\",\n    \"2021-09-01T22:00:00+00:00\"\n  ],\n  \"timestamp\": \"2021-09-02T07:15:43.567+00:00\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "fe91f259-2c75-46dd-8192-fbcdb2d20a0d",
+              "name": "No permission to execute operation",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "analysis-result",
+                    ":calculationId"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "calculationId",
+                      "description": "(Required) ID of the calculated Data"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Forbidden",
+              "code": 403,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"title\": \"Invalid Token\",\n  \"status\": \"403\",\n  \"detail\": \"Token not valid\",\n  \"statusCode\": \"INVALID_TOKEN\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "7738e7be-520a-4a8c-bec4-769487b4dd6b",
+              "name": "Entity not found",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "analysis-result",
+                    ":calculationId"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "calculationId",
+                      "description": "(Required) ID of the calculated Data"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"title\": \"Analysis not found\",\n  \"status\": \"404\",\n  \"detail\": \"Analysis not found\",\n  \"statusCode\": \"ANALYSIS_NOT_FOUND\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "fbda91e6-be97-4c22-b268-c35948da6e2a",
+          "name": "Get number of analysis done for current month",
+          "request": {
+            "name": "Get number of analysis done for current month",
+            "description": {
+              "content": "Get number of analysis done for current month",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "analysis-usage",
+                "current"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "9368f83b-3871-41fd-9266-e546b7863d58",
+              "name": "OK",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "analysis-usage",
+                    "current"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"calculationsCount\": \"4012\",\n  \"maxCalculationsAllowed\": \"310000\",\n  \"month\": \"1\",\n  \"year\": \"2022\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "cfa4bb37-f25e-4eff-8ba4-f9e9e6b8022f",
+              "name": "No permission to execute operation",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "analysis-usage",
+                    "current"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Forbidden",
+              "code": 403,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"title\": \"Invalid Token\",\n  \"status\": \"403\",\n  \"detail\": \"Token not valid\",\n  \"statusCode\": \"INVALID_TOKEN\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    },
+    {
+      "id": "623d7912-3a2d-4111-94e3-8fdbea92b05d",
+      "name": "Available Objects",
+      "description": {
+        "content": "Get information about available objects you can use to build Analysis",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "9cf9c383-1aab-4638-abab-d80babe3e9e3",
+          "name": "List all available dimensions and metrics",
+          "request": {
+            "name": "List all available dimensions and metrics",
+            "description": {
+              "content": "List all available dimensions and metrics",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "query-objects"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "language",
+                  "value": "<string>",
+                  "description": "(Required) Optional standard ISO-639-1 language code for translation (when applicable).\n\nOnly \"de\" and \"en\" supported for the moment. \n\nDefault is  \"en\""
+                }
+              ],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "31743645-ccd0-4cb9-b7d7-778e8bf21c30",
+              "name": "OK",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "query-objects"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "language",
+                      "value": "<string>"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"metrics\": [\n    {\n      \"name\": \"alexaRanking\",\n      \"context\": \"NONE\",\n      \"dataType\": \"NUMBER\",\n      \"sortable\": \"true\",\n      \"title\": \"Alexa Ranking\",\n      \"elementType\": \"DEFAULT_METRIC\",\n      \"metricDisplayType\": \"NORMAL\"\n    },\n    {\n      \"name\": \"attribution_1_order_qty\",\n      \"context\": \"ACTION\",\n      \"dataType\": \"NUMBER\",\n      \"sortable\": \"true\",\n      \"title\": \"Qty Orders (Attribution last session, external), Order\",\n      \"elementType\": \"CAMPAIGNS_ATTRIBUTION\",\n      \"metricDisplayType\": \"NORMAL\"\n    },\n    {\n      \"name\": \"custom_metric_1000853\",\n      \"context\": \"SESSION\",\n      \"dataType\": \"NUMBER\",\n      \"sortable\": \"true\",\n      \"title\": \"Android Users (Segment)\",\n      \"elementType\": \"CUSTOM_METRIC\",\n      \"metricDisplayType\": \"NORMAL\"\n    },\n    {\n      \"name\": \"media_chapter_1\",\n      \"context\": \"ATOMIC\",\n      \"dataType\": \"NUMBER\",\n      \"sortable\": \"true\",\n      \"title\": \"Media Chapter 1\",\n      \"elementType\": \"DEFAULT_METRIC\",\n      \"metricDisplayType\": \"NORMAL\"\n    },\n    {\n      \"name\": \"page_category_number_13_sum\",\n      \"context\": \"NONE\",\n      \"dataType\": \"NUMBER\",\n      \"sortable\": \"true\",\n      \"title\": \"Social Metrics\",\n      \"elementType\": \"CUSTOM_CATEGORY\",\n      \"metricDisplayType\": \"NORMAL\"\n    },\n    {\n      \"name\": \"products_viewed_qty\",\n      \"context\": \"ATOMIC\",\n      \"dataType\": \"NUMBER\",\n      \"sortable\": \"true\",\n      \"title\": \"Qty Product Views\",\n      \"elementType\": \"DEFAULT_METRIC\",\n      \"metricDisplayType\": \"NORMAL\"\n    }\n  ],\n  \"dimensions\": [\n    {\n      \"name\": \"attribution_1\",\n      \"context\": \"NONE\",\n      \"dataType\": \"NUMBER\",\n      \"sortable\": \"true\",\n      \"title\": \"Attribution (last session, external) of Order\",\n      \"elementType\": \"CAMPAIGNS_ATTRIBUTION\",\n      \"mapping\": {\n        \"\": \"No Filter\",\n        \"*\": \"All\"\n      }\n    },\n    {\n      \"name\": \"attribution_2\",\n      \"context\": \"NONE\",\n      \"dataType\": \"NUMBER\",\n      \"sortable\": \"true\",\n      \"title\": \"Attribution (multiple, external) of Order\",\n      \"elementType\": \"CAMPAIGNS_ATTRIBUTION\",\n      \"mapping\": {\n        \"\": \"No Filter\",\n        \"*\": \"All\"\n      }\n    },\n    {\n      \"name\": \"device_deviceClass\",\n      \"context\": \"SESSION\",\n      \"dataType\": \"NUMBER\",\n      \"sortable\": \"true\",\n      \"title\": \"Device Class\",\n      \"elementType\": \"DEFAULT_DIMENSION\",\n      \"mapping\": {\n        \"0\": \"PC / Laptop\",\n        \"1\": \"Smartphone\",\n        \"2\": \"Tablet\",\n        \"3\": \"TV\",\n        \"4\": \"Console\",\n        \"5\": \"Smartwatch\",\n        \"6\": \"E-Reader\",\n        \"7\": \"Mediahub\",\n        \"8\": \"other\",\n        \"1000\": \"unknown\",\n        \"\": \"No filter\"\n      }\n    },\n    {\n      \"name\": \"device_model\",\n      \"context\": \"SESSION\",\n      \"dataType\": \"STRING\",\n      \"sortable\": \"false\",\n      \"title\": \"Device Model\",\n      \"elementType\": \"DEFAULT_DIMENSION\"\n    },\n    {\n      \"name\": \"user_country\",\n      \"context\": \"SESSION\",\n      \"dataType\": \"STRING\",\n      \"sortable\": \"false\",\n      \"title\": \"URM - Country\",\n      \"elementType\": \"DEFAULT_DIMENSION\"\n    },\n    {\n      \"name\": \"user_gender\",\n      \"context\": \"SESSION\",\n      \"dataType\": \"NUMBER\",\n      \"sortable\": \"true\",\n      \"title\": \"URM - Gender\",\n      \"elementType\": \"DEFAULT_DIMENSION\",\n      \"mapping\": {\n        \"0\": \"unknown\",\n        \"1\": \"Man\",\n        \"2\": \"Woman\",\n        \"\": \"No filter\"\n      }\n    },\n    {\n      \"name\": \"user_id\",\n      \"context\": \"SESSION\",\n      \"dataType\": \"STRING\",\n      \"sortable\": \"false\",\n      \"title\": \"URM - Visitor Id\",\n      \"elementType\": \"DEFAULT_DIMENSION\"\n    },\n    {\n      \"name\": \"user_lastVisit\",\n      \"context\": \"SESSION\",\n      \"dataType\": \"NUMBER\",\n      \"sortable\": \"true\",\n      \"title\": \"URM - Last Visit\",\n      \"elementType\": \"DEFAULT_DIMENSION\",\n      \"mapping\": {\n        \"0\": \"No\",\n        \"1\": \"Yes\",\n        \"\": \"No filter\"\n      }\n    },\n    {\n      \"name\": \"user_lastVisitWithPurchase\",\n      \"context\": \"SESSION\",\n      \"dataType\": \"NUMBER\",\n      \"sortable\": \"true\",\n      \"title\": \"URM - Last Visit with a Purchase\",\n      \"elementType\": \"DEFAULT_DIMENSION\",\n      \"mapping\": {\n        \"0\": \"No\",\n        \"1\": \"Yes\",\n        \"\": \"No filter\"\n      }\n    },\n    {\n      \"name\": \"user_macroStatus\",\n      \"context\": \"SESSION\",\n      \"dataType\": \"NUMBER\",\n      \"sortable\": \"true\",\n      \"title\": \"URM - Customer Macro Status\",\n      \"elementType\": \"DEFAULT_DIMENSION\",\n      \"mapping\": {\n        \"0\": \"unknown\",\n        \"1\": \"Offsite\",\n        \"2\": \"Onsite\",\n        \"3\": \"Product view\",\n        \"4\": \"Abandoned basket\",\n        \"5\": \"Registration\",\n        \"6\": \"New Customer\",\n        \"7\": \"Returning buyer\",\n        \"\": \"No filter\"\n      }\n    },\n    {\n      \"name\": \"visitors_newVsReturning\",\n      \"context\": \"SESSION\",\n      \"dataType\": \"NUMBER\",\n      \"sortable\": \"true\",\n      \"title\": \"New vs. Returning\",\n      \"elementType\": \"DEFAULT_DIMENSION\",\n      \"mapping\": {\n        \"0\": \"Returning\",\n        \"1\": \"New\",\n        \"2\": \"Unknown\",\n        \"\": \"No filter\"\n      }\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "e7fb8078-76b0-4ff1-9ae8-3e6a3ab2d5ac",
+              "name": "No permission to execute operation",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "query-objects"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "language",
+                      "value": "<string>"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Forbidden",
+              "code": 403,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"title\": \"Invalid Token\",\n  \"status\": \"403\",\n  \"detail\": \"Token not valid\",\n  \"statusCode\": \"INVALID_TOKEN\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "d6d8b8c8-321b-4fba-91ef-d670a120f672",
+          "name": "List all available dynamic timefilters",
+          "request": {
+            "name": "List all available dynamic timefilters",
+            "description": {
+              "content": "List all available dynamic timefilter value.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "dynamic-timefilters"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "language",
+                  "value": "<string>",
+                  "description": "(Required) Optional standard ISO-639-1 language code for translation (when applicable).\n\nOnly \"de\" and \"en\" supported for the moment. \n\nDefault is  \"en\""
+                }
+              ],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "c927d165-f8a0-4d30-989b-8351105290f7",
+              "name": "OK",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "dynamic-timefilters"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "language",
+                      "value": "<string>"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "[\n  {\n    \"title\": \"Today\",\n    \"name\": \"today\",\n    \"dynamicFilter\": {\n      \"name\": \"time_dynamic\",\n      \"connector\": \"AND\",\n      \"filterPredicate\": \"LIKE\",\n      \"value1\": \"today\",\n      \"value2\": \"\",\n      \"context\": \"NONE\"\n    }\n  },\n  {\n    \"title\": \"Today, 7 days ago\",\n    \"name\": \"before_7_days\",\n    \"dynamicFilter\": {\n      \"name\": \"time_dynamic\",\n      \"connector\": \"AND\",\n      \"filterPredicate\": \"LIKE\",\n      \"value1\": \"before_7_days\",\n      \"value2\": \"\",\n      \"context\": \"NONE\"\n    }\n  },\n  {\n    \"title\": \"Today, 14 days ago\",\n    \"name\": \"before_14_days\",\n    \"dynamicFilter\": {\n      \"name\": \"time_dynamic\",\n      \"connector\": \"AND\",\n      \"filterPredicate\": \"LIKE\",\n      \"value1\": \"before_14_days\",\n      \"value2\": \"\",\n      \"context\": \"NONE\"\n    }\n  }\n]",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "8829993f-6da9-4d97-99c8-b7736e59df3c",
+              "name": "No permission to execute operation",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "dynamic-timefilters"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "language",
+                      "value": "<string>"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Forbidden",
+              "code": 403,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"title\": \"Invalid Token\",\n  \"status\": \"403\",\n  \"detail\": \"Token not valid\",\n  \"statusCode\": \"INVALID_TOKEN\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "879e4a65-617e-45dc-b492-07d138315636",
+          "name": "List all available segments",
+          "request": {
+            "name": "List all available segments",
+            "description": {
+              "content": "List all available segments",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "segments"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "0db747b9-e036-4b34-a0c1-2d450895784b",
+              "name": "OK",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "segments"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "[\n  {\n    \"id\": \"67\",\n    \"title\": \"Social media Visitor\",\n    \"description\": \"Visitor which came from Social Media\"\n  },\n  {\n    \"id\": \"95\",\n    \"title\": \"Returning Visitor\",\n    \"description\": \"User with at least 5 Visits\"\n  }\n]",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "970b7630-a77b-4552-9fa8-6d8137b8402c",
+              "name": "No permission to execute operation",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "segments"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Forbidden",
+              "code": 403,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"title\": \"Invalid Token\",\n  \"status\": \"403\",\n  \"detail\": \"Token not valid\",\n  \"statusCode\": \"INVALID_TOKEN\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "https://api.mapp.com/api/analytics",
+      "key": "baseUrl"
+    }
+  ],
+  "auth": {
+    "type": "oauth2",
+    "oauth2": [
+      {
+        "key": "accessTokenUrl",
+        "value": "https://auth.mapp.com/oauth2/token"
+      },
+      {
+        "key": "grant_type",
+        "value": "client_credentials"
+      }
+    ]
+  },
+  "info": {
+    "_postman_id": "1daa4d0b-a429-41ef-9b8e-81d4bee5da87",
+    "name": "Analytics API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "OpenAPI 3.0 Specification of Mapp Intelligence AnalyticsAPI \n\n In order to use these endpoints you must authorize by using a valid OAuth clientID configured in Mapp Intelligence Settings section.\n\nContact Support:\n Name: Technical Support Mapp Digital",
+      "type": "text/plain"
+    }
+  }
+}

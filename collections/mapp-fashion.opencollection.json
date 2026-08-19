@@ -1,0 +1,602 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Mapp Fashion API",
+    "version": "10"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "authorization",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "start the process of obtaining a JWT",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/oauth/authorize",
+            "params": [
+              {
+                "name": "redirect_uri",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "response_type",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "client_id",
+                "value": "",
+                "type": "query",
+                "description": "the api client id supplied by dressipi"
+              },
+              {
+                "name": "state",
+                "value": "",
+                "type": "query",
+                "description": "a randomly generated state value"
+              },
+              {
+                "name": "code_challenge",
+                "value": "",
+                "type": "query",
+                "description": "a urlsafe base64 encoded, SHA256 hash of the code verifier (a cryptographically secure randomly generated string)."
+              },
+              {
+                "name": "code_challenge_method",
+                "value": "",
+                "type": "query"
+              }
+            ]
+          },
+          "docs": "This is an oauth2 compliant authorize endpoint (see https://tools.ietf.org/html/rfc6749) with the following limitations:\n\n- Only grant code flow is allowed\n- PKCE is mandatory i.e. you must generate a code_verifier (a randomly generated secret) and include its url safe base64 encoded SHA256 hash as the code_challenge parameter\n- Only the S256 code challenge method is supported\n- The redirect URI must be set to urn:ietf:wg:oauth:2.0:oob:auto\n\nThis api returns a grant code that can then be exchang"
+        },
+        {
+          "info": {
+            "name": "exchange a grant code or refresh token for a JWT",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{baseUrl}}/oauth/token"
+          },
+          "docs": "This allows the client to exchange a previously obtained grant code or refresh token for an access token for immediate use and a refresh token for subsequent requests.\n\nIt may return an updated refresh token, in which case the stored refresh token should be updated\n\nThe redirect URI must be set to urn:ietf:wg:oauth:2.0:oob:auto\n\nWhen exchanging a grant code from the authorize endpoint:\n- set grant_type to authorization_code\n- set code to the code returned by the authorize endpoint\n\nWhen refreshi"
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "items",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Get information about an item by id",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/items/:id",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "An identifier for the source item. The interpretation of this item is controlled by the `identifier_type` parameter"
+              },
+              {
+                "name": "identifier_type",
+                "value": "",
+                "type": "query",
+                "description": "How dressipi should interpret the item id. Not all of these may be available, depending on the information in the product feed and how it is processed. Contact dressipi for examples of these types for your specific integration.\n\nIn general\n\n- product-code is the style + color identifier from the feed\n- sku is style without color or size (can be supplemented with an extra parameter specifying the color + size variant)\n"
+              },
+              {
+                "name": "pretty",
+                "value": "",
+                "type": "query",
+                "description": "If true, pretty print Json output. This increases response size and should usually be off in production environments\n"
+              },
+              {
+                "name": "include_dressipi_ids",
+                "value": "",
+                "type": "query",
+                "description": "Controls whether dressipi garment ids (raw_garment_id) are included in response\n"
+              },
+              {
+                "name": "fields",
+                "value": "",
+                "type": "query",
+                "description": "A list of garment attributes to fetch. Only supported for garment_format=document or detailed. Custom fields may be available - contact dressipi for details"
+              },
+              {
+                "name": "locale",
+                "value": "",
+                "type": "query",
+                "description": "A locale parameter describing what stock information to use and what language to return text in (if applicable). This parameter will only\nfunction if the corresponding information is in the product feed & processed accordingly. If stock local and UI language are not the same,\nspecify the language parameter in addition to this one.\n"
+              },
+              {
+                "name": "language",
+                "value": "",
+                "type": "query",
+                "description": "Allows you to specify a locale used for feed attributes such as product name that should be localized using a different locale to price &\nstock information. This parameter will only function if the corresponding information is in the product feed & processed accordingly.\n"
+              }
+            ]
+          },
+          "docs": "Fetches information about a garment. The garment format is implicitly set to detailed.\n"
+        },
+        {
+          "info": {
+            "name": "return top curated recommendations for a user",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/items/top",
+            "params": [
+              {
+                "name": "garment_format",
+                "value": "",
+                "type": "query",
+                "description": "The desired response format.\n\nThe response includes a description of the outfits / similar items but no data on the items themselves: since these may be repeated within the response, garment data is provided separately in the response.\n\nThe `detailed` format includes the most amount of item metadata (name, description, price etc).\n\nThe `document` format only includes item identifiers, and if requested dressipi generated information about the item, such as predicted size.\n\nThe `retailer_ids` format only returns the item identifiers.\n"
+              },
+              {
+                "name": "pretty",
+                "value": "",
+                "type": "query",
+                "description": "If true, pretty print json output. This increases response size and should usually be off in production environments\n"
+              },
+              {
+                "name": "include_dressipi_ids",
+                "value": "",
+                "type": "query",
+                "description": "Controls whether dressipi garment ids (raw_garment_id) are included in response\n"
+              },
+              {
+                "name": "fields",
+                "value": "",
+                "type": "query",
+                "description": "A list of garment attributes to fetch. Only supported for garment_format=document or detailed. Custom fields may be available - contact dressipi for details"
+              },
+              {
+                "name": "locale",
+                "value": "",
+                "type": "query",
+                "description": "A locale parameter describing what stock information to use and what language to return text in (if applicable). This parameter will only\nfunction if the corresponding information is in the product feed & processed accordingly. If stock local and UI language are not the same,\nspecify the language parameter in addition to this one.\n"
+              },
+              {
+                "name": "language",
+                "value": "",
+                "type": "query",
+                "description": "Allows you to specify a locale used for feed attributes such as product name that should be localized using a different locale to price &\nstock information. This parameter will only function if the corresponding information is in the product feed & processed accordingly.\n"
+              },
+              {
+                "name": "department",
+                "value": "",
+                "type": "query",
+                "description": "The department to which the items will belong\n"
+              },
+              {
+                "name": "excluded_ids",
+                "value": "",
+                "type": "query",
+                "description": "List of product identifiers to be excluded from the results.\n"
+              },
+              {
+                "name": "include_user_data",
+                "value": "",
+                "type": "query",
+                "description": "Include information about the user in the response (if known)\n"
+              }
+            ]
+          },
+          "docs": "Returns curated recommendations for a user profile\nwithout targeting a specific garment.\n\nThis endpoint provides personalized item recommendations based on the user's profile\nand preferences.\nCurrently only available for the womens department\n"
+        },
+        {
+          "info": {
+            "name": "return outfits or recommended items for a set of source items",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/items/:id/complementary",
+            "params": [
+              {
+                "name": "garment_format",
+                "value": "",
+                "type": "query",
+                "description": "The desired response format.\n\nThe response includes a description of the outfits / similar items but no data on the items themselves: since these may be repeated within the response, garment data is provided separately in the response.\n\nThe `detailed` format includes the most amount of item metadata (name, description, price etc).\n\nThe `document` format only includes item identifiers, and if requested Dressipi generated information about the item, such as predicted size.\n\nThe `retailer_ids` format only returns the item identifiers.\n"
+              },
+              {
+                "name": "identifier_type",
+                "value": "",
+                "type": "query",
+                "description": "How Dressipi should interpret the item id. Not all of these may be available, depending on the information in the product feed and how it is processed. Contact Dressipi for examples of these types for your specific integration.\n\nIn general\n\n- product-code is the style + color identifier from the feed\n- sku is style without color or size (can be supplemented with an extra parameter specifying the color + size variant)\n"
+              },
+              {
+                "name": "pretty",
+                "value": "",
+                "type": "query",
+                "description": "If true, pretty print Json output. This increases response size and should usually be off in production environments\n"
+              },
+              {
+                "name": "include_dressipi_ids",
+                "value": "",
+                "type": "query",
+                "description": "Controls whether Dressipi garment ids (raw_garment_id) are included in response\n"
+              },
+              {
+                "name": "locale",
+                "value": "",
+                "type": "query",
+                "description": "A locale parameter describing what stock information to use and what language to return text in (if applicable). This parameter will only\nfunction if the corresponding information is in the product feed & processed accordingly. If stock local and UI language are not the same,\nspecify the language parameter in addition to this one.\n"
+              },
+              {
+                "name": "language",
+                "value": "",
+                "type": "query",
+                "description": "Allows you to specify a locale used for feed attributes such as product name that should be localized using a different locale to price &\nstock information. This parameter will only function if the corresponding information is in the product feed & processed accordingly.\n"
+              },
+              {
+                "name": "excluded_ids",
+                "value": "",
+                "type": "query",
+                "description": "List of product identifiers to be excluded from the results\n"
+              },
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "An identifier for one or more source item. The interpretation of this item is controlled by the `identifier_type` parameter"
+              }
+            ]
+          },
+          "docs": "Fetches related recommendations or outfits (items which as a set complement the source item(s)) based\non business rules agreed with Dressipi. Depending on the items passed and these rules, the result might be related to some, all or none of the items specified\n\nFor example this could be used on the checkout page to show recommendations based on the content of the\nuser's basket.\n\nThis is the api equivalent of the shopping basket widget\n"
+        },
+        {
+          "info": {
+            "name": "return outfits or similar items for a single source item",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/items/:id/related",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "An identifier for the source item. The interpretation of this item is controlled by the `identifier_type` parameter"
+              },
+              {
+                "name": "methods",
+                "value": "",
+                "type": "query",
+                "description": "The methods through which related items should be generated. These are attempted in order.\n\nThe `partner_outfits` method is only available if Dressipi has been provided with curated outfit data for the item\n"
+              },
+              {
+                "name": "try_all_methods",
+                "value": "",
+                "type": "query",
+                "description": "If false (the default), the methods listed are attempted until one succeeds and only results for that method are returned.\n\nIf true, results for all successful methods are returned\n"
+              },
+              {
+                "name": "locale",
+                "value": "",
+                "type": "query",
+                "description": "A locale parameter describing what stock information to use and what language to return text in (if applicable). This parameter will only\nfunction if the corresponding information is in the product feed & processed accordingly. If stock local and UI language are not the same,\nspecify the language parameter in addition to this one.\n"
+              },
+              {
+                "name": "language",
+                "value": "",
+                "type": "query",
+                "description": "Allows you to specify a locale used for feed attributes such as product name that should be localized using a different locale to price &\nstock information. This parameter will only function if the corresponding information is in the product feed & processed accordingly.\n"
+              },
+              {
+                "name": "exclude_source_garment",
+                "value": "",
+                "type": "query",
+                "description": "Whether to exclude the source item from any returned outfits or not\n"
+              },
+              {
+                "name": "outfits_per_occasion",
+                "value": "",
+                "type": "query",
+                "description": "The number of outfits to attempt to return *per occasion*. In the case of a single occasion garment, this\nlimit is doubled internally\n"
+              },
+              {
+                "name": "max_similar_items",
+                "value": "",
+                "type": "query",
+                "description": "The maximum number of similar items to return.\n"
+              },
+              {
+                "name": "stores",
+                "value": "",
+                "type": "query",
+                "description": "List of stores to filter recommendations by. An item must be available in at least one of the specified stores in order\nto be returned.\n\nThis requires that per-store availability data is shared with dressipi\n"
+              },
+              {
+                "name": "garment_format",
+                "value": "",
+                "type": "query",
+                "description": "The desired response format.\n\nThe response includes a description of the outfits / similar items but no data on the items themselves: since these may be repeated within the response, garment data is provided separately in the response.\n\nThe `detailed` format includes the most amount of item metadata (name, description, price etc).\n\nThe `document` format only includes item identifiers, and if requested dressipi generated information about the item, such as predicted size.\n\nThe `retailer_ids` format only returns the item identifiers.\n"
+              },
+              {
+                "name": "identifier_type",
+                "value": "",
+                "type": "query",
+                "description": "How dressipi should interpret the item id. Not all of these may be available, depending on the information in the product feed and how it is processed. Contact dressipi for examples of these types for your specific integration.\n\nIn general\n\n- product-code is the style + color identifier from the feed\n- sku is style without color or size (can be supplemented with an extra parameter specifying the color + size variant)\n"
+              },
+              {
+                "name": "pretty",
+                "value": "",
+                "type": "query",
+                "description": "If true, pretty print Json output. This increases response size and should usually be off in production environments\n"
+              },
+              {
+                "name": "include_dressipi_ids",
+                "value": "",
+                "type": "query",
+                "description": "Controls whether Dressipi garment ids (raw_garment_id) are included in response\n"
+              },
+              {
+                "name": "fields",
+                "value": "",
+                "type": "query",
+                "description": "A list of garment attributes to fetch. Only supported for garment_format=document or detailed. Custom fields may be available - contact Dressipi for details"
+              },
+              {
+                "name": "sku_refinement",
+                "value": "",
+                "type": "query",
+                "description": "When identifier_type is set to sku, identifies the particular size+color variant\n"
+              },
+              {
+                "name": "excluded_ids",
+                "value": "",
+                "type": "query",
+                "description": "List of product identifiers to be excluded from the results.\nThe interpretation of this item is controlled by the `identifier_type` parameter\n"
+              },
+              {
+                "name": "include_user_data",
+                "value": "",
+                "type": "query",
+                "description": "Include information about the user in the response (if known)\n"
+              }
+            ]
+          },
+          "docs": "Fetches either similar items (items which are related to the source item by common features)\nor outfits (items which as a set complement the source item).'\n\nThis is the api equivalent of the outfits widget.\n"
+        },
+        {
+          "info": {
+            "name": "return top curated recommendations for a user based on their basket items",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/items/basket",
+            "params": [
+              {
+                "name": "ids",
+                "value": "",
+                "type": "query",
+                "description": "List of garment identifiers representing the user's basket.\n"
+              },
+              {
+                "name": "excluded_ids",
+                "value": "",
+                "type": "query",
+                "description": "List of garment identifiers to be excluded from the recommendations.\n"
+              },
+              {
+                "name": "identifier_type",
+                "value": "",
+                "type": "query",
+                "description": "The type of garment identifiers provided in `ids` and `excluded_ids`.\n"
+              },
+              {
+                "name": "max_items",
+                "value": "",
+                "type": "query",
+                "description": "The desired number of recommended items to return.\n"
+              },
+              {
+                "name": "sort",
+                "value": "",
+                "type": "query",
+                "description": "The attribute to sort results by. Currently only 'price' is supported.\n"
+              },
+              {
+                "name": "direction",
+                "value": "",
+                "type": "query",
+                "description": "The direction to sort results by.\n"
+              },
+              {
+                "name": "garment_format",
+                "value": "",
+                "type": "query",
+                "description": "The desired response format. If 'simple', only basic garment identifiers are returned.\nIf 'detailed', more comprehensive garment metadata is included.\n"
+              },
+              {
+                "name": "locale",
+                "value": "",
+                "type": "query",
+                "description": "A locale parameter describing what stock information to use and what language to return text in (if applicable). This parameter will only\nfunction if the corresponding information is in the product feed & processed accordingly. If stock local and UI language are not the same,\nspecify the language parameter in addition to this one.\n"
+              },
+              {
+                "name": "language",
+                "value": "",
+                "type": "query",
+                "description": "Allows you to specify a locale used for feed attributes such as product name that should be localized using a different locale to price &\nstock information. This parameter will only function if the corresponding information is in the product feed & processed accordingly.\n"
+              },
+              {
+                "name": "pretty",
+                "value": "",
+                "type": "query",
+                "description": "If true, pretty print json output. This increases response size and should usually be off in production environments\n"
+              },
+              {
+                "name": "include_dressipi_ids",
+                "value": "",
+                "type": "query",
+                "description": "Controls whether dressipi garment ids (raw_garment_id) are included in response\n"
+              },
+              {
+                "name": "include_user_data",
+                "value": "",
+                "type": "query",
+                "description": "If true, user information will be included in the response where applicable\n"
+              }
+            ]
+          },
+          "docs": "The basket recommendations endpoint returns curated recommendations for a user profile\nbased on the garments in their basket (which can be empty).\n\nThis endpoint provides personalized item recommendations based on the user's profile\nand preferences.\n"
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "recommendations",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "return facetted recommendations for a user",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{baseUrl}}/recommendations/facetted",
+            "params": [
+              {
+                "name": "garment_format",
+                "value": "",
+                "type": "query",
+                "description": "The desired response format.\n\nThe response includes a description of the outfits / similar items but no data on the items themselves: since these may be repeated within the response, garment data is provided separately in the response.\n\nThe `detailed` format includes the most amount of item metadata (name, description, price etc).\n\nThe `document` format only includes item identifiers, and if requested dressipi generated information about the item, such as predicted size.\n\nThe `retailer_ids` format only returns the item identifiers.\n"
+              },
+              {
+                "name": "fields",
+                "value": "",
+                "type": "query",
+                "description": "A list of garment attributes to fetch. Only supported for garment_format=document or detailed. Custom fields may be available - contact dressipi for details"
+              },
+              {
+                "name": "pretty",
+                "value": "",
+                "type": "query",
+                "description": "If true, pretty print json output. This increases response size and should usually be off in production environments\n"
+              },
+              {
+                "name": "include_dressipi_ids",
+                "value": "",
+                "type": "query",
+                "description": "Controls whether dressipi garment ids (raw_garment_id) are included in response\n"
+              },
+              {
+                "name": "page",
+                "value": "",
+                "type": "query",
+                "description": "The page from which to start results\n"
+              },
+              {
+                "name": "per_page",
+                "value": "",
+                "type": "query",
+                "description": "The number of result to return per page\n"
+              },
+              {
+                "name": "device_type",
+                "value": "",
+                "type": "query",
+                "description": "A device type identifier. This allows segmenting a/b test statistics\nin the same way as you do.\n"
+              },
+              {
+                "name": "locale",
+                "value": "",
+                "type": "query",
+                "description": "A locale parameter describing what stock information to use and what language to return text in (if applicable). This parameter will only\nfunction if the corresponding information is in the product feed & processed accordingly. If stock local and UI language are not the same,\nspecify the language parameter in addition to this one.\n"
+              },
+              {
+                "name": "language",
+                "value": "",
+                "type": "query",
+                "description": "Allows you to specify a locale used for feed attributes such as product name that should be localized using a different locale to price &\nstock information. This parameter will only function if the corresponding information is in the product feed & processed accordingly.\n"
+              }
+            ]
+          },
+          "docs": "The facetted recommendations api allows retrieval of the most recommended garments for a user.\nThe result set can be filtered by specifying one or more filters. Optionally retrieval of information\nabout the number of hits for other values of the filter are returned\n\nThe currently recognized aggregations are\n\n- garment_category\n- brand\n- occasion\n- must_have\n- retailer_labels (previously known as retailer_categories): significance dependent on retailer and data present in feed\n- store: if dressip"
+        },
+        {
+          "info": {
+            "name": "return themed recommendations for a user",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/recommendations/themed",
+            "params": [
+              {
+                "name": "garment_format",
+                "value": "",
+                "type": "query",
+                "description": "The desired response format.\n\nThe response includes a description of the outfits / similar items but no data on the items themselves: since these may be repeated within the response, garment data is provided separately in the response.\n\nThe `detailed` format includes the most amount of item metadata (name, description, price etc).\n\nThe `document` format only includes item identifiers, and if requested dressipi generated information about the item, such as predicted size.\n\nThe `retailer_ids` format only returns the item identifiers.\n"
+              },
+              {
+                "name": "pretty",
+                "value": "",
+                "type": "query",
+                "description": "If true, pretty print Json output. This increases response size and should usually be off in production environments\n"
+              },
+              {
+                "name": "include_dressipi_ids",
+                "value": "",
+                "type": "query",
+                "description": "Controls whether dressipi garment ids (raw_garment_id) are included in response\n"
+              },
+              {
+                "name": "device_type",
+                "value": "",
+                "type": "query",
+                "description": "A device type identifier. This allows segmenting a/b test statistics\nin the same way as you do.\n"
+              },
+              {
+                "name": "locale",
+                "value": "",
+                "type": "query",
+                "description": "A locale parameter describing what stock information to use and what language to return text in (if applicable). This parameter will only\nfunction if the corresponding information is in the product feed & processed accordingly. If stock local and UI language are not the same,\nspecify the language parameter in addition to this one.\n"
+              },
+              {
+                "name": "language",
+                "value": "",
+                "type": "query",
+                "description": "Allows you to specify a locale used for feed attributes such as product name that should be localized using a different locale to price &\nstock information. This parameter will only function if the corresponding information is in the product feed & processed accordingly.\n"
+              },
+              {
+                "name": "theme",
+                "value": "",
+                "type": "query",
+                "description": "The theme identifier, as agreed with Dressipi."
+              },
+              {
+                "name": "count",
+                "value": "",
+                "type": "query",
+                "description": "The number of recommendations to return"
+              }
+            ]
+          },
+          "docs": "The themed recommendations api allows retrieval of the most recommended garments for a user matching a theme.\nThemes should be agreed in advance with dressipi.\n\nThis is the api equivalent of the plp widget.\n"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

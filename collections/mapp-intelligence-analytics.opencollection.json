@@ -1,0 +1,220 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Analytics API",
+    "version": "1.0.0"
+  },
+  "request": {
+    "auth": {
+      "type": "oauth2",
+      "flow": "client_credentials",
+      "accessTokenUrl": "https://auth.mapp.com/oauth2/token",
+      "credentials": {
+        "clientId": "{{clientId}}",
+        "clientSecret": "{{clientSecret}}"
+      }
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Analysis",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Get query status",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.mapp.com/api/analytics/analysis-query/:correlationId",
+            "params": [
+              {
+                "name": "correlationId",
+                "value": "",
+                "type": "path",
+                "description": "ID of the query"
+              }
+            ]
+          },
+          "docs": "Returns status of the analysis query. \n\n Once calculation is SUCCESS, result is  available and can be retrieved by using the provided link (or calculationId)."
+        },
+        {
+          "info": {
+            "name": "Cancel query",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://api.mapp.com/api/analytics/analysis-query/:correlationId",
+            "params": [
+              {
+                "name": "correlationId",
+                "value": "",
+                "type": "path",
+                "description": "ID of the query to be canceled"
+              }
+            ]
+          },
+          "docs": "Abort running query, if still running"
+        },
+        {
+          "info": {
+            "name": "Get report calculation query state",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.mapp.com/api/analytics/report-query/:reportCorrelationId",
+            "params": [
+              {
+                "name": "reportCorrelationId",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Get report calculation query state"
+        },
+        {
+          "info": {
+            "name": "Cancel report calculation query",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://api.mapp.com/api/analytics/report-query/:reportCorrelationId",
+            "params": [
+              {
+                "name": "reportCorrelationId",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Cancel report calculation query"
+        },
+        {
+          "info": {
+            "name": "Create calculation query",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.mapp.com/api/analytics/analysis-query",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Create a calculation query. \n\n Response will be either \n+ 200 if the result is already available and can be retrieved by using the provided link (or calculationId) \n+ 201 if the calculation is being queued. Status can be polled by using the provided link (or correlationId)."
+        },
+        {
+          "info": {
+            "name": "Create report calculation query",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.mapp.com/api/analytics/report-query",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Create multiple calculation queries, also known as a report."
+        },
+        {
+          "info": {
+            "name": "Get analysis result",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.mapp.com/api/analytics/analysis-result/:calculationId",
+            "params": [
+              {
+                "name": "calculationId",
+                "value": "",
+                "type": "path",
+                "description": "ID of the calculated Data"
+              }
+            ]
+          },
+          "docs": "Retrieve the analysis data."
+        },
+        {
+          "info": {
+            "name": "Get number of analysis done for current month",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.mapp.com/api/analytics/analysis-usage/current"
+          },
+          "docs": "Get number of analysis done for current month"
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Available Objects",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List all available dimensions and metrics",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.mapp.com/api/analytics/query-objects",
+            "params": [
+              {
+                "name": "language",
+                "value": "",
+                "type": "query",
+                "description": "Optional standard ISO-639-1 language code for translation (when applicable).\n\nOnly \"de\" and \"en\" supported for the moment. \n\nDefault is  \"en\""
+              }
+            ]
+          },
+          "docs": "List all available dimensions and metrics"
+        },
+        {
+          "info": {
+            "name": "List all available dynamic timefilters",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.mapp.com/api/analytics/dynamic-timefilters",
+            "params": [
+              {
+                "name": "language",
+                "value": "",
+                "type": "query",
+                "description": "Optional standard ISO-639-1 language code for translation (when applicable).\n\nOnly \"de\" and \"en\" supported for the moment. \n\nDefault is  \"en\""
+              }
+            ]
+          },
+          "docs": "List all available dynamic timefilter value."
+        },
+        {
+          "info": {
+            "name": "List all available segments",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.mapp.com/api/analytics/segments"
+          },
+          "docs": "List all available segments"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

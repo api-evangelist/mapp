@@ -1,0 +1,4122 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Mapp Engage public API",
+    "version": "1"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Meta",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Activate attribute definitions",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{baseUrl}}/meta/activateAttributeDefinitions"
+          },
+          "docs": "Reactivates archived custom attributes that are named in the parameter list. After activation, they can be used in personalization during the message composition process.<br>Request body example: <br><br><pre>[\"attributename\"]</pre>"
+        },
+        {
+          "info": {
+            "name": "Archive attribute definitions",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{baseUrl}}/meta/archiveAttributeDefinitions"
+          },
+          "docs": "Archives custom attributes. An archived attribute is still stored in the system. The attributes can still be in use for existing messages and sendouts, but they are not available in the GUI message creation process (i.e. personalization builder).<br>Request body example: <br><br><pre>[\"attributename\"]</pre>"
+        },
+        {
+          "info": {
+            "name": "Attach tags",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{baseUrl}}/meta/attachTags",
+            "params": [
+              {
+                "name": "entityId",
+                "value": "",
+                "type": "query",
+                "description": "Entity id"
+              },
+              {
+                "name": "entityType",
+                "value": "",
+                "type": "query",
+                "description": "Entity type"
+              }
+            ]
+          },
+          "docs": "Attach tags"
+        },
+        {
+          "info": {
+            "name": "Create attribute definitions",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{baseUrl}}/meta/createAttributeDefinitions"
+          },
+          "docs": "Creates a new data field (custom user attribute) where information about users can be stored. With the standard setup, you are permitted to create a limited number of custom attributes with different data types.<br>Each custom user attribute has a unique name. If an attribute is no longer needed, it may be archived. Please contact your customer support representative if you need to delete an attribute.<br>Request body example: <br><br><pre>[{<br>\"name\": \"attributename\",<br>\"type\": \"STRING\",<br>\""
+        },
+        {
+          "info": {
+            "name": "Create link categories",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{baseUrl}}/meta/createLinkCategories"
+          },
+          "docs": "Creates new link categories. Link categories are automatically assigned to a link via a regex pattern.<br>The link categories group together different links for statistical purposes and can be used to trigger automated processes when a link of a certain category is clicked.<br>The name and pattern are mandatory inputs for the category. The ID is automatically assigned by the system<br>Request body example: <br><br><pre>[{<br>\"id\": \"\",<br>\"name\": \"TestApi\",<br>\"description\" : \"Rest Api Call\",<br>"
+        },
+        {
+          "info": {
+            "name": "Delete a link category",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{baseUrl}}/meta/deleteLinkCategory"
+          },
+          "docs": "Delete link category"
+        },
+        {
+          "info": {
+            "name": "Detach tags",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{baseUrl}}/meta/detachTags",
+            "params": [
+              {
+                "name": "entityId",
+                "value": "",
+                "type": "query",
+                "description": "Entity id"
+              },
+              {
+                "name": "entityType",
+                "value": "",
+                "type": "query",
+                "description": "Entity type"
+              },
+              {
+                "name": "tags",
+                "value": "",
+                "type": "query",
+                "description": "Entity tags"
+              }
+            ]
+          },
+          "docs": "Detach tags"
+        },
+        {
+          "info": {
+            "name": "Find entities by tags",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{baseUrl}}/meta/findByTags",
+            "params": [
+              {
+                "name": "tags",
+                "value": "",
+                "type": "query",
+                "description": "Tags"
+              },
+              {
+                "name": "entityType",
+                "value": "",
+                "type": "query",
+                "description": "Entity type"
+              }
+            ]
+          },
+          "docs": "Find by tags"
+        },
+        {
+          "info": {
+            "name": "Get attribute definitions",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/meta/getAttributeDefinitions"
+          },
+          "docs": "Returns a list of all active custom attributes that are defined for the users. Attributes with the status 'archived' or 'system' are not included in the list."
+        },
+        {
+          "info": {
+            "name": "Get link categories",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/meta/getLinkCategories"
+          },
+          "docs": "Get link categories"
+        },
+        {
+          "info": {
+            "name": "Get tags",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/meta/getTags",
+            "params": [
+              {
+                "name": "entityId",
+                "value": "",
+                "type": "query",
+                "description": "Entity id"
+              },
+              {
+                "name": "entityType",
+                "value": "",
+                "type": "query",
+                "description": "Entity type"
+              }
+            ]
+          },
+          "docs": "Get tags"
+        },
+        {
+          "info": {
+            "name": "Merge attribute definitions",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{baseUrl}}/meta/mergeAttributeDefinitions"
+          },
+          "docs": "Updates the list of custom attributes that are available on the interface. It is used to archive, activate, and create custom attributes. This call affects every custom attribute that is available in your system. It updates all of the attributes that are available for saving user data and reusing it in a different context. If an attribute is not mentioned, it is automatically deactivated. Errors and changes are delivered at the end of the process when all attributes are processed. The update can"
+        },
+        {
+          "info": {
+            "name": "Update a link category",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{baseUrl}}/meta/updateLinkCategory"
+          },
+          "docs": "Update link categoriy"
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Group",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Activate groups",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{baseUrl}}/group/activate"
+          },
+          "docs": "Activates archived groups.<br>Request body example:<br><br><pre>[\"1800123820\", \"1800146953\"]</pre>"
+        },
+        {
+          "info": {
+            "name": "Archive groups",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{baseUrl}}/group/archive"
+          },
+          "docs": "Archive a list of groups and any dependent subgroups. Other dependent objects, such as triggers and scheduled tasks, are not archived.<br>Request body example:<br><br><pre>[\"1800123820\", \"1800146953\"]</pre>"
+        },
+        {
+          "info": {
+            "name": "Clone a group",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{baseUrl}}/group/clone",
+            "params": [
+              {
+                "name": "groupId",
+                "value": "",
+                "type": "query",
+                "description": "ID of the group to be cloned"
+              }
+            ]
+          },
+          "docs": "Creates a clone of a group that already exists in the system.<br>Most of the sendout options and delivery settings are identical for the original and the clone.<br>Group members are not copied<br>Request body example:<br><br><pre>{<br>\"name\" : \"Group Name\",<br>\"description\" : \"Description of the group\",<br>\"email\" : \"group@test.com\",<br>\"includePreparedMessages\" : \"true\",<br>\"includeTestUsers\" : \"false\"<br>}</pre>"
+        },
+        {
+          "info": {
+            "name": "Create a group",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{baseUrl}}/group/create",
+            "params": [
+              {
+                "name": "name",
+                "value": "",
+                "type": "query",
+                "description": "The name of the group."
+              },
+              {
+                "name": "email",
+                "value": "",
+                "type": "query",
+                "description": "The email address of the group."
+              },
+              {
+                "name": "description",
+                "value": "",
+                "type": "query",
+                "description": "The description of the group."
+              },
+              {
+                "name": "groupCategoryId",
+                "value": "",
+                "type": "query",
+                "description": "The group category"
+              },
+              {
+                "name": "isoCountryCode",
+                "value": "",
+                "type": "query",
+                "description": "The ISO country code"
+              },
+              {
+                "name": "isoLanguageCode",
+                "value": "",
+                "type": "query",
+                "description": "The ISO language code"
+              },
+              {
+                "name": "isSuperGroup",
+                "value": "",
+                "type": "query",
+                "description": "Should be a supergroup"
+              },
+              {
+                "name": "groupTemplateId",
+                "value": "",
+                "type": "query",
+                "description": "The ID of groupTemplate"
+              }
+            ]
+          },
+          "docs": "Create a new group.<br>For domain, check Mapp Engage > Create > New Group<br>Returns Object Already Exists Exception"
+        },
+        {
+          "info": {
+            "name": "Find group IDs by attributes",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{baseUrl}}/group/findIdsByAttributes"
+          },
+          "docs": "Returns a list of group IDs for all groups in the system that use the specified group attributes.<br>Group attributes are only available in the group context and consist of a unique name and a value.<br>Please note that attributes like Group Name or Email cannot be used here.<br>Request body example:<br><br><pre>[{<br>\"name\" : \" GroupAttributeName \",<br>\"value\" : \"12345\"<br>}]</pre>"
+        },
+        {
+          "info": {
+            "name": "Get a group",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/group/get",
+            "params": [
+              {
+                "name": "groupId",
+                "value": "",
+                "type": "query",
+                "description": "ID of the group to be cloned"
+              }
+            ]
+          },
+          "docs": "Returns the group object of the specified group. The group is identified by group ID."
+        },
+        {
+          "info": {
+            "name": "Get group attributes",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/group/getAttributes",
+            "params": [
+              {
+                "name": "groupId",
+                "value": "",
+                "type": "query",
+                "description": "ID of the group for which we request the parameters."
+              }
+            ]
+          },
+          "docs": "Provides a list of all group attributes."
+        },
+        {
+          "info": {
+            "name": "List group settings templates",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/group/getAllGroupSettingsTemplates"
+          },
+          "docs": "Gets all GroupSettingsTemplates that are defined in the system.<br>GroupSettingTemplates predefine several settings in a template and can be applied using /group/overrideGroupSettings call.<br>The mechanism for using GroupSettingTemplates is only available in a special configuration."
+        },
+        {
+          "info": {
+            "name": "List prepared messages for a group",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/group/getPreparedMessages",
+            "params": [
+              {
+                "name": "groupId",
+                "value": "",
+                "type": "query",
+                "description": "ID of the group for which we request the messages"
+              }
+            ]
+          },
+          "docs": "Returns all of the prepared messages for a specific group."
+        },
+        {
+          "info": {
+            "name": "Override group settings",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{baseUrl}}/group/overrideGroupSettings",
+            "params": [
+              {
+                "name": "groupId",
+                "value": "",
+                "type": "query",
+                "description": "ID of the group for which we change the settings."
+              },
+              {
+                "name": "settingsId",
+                "value": "",
+                "type": "query",
+                "description": "ID of the configuration template."
+              }
+            ]
+          },
+          "docs": "Overwrites the existing group settings with a new template."
+        },
+        {
+          "info": {
+            "name": "Set group attributes",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{baseUrl}}/group/setAttributes",
+            "params": [
+              {
+                "name": "groupId",
+                "value": "",
+                "type": "query",
+                "description": "ID of the group for which we request the parameters."
+              }
+            ]
+          },
+          "docs": "Creates and updates the group attributes. Existing attributes are overwritten.<br>Request body example:<br><br><pre>[{<br>\"name\" : \"GroupAttributeName\",<br>\"value\" : \"12345\"<br>}]</pre>"
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Contact",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Anonymize a contact",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/contact/anonymize",
+            "params": [
+              {
+                "name": "contactId",
+                "value": "",
+                "type": "query",
+                "description": "The user ID of the contact to perform anonymization for."
+              },
+              {
+                "name": "notificationRecipient",
+                "value": "",
+                "type": "query",
+                "description": "Active system user witch is going to be used for permission checks, and will get system message."
+              }
+            ]
+          },
+          "docs": "Anonymizes contact PII data based on GDPR regulations."
+        },
+        {
+          "info": {
+            "name": "Check contact update version",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/contact/checkUpdateVersion",
+            "params": [
+              {
+                "name": "contactIdentifier",
+                "value": "",
+                "type": "query",
+                "description": "The contact identifier. The same that is used in the \"Update\" method. It is described here ContactIdentifier."
+              },
+              {
+                "name": "updateVersion",
+                "value": "",
+                "type": "query",
+                "description": "The timestamp to be checked."
+              }
+            ]
+          },
+          "docs": "Checks if profile update with specified update version (timestamp) has been saved in Data Store."
+        },
+        {
+          "info": {
+            "name": "Create a contact",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{baseUrl}}/contact/create"
+          },
+          "docs": "Creates a new contact using the information provided in the contact object.<br><br>Check Contact_ for possible identifiers in the body.<br>Request body examples:<br><br><pre>{<br>\"emailAddress\": \"test20210203@dropmail.mapp.com\",<br>\"attributes\":<br>[<br>{\"name\": \"FirstName\", \"value\": \"John\"},<br>{\"name\": \"LastName\", \"value\": \"Smith\"},<br>{\"name\": \"mobileNumber\", \"value\": \"33505606709\"},<br>{\"name\": \"user.ISOCountryCode\", \"value\": \"FR\"}<br>]<br>}<br><br>{<br>  \"emailAddress\" : \"testuser@dropmail."
+        },
+        {
+          "info": {
+            "name": "Delete a contact",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{baseUrl}}/contact/delete"
+          },
+          "docs": "Deletes the contact identified by the specified identifier.<br>Request body example:<br><br>{<br>    \"type\":\"EMAIL\",<br>    \"value\":\"test@test.com\"<br>}"
+        },
+        {
+          "info": {
+            "name": "Export a contact (GDPR)",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/contact/export",
+            "params": [
+              {
+                "name": "contactId",
+                "value": "",
+                "type": "query",
+                "description": "The user ID of the contact to perform export for."
+              },
+              {
+                "name": "notificationRecipient",
+                "value": "",
+                "type": "query",
+                "description": "Active system user which is going to be used for permission checks, and will get system message."
+              }
+            ]
+          },
+          "docs": "Pushes asynchronous GDPR contact export, which will send system message with the link in the end."
+        },
+        {
+          "info": {
+            "name": "Get a contact",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{baseUrl}}/contact/get"
+          },
+          "docs": "Returns a contact object that matches the specified identifier.<br>Request body examples:<br><br><pre>{<br>    \"type\":\"EMAIL\",<br>    \"value\":\"test@test.com\"<br>}<br><br>{<br>    \"type\":\"MOBILE\",<br>    \"value\":\"48505606707\"<br>}</pre><br>Note: Do not confuse user/get, which is a GET call requiring a user id, with contact/get, which is a POST call requiring a post body containing the identifier to query (email, mobile)."
+        },
+        {
+          "info": {
+            "name": "Update a contact",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{baseUrl}}/contact/update",
+            "params": [
+              {
+                "name": "identifierType",
+                "value": "",
+                "type": "query",
+                "description": "The type of identifier to be used for the contact update."
+              }
+            ]
+          },
+          "docs": "Can be used to update contacts. <br>Please Note: If an attribute, for example, mobileNumber, is not included or left empty, any existing value will be removed from the contact’s profile. <br>Request body examples:<br><br><pre>{<br>    \"emailAddress\": \"test20200529@dropmail.mapp.com\",<br>    \"attributes\":<br>    [<br>    {\"name\": \"FirstName\", \"value\": \"John\"},<br>    {\"name\": \"LastName\", \"value\": \"Smith\"},             <br>    {\"name\": \"mobileNumber\", \"value\": \"335056067010\"}, <br>    {\"name\": \"us"
+        },
+        {
+          "info": {
+            "name": "Update a multichannel contact",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{baseUrl}}/contact/updateMultichannelContact",
+            "params": [
+              {
+                "name": "identifierType",
+                "value": "",
+                "type": "query",
+                "description": "The type of identifier to be used for the contact update."
+              }
+            ]
+          },
+          "docs": "Updates the profile data of an existing multichannel contact,<br><br>setting correctly mobile alias.<br>Request body examples:<br><br><pre>{<br>    \"emailAddress\": \"test20200529@dropmail.mapp.com\",<br>    \"attributes\":<br>    [<br>    {\"name\": \"FirstName\", \"value\": \"John\"},<br>    {\"name\": \"LastName\", \"value\": \"Smith\"},             <br>    {\"name\": \"mobileNumber\", \"value\": \"335056067010\"}, <br>    {\"name\": \"user.ISOCountryCode\", \"value\": \"FR\"}                        <br>    ]<br>}</pre><br><br>C"
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Process",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Apply an action to a process",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{baseUrl}}/process/applyAction",
+            "params": [
+              {
+                "name": "processId",
+                "value": "",
+                "type": "query",
+                "description": "Process identifier"
+              }
+            ]
+          },
+          "docs": "Changes the status of an existing process."
+        },
+        {
+          "info": {
+            "name": "Get process details",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/process/getDetails",
+            "params": [
+              {
+                "name": "processId",
+                "value": "",
+                "type": "query",
+                "description": "Process identifier"
+              }
+            ]
+          },
+          "docs": "Returns information for the process identified by the specified process ID."
+        },
+        {
+          "info": {
+            "name": "List processes",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/process/getProcessList",
+            "params": [
+              {
+                "name": "status",
+                "value": "",
+                "type": "query",
+                "description": "Optional status filter: PROCESSING, PAUSED, FINISHED, or FAILED"
+              },
+              {
+                "name": "limit",
+                "value": "",
+                "type": "query",
+                "description": "Maximum number of processes to return. Default 500, max 500."
+              },
+              {
+                "name": "offset",
+                "value": "",
+                "type": "query",
+                "description": "Number of processes to skip. Default 0."
+              }
+            ]
+          },
+          "docs": "Returns a paginated list of processes, optionally filtered by status. Results are ordered by start date descending. Use 'limit' and 'offset' to page through results."
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Profile Attributes",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Archive profile attributes",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{baseUrl}}/profileAttributes/archive"
+          },
+          "docs": "Archive profile attributes"
+        },
+        {
+          "info": {
+            "name": "Create a profile attribute",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{baseUrl}}/profileAttributes/create"
+          },
+          "docs": "Create a profile attribute"
+        },
+        {
+          "info": {
+            "name": "Get a single profile attribute by ID",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/profileAttributes/get",
+            "params": [
+              {
+                "name": "attributeId",
+                "value": "",
+                "type": "query"
+              }
+            ]
+          },
+          "docs": "Get a single profile attribute by ID"
+        },
+        {
+          "info": {
+            "name": "Get available channels for attribute assignment",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/profileAttributes/getAvailableChannels"
+          },
+          "docs": "Get available channels for attribute assignment"
+        },
+        {
+          "info": {
+            "name": "Get recipient statistic settings",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/profileAttributes/getMarked"
+          },
+          "docs": "Get recipient statistic settings"
+        },
+        {
+          "info": {
+            "name": "Get remaining profile attribute capacity per data type",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/profileAttributes/getCapacity"
+          },
+          "docs": "Get remaining profile attribute capacity per data type"
+        },
+        {
+          "info": {
+            "name": "Get technical (system) attributes",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/profileAttributes/getTechnical"
+          },
+          "docs": "Get technical (system) attributes"
+        },
+        {
+          "info": {
+            "name": "List profile attributes",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/profileAttributes/list",
+            "params": [
+              {
+                "name": "archived",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "withEnums",
+                "value": "",
+                "type": "query"
+              }
+            ]
+          },
+          "docs": "List profile attributes"
+        },
+        {
+          "info": {
+            "name": "Mark a profile attribute for recipient statistics",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{baseUrl}}/profileAttributes/markForStats",
+            "params": [
+              {
+                "name": "attributeName",
+                "value": "",
+                "type": "query"
+              }
+            ]
+          },
+          "docs": "Mark a profile attribute for recipient statistics"
+        },
+        {
+          "info": {
+            "name": "Restore archived profile attributes",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{baseUrl}}/profileAttributes/restore"
+          },
+          "docs": "Restore archived profile attributes"
+        },
+        {
+          "info": {
+            "name": "Trigger async CSV export of profile attributes",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/profileAttributes/export"
+          },
+          "docs": "Trigger async CSV export of profile attributes"
+        },
+        {
+          "info": {
+            "name": "Unmark a profile attribute from recipient statistics",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{baseUrl}}/profileAttributes/unmarkForStats",
+            "params": [
+              {
+                "name": "attributeName",
+                "value": "",
+                "type": "query"
+              }
+            ]
+          },
+          "docs": "Unmark a profile attribute from recipient statistics"
+        },
+        {
+          "info": {
+            "name": "Update a profile attribute",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "{{baseUrl}}/profileAttributes/update",
+            "params": [
+              {
+                "name": "attributeId",
+                "value": "",
+                "type": "query"
+              }
+            ]
+          },
+          "docs": "Update a profile attribute"
+        },
+        {
+          "info": {
+            "name": "Validate profile attribute name uniqueness",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/profileAttributes/validateName",
+            "params": [
+              {
+                "name": "name",
+                "value": "",
+                "type": "query"
+              }
+            ]
+          },
+          "docs": "Validate profile attribute name uniqueness"
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Mobile Push",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Cancel a push message send",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{baseUrl}}/mobilePush/cancelPushSend",
+            "params": [
+              {
+                "name": "messageId",
+                "value": "",
+                "type": "query",
+                "description": "The message ID."
+              }
+            ]
+          },
+          "docs": "Cancel message send."
+        },
+        {
+          "info": {
+            "name": "Create and schedule a push message",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{baseUrl}}/mobilePush/createAndSchedulePushMessage"
+          },
+          "docs": "Create and schedule push message.<br>Request body example:<br><br><pre>{<br>    \"name\" : \"test name\",<br>    \"appId\" : \"1585031493269\",<br>    \"selectionPlanId\" : \"768E488C-45C2-4A6F-800B-C569586F1DC5\",<br>    \"content\" : \"This is iOS test push \",<br>    \"messageTitle\" : \"Hello\",<br>    \"description\" : \"description\", <br>    \"notificationSound\" : \"sound1.mp3\",<br>    \"pushActionType\" : \"LAUNCH_APP\",<br>    \"pushActionParams\" : \"www.test.com\",<br>    \"buttonCategory\" : \"apx_read_open\",<br>    \"bu"
+        },
+        {
+          "info": {
+            "name": "Delete a prepared push message",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "{{baseUrl}}/mobilePush/deletePushMessage",
+            "params": [
+              {
+                "name": "messageId",
+                "value": "",
+                "type": "query",
+                "description": "The campaign ID of the prepared message to be deleted."
+              }
+            ]
+          },
+          "docs": "Delete prepared push message."
+        },
+        {
+          "info": {
+            "name": "Get a prepared push message",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/mobilePush/getPushMessage",
+            "params": [
+              {
+                "name": "messageId",
+                "value": "",
+                "type": "query",
+                "description": "The message ID."
+              }
+            ]
+          },
+          "docs": "Get push message."
+        },
+        {
+          "info": {
+            "name": "Pause a push message send",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{baseUrl}}/mobilePush/pausePushSend",
+            "params": [
+              {
+                "name": "messageId",
+                "value": "",
+                "type": "query",
+                "description": "The message ID."
+              }
+            ]
+          },
+          "docs": "Pause message send."
+        },
+        {
+          "info": {
+            "name": "Resume a push message send",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{baseUrl}}/mobilePush/resumePushSend",
+            "params": [
+              {
+                "name": "messageId",
+                "value": "",
+                "type": "query",
+                "description": "The message ID."
+              }
+            ]
+          },
+          "docs": "Resume message send."
+        },
+        {
+          "info": {
+            "name": "Send a single mobile push message",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{baseUrl}}/mobilePush/sendSingle",
+            "params": [
+              {
+                "name": "recipientId",
+                "value": "",
+                "type": "query",
+                "description": "The user ID of the intended message recipient."
+              },
+              {
+                "name": "campaignId",
+                "value": "",
+                "type": "query",
+                "description": "The campaign ID of the prepared message to be sent."
+              }
+            ]
+          },
+          "docs": "Sends single mobile push message to the specified recipient."
+        },
+        {
+          "info": {
+            "name": "Send a single multi-tenant mobile push message",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{baseUrl}}/mobilePush/multiTenantSendSingle"
+          },
+          "docs": "Sends single mobile push message to the specified recipient with child users personalization."
+        },
+        {
+          "info": {
+            "name": "Update a prepared push message",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "{{baseUrl}}/mobilePush/updatePushMessage"
+          },
+          "docs": "Update prepared push message.<br>Request body example:<br><br><pre>{<br>    \"messageId\" : 1<br>    \"name\" : \"test name\",<br>    \"appId\" : \"1585031493269\",<br>    \"selectionPlanId\" : \"768E488C-45C2-4A6F-800B-C569586F1DC5\",<br>    \"content\" : \"This is iOS test push \",<br>    \"messageTitle\" : \"Hello\",<br>    \"description\" : \"description\",<br>    \"notificationSound\" : \"sound1.mp3\",<br>    \"pushActionType\" : \"LAUNCH_APP\",<br>    \"pushActionParams\" : \"www.test.com\",<br>    \"buttonCategory\" : \"apx_read"
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Draft Message",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Create a draft message",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{baseUrl}}/draftmessage/create"
+          },
+          "docs": "Creates a new message as a draft.<br>Request body example:<br><br><pre>{<br>    \"name\": \"Test Draft Message\",<br>    \"externalId\": null,<br>    \"messageCategoryId\": null,<br>    \"message\":<br>    {<br>        \"subject\": \"This is draft test\",<br>        \"emailBodyText\": null,<br>        \"emailBodyHtml\": \"Test\",<br>        \"smsText\": null,<br>        \"faxText\": null,<br>        \"emailHeaders\":<br>        [<br>        ],<br>        \"attachments\":<br>        [<br>        ],<br>        \"attachmentRef"
+        },
+        {
+          "info": {
+            "name": "Delete a draft message",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "{{baseUrl}}/draftmessage/delete",
+            "params": [
+              {
+                "name": "draftMessageId",
+                "value": "",
+                "type": "query",
+                "description": "ID of draft message"
+              }
+            ]
+          },
+          "docs": "Deletes a draft message identified by the specified draft message ID."
+        },
+        {
+          "info": {
+            "name": "Find draft messages",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{baseUrl}}/draftmessage/find"
+          },
+          "docs": "Finds draft messages specified by a draft message filter. Note: required date format \"YYYY-DD-MM\""
+        },
+        {
+          "info": {
+            "name": "Get a draft message",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/draftmessage/get",
+            "params": [
+              {
+                "name": "draftMessageId",
+                "value": "",
+                "type": "query",
+                "description": "ID of draft message"
+              }
+            ]
+          },
+          "docs": "Returns a draft message identified by the specified draft message ID."
+        },
+        {
+          "info": {
+            "name": "Save a draft message as a prepared message",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/draftmessage/saveAsPreparedMessage",
+            "params": [
+              {
+                "name": "draftMessageId",
+                "value": "",
+                "type": "query",
+                "description": "The draft message to be used in creating the prepared message"
+              },
+              {
+                "name": "groupId",
+                "value": "",
+                "type": "query",
+                "description": "The id of the group to perform sendout on"
+              },
+              {
+                "name": "channelId",
+                "value": "",
+                "type": "query",
+                "description": "The channel id associated with the message"
+              },
+              {
+                "name": "senderProfileName",
+                "value": "",
+                "type": "query",
+                "description": "TLS sender profile. Requires a Feature Switch and setting up a profile name in Mapp Engage. (optional)"
+              }
+            ]
+          },
+          "docs": "Saves draft message as a prepared message. The channel ID is available at the \"Information\" panel for each channel, at \"Administration > Channels\"."
+        },
+        {
+          "info": {
+            "name": "Update a draft message",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{baseUrl}}/draftmessage/update"
+          },
+          "docs": "Updates a message draft.<br>Request body example:<br><br><pre>{<br>    \"id\": 18060600,<br>    \"name\": \"Test Draft Message\",<br>    \"externalId\": null,<br>    \"messageCategoryId\": null,<br>    \"message\":<br>    {<br>        \"subject\": \"This is draft test\",<br>        \"emailBodyText\": null,<br>        \"emailBodyHtml\": \"Test\",<br>        \"smsText\": null,<br>        \"faxText\": null,<br>        \"emailHeaders\":<br>        [<br>        ],<br>        \"attachments\":<br>        [<br>        ],<br>        "
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Group Attributes",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Create a group attribute",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{baseUrl}}/groupAttributes/create",
+            "params": [
+              {
+                "name": "groupId",
+                "value": "",
+                "type": "query"
+              }
+            ]
+          },
+          "docs": "Create a group attribute"
+        },
+        {
+          "info": {
+            "name": "Delete group attributes by name (bulk)",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{baseUrl}}/groupAttributes/delete",
+            "params": [
+              {
+                "name": "groupId",
+                "value": "",
+                "type": "query"
+              }
+            ]
+          },
+          "docs": "Delete group attributes by name (bulk)"
+        },
+        {
+          "info": {
+            "name": "Get a single group attribute by name",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/groupAttributes/get",
+            "params": [
+              {
+                "name": "groupId",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "attributeName",
+                "value": "",
+                "type": "query"
+              }
+            ]
+          },
+          "docs": "Get a single group attribute by name"
+        },
+        {
+          "info": {
+            "name": "Import group attributes from CSV",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{baseUrl}}/groupAttributes/importAttributes",
+            "params": [
+              {
+                "name": "groupId",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "syncMode",
+                "value": "",
+                "type": "query"
+              }
+            ]
+          },
+          "docs": "Import group attributes from CSV"
+        },
+        {
+          "info": {
+            "name": "List group attributes for a group",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/groupAttributes/list",
+            "params": [
+              {
+                "name": "groupId",
+                "value": "",
+                "type": "query"
+              }
+            ]
+          },
+          "docs": "List group attributes for a group"
+        },
+        {
+          "info": {
+            "name": "Trigger async CSV export of group attributes",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/groupAttributes/export",
+            "params": [
+              {
+                "name": "groupId",
+                "value": "",
+                "type": "query"
+              }
+            ]
+          },
+          "docs": "Trigger async CSV export of group attributes"
+        },
+        {
+          "info": {
+            "name": "Update a group attribute",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "{{baseUrl}}/groupAttributes/update",
+            "params": [
+              {
+                "name": "groupId",
+                "value": "",
+                "type": "query"
+              }
+            ]
+          },
+          "docs": "Update a group attribute"
+        },
+        {
+          "info": {
+            "name": "Validate group attribute name uniqueness within a group",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/groupAttributes/validateName",
+            "params": [
+              {
+                "name": "groupId",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "name",
+                "value": "",
+                "type": "query"
+              }
+            ]
+          },
+          "docs": "Validate group attribute name uniqueness within a group"
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Member Attributes",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Create a member attribute for a group",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{baseUrl}}/memberAttributes/create",
+            "params": [
+              {
+                "name": "groupId",
+                "value": "",
+                "type": "query"
+              }
+            ]
+          },
+          "docs": "Create a member attribute for a group"
+        },
+        {
+          "info": {
+            "name": "Delete a member attribute from a group",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "{{baseUrl}}/memberAttributes/delete",
+            "params": [
+              {
+                "name": "groupId",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "attributeId",
+                "value": "",
+                "type": "query"
+              }
+            ]
+          },
+          "docs": "Delete a member attribute from a group"
+        },
+        {
+          "info": {
+            "name": "Get a single member attribute",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/memberAttributes/get",
+            "params": [
+              {
+                "name": "groupId",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "attributeId",
+                "value": "",
+                "type": "query"
+              }
+            ]
+          },
+          "docs": "Get a single member attribute"
+        },
+        {
+          "info": {
+            "name": "List member attributes for a group",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/memberAttributes/list",
+            "params": [
+              {
+                "name": "groupId",
+                "value": "",
+                "type": "query"
+              }
+            ]
+          },
+          "docs": "List member attributes for a group"
+        },
+        {
+          "info": {
+            "name": "Update a member attribute for a group",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "{{baseUrl}}/memberAttributes/update",
+            "params": [
+              {
+                "name": "groupId",
+                "value": "",
+                "type": "query"
+              }
+            ]
+          },
+          "docs": "Update a member attribute for a group"
+        },
+        {
+          "info": {
+            "name": "Validate member attribute name uniqueness within a group",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/memberAttributes/validateName",
+            "params": [
+              {
+                "name": "groupId",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "name",
+                "value": "",
+                "type": "query"
+              }
+            ]
+          },
+          "docs": "Validate member attribute name uniqueness within a group"
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Membership",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Create a membership",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/membership/create",
+            "params": [
+              {
+                "name": "userId",
+                "value": "",
+                "type": "query",
+                "description": "ID of the user."
+              },
+              {
+                "name": "groupId",
+                "value": "",
+                "type": "query",
+                "description": "ID of the group."
+              }
+            ]
+          },
+          "docs": "Subscribes a contact to a group, creating a new membership. Unlike normal subscription, a notification is not sent."
+        },
+        {
+          "info": {
+            "name": "Delete a membership",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "{{baseUrl}}/membership/delete",
+            "params": [
+              {
+                "name": "userId",
+                "value": "",
+                "type": "query",
+                "description": "ID of the user."
+              },
+              {
+                "name": "groupId",
+                "value": "",
+                "type": "query",
+                "description": "ID of the group."
+              }
+            ]
+          },
+          "docs": "Deletes an existing membership (meaning the user is unsubscribed from the group). This call differs from the unsubscribe method in that the user is not notified about the unsubscription"
+        },
+        {
+          "info": {
+            "name": "Find all memberships for a user by email",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/membership/findAllByEmail",
+            "params": [
+              {
+                "name": "email",
+                "value": "",
+                "type": "query",
+                "description": "Email of the user"
+              }
+            ]
+          },
+          "docs": "Returns the membership information of a user identified by email."
+        },
+        {
+          "info": {
+            "name": "Find all memberships for a user",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/membership/findAll",
+            "params": [
+              {
+                "name": "userId",
+                "value": "",
+                "type": "query",
+                "description": "ID of the user"
+              }
+            ]
+          },
+          "docs": "Returns a list of membership objects, one membership object for each group in which the user is a member."
+        },
+        {
+          "info": {
+            "name": "Get a membership by email",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/membership/getByEmail",
+            "params": [
+              {
+                "name": "email",
+                "value": "",
+                "type": "query",
+                "description": "Email of the user."
+              },
+              {
+                "name": "groupId",
+                "value": "",
+                "type": "query",
+                "description": "ID of the group."
+              }
+            ]
+          },
+          "docs": "Retrieves the membership information of a contact identified by email in a group specified by groupId."
+        },
+        {
+          "info": {
+            "name": "Get a membership",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/membership/get",
+            "params": [
+              {
+                "name": "userId",
+                "value": "",
+                "type": "query",
+                "description": "ID of the user."
+              },
+              {
+                "name": "groupId",
+                "value": "",
+                "type": "query",
+                "description": "ID of the group."
+              }
+            ]
+          },
+          "docs": "Retrieves the membership information of a user identified by the userId in a group identified by groupId."
+        },
+        {
+          "info": {
+            "name": "Get membership attributes by email",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/membership/getAttributesByEmail",
+            "params": [
+              {
+                "name": "email",
+                "value": "",
+                "type": "query",
+                "description": "Email of the user"
+              },
+              {
+                "name": "groupId",
+                "value": "",
+                "type": "query",
+                "description": "ID of the group"
+              }
+            ]
+          },
+          "docs": "Returns a collection of member attributes for a user within the specified group.<br>Member attributes are used to save information for an individual user, but in the context of a specific group.<br>A member attribute contains a specific value for each recipient. The user is identified by the email"
+        },
+        {
+          "info": {
+            "name": "Get membership attributes",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/membership/getAttributes",
+            "params": [
+              {
+                "name": "userId",
+                "value": "",
+                "type": "query",
+                "description": "ID of the user"
+              },
+              {
+                "name": "groupId",
+                "value": "",
+                "type": "query",
+                "description": "ID of the group"
+              }
+            ]
+          },
+          "docs": "Returns a collection of member attributes for a user within the specified group.<br>Member attributes are used to save information for an individual user but in the context of a specific group.<br>A member attribute contains a specific value for each recipient"
+        },
+        {
+          "info": {
+            "name": "Replace membership attributes",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{baseUrl}}/membership/replaceAttributes",
+            "params": [
+              {
+                "name": "userId",
+                "value": "",
+                "type": "query",
+                "description": "ID of the user"
+              },
+              {
+                "name": "groupId",
+                "value": "",
+                "type": "query",
+                "description": "ID of the group"
+              }
+            ]
+          },
+          "docs": "Replaces the member attributes for a contact within a group where the contact is a member<br>Request body example: <br><br><pre>[{<br>\"name\" : \"attribute1\",<br>\"value\" : \"0001\"<br>},<br>{<br>\"name\" : \"attribute2\",<br>\"value\" : \"0002\"<br>}]</pre>"
+        },
+        {
+          "info": {
+            "name": "Subscribe a contact to a group by email",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{baseUrl}}/membership/subscribeByEmail",
+            "params": [
+              {
+                "name": "email",
+                "value": "",
+                "type": "query",
+                "description": "Email of the user.<br><br>Important note! Some special characters in an email address must be URL encoded, such as the \"+\", \"]\" and \"]\" characters, for example:<br><br>name+surname@test.com should be encoded as name%2Bsurname@test.com<br><br>name[surname@test.com should be encoded as name%5Bsurname@test.com<br><br>name]surname@test.com should be encoded as name%5Dsurname@test.com<br><br>The \"@\" symbol used to separate the local part from the domain can be used with or without being URL encoded. Engage will accept both formats as the separator symbol. For example, both the following addresses are valid and identical for Engage:\nmy.address@example.com or my.address%40example.com"
+              },
+              {
+                "name": "groupId",
+                "value": "",
+                "type": "query",
+                "description": "ID of the group"
+              },
+              {
+                "name": "subscriptionMode",
+                "value": "",
+                "type": "query",
+                "description": "CONFIRMED_OPT_IN - New contacts receive a welcome message via email when they are added to the group. Despite the label used for this value, the contact does not need to confirm the subscription. A single opt-in subscription.``<br>DOUBLE_OPT_IN - New contacts receive an invitation to join the group via email. The contact must accept the invitation before they are added to the group. A double opt-in subscription.<br>OPT_IN - New contacts are added to the group without notification."
+              }
+            ]
+          },
+          "docs": "Subscribes a recipient to a group.<br>The recipient must exist in the system.<br><br>Example:<br><code>https://<Engage System Domain>/api/rest/v19/membership/subscribeByEmail?email=j.mcexample@example.com&groupId=12345978&subscriptionMode=OPT_IN</code>"
+        },
+        {
+          "info": {
+            "name": "Subscribe a user to a group",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{baseUrl}}/membership/subscribe",
+            "params": [
+              {
+                "name": "userId",
+                "value": "",
+                "type": "query",
+                "description": "ID of the user"
+              },
+              {
+                "name": "groupId",
+                "value": "",
+                "type": "query",
+                "description": "ID of the group"
+              },
+              {
+                "name": "subscriptionMode",
+                "value": "",
+                "type": "query",
+                "description": "CONFIRMED_OPT_IN - New contacts receive a welcome message via email when they are added to the group. The contact does not need to confirm the subscription. A single opt-in subscription.<br>DOUBLE_OPT_IN - New contacts receive an invitation to join the group via email. The contact must accept the invitation before they are added to the group. A double opt-in subscription<br>OPT_IN - New contacts are added to the group without notification. OPT_IN is creating self-subscribers"
+              }
+            ]
+          },
+          "docs": "Subscribes a user to a group. With this call, the subscription is handled as a self subscription.<br>Depending on the subscription mode used, the user may have to confirm the subscription (opt-in) and may be notified of the successful subscription."
+        },
+        {
+          "info": {
+            "name": "Unsubscribe a contact from a group by email",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{baseUrl}}/membership/unsubscribeByEmail",
+            "params": [
+              {
+                "name": "email",
+                "value": "",
+                "type": "query",
+                "description": "Email of the user."
+              },
+              {
+                "name": "groupId",
+                "value": "",
+                "type": "query",
+                "description": "ID of the group."
+              }
+            ]
+          },
+          "docs": "Unsubscribes a contact from a group based on their email address. An unsubscription confirmation email is sent to the contact."
+        },
+        {
+          "info": {
+            "name": "Unsubscribe a contact from a message by email",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{baseUrl}}/membership/unsubscribeFromMessageByEmail",
+            "params": [
+              {
+                "name": "email",
+                "value": "",
+                "type": "query",
+                "description": "Email of the user."
+              },
+              {
+                "name": "groupId",
+                "value": "",
+                "type": "query",
+                "description": "ID of the group."
+              },
+              {
+                "name": "messageId",
+                "value": "",
+                "type": "query",
+                "description": "ID of the message."
+              }
+            ]
+          },
+          "docs": "Unsubscribes a user from a group based on an email address. The unsubscription is associated with a specific message. An unsubscribe confirmation email is sent to the user. Returns success only when the user is unsubscribed from the group and the unsubscription is associated with the specified message."
+        },
+        {
+          "info": {
+            "name": "Unsubscribe a user from a group",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{baseUrl}}/membership/unsubscribe",
+            "params": [
+              {
+                "name": "userId",
+                "value": "",
+                "type": "query",
+                "description": "ID of the user"
+              },
+              {
+                "name": "groupId",
+                "value": "",
+                "type": "query",
+                "description": "ID of the group"
+              },
+              {
+                "name": "unsubscriptionMode",
+                "value": "",
+                "type": "query",
+                "description": "CONFIRMED_OPT_IN - Contacts receive a message via email when they are removed from the group. Despite the label used for this value, the contact does not need to confirm the unsubscription. A single opt-in unsubscription.<br>OPT_IN - Contacts are removed from the group without notification email."
+              }
+            ]
+          },
+          "docs": "Unsubscribes a user from a group. A notification is sent to the manager."
+        },
+        {
+          "info": {
+            "name": "Unsubscribe a user from a message",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{baseUrl}}/membership/unsubscribeFromMessage",
+            "params": [
+              {
+                "name": "userId",
+                "value": "",
+                "type": "query",
+                "description": "ID of the user."
+              },
+              {
+                "name": "groupId",
+                "value": "",
+                "type": "query",
+                "description": "ID of the group."
+              },
+              {
+                "name": "messageId",
+                "value": "",
+                "type": "query",
+                "description": "ID of the message."
+              }
+            ]
+          },
+          "docs": "Unsubscribes a user from a group. The unsubscription is associated with a specific message. Notification is sent to the group manager.<br>Returns success only when the user is unsubscribed from the group and the unsubscription is associated with the specified message."
+        },
+        {
+          "info": {
+            "name": "Update membership attributes",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{baseUrl}}/membership/updateAttributes",
+            "params": [
+              {
+                "name": "userId",
+                "value": "",
+                "type": "query",
+                "description": "ID of the user"
+              },
+              {
+                "name": "groupId",
+                "value": "",
+                "type": "query",
+                "description": "ID of the group"
+              }
+            ]
+          },
+          "docs": "Updates the member attributes for a user within a group if the user is a member of the group.<br><br>If an attribute already exists, the value will be updated<br><br>If not, a new attribute will be created.<br>Request body example: <br>[<br><pre>[<br>  {\"name\":\"car\",\"value\":\"BMW\"},<br>  {\"name\":\"mascot\",\"value\":\"cat\"},<br>  {\"name\":\"age\",\"value\":\"18\"}<br>]</pre>"
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Related Data",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Create a related data record",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{baseUrl}}/relatedData/createRecord"
+          },
+          "docs": "Adds ONE record to a data set. The data to insert is defined in a JSON block submitted in the request body. <br>The JSON block must contain the dataset's name, the key value, and a data array of name and value elements. The name references the column in the related data set, and the value contains the data to be inserted into the corresponding columns. <br><br>datasetName (String, required) - Name of the related data set. All related data records reside within a data set identified by a unique n"
+        },
+        {
+          "info": {
+            "name": "Delete related data records",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{baseUrl}}/relatedData/deleteRecords"
+          },
+          "docs": "Delete a record in a related data set.<br>Request body example:<br><br> <pre>{\"datasetName\": \"products\",<br> \"key\": \"testuser@domain.com\",<br> \"filter\":<br>    [{<br>        \"name\":\"bicycle\",<br>          \"value\":\"14\"<br>     }]<br>}</pre>"
+        },
+        {
+          "info": {
+            "name": "Get related data records by key",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/relatedData/getRecordsByKey",
+            "params": [
+              {
+                "name": "datasetName",
+                "value": "",
+                "type": "query",
+                "description": "Name of the related data set"
+              },
+              {
+                "name": "key",
+                "value": "",
+                "type": "query",
+                "description": "Key defining which record(s) to select from the data set"
+              }
+            ]
+          },
+          "docs": "Returns all related data records stored under the specified key in a related data set.<br><br>Response body example - 1 record:<br><br><pre>[<br>    {<br>        \"datasetName\": \"products\",<br>        \"key\": \"test-user@example.com\",<br>        \"data\": [<br>            { \"name\": \"hairColor\", \"value\": \"green\" },<br>            { \"name\": \"eyeColor\", \"value\": \"blue\" }<br>        ]<br>    }<br>]</pre><br><br>Response body example - empty result:<br><br><pre>[]</pre>"
+        },
+        {
+          "info": {
+            "name": "Update related data records",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{baseUrl}}/relatedData/updateRecords"
+          },
+          "docs": "Updates all or specific records for a key in a related data set. For the requests without filter, the behavior is the same as in file import (\"delete all + add\").<br><br>There is no possibility to update the unique RD column. The unique column is treated as a part of the key that's why to change such entities it needs to be deleted and created as the new row.<br>Request body example:<br><br> <pre>{<br>  \"datasetName\": \"products\",<br>  \"key\": \"testuser@domain.com\",<br>  \"data\": [<br>    {<br>    "
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Segmentation",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Create a selection plan",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{baseUrl}}/segmentation/create"
+          },
+          "docs": "Creates a new selection plan. The request body is a wrapper whose <code>json</code> field carries the raw plan JSON document <b>as a string</b> (escaped). The plan must contain at least <code>name</code> and <code>nodes</code>; validate it against <code>schema</code> first. Returns the new plan's id.<br/><br/><b>Example body</b><pre>{\n  \"json\": \"{\\\"name\\\":\\\"My plan\\\",\\\"timeZoneId\\\":\\\"Europe/Belgrade\\\",\\\"nodes\\\":[ ... ]}\"\n}</pre>"
+        },
+        {
+          "info": {
+            "name": "Delete a selection plan",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "{{baseUrl}}/segmentation/delete",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "query",
+                "description": "ID of the plan to delete (GUID)."
+              }
+            ]
+          },
+          "docs": "Permanently deletes a selection plan by ID. <b>Irreversible.</b> Selection Builder responds 204 No Content on success."
+        },
+        {
+          "info": {
+            "name": "Find selection plans",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{baseUrl}}/segmentation/find"
+          },
+          "docs": "Returns a paged list of selection plans (without node detail). Filter, sort and paging criteria are supplied in the request body; all fields are optional - send an empty body or <code>{}</code> to list with server defaults.<br/><br/><b>Body fields</b> (all optional):<ul><li><b>page</b> - zero-based page index (default 0).</li><li><b>size</b> - page size (default: server page size).</li><li><b>sort</b> - array of <code>\"field,asc|desc\"</code>; the first entry is the primary key, the rest are tie-"
+        },
+        {
+          "info": {
+            "name": "Get a segment count",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/segmentation/getCount",
+            "params": [
+              {
+                "name": "termId",
+                "value": "",
+                "type": "query",
+                "description": "ID of selection term user wants to get a count for."
+              }
+            ]
+          },
+          "docs": "Returns segment count size for requested selection plan id."
+        },
+        {
+          "info": {
+            "name": "Get a selection plan",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/segmentation/get",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "query",
+                "description": "ID of the plan to retrieve (GUID), e.g. FF784C2A-B3FD-4851-A49A-ECC807E8F8A2."
+              }
+            ]
+          },
+          "docs": "Returns a single selection plan by ID in <b>FULL</b> - every node with its complete selector configuration. This is the lossless read: the returned shape is exactly what <code>update</code> accepts, so a fetch-modify-resubmit round-trip is safe. Use this (not <code>preview</code>) whenever the plan will be edited and saved back."
+        },
+        {
+          "info": {
+            "name": "Get the selection plan schema",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/segmentation/schema"
+          },
+          "docs": "Returns the selection plan JSON schema as a string. The schema describes every node type, selector and field (including the string-boolean fields such as <code>negated</code>, <code>caseSensitive</code>, <code>present</code> and <code>ignoreYear</code>, which are serialized as the strings <code>\"true\"</code>/<code>\"false\"</code>). Fetch it once and validate a plan body against it before calling <code>create</code> or <code>update</code>. Takes no parameters."
+        },
+        {
+          "info": {
+            "name": "Preview a selection plan",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/segmentation/preview",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "query",
+                "description": "ID of the plan to preview (GUID), e.g. FF784C2A-B3FD-4851-A49A-ECC807E8F8A2."
+              }
+            ]
+          },
+          "docs": "Returns a single selection plan by ID in <b>REDUCED</b> form: identity, status, time zone and a lightweight node tree (node types, and per criterion selector type / operator / property / values) but <b>no</b> selector configuration. Cheap to render and reason over. <b>Lossy</b> - never feed this back into <code>update</code>; use <code>get</code> for round-trips."
+        },
+        {
+          "info": {
+            "name": "Publish a selection plan",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{baseUrl}}/segmentation/publish",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "query",
+                "description": "ID of the plan to publish (GUID)."
+              },
+              {
+                "name": "isBeta",
+                "value": "",
+                "type": "query",
+                "description": "Use the beta calculation path. Defaults to false."
+              },
+              {
+                "name": "fastCountMode",
+                "value": "",
+                "type": "query",
+                "description": "Fast-count mode. Defaults to 'off'."
+              }
+            ]
+          },
+          "docs": "Publishes a selection plan by ID, making it the live published version and assigning a selection term id. There is no request body - publishing acts on the plan already saved by <code>create</code>/<code>update</code>. The plan is fully validated on publish (drafts may save with invalid criteria, but publish rejects them). Returns the published plan's metadata (without node detail)."
+        },
+        {
+          "info": {
+            "name": "Trigger a segment count",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{baseUrl}}/segmentation/triggerCount",
+            "params": [
+              {
+                "name": "termId",
+                "value": "",
+                "type": "query",
+                "description": "ID of selection term user wants to get a count for."
+              }
+            ]
+          },
+          "docs": "Returns count size for requested termId."
+        },
+        {
+          "info": {
+            "name": "Update a selection plan",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "{{baseUrl}}/segmentation/update",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "query",
+                "description": "ID of the plan to update (GUID)."
+              }
+            ]
+          },
+          "docs": "Overwrites an existing selection plan. The query parameter <code>id</code> identifies the plan; the request body is a wrapper whose <code>json</code> field carries the full plan JSON document <b>as a string</b> (escaped). Update replaces the <b>whole</b> plan, so fetch the current plan with <code>get</code> first, modify it, then send it back here. If the plan JSON also contains an id it must match the query <code>id</code>. Returns the updated plan.<br/><br/><b>Example body</b><pre>{\n  \"json\": "
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "System User",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Create a system user",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{baseUrl}}/systemuser/create",
+            "params": [
+              {
+                "name": "createContact",
+                "value": "",
+                "type": "query",
+                "description": "Flag that determines whether to create a contact"
+              },
+              {
+                "name": "suppressSystemMessage",
+                "value": "",
+                "type": "query",
+                "description": "Flag that determines suppressing system message"
+              }
+            ]
+          },
+          "docs": "Creates the new system user in the system.<br>Request body example:<br><br><pre>{<br>\"email\":\"test1@test.mapp\",<br>\"firstName\":\"sf53sd\",<br>\"lastName\":\"zf8hzt\",<br>\"language\":\"en\",<br>\"type\":\"hybrid\",<br>\"messagingRole\":\"project_manager\"<br>}</pre>"
+        },
+        {
+          "info": {
+            "name": "Delete a system user",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "{{baseUrl}}/systemuser/delete",
+            "params": [
+              {
+                "name": "systemUserId",
+                "value": "",
+                "type": "query",
+                "description": "ID of the user"
+              },
+              {
+                "name": "email",
+                "value": "",
+                "type": "query",
+                "description": "Email of the user"
+              },
+              {
+                "name": "externalId",
+                "value": "",
+                "type": "query",
+                "description": "External ID of the user"
+              }
+            ]
+          },
+          "docs": "Deletes the system user identified by the specified system user ID, external ID, or email address."
+        },
+        {
+          "info": {
+            "name": "Get a system user",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/systemuser/get",
+            "params": [
+              {
+                "name": "systemUserId",
+                "value": "",
+                "type": "query",
+                "description": "ID of the user"
+              },
+              {
+                "name": "email",
+                "value": "",
+                "type": "query",
+                "description": "Email of the user"
+              },
+              {
+                "name": "externalId",
+                "value": "",
+                "type": "query",
+                "description": "External ID of the user"
+              }
+            ]
+          },
+          "docs": "Retrieves the system user identified by the specified system user ID, external ID, or email address.Note: It is not required to fill all params fields. It's enough to fill just one field out off three (systemUserId or email)"
+        },
+        {
+          "info": {
+            "name": "Update a system user's password",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{baseUrl}}/systemuser/updatePassword"
+          },
+          "docs": "Updates or create the system user password identified by the specified system user ID.<br>Request body example:<br><br><pre>{<br>    \"systemUserId\":1234,<br>    \"password\":\"abcd1234\"<br>}</pre>"
+        },
+        {
+          "info": {
+            "name": "Update a system user",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{baseUrl}}/systemuser/update"
+          },
+          "docs": "Updates the existing system user in the system."
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "User",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Create a user",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{baseUrl}}/user/create",
+            "params": [
+              {
+                "name": "email",
+                "value": "",
+                "type": "query",
+                "description": "Email of the user"
+              },
+              {
+                "name": "mobileNumber",
+                "value": "",
+                "type": "query",
+                "description": "Mobile number of the user"
+              }
+            ]
+          },
+          "docs": "Creates a new user. Requires either an email or a mobile number since these fields are used as the unique user identifier in the system.<br>Request body example:<br><pre>[<br>  {\"name\" : \"user.lastname\", \"value\" : \"Smith\"},<br>  {\"name\" : \"DateOfBirth\", \"value\" : \"1970-05-05\"},<br>  {\"name\" : \"ISOlanguagecode\", \"value\" : \"fr\"},<br>  {\"name\": \"user.ISOCountryCode\", \"value\": \"FR\"} <br>]</pre>"
+        },
+        {
+          "info": {
+            "name": "Delete a user by email",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "{{baseUrl}}/user/deleteByEmail",
+            "params": [
+              {
+                "name": "email",
+                "value": "",
+                "type": "query",
+                "description": "Email of the user"
+              }
+            ]
+          },
+          "docs": "Deletes the user identified by the email address."
+        },
+        {
+          "info": {
+            "name": "Delete a user by mobile number",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "{{baseUrl}}/user/deleteByMobileNumber",
+            "params": [
+              {
+                "name": "mobileNumber",
+                "value": "",
+                "type": "query",
+                "description": "Mobile number of the user"
+              }
+            ]
+          },
+          "docs": "Deletes the user identified by the mobile number."
+        },
+        {
+          "info": {
+            "name": "Delete a user",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "{{baseUrl}}/user/delete",
+            "params": [
+              {
+                "name": "userId",
+                "value": "",
+                "type": "query",
+                "description": "User id"
+              }
+            ]
+          },
+          "docs": "Deletes the user identified by the specified ID"
+        },
+        {
+          "info": {
+            "name": "Get a user by email",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/user/getByEmail",
+            "params": [
+              {
+                "name": "email",
+                "value": "",
+                "type": "query",
+                "description": "Email of the user"
+              }
+            ]
+          },
+          "docs": "Returns user data from the profile identified by the provided email address. This includes the unique user ID, email address, mobile number, and profile identifier value."
+        },
+        {
+          "info": {
+            "name": "Get a user by identifier",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/user/getByIdentifier",
+            "params": [
+              {
+                "name": "identifier",
+                "value": "",
+                "type": "query",
+                "description": "Identifier of the user"
+              }
+            ]
+          },
+          "docs": "Returns the user identified by the specified identifier. If there are more users with the same identifier, the response refers to the last user where this identifier has been assigned."
+        },
+        {
+          "info": {
+            "name": "Get a user by mobile number",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/user/getByMobileNumber",
+            "params": [
+              {
+                "name": "mobileNumber",
+                "value": "",
+                "type": "query",
+                "description": "Mobile number of the user"
+              }
+            ]
+          },
+          "docs": "Returns the user identified by the specified identifier. If there are more users with the same identifier, the response refers to the last user where this identifier has been assigned"
+        },
+        {
+          "info": {
+            "name": "Get a user's message history",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/user/getMessageHistory",
+            "params": [
+              {
+                "name": "userId",
+                "value": "",
+                "type": "query",
+                "description": "User id"
+              },
+              {
+                "name": "fromDate",
+                "value": "",
+                "type": "query",
+                "description": "Start date of time frame in ISO 8601 date time format."
+              },
+              {
+                "name": "toDate",
+                "value": "",
+                "type": "query",
+                "description": "End date of time frame in ISO 8601 date time format."
+              }
+            ]
+          },
+          "docs": "Retrieves the message history for a recipient for a set time frame.<br>The maximum time frame is 31 days. The maximum number of messages returned is 5000. sendDate is presented as Datetim"
+        },
+        {
+          "info": {
+            "name": "Get a user's profile by email",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/user/getProfileByEmail",
+            "params": [
+              {
+                "name": "email",
+                "value": "",
+                "type": "query",
+                "description": "Email of the user"
+              }
+            ]
+          },
+          "docs": "Returns the user's profile, this is identified by the email address."
+        },
+        {
+          "info": {
+            "name": "Get a user's profile by mobile number",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/user/getProfileByMobileNumber",
+            "params": [
+              {
+                "name": "mobileNumber",
+                "value": "",
+                "type": "query",
+                "description": "Mobile number of the user"
+              }
+            ]
+          },
+          "docs": "Returns the user's profile, identified by the mobile number"
+        },
+        {
+          "info": {
+            "name": "Get a user's profile",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/user/getProfile",
+            "params": [
+              {
+                "name": "userId",
+                "value": "",
+                "type": "query",
+                "description": "ID of the user"
+              }
+            ]
+          },
+          "docs": "Returns the user's profile (only attributes with a value are shown). The profile consists of attributes that contain user data. All attributes can be accessed system-wide."
+        },
+        {
+          "info": {
+            "name": "Get a user",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/user/get",
+            "params": [
+              {
+                "name": "userId",
+                "value": "",
+                "type": "query",
+                "description": "ID of the user"
+              }
+            ]
+          },
+          "docs": "Returns the user identified by the specified user ID."
+        },
+        {
+          "info": {
+            "name": "Replace a user's profile by email",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{baseUrl}}/user/replaceProfileByEmail",
+            "params": [
+              {
+                "name": "email",
+                "value": "",
+                "type": "query",
+                "description": "Email of the user"
+              }
+            ]
+          },
+          "docs": "Replaces all attribute values for a specific user. All attribute values that are transmitted with the method are added and replace any existing values.<br><br>Any currently existing attribute values that are not found in the API call are deleted (except for Member attributes).<br>Request body example: <br><pre>[<br>  {\"name\" : \"user.firstname\", \"value\" : \"FirstName\"},<br>  {\"name\" : \"user.lastname\", \"value\" : \"LastName\"}<br>]</pre><br><br><b>Maximum character lengths for standard attribute value"
+        },
+        {
+          "info": {
+            "name": "Replace a user's profile by mobile number",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{baseUrl}}/user/replaceProfileByMobileNumber",
+            "params": [
+              {
+                "name": "mobileNumber",
+                "value": "",
+                "type": "query",
+                "description": "Mobile number of the user"
+              }
+            ]
+          },
+          "docs": "Replaces all attribute values for a specific user. All attribute values that are transmitted with the method are added and replace any existing values.<br><br>Any currently existing attribute values that are not found in the API call are deleted (except for Member attributes).<br>Request body example: <br><pre>[<br>  {\"name\" : \"user.firstname\", \"value\" : \"FirstName\"},<br>  {\"name\" : \"user.lastname\", \"value\" : \"LastName\"}<br>]</pre><br><br><b>Maximum character lengths for standard attribute value"
+        },
+        {
+          "info": {
+            "name": "Replace a user's profile",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{baseUrl}}/user/replaceProfile",
+            "params": [
+              {
+                "name": "userId",
+                "value": "",
+                "type": "query",
+                "description": "ID of the user"
+              }
+            ]
+          },
+          "docs": "Replaces all attribute values for a specific user. All attribute values that are transmitted with the method are added and replace any existing values.<br><br>Any currently existing attribute values that are not found in the API call are deleted (except for Member attributes).<br>Request body example: <br><pre>[<br>  {\"name\" : \"user.firstname\", \"value\" : \"John\"},<br>  {\"name\" : \"user.lastname\", \"value\" : \"Smith\"}<br>]</pre> <br><br>Request body example - erase mobile number:<br>[<br>  <pre>{\"nam"
+        },
+        {
+          "info": {
+            "name": "Update a user's profile by email",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{baseUrl}}/user/updateProfileByEmail",
+            "params": [
+              {
+                "name": "email",
+                "value": "",
+                "type": "query",
+                "description": "Email of the user"
+              }
+            ]
+          },
+          "docs": "Updates a user identified via email. Updates all data stored in the attributes with the information saved in the attribute list. This method only changes the information that is explicitly mentioned. Attributes that are not mentioned are not changed (there is also a replace method to change the entire profile of a user and to delete attribute values if the attribute is not mentioned for the user).<br>Request body example: <br><pre>[<br>  {\"name\" : \"user.firstname\", \"value\" : \"John\"},<br>  {\"name"
+        },
+        {
+          "info": {
+            "name": "Update a user's profile by mobile number",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{baseUrl}}/user/updateProfileByMobileNumber",
+            "params": [
+              {
+                "name": "mobileNumber",
+                "value": "",
+                "type": "query",
+                "description": "Mobile number of the user"
+              }
+            ]
+          },
+          "docs": "Updates a user identified via mobile number. Updates all data stored in the attributes with the information saved in the attribute list. This method only changes the information that is explicitly mentioned. Attributes that are not mentioned are not changed (there is also a replace method to change the entire profile of a user and to delete attribute values if the attribute is not mentioned for the user).<br>Request body example: <br><pre>[<br>  {\"name\" : \"user.firstname\", \"value\" : \"FirstName\"}"
+        },
+        {
+          "info": {
+            "name": "Update a user's profile",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{baseUrl}}/user/updateProfile",
+            "params": [
+              {
+                "name": "userId",
+                "value": "",
+                "type": "query",
+                "description": "ID of the user"
+              }
+            ]
+          },
+          "docs": "Updates the user's profile with the information saved in the attribute list. Attributes that are not mentioned are not changed.<br>Note: There is also a user replaceProfile method to<br><br>1) change the entire profile of a user and<br><br>2) to delete attribute values if the attribute is not mentioned for the user.<br><br>Request body example: <br><pre>[<br>  {\"name\" : \"user.firstname\", \"value\" : \"John\"},<br>  {\"name\" : \"user.lastname\", \"value\" : \"Smith\"},<br>  {\"name\": \"user.ISOCountryCode\", \""
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Ecommerce",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Create a wish list item",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{baseUrl}}/ecommerce/createWishlistItem",
+            "params": [
+              {
+                "name": "userEmail",
+                "value": "",
+                "type": "query",
+                "description": "Email of the user"
+              },
+              {
+                "name": "wishlistItem",
+                "value": "",
+                "type": "query",
+                "description": "Wish list item"
+              }
+            ]
+          },
+          "docs": "Create a wish list item<br>Request body example:<br><br> <pre>{<br>  \"productSKU\": \"2022-01-13-2\",<br>  \"timestamp\": \"2022-01-14T17:25:43.511Z\",<br>  \"productPrice\": \"1\",<br>  \"size\": \"1\"<br>}</pre>"
+        },
+        {
+          "info": {
+            "name": "Create an abandoned browse item",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{baseUrl}}/ecommerce/createAbandonedBrowseItem",
+            "params": [
+              {
+                "name": "userEmail",
+                "value": "",
+                "type": "query",
+                "description": "Email of the user"
+              },
+              {
+                "name": "wishlistItem",
+                "value": "",
+                "type": "query",
+                "description": "Ecommerce item"
+              }
+            ]
+          },
+          "docs": "Create an abandoned browse item<br>Request body example:<br><br><pre>{<br>  \"productSKU\": \"2022-01-13-2\",<br>  \"timestamp\": \"2022-01-14T17:25:43.511Z\",<br>  \"productPrice\": \"1\",<br>  \"size\": \"1\"<br>}</pre>"
+        },
+        {
+          "info": {
+            "name": "Create an abandoned cart item",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{baseUrl}}/ecommerce/createAbandonedCartItem",
+            "params": [
+              {
+                "name": "userEmail",
+                "value": "",
+                "type": "query",
+                "description": "Email of the user"
+              },
+              {
+                "name": "wishlistItem",
+                "value": "",
+                "type": "query",
+                "description": "Ecommerce item"
+              }
+            ]
+          },
+          "docs": "Create an abandoned cart item<br>Request body example:<br><br><pre>{<br>  \"productSKU\": \"2022-01-13-2\",<br>  \"timestamp\": \"2022-01-14T17:25:43.511Z\",<br>  \"productPrice\": \"1\",<br>  \"size\": \"1\"<br>}</pre>"
+        },
+        {
+          "info": {
+            "name": "Delete a transaction",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "{{baseUrl}}/ecommerce/removeTransaction",
+            "params": [
+              {
+                "name": "userEmail",
+                "value": "",
+                "type": "query",
+                "description": "Email of the user for which the transaction should be removed"
+              },
+              {
+                "name": "orderId",
+                "value": "",
+                "type": "query",
+                "description": "OrderId of the transaction to be removedOrderId of the transaction to be removed"
+              }
+            ]
+          },
+          "docs": "Delete transaction"
+        },
+        {
+          "info": {
+            "name": "Delete a wish list item",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "{{baseUrl}}/ecommerce/removeWishlistItem",
+            "params": [
+              {
+                "name": "userEmail",
+                "value": "",
+                "type": "query",
+                "description": "Email of the user for which the wishlist item should be removed"
+              },
+              {
+                "name": "productSKU",
+                "value": "",
+                "type": "query",
+                "description": "ProductSKU of the wishlist item to be removed"
+              }
+            ]
+          },
+          "docs": "Delete wishlist item"
+        },
+        {
+          "info": {
+            "name": "Delete an abandoned browse item",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "{{baseUrl}}/ecommerce/removeAbandonedBrowseItem",
+            "params": [
+              {
+                "name": "userEmail",
+                "value": "",
+                "type": "query",
+                "description": "Email of the user for which the abandonedBrowse item should be removed"
+              },
+              {
+                "name": "productSKU",
+                "value": "",
+                "type": "query",
+                "description": "ProductSKU of the abandonedBrowse item to be removed"
+              }
+            ]
+          },
+          "docs": "Delete an abandoned browse item"
+        },
+        {
+          "info": {
+            "name": "Delete an abandoned cart item",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "{{baseUrl}}/ecommerce/removeAbandonedCartItem",
+            "params": [
+              {
+                "name": "userEmail",
+                "value": "",
+                "type": "query",
+                "description": "Email of the user for which the abandonedCart item should be removed"
+              },
+              {
+                "name": "productSKU",
+                "value": "",
+                "type": "query",
+                "description": "ProductSKU of the abandonedCart item to be removed"
+              }
+            ]
+          },
+          "docs": "Delete an abandoned cart item"
+        },
+        {
+          "info": {
+            "name": "Register a transaction",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{baseUrl}}/ecommerce/registerTransaction",
+            "params": [
+              {
+                "name": "userEmail",
+                "value": "",
+                "type": "query",
+                "description": "Email of the user"
+              },
+              {
+                "name": "transaction",
+                "value": "",
+                "type": "query",
+                "description": "Transaction item"
+              }
+            ]
+          },
+          "docs": "Register an ecommerce transaction<br>Request body example - with custom columns:<br><br><pre>{<br>   \"transactionItems\": [<br>       {<br>           \"orderId\": \"20220204\",<br>           \"productName\": \"BOSS bag\",<br>            \"productSKU\": \"XXX-123-ABC\",<br>            \"category\": \"Exclusive bags\",<br>            \"brand\": \"BOSS\",<br>            \"storeId\": \"gdg4535fsgdfg\",<br>            \"purchaseSource\": \"http://www.mango.com\",<br>            \"discountValue\": \"0\",<br>            \"variant\": \"BL"
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Blacklist",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Create group blacklist entries",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{baseUrl}}/blacklist/createGroupEntries",
+            "params": [
+              {
+                "name": "groupId",
+                "value": "",
+                "type": "query",
+                "description": "ID of the group"
+              }
+            ]
+          },
+          "docs": "Adds new entries (email, emailDomain or mobileNumber) to the group blacklist.<br>Request body example:<br><br><pre>[{<br>\"type\": \"EMAIL\",<br> \"pattern\": \"test@test.com\"<br>}]</pre>"
+        },
+        {
+          "info": {
+            "name": "Create hashed group blacklist entries",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{baseUrl}}/blacklist/createGroupEntriesHashed",
+            "params": [
+              {
+                "name": "groupId",
+                "value": "",
+                "type": "query",
+                "description": "The group ID."
+              },
+              {
+                "name": "hashed",
+                "value": "",
+                "type": "query",
+                "description": "Hashing algorithm used to hash given entries. Either 'clear-text' or 'md5'"
+              }
+            ]
+          },
+          "docs": "Adds new hashed email entries to the group blacklist. Entries can be hashed using md5hashgenerator.<br>Request body example:<br><br><pre>[<br>    {<br>        \"type\": \"EMAIL\",<br>        \"pattern\":\"6a4b6cb2045fd55f706eaebd6ab5d4f7\"<br>    },<br>    {<br>        \"type\": \"EMAIL\",<br>        \"pattern\":\"0dbfb46341bc3d195db23e4015b20847\"<br>    }<br>]</pre>"
+        },
+        {
+          "info": {
+            "name": "Create hashed system blacklist entries",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{baseUrl}}/blacklist/createSystemEntriesHashed",
+            "params": [
+              {
+                "name": "hashed",
+                "value": "",
+                "type": "query",
+                "description": "the hashing algorithm used to hash given entries. Either 'clear-text' or 'md5'"
+              }
+            ]
+          },
+          "docs": "Adds new entries (email, email domain, mobile number, or mobile app alias) to the system blacklist. Entries can be hashed using md5hashgenerator.<br>Request body example:<br><br><pre>[<br>    {<br>        \"type\": \"EMAIL\",<br>        \"pattern\":\"6a4b6cb2045fd55f706eaebd6ab5d4f7\"<br>    },<br>    {<br>        \"type\": \"EMAIL\",<br>        \"pattern\":\"0dbfb46341bc3d195db23e4015b20847\"<br>    }<br>]</pre>"
+        },
+        {
+          "info": {
+            "name": "Create system blacklist entries",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{baseUrl}}/blacklist/createSystemEntries"
+          },
+          "docs": "Adds new entries (email, email domain or mobile number) to the system blacklist. <br>Request body examples:<br><br><pre>[{<br>\"type\": \"EMAIL\",<br> \"pattern\": \"test@test.com\"<br>}]<br><br>[{<br>\"type\": \"PHONE_NUMBER\",<br>\"pattern\": \"336789012345\"<br>}]</pre>"
+        },
+        {
+          "info": {
+            "name": "Delete group blacklist entries",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{baseUrl}}/blacklist/deleteGroupEntries",
+            "params": [
+              {
+                "name": "groupId",
+                "value": "",
+                "type": "query",
+                "description": "ID of the group."
+              }
+            ]
+          },
+          "docs": "Deletes entries (email, email domain or mobile number) from the group blacklist.<br>Request body example:<br><br><pre>[{<br>\"type\": \"EMAIL\",<br> \"pattern\": \"test@test.com\"<br>}]</pre>"
+        },
+        {
+          "info": {
+            "name": "Delete system blacklist entries",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{baseUrl}}/blacklist/deleteSystemEntries"
+          },
+          "docs": "Deletes entries (email, email domain or mobile number ) from the system blacklist.<br>Request body example:<br><br><pre>[{<br>\"type\": \"EMAIL\",<br> \"pattern\": \"test@test.com\"<br>}]</pre>"
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Whiteboard",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Creates or updates a whiteboard. Schema-validates the body against the whiteboard JSON Schema before delegating to the downstream save flow.",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{baseUrl}}/whiteboard/save"
+          },
+          "docs": "Creates or updates a whiteboard. Schema-validates the body against the whiteboard JSON Schema before delegating to the downstream save flow."
+        },
+        {
+          "info": {
+            "name": "Deletes a whiteboard by id. Removes per-user data, statistics and labels via the downstream service.",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "{{baseUrl}}/whiteboard/delete",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "query",
+                "description": "ID of the whiteboard to delete"
+              }
+            ]
+          },
+          "docs": "Deletes a whiteboard by id. Removes per-user data, statistics and labels via the downstream service."
+        },
+        {
+          "info": {
+            "name": "Publishes a whiteboard. Schema-validates the DiagramData JSON before delegating to the downstream publish flow.",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{baseUrl}}/whiteboard/publish"
+          },
+          "docs": "Publishes a whiteboard. Schema-validates the DiagramData JSON before delegating to the downstream publish flow."
+        },
+        {
+          "info": {
+            "name": "Returns a single whiteboard (all versions) by id.",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/whiteboard/get",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "query",
+                "description": "ID of the whiteboard to return"
+              }
+            ]
+          },
+          "docs": "Returns a single whiteboard (all versions) by id."
+        },
+        {
+          "info": {
+            "name": "Returns the active static whiteboard templates served by the Audience Interaction Planner service.",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/whiteboard/listTemplates"
+          },
+          "docs": "Returns the active static whiteboard templates served by the Audience Interaction Planner service."
+        },
+        {
+          "info": {
+            "name": "Returns a paginated list of whiteboard summaries for the calling customer, optionally filtered by name / status and ordered by last update date.",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/whiteboard/find",
+            "params": [
+              {
+                "name": "nameFilter",
+                "value": "",
+                "type": "query",
+                "description": "Substring filter on whiteboard name (>= 3 chars)"
+              },
+              {
+                "name": "statusFilter",
+                "value": "",
+                "type": "query",
+                "description": "AutomationStatus value (DRAFT, ACTIVE, ...)"
+              },
+              {
+                "name": "sortByDate",
+                "value": "",
+                "type": "query",
+                "description": "ASC or DESC, applied to lastUpdateDate"
+              },
+              {
+                "name": "page",
+                "value": "",
+                "type": "query",
+                "description": "1-based page index, defaults to 1"
+              },
+              {
+                "name": "limit",
+                "value": "",
+                "type": "query",
+                "description": "Page size, defaults to 100"
+              }
+            ]
+          },
+          "docs": "Returns a paginated list of whiteboard summaries for the calling customer, optionally filtered by name / status and ordered by last update date."
+        },
+        {
+          "info": {
+            "name": "Returns the canonical whiteboard JSON Schema served by the Audience Interaction Planner service.",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/whiteboard/schema"
+          },
+          "docs": "Returns the canonical whiteboard JSON Schema served by the Audience Interaction Planner service."
+        },
+        {
+          "info": {
+            "name": "Validates a whiteboard. Runs the full model-level validation suite and returns a structured ValidationResult.",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{baseUrl}}/whiteboard/validate"
+          },
+          "docs": "Validates a whiteboard. Runs the full model-level validation suite and returns a structured ValidationResult."
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Content",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Delete a content element",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "{{baseUrl}}/content/delete",
+            "params": [
+              {
+                "name": "contentId",
+                "value": "",
+                "type": "query",
+                "description": "Content id"
+              }
+            ]
+          },
+          "docs": "Deletes a content element in the Content Store."
+        },
+        {
+          "info": {
+            "name": "Store a file in the Content Store",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{baseUrl}}/content/store"
+          },
+          "docs": "Stores a file in the Content Store. Enter name, contentType and base64-encoded content.<br>The file can be encoded using base64encode.org<br>File size limit is 512kB.<br>Request body example:<br><br><pre>{<br>  \"name\": \"twitter_logo.png\",<br>  \"contentType\": \"image/png\",<br>  \"content\": \"iVBORw0KGgoAAAANSUhEUgAAABUAAAARCAYAAAAyhueAAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAASFJREFUeNqslM0NgkAQhRdiAdiAgQ6468EO1INntQOpwFABdqBe9aAdiIl3twS1AbECfJPMkhVZftSXjJPsDh87z2WsNE1Fb3d3z+POVVQIdQ5ShJh"
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Landing Page",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Delete a landing page",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "{{baseUrl}}/landingpage/delete",
+            "params": [
+              {
+                "name": "landingpageId",
+                "value": "",
+                "type": "query",
+                "description": "ID of the landing page"
+              }
+            ]
+          },
+          "docs": "Deletes the landing page with the specified landing page ID. It works only if the landing page is inactive."
+        },
+        {
+          "info": {
+            "name": "Delete multiple landing pages",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{baseUrl}}/landingpage/deleteMany"
+          },
+          "docs": "Deletes the landing pages with the specified landing page IDs. It works only if landing pages are inactive.<br>Request body example:<br><br><pre>[\"626\",\"627\"]</pre>"
+        },
+        {
+          "info": {
+            "name": "Find landing pages",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{baseUrl}}/landingpage/find"
+          },
+          "docs": "Find the landing page."
+        },
+        {
+          "info": {
+            "name": "Get a landing page's status",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/landingpage/getStatus",
+            "params": [
+              {
+                "name": "landingpageId",
+                "value": "",
+                "type": "query",
+                "description": "ID of the landing page"
+              }
+            ]
+          },
+          "docs": "Returns the publishing status of a landing page. Because these pages are usually associated with the lifetime of a particular email campaign, they may have a differing publishing status. Previously published pages that have become inactive because they are no longer valid are sometimes redirected to another default page. Possible states are:<br><br><pre>PUBLISHED<br><br>INACTIVE<br><br>SCHEDULED</pre>"
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Address Attributes",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List address attributes (read-only, from metadata service)",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/addressAttributes/list"
+          },
+          "docs": "List address attributes (read-only, from metadata service)"
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Usage Statistics",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Export usage statistics",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/usagestatistics/export",
+            "params": [
+              {
+                "name": "fromDate",
+                "value": "",
+                "type": "query",
+                "description": "From date request"
+              },
+              {
+                "name": "toDate",
+                "value": "",
+                "type": "query",
+                "description": "To date request"
+              },
+              {
+                "name": "format",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "destination",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "notificationUser",
+                "value": "",
+                "type": "query"
+              }
+            ]
+          },
+          "docs": "Export usage statistics<br>Notes: If the request to generate export is successful, then show \"Usage Statistics Export Job ID is being generated. The notification user will receive an email when the export is ready.\"<br><br>If the request to generate export is unsuccessful, then show \"The request has failed. Please get in touch with your Account Representative and quote [API error code].\"<br>Request body example:<br> <pre>{<br>    \"entityKey\": \"23\",<br>    \"code\": null,<br>    \"message\": \"Usage S"
+        },
+        {
+          "info": {
+            "name": "Get usage statistics",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/usagestatistics/get",
+            "params": [
+              {
+                "name": "fromDate",
+                "value": "",
+                "type": "query",
+                "description": "The start of the time period to request."
+              },
+              {
+                "name": "toDate",
+                "value": "",
+                "type": "query",
+                "description": "The end of the time period to request."
+              },
+              {
+                "name": "aggregationPeriod",
+                "value": "",
+                "type": "query",
+                "description": "The aggregation period. The options are auto (default), daily, or monthly."
+              }
+            ]
+          },
+          "docs": "Get usage statistics<br>Request body example:<br><br><pre>{<br>  \"name\": \"totalnoofapi2.0callsresponsesize_/usagestatistics/get\",<br>  \"description\": \"Total no. of API 2.0 response sizes sent per method\",<br>  \"unit\": \"MB\",<br>  \"counters\": [<br>     {<br>        \"timestamp\": \"2020-08-01\",<br>        \"value\": \"0,11\"<br>     },<br>     {<br>        \"timestamp\": \"2020-08-02\",<br>        \"value\": \"0,11\"<br>     }<br>     ]<br>}</pre>"
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Automation",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Find automations",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{baseUrl}}/automation/find"
+          },
+          "docs": "Returns information about one or more time-based / event-based automations."
+        },
+        {
+          "info": {
+            "name": "Get automation details",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{baseUrl}}/automation/getDetails",
+            "params": [
+              {
+                "name": "automationType",
+                "value": "",
+                "type": "query",
+                "description": "Type of the automation, values [EVENT_BASED, TIME_BASED]"
+              },
+              {
+                "name": "automationId",
+                "value": "",
+                "type": "query",
+                "description": "ID of the automation"
+              }
+            ]
+          },
+          "docs": "Returns detailed information for an time-based / event-based automation."
+        },
+        {
+          "info": {
+            "name": "Run a time-based automation once",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/automation/runOnce",
+            "params": [
+              {
+                "name": "automationId",
+                "value": "",
+                "type": "query",
+                "description": "ID of the automation"
+              }
+            ]
+          },
+          "docs": "Performs one execution of the specified time-based automation. Execution takes place immediately.<br>Run once does not change the status or schedule of the automation.<br>You can only use this method to run an existing time-based automation."
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Message",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Find messages",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{baseUrl}}/message/find",
+            "params": [
+              {
+                "name": "messageFilter",
+                "value": "",
+                "type": "query",
+                "description": "A filter with the list of returned messages."
+              }
+            ]
+          },
+          "docs": "Returns a list of message summary objects that contain information about the messages that match the filter criteria.<br>You can use this method to retrieve information about a message that has been sent or saved as a prepared message<br>Request body example:<br><pre>{<br>  \"groupId\": 650557972,<br>  \"sendoutDateFrom\": \"2018-09-01T00:00:00\",<br>  \"sendoutDateTo\": \"2018-10-01T00:00:00\"<br>}</pre><br><br>Request body 2 example:<br><pre>{<br>  \"sendoutDateFrom\": \"2018-09-01T00:00:00\",<br>  \"sendout"
+        },
+        {
+          "info": {
+            "name": "Get historical message data",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/message/getHistorical",
+            "params": [
+              {
+                "name": "messageId",
+                "value": "",
+                "type": "query",
+                "description": "ID of the (sent) message to fetch."
+              },
+              {
+                "name": "contactId",
+                "value": "",
+                "type": "query",
+                "description": "ID of the contact for whom the message shall be personalized."
+              }
+            ]
+          },
+          "docs": "Make sure the \"datastore_rmo\" feature switch is on. In case of trouble contact Support.<br><br>Fetch a specific (group) message as it was sent to a defined contact, including resolved personalizations."
+        },
+        {
+          "info": {
+            "name": "Get message statistics by external ID",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/message/getStatisticsByExternalMessageId",
+            "params": [
+              {
+                "name": "externalMessageId",
+                "value": "",
+                "type": "query",
+                "description": "External ID of the message"
+              }
+            ]
+          },
+          "docs": "Retrieves statistical data for a sent message that is identified by the external message ID."
+        },
+        {
+          "info": {
+            "name": "Get message statistics",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/message/getStatistics",
+            "params": [
+              {
+                "name": "messageId",
+                "value": "",
+                "type": "query",
+                "description": "ID of the message"
+              }
+            ]
+          },
+          "docs": "Retrieves statistical data for a sent message."
+        },
+        {
+          "info": {
+            "name": "Get message time distribution by external ID",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{baseUrl}}/message/getTimeDistributionByExternalMessageId",
+            "params": [
+              {
+                "name": "messageId",
+                "value": "",
+                "type": "query",
+                "description": "ID of the message"
+              },
+              {
+                "name": "interval",
+                "value": "",
+                "type": "query",
+                "description": "Interval values: DAILY or HOURLY"
+              }
+            ]
+          },
+          "docs": "Retrieves statistical time distribution information for a specific sent message."
+        },
+        {
+          "info": {
+            "name": "Get message time distribution",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{baseUrl}}/message/getTimeDistribution",
+            "params": [
+              {
+                "name": "messageId",
+                "value": "",
+                "type": "query",
+                "description": "ID of the message"
+              },
+              {
+                "name": "interval",
+                "value": "",
+                "type": "query",
+                "description": "Interval values: DAILY or HOURLY"
+              }
+            ]
+          },
+          "docs": "Retrieves statistical time distribution information for a specific sent message."
+        },
+        {
+          "info": {
+            "name": "Get used personalizations for a message",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/message/getUsedPersonalizations",
+            "params": [
+              {
+                "name": "messageId",
+                "value": "",
+                "type": "query",
+                "description": "ID of the message"
+              }
+            ]
+          },
+          "docs": "Returns the names of all user and group attributes that are referenced within the header and content area of a prepared message. The reference to the attributes is a personalization placeholder in the body of the message. All of these placeholders are replaced with individual user or message information during sendout. Be aware that this method does not return member attributes."
+        },
+        {
+          "info": {
+            "name": "Get used personalizations for multiple messages",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{baseUrl}}/message/getManyUsedPersonalizations"
+          },
+          "docs": "Returns the names of all user and group attributes that are referenced within the header and content area of a prepared message. The reference to the attributes is a personalization placeholder in the body of the message. All of these placeholders are replaced with individual user or message information during sendout.<br>Be aware that this method does not return member attributes.<br>Request body example:<br><br><pre>[\"1800249553\",\"1800202306\"]</pre>"
+        },
+        {
+          "info": {
+            "name": "Send a single message",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{baseUrl}}/message/sendSingle",
+            "params": [
+              {
+                "name": "messageId",
+                "value": "",
+                "type": "query",
+                "description": "ID of the message"
+              },
+              {
+                "name": "recipientId",
+                "value": "",
+                "type": "query",
+                "description": "ID of the user"
+              },
+              {
+                "name": "senderProfileName",
+                "value": "",
+                "type": "query",
+                "description": "TLS sender profile. Requires a Feature Switch and setting up profile name in Mapp Engage. (optional)"
+              }
+            ]
+          },
+          "docs": "Sends a prepared message as a single message to a specific user. <br><br>This method automatically adds the user who receives the email to the group of the prepared message.<br>Attachments can be encoded using base64encode.org.<br>Request body example: <br><br><pre>{<br>\"parameters\":<br>    [{\"name\" : \"Parameter Name 1\",\"value\" : \"Parameter Value 1\"},<br>     {\"name\" : \"Parameter Name 2\",\"value\": \"Parameter Value 2\"}],<br>     \"attachments\":<br>    [{\"name\" : \"image.png\",<br>    \"contentType\" : "
+        },
+        {
+          "info": {
+            "name": "Send a transactional message with event details",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{baseUrl}}/message/sendTransactionalWithEventDetails",
+            "params": [
+              {
+                "name": "messageId",
+                "value": "",
+                "type": "query",
+                "description": "ID of the message or prepared message"
+              },
+              {
+                "name": "externalTransactionFormula",
+                "value": "",
+                "type": "query",
+                "description": "External transactional identifier"
+              },
+              {
+                "name": "recipientId",
+                "value": "",
+                "type": "query",
+                "description": "ID of the user"
+              }
+            ]
+          },
+          "docs": "Sends a previously prepared message as a transactional message including transaction details such as purchase confirmation, <br>and adds user as member to group the prepared message belong to .<br> Please be aware this may cause that user to be unexpectedly subscribed or re-subscribed to that group. <br><br>User can iterate through the list of items using for each expression to access the individual item.<br><br>User can specify any number of attributes aka transaction_details and access them us"
+        },
+        {
+          "info": {
+            "name": "Send a transactional message",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{baseUrl}}/message/sendTransactional",
+            "params": [
+              {
+                "name": "messageId",
+                "value": "",
+                "type": "query",
+                "description": "ID of the message or prepared message"
+              },
+              {
+                "name": "externalTransactionFormula",
+                "value": "",
+                "type": "query",
+                "description": "External transactional identifier. If not available, \"null\" can be used."
+              },
+              {
+                "name": "recipientId",
+                "value": "",
+                "type": "query",
+                "description": "ID of the user"
+              },
+              {
+                "name": "senderProfileName",
+                "value": "",
+                "type": "query",
+                "description": "TLS sender profile. Requires a Feature Switch and setting up a profile name in Mapp Engage. (optional)"
+              }
+            ]
+          },
+          "docs": "Sends a prepared message as a transactional message, and adds user as member to group the prepared message belong to. <br> Please be aware this may cause that user to be unexpectedly subscribed or re-subscribed to that group. <br>Attachments may be added as part of the JSON payload. If you wish to attach a file to the message, the data must be Base64 encoded <br>and added as the value of the attachment’s content string, as demonstrated below. Request body example with attachment: <br><br><pre>{<"
+        },
+        {
+          "info": {
+            "name": "Validate a list of messages",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{baseUrl}}/message/validateList"
+          },
+          "docs": "Validates a list of messages for the following functionality: checks that the message is valid (InvalidObjectError -> objecttype message), checks that the message does not contain any invalid content store items, checks that the message does not use archived Attributes (InvalidObjectError -> objecttype attribute).<br>Request body example:<br><br><pre>[\"1800249570\",\"1800202306\"]</pre>"
+        },
+        {
+          "info": {
+            "name": "Validate a message",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/message/validate",
+            "params": [
+              {
+                "name": "messageId",
+                "value": "",
+                "type": "query",
+                "description": "ID of the message"
+              }
+            ]
+          },
+          "docs": "Validates a prepared message for the following functionality: check that message is valid (InvalidObjectError -> objecttype message), check that message does not contain invalid content store items, check that message does not use archived Attributes (InvalidObjectError -> objecttype attribute).<br>Request body example:<br><br><pre>[\"1800249570\",\"1800202306\"]</pre>"
+        },
+        {
+          "info": {
+            "name": "Validate many messages",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{baseUrl}}/message/validateMany"
+          },
+          "docs": "Validates many messages for the following functionality: checks that the message is valid (InvalidObjectError -> objecttype message), checks that the message does not contain any invalid content store items, checks that the message does not use archived Attributes (InvalidObjectError -> objecttype attribute).<br>Request body example:<br><br><pre>[\"1800249570\",\"1800202306\"]</pre>"
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Prepared Message",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Find prepared messages",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{baseUrl}}/preparedmessage/find",
+            "params": [
+              {
+                "name": "preparedMessageFilter",
+                "value": "",
+                "type": "query",
+                "description": "A filter with the list of prepared message."
+              }
+            ]
+          },
+          "docs": "Returns list of prepared messages. At least one of the following two fields is mandatory:<br><br>'lastUpdateDateFrom'<br><br>'creationDateFrom' - must be within 31 days of CreationDateTo.<br><br>CreationDateTo if is not given then by default is currentDate, if is given than obligatory is to use creationDateFrom as well.<br><br>To get the result faster, use limit (1-500) <br>Request body examples:<br><br><pre>{<br> \"externalMessageId\": \"MessageID\"<br>} <br><br>{<br> \"creationDateFrom\": \"2020-07-1"
+        },
+        {
+          "info": {
+            "name": "Get a prepared message",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/preparedmessage/get",
+            "params": [
+              {
+                "name": "messageId",
+                "value": "",
+                "type": "query",
+                "description": "The prepared message ID"
+              },
+              {
+                "name": "contactId",
+                "value": "",
+                "type": "query",
+                "description": "The contact ID to personalize message for. It has to be the member of the prepared message's group. Note: empty - Leave contact empty to get not personalized (raw) message"
+              }
+            ]
+          },
+          "docs": "Returns a prepared message identified by the messageId, personalized for contactId.<br><br>trackingOverride controls message tracking consent override behavior:<br>1 = no override; per-contact tracking consent applies.<br>2 = full override; open and link-click tracking are enforced for all recipients regardless of individual consent.<br>Any other value is rejected by this API."
+        },
+        {
+          "info": {
+            "name": "Send a prepared message",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/preparedmessage/send",
+            "params": [
+              {
+                "name": "preparedMessageId",
+                "value": "",
+                "type": "query",
+                "description": "The id of the prepared message you want to send."
+              },
+              {
+                "name": "sendDateTime",
+                "value": "",
+                "type": "query",
+                "description": "Sendout date-time. ISO_8601 format, in URL encoded form"
+              },
+              {
+                "name": "processingDateTime",
+                "value": "",
+                "type": "query",
+                "description": "The preprocessing date-time (optional). ISO_8601 format, in URL encoded form"
+              },
+              {
+                "name": "selectionId",
+                "value": "",
+                "type": "query",
+                "description": "A selection id to associate with the sendout (optional)."
+              },
+              {
+                "name": "bestSendoutTime",
+                "value": "",
+                "type": "query",
+                "description": "True/False."
+              },
+              {
+                "name": "bestSendoutTimeDefault",
+                "value": "",
+                "type": "query",
+                "description": "17:00."
+              },
+              {
+                "name": "bestSendoutTimeTimezone",
+                "value": "",
+                "type": "query",
+                "description": "Europe/Berlin."
+              }
+            ]
+          },
+          "docs": "Send prepared messages based on a given send datetime."
+        },
+        {
+          "info": {
+            "name": "Update a prepared message",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{baseUrl}}/preparedmessage/update"
+          },
+          "docs": "Update prepared message.<br><br>trackingOverride controls message tracking consent override behavior:<br>1 = no override; per-contact tracking consent applies.<br>2 = full override; open and link-click tracking are enforced for all recipients regardless of individual consent.<br>Any other value is rejected by this API.<br>On update, omit trackingOverride or send null to preserve the existing stored value; set trackingOverride to 1 explicitly to clear an active override."
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "CMS",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Get a CMS message as MIME",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/cms/getMimeMessage",
+            "params": [
+              {
+                "name": "cmsMessageId",
+                "value": "",
+                "type": "query",
+                "description": "The ID of the CMS message to be returned."
+              }
+            ]
+          },
+          "docs": "Returns the specified CMS message in MIME message format."
+        },
+        {
+          "info": {
+            "name": "List CMS message definitions",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/cms/getMessageDefinitions"
+          },
+          "docs": "Returns a list of all CMS messages that are saved in the system.<br>Every CMS message contains detailed information that identifies the message and the template that was used for creation."
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "System",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Get the API version",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/system/getApiVersion"
+          },
+          "docs": "Returns information about the API version currently in use."
+        },
+        {
+          "info": {
+            "name": "Get the Engage build version",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/system/getEcmVersion"
+          },
+          "docs": "Returns information about the API version currently in use."
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Async",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Get the next result index for a topic",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/async/getNextIndex",
+            "params": [
+              {
+                "name": "topic",
+                "value": "",
+                "type": "query",
+                "description": "Name of the topic."
+              }
+            ]
+          },
+          "docs": "Returns the next index for the given topic relative to the last call to \"async/poll\". This call is useful when switching from calling \"async/poll\" (with a managed index) to calling \"async/pollByIndex\" where the index is managed by the user. The result value can be used as value for parameter \"index\" in a follow-up call to \"async/pollByIndex\"."
+        },
+        {
+          "info": {
+            "name": "Get the polled result count for a topic",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/async/getPollCount",
+            "params": [
+              {
+                "name": "topic",
+                "value": "",
+                "type": "query",
+                "description": "Name of the topic."
+              }
+            ]
+          },
+          "docs": "Returns the number of result items that were retrieved/polled for a certain topic."
+        },
+        {
+          "info": {
+            "name": "Get the submitted job count for a topic",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/async/getSubmitCount"
+          },
+          "docs": "Returns the number of job results that were submitted for a specific topic."
+        },
+        {
+          "info": {
+            "name": "Poll results for a topic by event type",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/async/pollByType",
+            "params": [
+              {
+                "name": "type",
+                "value": "",
+                "type": "query",
+                "description": "Type of events you want to check values for:\nallMessages (Includes all other types EXCEPT sentToMta), linkClick, mtaResponse, smsResponse, readTrack, forwardTrack, conversion, skipTracking, sendTransactional, unsubscribe, sentToMta.\nTo get all available types, you must be able to make at least two separate calls. 1. To allMessages type, and 2. To sentToMta type."
+              },
+              {
+                "name": "limit",
+                "value": "",
+                "type": "query",
+                "description": "Number of events to poll."
+              }
+            ]
+          },
+          "docs": "Retrieves a specific number of results for a topic from the result queue.<br>Request body example:<br><br><pre>{<br>    \"type\":\"linkClick \",<br>    \"limit\":\"10000\"<br>}</pre><br>"
+        },
+        {
+          "info": {
+            "name": "Poll results for a topic by index",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/async/pollByIndex",
+            "params": [
+              {
+                "name": "topic",
+                "value": "",
+                "type": "query",
+                "description": "Name of the topic."
+              },
+              {
+                "name": "index",
+                "value": "",
+                "type": "query",
+                "description": "A number of the offset to start from."
+              },
+              {
+                "name": "limit",
+                "value": "",
+                "type": "query",
+                "description": "A number of result items to retrieve."
+              }
+            ]
+          },
+          "docs": "Retrieves a specific number of results for a topic from the result queue, starting from the given offset."
+        },
+        {
+          "info": {
+            "name": "Poll results for a topic within a time range",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/async/pollByRange",
+            "params": [
+              {
+                "name": "type",
+                "value": "",
+                "type": "query",
+                "description": "Type of events customer would like to poll (e.g allMessages [This TYPE consolidates all types below except for sentToMta, therefore 2-10 below are included in allMessages], linkClick, mtaResponse, smsResponse, readTrack, forwardTrack, conversion, skipTracking, sendTransactional, unsubscribe, sentToMta [This type must be called separately. For any customer to get all available types their web-service must be able to make at least two separate calls. 1. To allMessages type, and 2. To sentToMta type])"
+              },
+              {
+                "name": "from",
+                "value": "",
+                "type": "query",
+                "description": "Opening timestamp from when the customer would like to get events (warning: timestamp is a time of inserting event to the database, not time of occurring of the event, so if the event happened at 31st of January at 23:59:59 but we had a delay in inserting and it was inserted of 1st of February then timestamp will be on February)."
+              },
+              {
+                "name": "to",
+                "value": "",
+                "type": "query",
+                "description": "Closing timestamp."
+              },
+              {
+                "name": "limit",
+                "value": "",
+                "type": "query",
+                "description": "A number of events to fetch."
+              }
+            ]
+          },
+          "docs": "Retrieves a specific number of results for a topic from the result queue in the designated period.<br>Request body example:<br><br><pre>{<br>    \"type\":\"linkClick\",<br>    \"from\":\"1683637275\"<br>    \"to\":\"1683720075\"<br>    \"limit\":\"86400\"<br>}</pre>"
+        },
+        {
+          "info": {
+            "name": "Poll results for a topic",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/async/poll",
+            "params": [
+              {
+                "name": "topic",
+                "value": "",
+                "type": "query",
+                "description": "Name of the topic."
+              },
+              {
+                "name": "limit",
+                "value": "",
+                "type": "query",
+                "description": "A number of result items to retrieve."
+              }
+            ]
+          },
+          "docs": "Retrieves a certain amount of results for a topic from the result queue. The result items that were retrieved are deleted from the server once they have been transmitted. <br>Request body example:<br><br><pre>{<br>  \"name\": \"twitter_logo.png\",<br>  \"contentType\": \"image/png\",<br>  \"content\": \"iVBORw0KGgoAAAANSUhEUgAAABUAAAARCAYAAAAyhueAAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAASFJREFUeNqslM0NgkAQhRdiAdiAgQ6468EO1INntQOpwFABdqBe9aAdiIl3twS1AbECfJPMkhVZftSXjJPsDh87z2WsNE1Fb3d3z+POVVQIdQ"
+        },
+        {
+          "info": {
+            "name": "Submit an asynchronous job for a topic",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/async/submit"
+          },
+          "docs": "Initiates an asynchronous job by providing a topic name (script name) and input data (arguments).<br>The script name references an API script that is individually created for your system.<br>CEP receives the request and processes the script asynchronously.<br/><br>Results can be polled from the result queue by topic name."
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Audit Log",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List Log Tracker audit events",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/auditlog/events",
+            "params": [
+              {
+                "name": "since",
+                "value": "",
+                "type": "query",
+                "description": "Start of the time window, inclusive."
+              },
+              {
+                "name": "until",
+                "value": "",
+                "type": "query",
+                "description": "End of the time window, exclusive."
+              },
+              {
+                "name": "actionCategory",
+                "value": "",
+                "type": "query",
+                "description": "Optional Log Tracker action category filter."
+              },
+              {
+                "name": "entryType",
+                "value": "",
+                "type": "query",
+                "description": "Optional comma-separated list of event types."
+              },
+              {
+                "name": "executorId",
+                "value": "",
+                "type": "query",
+                "description": "Optional executor system user ID filter."
+              },
+              {
+                "name": "referenceType",
+                "value": "",
+                "type": "query",
+                "description": "Optional reference entity type filter."
+              },
+              {
+                "name": "referenceId",
+                "value": "",
+                "type": "query",
+                "description": "Optional referenced entity ID filter."
+              },
+              {
+                "name": "pageSize",
+                "value": "",
+                "type": "query",
+                "description": "Maximum number of rows to request."
+              },
+              {
+                "name": "pageToken",
+                "value": "",
+                "type": "query",
+                "description": "Opaque cursor token."
+              }
+            ]
+          },
+          "docs": "Returns Log Tracker audit events for a bounded time window."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}
