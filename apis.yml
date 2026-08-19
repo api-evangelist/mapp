@@ -13,7 +13,7 @@ image: https://mapp.com/wp-content/uploads/2026/05/mapp-default-open-graph-image
 url: https://raw.githubusercontent.com/api-evangelist/mapp/refs/heads/main/apis.yml
 x-type: company
 x-source: harvest:marketing-integration-graph
-specificationVersion: '0.20'
+specificationVersion: '0.23'
 created: '2026-08-12'
 modified: '2026-08-12'
 tags:
