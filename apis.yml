@@ -35,104 +35,1242 @@ maintainers:
 - FN: APIs.json
   email: info@apis.io
 apis:
-- aid: mapp:engage
-  name: Mapp Engage API
-  description: 'The Mapp Engage REST API (REST 2.0, incremental version v19) exchanges data between external
-    systems and Mapp Engage: create and update contacts, manage group memberships and attributes, send single,
-    transactional and prepared messages, manage mobile push, build and publish segments and whiteboards, register
-    e-commerce events (abandoned cart/browse, wish list, transactions), and retrieve Log Tracker audit events.
-    Authentication is HTTP Basic with a system user of type API. The base URL is tenant-specific: your Engage
-    login host plus /api/rest/v19.'
+- aid: mapp:mapp-address-attributes-api
+  name: Mapp Marketing Cloud Address Attributes API
+  description: >-
+    The Address Attributes API from Mapp Marketing Cloud — 1 operation(s) for address attributes.
   humanURL: https://docs.mapp.com/apidocs/engage-api
   baseURL: https://{engage-host}/api/rest/v19
   tags:
-  - Marketing Automation
-  - Email
-  - Messaging
-  - Contacts
-  - Push Notifications
+  - Address Attributes
   properties:
   - type: OpenAPI
-    url: openapi/mapp-engage-openapi.yml
-  - type: Overlay
-    url: overlays/mapp-engage-overlay.yaml
+    url: openapi/mapp-address-attributes-api-openapi.yml
   - type: Documentation
     url: https://docs.mapp.com/apidocs/engage-api
   - type: GettingStarted
     url: https://docs.mapp.com/apidocs/getting-started-with-engage-api
   - type: APIReference
     url: https://docs.mapp.com/apidocs/engage-api-calls
-- aid: mapp:intelligence-analytics
-  name: Mapp Intelligence Analytics API
-  description: 'The Mapp Intelligence Analytics API gives programmatic access to Mapp Intelligence (formerly
-    Webtrekk) digital-analytics data and functions — submit analysis queries (pivot, comparison, time series,
-    path, cross table), request reports, poll calculation status, retrieve results, list available dimensions,
-    metrics, segments and dynamic time filters, and check monthly analysis usage. OAuth2 client-credentials
-    against https://auth.mapp.com/oauth2/token; errors are returned as RFC 9457 problem+json.'
-  humanURL: https://docs.mapp.com/apidocs/analytics-api
-  baseURL: https://api.mapp.com/api/analytics
-  tags:
-  - Analytics
-  - Digital Analytics
-  - Reporting
-  - Segments
-  properties:
-  - type: OpenAPI
-    url: openapi/mapp-intelligence-analytics-openapi.yml
-  - type: Overlay
-    url: overlays/mapp-intelligence-analytics-overlay.yaml
   - type: Documentation
     url: https://docs.mapp.com/apidocs/analytics-api
   - type: APIReference
     url: https://docs.mapp.com/apidocs/analysis-analytics-api
   - type: Postman
-    url: https://cdn.document360.io/554b9b98-6720-4d8b-9919-c7b203d72648/Images/Documentation/Analytics%20API.postman_collection.json
-- aid: mapp:product-catalog
-  name: Mapp Product Catalog Public API
-  description: 'The Product Catalog Public API manages product and variant data inside Mapp Cloud catalogs —
-    create, replace, partially update, upsert, bulk-load and delete variants, manage variant attributes, read
-    catalog and attribute metadata for a workspace, and list variants for a product. Bearer-JWT (Keycloak)
-    authentication against https://api.mapp.com/api/product-catalog/v1.'
-  humanURL: https://docs.mapp.com/apidocs/product-catalog-api
-  baseURL: https://api.mapp.com
-  tags:
-  - E-Commerce
-  - Product Catalog
-  - Data Management
-  properties:
-  - type: OpenAPI
-    url: openapi/mapp-product-catalog-openapi.yml
-  - type: Overlay
-    url: overlays/mapp-product-catalog-overlay.yaml
+    url: >-
+      https://cdn.document360.io/554b9b98-6720-4d8b-9919-c7b203d72648/Images/Documentation/Analytics%20API.postman_collection.json
   - type: Documentation
     url: https://docs.mapp.com/apidocs/product-catalog-api
   - type: APIReference
     url: https://docs.mapp.com/apidocs/product-catalog-api-api-reference
   - type: Authentication
     url: https://docs.mapp.com/apidocs/product-catalog-api-authentification
-- aid: mapp:fashion
-  name: Mapp Fashion API
-  description: 'The Mapp Fashion (formerly Dressipi) recommendation API returns curated fashion and retail
-    recommendations: related and complementary items for a seed product, themed and facetted recommendations,
-    top items, and basket-based recommendations, plus an OAuth2 authorization-code + PKCE flow for obtaining
-    and refreshing JWTs. The base URL is delegated to a customer-owned domain (https://your-domain.com/api).'
-  humanURL: https://docs.mapp.com/apidocs/mapp-fashion-api-documentation
-  baseURL: https://{customer-domain}/api
+  - type: Documentation
+    url: https://docs.mapp.com/apidocs/mapp-fashion-api-documentation
+  - type: ChangeLog
+    url: https://docs.mapp.com/apidocs/changelog-mapp-fashion-api
+- aid: mapp:mapp-analysis-api
+  name: Mapp Marketing Cloud Analysis API
+  description: Submit analysis and get data
+  humanURL: https://docs.mapp.com/apidocs/engage-api
+  baseURL: https://{engage-host}/api/rest/v19
   tags:
-  - Recommendations
-  - Personalization
-  - Fashion
-  - E-Commerce
+  - Analysis
   properties:
   - type: OpenAPI
-    url: openapi/mapp-fashion-openapi.yml
-  - type: Overlay
-    url: overlays/mapp-fashion-overlay.yaml
+    url: openapi/mapp-analysis-api-openapi.yml
+  - type: Documentation
+    url: https://docs.mapp.com/apidocs/engage-api
+  - type: GettingStarted
+    url: https://docs.mapp.com/apidocs/getting-started-with-engage-api
+  - type: APIReference
+    url: https://docs.mapp.com/apidocs/engage-api-calls
+  - type: Documentation
+    url: https://docs.mapp.com/apidocs/analytics-api
+  - type: APIReference
+    url: https://docs.mapp.com/apidocs/analysis-analytics-api
+  - type: Postman
+    url: >-
+      https://cdn.document360.io/554b9b98-6720-4d8b-9919-c7b203d72648/Images/Documentation/Analytics%20API.postman_collection.json
+  - type: Documentation
+    url: https://docs.mapp.com/apidocs/product-catalog-api
+  - type: APIReference
+    url: https://docs.mapp.com/apidocs/product-catalog-api-api-reference
+  - type: Authentication
+    url: https://docs.mapp.com/apidocs/product-catalog-api-authentification
+  - type: Documentation
+    url: https://docs.mapp.com/apidocs/mapp-fashion-api-documentation
+  - type: ChangeLog
+    url: https://docs.mapp.com/apidocs/changelog-mapp-fashion-api
+- aid: mapp:mapp-async-api
+  name: Mapp Marketing Cloud Async API
+  description: The Async API from Mapp Marketing Cloud — 8 operation(s) for async.
+  humanURL: https://docs.mapp.com/apidocs/engage-api
+  baseURL: https://{engage-host}/api/rest/v19
+  tags:
+  - Async
+  properties:
+  - type: OpenAPI
+    url: openapi/mapp-async-api-openapi.yml
+  - type: Documentation
+    url: https://docs.mapp.com/apidocs/engage-api
+  - type: GettingStarted
+    url: https://docs.mapp.com/apidocs/getting-started-with-engage-api
+  - type: APIReference
+    url: https://docs.mapp.com/apidocs/engage-api-calls
+  - type: Documentation
+    url: https://docs.mapp.com/apidocs/analytics-api
+  - type: APIReference
+    url: https://docs.mapp.com/apidocs/analysis-analytics-api
+  - type: Postman
+    url: >-
+      https://cdn.document360.io/554b9b98-6720-4d8b-9919-c7b203d72648/Images/Documentation/Analytics%20API.postman_collection.json
+  - type: Documentation
+    url: https://docs.mapp.com/apidocs/product-catalog-api
+  - type: APIReference
+    url: https://docs.mapp.com/apidocs/product-catalog-api-api-reference
+  - type: Authentication
+    url: https://docs.mapp.com/apidocs/product-catalog-api-authentification
+  - type: Documentation
+    url: https://docs.mapp.com/apidocs/mapp-fashion-api-documentation
+  - type: ChangeLog
+    url: https://docs.mapp.com/apidocs/changelog-mapp-fashion-api
+- aid: mapp:mapp-audit-log-api
+  name: Mapp Marketing Cloud Audit Log API
+  description: The Audit Log API from Mapp Marketing Cloud — 1 operation(s) for audit log.
+  humanURL: https://docs.mapp.com/apidocs/engage-api
+  baseURL: https://{engage-host}/api/rest/v19
+  tags:
+  - Audit Log
+  properties:
+  - type: OpenAPI
+    url: openapi/mapp-audit-log-api-openapi.yml
+  - type: Documentation
+    url: https://docs.mapp.com/apidocs/engage-api
+  - type: GettingStarted
+    url: https://docs.mapp.com/apidocs/getting-started-with-engage-api
+  - type: APIReference
+    url: https://docs.mapp.com/apidocs/engage-api-calls
+  - type: Documentation
+    url: https://docs.mapp.com/apidocs/analytics-api
+  - type: APIReference
+    url: https://docs.mapp.com/apidocs/analysis-analytics-api
+  - type: Postman
+    url: >-
+      https://cdn.document360.io/554b9b98-6720-4d8b-9919-c7b203d72648/Images/Documentation/Analytics%20API.postman_collection.json
+  - type: Documentation
+    url: https://docs.mapp.com/apidocs/product-catalog-api
+  - type: APIReference
+    url: https://docs.mapp.com/apidocs/product-catalog-api-api-reference
+  - type: Authentication
+    url: https://docs.mapp.com/apidocs/product-catalog-api-authentification
+  - type: Documentation
+    url: https://docs.mapp.com/apidocs/mapp-fashion-api-documentation
+  - type: ChangeLog
+    url: https://docs.mapp.com/apidocs/changelog-mapp-fashion-api
+- aid: mapp:mapp-authorization-api
+  name: Mapp Marketing Cloud Authorization API
+  description: Operations for obtaining or refreshing JWTs
+  humanURL: https://docs.mapp.com/apidocs/engage-api
+  baseURL: https://{engage-host}/api/rest/v19
+  tags:
+  - authorization
+  properties:
+  - type: OpenAPI
+    url: openapi/mapp-authorization-api-openapi.yml
+  - type: Documentation
+    url: https://docs.mapp.com/apidocs/engage-api
+  - type: GettingStarted
+    url: https://docs.mapp.com/apidocs/getting-started-with-engage-api
+  - type: APIReference
+    url: https://docs.mapp.com/apidocs/engage-api-calls
+  - type: Documentation
+    url: https://docs.mapp.com/apidocs/analytics-api
+  - type: APIReference
+    url: https://docs.mapp.com/apidocs/analysis-analytics-api
+  - type: Postman
+    url: >-
+      https://cdn.document360.io/554b9b98-6720-4d8b-9919-c7b203d72648/Images/Documentation/Analytics%20API.postman_collection.json
+  - type: Documentation
+    url: https://docs.mapp.com/apidocs/product-catalog-api
+  - type: APIReference
+    url: https://docs.mapp.com/apidocs/product-catalog-api-api-reference
+  - type: Authentication
+    url: https://docs.mapp.com/apidocs/product-catalog-api-authentification
+  - type: Documentation
+    url: https://docs.mapp.com/apidocs/mapp-fashion-api-documentation
+  - type: ChangeLog
+    url: https://docs.mapp.com/apidocs/changelog-mapp-fashion-api
+- aid: mapp:mapp-automation-api
+  name: Mapp Marketing Cloud Automation API
+  description: The Automation API from Mapp Marketing Cloud — 3 operation(s) for automation.
+  humanURL: https://docs.mapp.com/apidocs/engage-api
+  baseURL: https://{engage-host}/api/rest/v19
+  tags:
+  - Automation
+  properties:
+  - type: OpenAPI
+    url: openapi/mapp-automation-api-openapi.yml
+  - type: Documentation
+    url: https://docs.mapp.com/apidocs/engage-api
+  - type: GettingStarted
+    url: https://docs.mapp.com/apidocs/getting-started-with-engage-api
+  - type: APIReference
+    url: https://docs.mapp.com/apidocs/engage-api-calls
+  - type: Documentation
+    url: https://docs.mapp.com/apidocs/analytics-api
+  - type: APIReference
+    url: https://docs.mapp.com/apidocs/analysis-analytics-api
+  - type: Postman
+    url: >-
+      https://cdn.document360.io/554b9b98-6720-4d8b-9919-c7b203d72648/Images/Documentation/Analytics%20API.postman_collection.json
+  - type: Documentation
+    url: https://docs.mapp.com/apidocs/product-catalog-api
+  - type: APIReference
+    url: https://docs.mapp.com/apidocs/product-catalog-api-api-reference
+  - type: Authentication
+    url: https://docs.mapp.com/apidocs/product-catalog-api-authentification
+  - type: Documentation
+    url: https://docs.mapp.com/apidocs/mapp-fashion-api-documentation
+  - type: ChangeLog
+    url: https://docs.mapp.com/apidocs/changelog-mapp-fashion-api
+- aid: mapp:mapp-available-objects-api
+  name: Mapp Marketing Cloud Available Objects API
+  description: Get information about available objects you can use to build Analysis
+  humanURL: https://docs.mapp.com/apidocs/engage-api
+  baseURL: https://{engage-host}/api/rest/v19
+  tags:
+  - Available Objects
+  properties:
+  - type: OpenAPI
+    url: openapi/mapp-available-objects-api-openapi.yml
+  - type: Documentation
+    url: https://docs.mapp.com/apidocs/engage-api
+  - type: GettingStarted
+    url: https://docs.mapp.com/apidocs/getting-started-with-engage-api
+  - type: APIReference
+    url: https://docs.mapp.com/apidocs/engage-api-calls
+  - type: Documentation
+    url: https://docs.mapp.com/apidocs/analytics-api
+  - type: APIReference
+    url: https://docs.mapp.com/apidocs/analysis-analytics-api
+  - type: Postman
+    url: >-
+      https://cdn.document360.io/554b9b98-6720-4d8b-9919-c7b203d72648/Images/Documentation/Analytics%20API.postman_collection.json
+  - type: Documentation
+    url: https://docs.mapp.com/apidocs/product-catalog-api
+  - type: APIReference
+    url: https://docs.mapp.com/apidocs/product-catalog-api-api-reference
+  - type: Authentication
+    url: https://docs.mapp.com/apidocs/product-catalog-api-authentification
+  - type: Documentation
+    url: https://docs.mapp.com/apidocs/mapp-fashion-api-documentation
+  - type: ChangeLog
+    url: https://docs.mapp.com/apidocs/changelog-mapp-fashion-api
+- aid: mapp:mapp-blacklist-api
+  name: Mapp Marketing Cloud Blacklist API
+  description: The Blacklist API from Mapp Marketing Cloud — 6 operation(s) for blacklist.
+  humanURL: https://docs.mapp.com/apidocs/engage-api
+  baseURL: https://{engage-host}/api/rest/v19
+  tags:
+  - Blacklist
+  properties:
+  - type: OpenAPI
+    url: openapi/mapp-blacklist-api-openapi.yml
+  - type: Documentation
+    url: https://docs.mapp.com/apidocs/engage-api
+  - type: GettingStarted
+    url: https://docs.mapp.com/apidocs/getting-started-with-engage-api
+  - type: APIReference
+    url: https://docs.mapp.com/apidocs/engage-api-calls
+  - type: Documentation
+    url: https://docs.mapp.com/apidocs/analytics-api
+  - type: APIReference
+    url: https://docs.mapp.com/apidocs/analysis-analytics-api
+  - type: Postman
+    url: >-
+      https://cdn.document360.io/554b9b98-6720-4d8b-9919-c7b203d72648/Images/Documentation/Analytics%20API.postman_collection.json
+  - type: Documentation
+    url: https://docs.mapp.com/apidocs/product-catalog-api
+  - type: APIReference
+    url: https://docs.mapp.com/apidocs/product-catalog-api-api-reference
+  - type: Authentication
+    url: https://docs.mapp.com/apidocs/product-catalog-api-authentification
+  - type: Documentation
+    url: https://docs.mapp.com/apidocs/mapp-fashion-api-documentation
+  - type: ChangeLog
+    url: https://docs.mapp.com/apidocs/changelog-mapp-fashion-api
+- aid: mapp:mapp-catalog-metadata-operations-api
+  name: Mapp Marketing Cloud Catalog Metadata Operations API
+  description: Endpoints for catalog metadata operations
+  humanURL: https://docs.mapp.com/apidocs/engage-api
+  baseURL: https://{engage-host}/api/rest/v19
+  tags:
+  - Catalog Metadata Operations
+  properties:
+  - type: OpenAPI
+    url: openapi/mapp-catalog-metadata-operations-api-openapi.yml
+  - type: Documentation
+    url: https://docs.mapp.com/apidocs/engage-api
+  - type: GettingStarted
+    url: https://docs.mapp.com/apidocs/getting-started-with-engage-api
+  - type: APIReference
+    url: https://docs.mapp.com/apidocs/engage-api-calls
+  - type: Documentation
+    url: https://docs.mapp.com/apidocs/analytics-api
+  - type: APIReference
+    url: https://docs.mapp.com/apidocs/analysis-analytics-api
+  - type: Postman
+    url: >-
+      https://cdn.document360.io/554b9b98-6720-4d8b-9919-c7b203d72648/Images/Documentation/Analytics%20API.postman_collection.json
+  - type: Documentation
+    url: https://docs.mapp.com/apidocs/product-catalog-api
+  - type: APIReference
+    url: https://docs.mapp.com/apidocs/product-catalog-api-api-reference
+  - type: Authentication
+    url: https://docs.mapp.com/apidocs/product-catalog-api-authentification
+  - type: Documentation
+    url: https://docs.mapp.com/apidocs/mapp-fashion-api-documentation
+  - type: ChangeLog
+    url: https://docs.mapp.com/apidocs/changelog-mapp-fashion-api
+- aid: mapp:mapp-cms-api
+  name: Mapp Marketing Cloud CMS API
+  description: The CMS API from Mapp Marketing Cloud — 2 operation(s) for cms.
+  humanURL: https://docs.mapp.com/apidocs/engage-api
+  baseURL: https://{engage-host}/api/rest/v19
+  tags:
+  - CMS
+  properties:
+  - type: OpenAPI
+    url: openapi/mapp-cms-api-openapi.yml
+  - type: Documentation
+    url: https://docs.mapp.com/apidocs/engage-api
+  - type: GettingStarted
+    url: https://docs.mapp.com/apidocs/getting-started-with-engage-api
+  - type: APIReference
+    url: https://docs.mapp.com/apidocs/engage-api-calls
+  - type: Documentation
+    url: https://docs.mapp.com/apidocs/analytics-api
+  - type: APIReference
+    url: https://docs.mapp.com/apidocs/analysis-analytics-api
+  - type: Postman
+    url: >-
+      https://cdn.document360.io/554b9b98-6720-4d8b-9919-c7b203d72648/Images/Documentation/Analytics%20API.postman_collection.json
+  - type: Documentation
+    url: https://docs.mapp.com/apidocs/product-catalog-api
+  - type: APIReference
+    url: https://docs.mapp.com/apidocs/product-catalog-api-api-reference
+  - type: Authentication
+    url: https://docs.mapp.com/apidocs/product-catalog-api-authentification
+  - type: Documentation
+    url: https://docs.mapp.com/apidocs/mapp-fashion-api-documentation
+  - type: ChangeLog
+    url: https://docs.mapp.com/apidocs/changelog-mapp-fashion-api
+- aid: mapp:mapp-contact-api
+  name: Mapp Marketing Cloud Contact API
+  description: The Contact API from Mapp Marketing Cloud — 8 operation(s) for contact.
+  humanURL: https://docs.mapp.com/apidocs/engage-api
+  baseURL: https://{engage-host}/api/rest/v19
+  tags:
+  - Contact
+  properties:
+  - type: OpenAPI
+    url: openapi/mapp-contact-api-openapi.yml
+  - type: Documentation
+    url: https://docs.mapp.com/apidocs/engage-api
+  - type: GettingStarted
+    url: https://docs.mapp.com/apidocs/getting-started-with-engage-api
+  - type: APIReference
+    url: https://docs.mapp.com/apidocs/engage-api-calls
+  - type: Documentation
+    url: https://docs.mapp.com/apidocs/analytics-api
+  - type: APIReference
+    url: https://docs.mapp.com/apidocs/analysis-analytics-api
+  - type: Postman
+    url: >-
+      https://cdn.document360.io/554b9b98-6720-4d8b-9919-c7b203d72648/Images/Documentation/Analytics%20API.postman_collection.json
+  - type: Documentation
+    url: https://docs.mapp.com/apidocs/product-catalog-api
+  - type: APIReference
+    url: https://docs.mapp.com/apidocs/product-catalog-api-api-reference
+  - type: Authentication
+    url: https://docs.mapp.com/apidocs/product-catalog-api-authentification
+  - type: Documentation
+    url: https://docs.mapp.com/apidocs/mapp-fashion-api-documentation
+  - type: ChangeLog
+    url: https://docs.mapp.com/apidocs/changelog-mapp-fashion-api
+- aid: mapp:mapp-content-api
+  name: Mapp Marketing Cloud Content API
+  description: The Content API from Mapp Marketing Cloud — 2 operation(s) for content.
+  humanURL: https://docs.mapp.com/apidocs/engage-api
+  baseURL: https://{engage-host}/api/rest/v19
+  tags:
+  - Content
+  properties:
+  - type: OpenAPI
+    url: openapi/mapp-content-api-openapi.yml
+  - type: Documentation
+    url: https://docs.mapp.com/apidocs/engage-api
+  - type: GettingStarted
+    url: https://docs.mapp.com/apidocs/getting-started-with-engage-api
+  - type: APIReference
+    url: https://docs.mapp.com/apidocs/engage-api-calls
+  - type: Documentation
+    url: https://docs.mapp.com/apidocs/analytics-api
+  - type: APIReference
+    url: https://docs.mapp.com/apidocs/analysis-analytics-api
+  - type: Postman
+    url: >-
+      https://cdn.document360.io/554b9b98-6720-4d8b-9919-c7b203d72648/Images/Documentation/Analytics%20API.postman_collection.json
+  - type: Documentation
+    url: https://docs.mapp.com/apidocs/product-catalog-api
+  - type: APIReference
+    url: https://docs.mapp.com/apidocs/product-catalog-api-api-reference
+  - type: Authentication
+    url: https://docs.mapp.com/apidocs/product-catalog-api-authentification
+  - type: Documentation
+    url: https://docs.mapp.com/apidocs/mapp-fashion-api-documentation
+  - type: ChangeLog
+    url: https://docs.mapp.com/apidocs/changelog-mapp-fashion-api
+- aid: mapp:mapp-draft-message-api
+  name: Mapp Marketing Cloud Draft Message API
+  description: The Draft Message API from Mapp Marketing Cloud — 6 operation(s) for draft message.
+  humanURL: https://docs.mapp.com/apidocs/engage-api
+  baseURL: https://{engage-host}/api/rest/v19
+  tags:
+  - Draft Message
+  properties:
+  - type: OpenAPI
+    url: openapi/mapp-draft-message-api-openapi.yml
+  - type: Documentation
+    url: https://docs.mapp.com/apidocs/engage-api
+  - type: GettingStarted
+    url: https://docs.mapp.com/apidocs/getting-started-with-engage-api
+  - type: APIReference
+    url: https://docs.mapp.com/apidocs/engage-api-calls
+  - type: Documentation
+    url: https://docs.mapp.com/apidocs/analytics-api
+  - type: APIReference
+    url: https://docs.mapp.com/apidocs/analysis-analytics-api
+  - type: Postman
+    url: >-
+      https://cdn.document360.io/554b9b98-6720-4d8b-9919-c7b203d72648/Images/Documentation/Analytics%20API.postman_collection.json
+  - type: Documentation
+    url: https://docs.mapp.com/apidocs/product-catalog-api
+  - type: APIReference
+    url: https://docs.mapp.com/apidocs/product-catalog-api-api-reference
+  - type: Authentication
+    url: https://docs.mapp.com/apidocs/product-catalog-api-authentification
+  - type: Documentation
+    url: https://docs.mapp.com/apidocs/mapp-fashion-api-documentation
+  - type: ChangeLog
+    url: https://docs.mapp.com/apidocs/changelog-mapp-fashion-api
+- aid: mapp:mapp-ecommerce-api
+  name: Mapp Marketing Cloud Ecommerce API
+  description: The Ecommerce API from Mapp Marketing Cloud — 8 operation(s) for ecommerce.
+  humanURL: https://docs.mapp.com/apidocs/engage-api
+  baseURL: https://{engage-host}/api/rest/v19
+  tags:
+  - Ecommerce
+  properties:
+  - type: OpenAPI
+    url: openapi/mapp-ecommerce-api-openapi.yml
+  - type: Documentation
+    url: https://docs.mapp.com/apidocs/engage-api
+  - type: GettingStarted
+    url: https://docs.mapp.com/apidocs/getting-started-with-engage-api
+  - type: APIReference
+    url: https://docs.mapp.com/apidocs/engage-api-calls
+  - type: Documentation
+    url: https://docs.mapp.com/apidocs/analytics-api
+  - type: APIReference
+    url: https://docs.mapp.com/apidocs/analysis-analytics-api
+  - type: Postman
+    url: >-
+      https://cdn.document360.io/554b9b98-6720-4d8b-9919-c7b203d72648/Images/Documentation/Analytics%20API.postman_collection.json
+  - type: Documentation
+    url: https://docs.mapp.com/apidocs/product-catalog-api
+  - type: APIReference
+    url: https://docs.mapp.com/apidocs/product-catalog-api-api-reference
+  - type: Authentication
+    url: https://docs.mapp.com/apidocs/product-catalog-api-authentification
+  - type: Documentation
+    url: https://docs.mapp.com/apidocs/mapp-fashion-api-documentation
+  - type: ChangeLog
+    url: https://docs.mapp.com/apidocs/changelog-mapp-fashion-api
+- aid: mapp:mapp-group-api
+  name: Mapp Marketing Cloud Group API
+  description: The Group API from Mapp Marketing Cloud — 11 operation(s) for group.
+  humanURL: https://docs.mapp.com/apidocs/engage-api
+  baseURL: https://{engage-host}/api/rest/v19
+  tags:
+  - Group
+  properties:
+  - type: OpenAPI
+    url: openapi/mapp-group-api-openapi.yml
+  - type: Documentation
+    url: https://docs.mapp.com/apidocs/engage-api
+  - type: GettingStarted
+    url: https://docs.mapp.com/apidocs/getting-started-with-engage-api
+  - type: APIReference
+    url: https://docs.mapp.com/apidocs/engage-api-calls
+  - type: Documentation
+    url: https://docs.mapp.com/apidocs/analytics-api
+  - type: APIReference
+    url: https://docs.mapp.com/apidocs/analysis-analytics-api
+  - type: Postman
+    url: >-
+      https://cdn.document360.io/554b9b98-6720-4d8b-9919-c7b203d72648/Images/Documentation/Analytics%20API.postman_collection.json
+  - type: Documentation
+    url: https://docs.mapp.com/apidocs/product-catalog-api
+  - type: APIReference
+    url: https://docs.mapp.com/apidocs/product-catalog-api-api-reference
+  - type: Authentication
+    url: https://docs.mapp.com/apidocs/product-catalog-api-authentification
+  - type: Documentation
+    url: https://docs.mapp.com/apidocs/mapp-fashion-api-documentation
+  - type: ChangeLog
+    url: https://docs.mapp.com/apidocs/changelog-mapp-fashion-api
+- aid: mapp:mapp-group-attributes-api
+  name: Mapp Marketing Cloud Group Attributes API
+  description: >-
+    The Group Attributes API from Mapp Marketing Cloud — 8 operation(s) for group attributes.
+  humanURL: https://docs.mapp.com/apidocs/engage-api
+  baseURL: https://{engage-host}/api/rest/v19
+  tags:
+  - Group Attributes
+  properties:
+  - type: OpenAPI
+    url: openapi/mapp-group-attributes-api-openapi.yml
+  - type: Documentation
+    url: https://docs.mapp.com/apidocs/engage-api
+  - type: GettingStarted
+    url: https://docs.mapp.com/apidocs/getting-started-with-engage-api
+  - type: APIReference
+    url: https://docs.mapp.com/apidocs/engage-api-calls
+  - type: Documentation
+    url: https://docs.mapp.com/apidocs/analytics-api
+  - type: APIReference
+    url: https://docs.mapp.com/apidocs/analysis-analytics-api
+  - type: Postman
+    url: >-
+      https://cdn.document360.io/554b9b98-6720-4d8b-9919-c7b203d72648/Images/Documentation/Analytics%20API.postman_collection.json
+  - type: Documentation
+    url: https://docs.mapp.com/apidocs/product-catalog-api
+  - type: APIReference
+    url: https://docs.mapp.com/apidocs/product-catalog-api-api-reference
+  - type: Authentication
+    url: https://docs.mapp.com/apidocs/product-catalog-api-authentification
+  - type: Documentation
+    url: https://docs.mapp.com/apidocs/mapp-fashion-api-documentation
+  - type: ChangeLog
+    url: https://docs.mapp.com/apidocs/changelog-mapp-fashion-api
+- aid: mapp:mapp-items-api
+  name: Mapp Marketing Cloud Items API
+  description: Operations for retrieving recommendations or items related to one or more seed items
+  humanURL: https://docs.mapp.com/apidocs/engage-api
+  baseURL: https://{engage-host}/api/rest/v19
+  tags:
+  - items
+  properties:
+  - type: OpenAPI
+    url: openapi/mapp-items-api-openapi.yml
+  - type: Documentation
+    url: https://docs.mapp.com/apidocs/engage-api
+  - type: GettingStarted
+    url: https://docs.mapp.com/apidocs/getting-started-with-engage-api
+  - type: APIReference
+    url: https://docs.mapp.com/apidocs/engage-api-calls
+  - type: Documentation
+    url: https://docs.mapp.com/apidocs/analytics-api
+  - type: APIReference
+    url: https://docs.mapp.com/apidocs/analysis-analytics-api
+  - type: Postman
+    url: >-
+      https://cdn.document360.io/554b9b98-6720-4d8b-9919-c7b203d72648/Images/Documentation/Analytics%20API.postman_collection.json
+  - type: Documentation
+    url: https://docs.mapp.com/apidocs/product-catalog-api
+  - type: APIReference
+    url: https://docs.mapp.com/apidocs/product-catalog-api-api-reference
+  - type: Authentication
+    url: https://docs.mapp.com/apidocs/product-catalog-api-authentification
+  - type: Documentation
+    url: https://docs.mapp.com/apidocs/mapp-fashion-api-documentation
+  - type: ChangeLog
+    url: https://docs.mapp.com/apidocs/changelog-mapp-fashion-api
+- aid: mapp:mapp-landing-page-api
+  name: Mapp Marketing Cloud Landing Page API
+  description: The Landing Page API from Mapp Marketing Cloud — 4 operation(s) for landing page.
+  humanURL: https://docs.mapp.com/apidocs/engage-api
+  baseURL: https://{engage-host}/api/rest/v19
+  tags:
+  - Landing Page
+  properties:
+  - type: OpenAPI
+    url: openapi/mapp-landing-page-api-openapi.yml
+  - type: Documentation
+    url: https://docs.mapp.com/apidocs/engage-api
+  - type: GettingStarted
+    url: https://docs.mapp.com/apidocs/getting-started-with-engage-api
+  - type: APIReference
+    url: https://docs.mapp.com/apidocs/engage-api-calls
+  - type: Documentation
+    url: https://docs.mapp.com/apidocs/analytics-api
+  - type: APIReference
+    url: https://docs.mapp.com/apidocs/analysis-analytics-api
+  - type: Postman
+    url: >-
+      https://cdn.document360.io/554b9b98-6720-4d8b-9919-c7b203d72648/Images/Documentation/Analytics%20API.postman_collection.json
+  - type: Documentation
+    url: https://docs.mapp.com/apidocs/product-catalog-api
+  - type: APIReference
+    url: https://docs.mapp.com/apidocs/product-catalog-api-api-reference
+  - type: Authentication
+    url: https://docs.mapp.com/apidocs/product-catalog-api-authentification
+  - type: Documentation
+    url: https://docs.mapp.com/apidocs/mapp-fashion-api-documentation
+  - type: ChangeLog
+    url: https://docs.mapp.com/apidocs/changelog-mapp-fashion-api
+- aid: mapp:mapp-member-attributes-api
+  name: Mapp Marketing Cloud Member Attributes API
+  description: >-
+    The Member Attributes API from Mapp Marketing Cloud — 6 operation(s) for member attributes.
+  humanURL: https://docs.mapp.com/apidocs/engage-api
+  baseURL: https://{engage-host}/api/rest/v19
+  tags:
+  - Member Attributes
+  properties:
+  - type: OpenAPI
+    url: openapi/mapp-member-attributes-api-openapi.yml
+  - type: Documentation
+    url: https://docs.mapp.com/apidocs/engage-api
+  - type: GettingStarted
+    url: https://docs.mapp.com/apidocs/getting-started-with-engage-api
+  - type: APIReference
+    url: https://docs.mapp.com/apidocs/engage-api-calls
+  - type: Documentation
+    url: https://docs.mapp.com/apidocs/analytics-api
+  - type: APIReference
+    url: https://docs.mapp.com/apidocs/analysis-analytics-api
+  - type: Postman
+    url: >-
+      https://cdn.document360.io/554b9b98-6720-4d8b-9919-c7b203d72648/Images/Documentation/Analytics%20API.postman_collection.json
+  - type: Documentation
+    url: https://docs.mapp.com/apidocs/product-catalog-api
+  - type: APIReference
+    url: https://docs.mapp.com/apidocs/product-catalog-api-api-reference
+  - type: Authentication
+    url: https://docs.mapp.com/apidocs/product-catalog-api-authentification
+  - type: Documentation
+    url: https://docs.mapp.com/apidocs/mapp-fashion-api-documentation
+  - type: ChangeLog
+    url: https://docs.mapp.com/apidocs/changelog-mapp-fashion-api
+- aid: mapp:mapp-membership-api
+  name: Mapp Marketing Cloud Membership API
+  description: The Membership API from Mapp Marketing Cloud — 16 operation(s) for membership.
+  humanURL: https://docs.mapp.com/apidocs/engage-api
+  baseURL: https://{engage-host}/api/rest/v19
+  tags:
+  - Membership
+  properties:
+  - type: OpenAPI
+    url: openapi/mapp-membership-api-openapi.yml
+  - type: Documentation
+    url: https://docs.mapp.com/apidocs/engage-api
+  - type: GettingStarted
+    url: https://docs.mapp.com/apidocs/getting-started-with-engage-api
+  - type: APIReference
+    url: https://docs.mapp.com/apidocs/engage-api-calls
+  - type: Documentation
+    url: https://docs.mapp.com/apidocs/analytics-api
+  - type: APIReference
+    url: https://docs.mapp.com/apidocs/analysis-analytics-api
+  - type: Postman
+    url: >-
+      https://cdn.document360.io/554b9b98-6720-4d8b-9919-c7b203d72648/Images/Documentation/Analytics%20API.postman_collection.json
+  - type: Documentation
+    url: https://docs.mapp.com/apidocs/product-catalog-api
+  - type: APIReference
+    url: https://docs.mapp.com/apidocs/product-catalog-api-api-reference
+  - type: Authentication
+    url: https://docs.mapp.com/apidocs/product-catalog-api-authentification
+  - type: Documentation
+    url: https://docs.mapp.com/apidocs/mapp-fashion-api-documentation
+  - type: ChangeLog
+    url: https://docs.mapp.com/apidocs/changelog-mapp-fashion-api
+- aid: mapp:mapp-message-api
+  name: Mapp Marketing Cloud Message API
+  description: The Message API from Mapp Marketing Cloud — 14 operation(s) for message.
+  humanURL: https://docs.mapp.com/apidocs/engage-api
+  baseURL: https://{engage-host}/api/rest/v19
+  tags:
+  - Message
+  properties:
+  - type: OpenAPI
+    url: openapi/mapp-message-api-openapi.yml
+  - type: Documentation
+    url: https://docs.mapp.com/apidocs/engage-api
+  - type: GettingStarted
+    url: https://docs.mapp.com/apidocs/getting-started-with-engage-api
+  - type: APIReference
+    url: https://docs.mapp.com/apidocs/engage-api-calls
+  - type: Documentation
+    url: https://docs.mapp.com/apidocs/analytics-api
+  - type: APIReference
+    url: https://docs.mapp.com/apidocs/analysis-analytics-api
+  - type: Postman
+    url: >-
+      https://cdn.document360.io/554b9b98-6720-4d8b-9919-c7b203d72648/Images/Documentation/Analytics%20API.postman_collection.json
+  - type: Documentation
+    url: https://docs.mapp.com/apidocs/product-catalog-api
+  - type: APIReference
+    url: https://docs.mapp.com/apidocs/product-catalog-api-api-reference
+  - type: Authentication
+    url: https://docs.mapp.com/apidocs/product-catalog-api-authentification
+  - type: Documentation
+    url: https://docs.mapp.com/apidocs/mapp-fashion-api-documentation
+  - type: ChangeLog
+    url: https://docs.mapp.com/apidocs/changelog-mapp-fashion-api
+- aid: mapp:mapp-meta-api
+  name: Mapp Marketing Cloud Meta API
+  description: The Meta API from Mapp Marketing Cloud — 13 operation(s) for meta.
+  humanURL: https://docs.mapp.com/apidocs/engage-api
+  baseURL: https://{engage-host}/api/rest/v19
+  tags:
+  - Meta
+  properties:
+  - type: OpenAPI
+    url: openapi/mapp-meta-api-openapi.yml
+  - type: Documentation
+    url: https://docs.mapp.com/apidocs/engage-api
+  - type: GettingStarted
+    url: https://docs.mapp.com/apidocs/getting-started-with-engage-api
+  - type: APIReference
+    url: https://docs.mapp.com/apidocs/engage-api-calls
+  - type: Documentation
+    url: https://docs.mapp.com/apidocs/analytics-api
+  - type: APIReference
+    url: https://docs.mapp.com/apidocs/analysis-analytics-api
+  - type: Postman
+    url: >-
+      https://cdn.document360.io/554b9b98-6720-4d8b-9919-c7b203d72648/Images/Documentation/Analytics%20API.postman_collection.json
+  - type: Documentation
+    url: https://docs.mapp.com/apidocs/product-catalog-api
+  - type: APIReference
+    url: https://docs.mapp.com/apidocs/product-catalog-api-api-reference
+  - type: Authentication
+    url: https://docs.mapp.com/apidocs/product-catalog-api-authentification
+  - type: Documentation
+    url: https://docs.mapp.com/apidocs/mapp-fashion-api-documentation
+  - type: ChangeLog
+    url: https://docs.mapp.com/apidocs/changelog-mapp-fashion-api
+- aid: mapp:mapp-mobile-push-api
+  name: Mapp Marketing Cloud Mobile Push API
+  description: The Mobile Push API from Mapp Marketing Cloud — 9 operation(s) for mobile push.
+  humanURL: https://docs.mapp.com/apidocs/engage-api
+  baseURL: https://{engage-host}/api/rest/v19
+  tags:
+  - Mobile Push
+  properties:
+  - type: OpenAPI
+    url: openapi/mapp-mobile-push-api-openapi.yml
+  - type: Documentation
+    url: https://docs.mapp.com/apidocs/engage-api
+  - type: GettingStarted
+    url: https://docs.mapp.com/apidocs/getting-started-with-engage-api
+  - type: APIReference
+    url: https://docs.mapp.com/apidocs/engage-api-calls
+  - type: Documentation
+    url: https://docs.mapp.com/apidocs/analytics-api
+  - type: APIReference
+    url: https://docs.mapp.com/apidocs/analysis-analytics-api
+  - type: Postman
+    url: >-
+      https://cdn.document360.io/554b9b98-6720-4d8b-9919-c7b203d72648/Images/Documentation/Analytics%20API.postman_collection.json
+  - type: Documentation
+    url: https://docs.mapp.com/apidocs/product-catalog-api
+  - type: APIReference
+    url: https://docs.mapp.com/apidocs/product-catalog-api-api-reference
+  - type: Authentication
+    url: https://docs.mapp.com/apidocs/product-catalog-api-authentification
+  - type: Documentation
+    url: https://docs.mapp.com/apidocs/mapp-fashion-api-documentation
+  - type: ChangeLog
+    url: https://docs.mapp.com/apidocs/changelog-mapp-fashion-api
+- aid: mapp:mapp-prepared-message-api
+  name: Mapp Marketing Cloud Prepared Message API
+  description: >-
+    The Prepared Message API from Mapp Marketing Cloud — 4 operation(s) for prepared message.
+  humanURL: https://docs.mapp.com/apidocs/engage-api
+  baseURL: https://{engage-host}/api/rest/v19
+  tags:
+  - Prepared Message
+  properties:
+  - type: OpenAPI
+    url: openapi/mapp-prepared-message-api-openapi.yml
+  - type: Documentation
+    url: https://docs.mapp.com/apidocs/engage-api
+  - type: GettingStarted
+    url: https://docs.mapp.com/apidocs/getting-started-with-engage-api
+  - type: APIReference
+    url: https://docs.mapp.com/apidocs/engage-api-calls
+  - type: Documentation
+    url: https://docs.mapp.com/apidocs/analytics-api
+  - type: APIReference
+    url: https://docs.mapp.com/apidocs/analysis-analytics-api
+  - type: Postman
+    url: >-
+      https://cdn.document360.io/554b9b98-6720-4d8b-9919-c7b203d72648/Images/Documentation/Analytics%20API.postman_collection.json
+  - type: Documentation
+    url: https://docs.mapp.com/apidocs/product-catalog-api
+  - type: APIReference
+    url: https://docs.mapp.com/apidocs/product-catalog-api-api-reference
+  - type: Authentication
+    url: https://docs.mapp.com/apidocs/product-catalog-api-authentification
+  - type: Documentation
+    url: https://docs.mapp.com/apidocs/mapp-fashion-api-documentation
+  - type: ChangeLog
+    url: https://docs.mapp.com/apidocs/changelog-mapp-fashion-api
+- aid: mapp:mapp-process-api
+  name: Mapp Marketing Cloud Process API
+  description: The Process API from Mapp Marketing Cloud — 3 operation(s) for process.
+  humanURL: https://docs.mapp.com/apidocs/engage-api
+  baseURL: https://{engage-host}/api/rest/v19
+  tags:
+  - Process
+  properties:
+  - type: OpenAPI
+    url: openapi/mapp-process-api-openapi.yml
+  - type: Documentation
+    url: https://docs.mapp.com/apidocs/engage-api
+  - type: GettingStarted
+    url: https://docs.mapp.com/apidocs/getting-started-with-engage-api
+  - type: APIReference
+    url: https://docs.mapp.com/apidocs/engage-api-calls
+  - type: Documentation
+    url: https://docs.mapp.com/apidocs/analytics-api
+  - type: APIReference
+    url: https://docs.mapp.com/apidocs/analysis-analytics-api
+  - type: Postman
+    url: >-
+      https://cdn.document360.io/554b9b98-6720-4d8b-9919-c7b203d72648/Images/Documentation/Analytics%20API.postman_collection.json
+  - type: Documentation
+    url: https://docs.mapp.com/apidocs/product-catalog-api
+  - type: APIReference
+    url: https://docs.mapp.com/apidocs/product-catalog-api-api-reference
+  - type: Authentication
+    url: https://docs.mapp.com/apidocs/product-catalog-api-authentification
+  - type: Documentation
+    url: https://docs.mapp.com/apidocs/mapp-fashion-api-documentation
+  - type: ChangeLog
+    url: https://docs.mapp.com/apidocs/changelog-mapp-fashion-api
+- aid: mapp:mapp-product-data-operations-api
+  name: Mapp Marketing Cloud Product Data Operations API
+  description: Endpoints for product data operations
+  humanURL: https://docs.mapp.com/apidocs/engage-api
+  baseURL: https://{engage-host}/api/rest/v19
+  tags:
+  - Product Data Operations
+  properties:
+  - type: OpenAPI
+    url: openapi/mapp-product-data-operations-api-openapi.yml
+  - type: Documentation
+    url: https://docs.mapp.com/apidocs/engage-api
+  - type: GettingStarted
+    url: https://docs.mapp.com/apidocs/getting-started-with-engage-api
+  - type: APIReference
+    url: https://docs.mapp.com/apidocs/engage-api-calls
+  - type: Documentation
+    url: https://docs.mapp.com/apidocs/analytics-api
+  - type: APIReference
+    url: https://docs.mapp.com/apidocs/analysis-analytics-api
+  - type: Postman
+    url: >-
+      https://cdn.document360.io/554b9b98-6720-4d8b-9919-c7b203d72648/Images/Documentation/Analytics%20API.postman_collection.json
+  - type: Documentation
+    url: https://docs.mapp.com/apidocs/product-catalog-api
+  - type: APIReference
+    url: https://docs.mapp.com/apidocs/product-catalog-api-api-reference
+  - type: Authentication
+    url: https://docs.mapp.com/apidocs/product-catalog-api-authentification
+  - type: Documentation
+    url: https://docs.mapp.com/apidocs/mapp-fashion-api-documentation
+  - type: ChangeLog
+    url: https://docs.mapp.com/apidocs/changelog-mapp-fashion-api
+- aid: mapp:mapp-profile-attributes-api
+  name: Mapp Marketing Cloud Profile Attributes API
+  description: >-
+    The Profile Attributes API from Mapp Marketing Cloud — 14 operation(s) for profile attributes.
+  humanURL: https://docs.mapp.com/apidocs/engage-api
+  baseURL: https://{engage-host}/api/rest/v19
+  tags:
+  - Profile Attributes
+  properties:
+  - type: OpenAPI
+    url: openapi/mapp-profile-attributes-api-openapi.yml
+  - type: Documentation
+    url: https://docs.mapp.com/apidocs/engage-api
+  - type: GettingStarted
+    url: https://docs.mapp.com/apidocs/getting-started-with-engage-api
+  - type: APIReference
+    url: https://docs.mapp.com/apidocs/engage-api-calls
+  - type: Documentation
+    url: https://docs.mapp.com/apidocs/analytics-api
+  - type: APIReference
+    url: https://docs.mapp.com/apidocs/analysis-analytics-api
+  - type: Postman
+    url: >-
+      https://cdn.document360.io/554b9b98-6720-4d8b-9919-c7b203d72648/Images/Documentation/Analytics%20API.postman_collection.json
+  - type: Documentation
+    url: https://docs.mapp.com/apidocs/product-catalog-api
+  - type: APIReference
+    url: https://docs.mapp.com/apidocs/product-catalog-api-api-reference
+  - type: Authentication
+    url: https://docs.mapp.com/apidocs/product-catalog-api-authentification
+  - type: Documentation
+    url: https://docs.mapp.com/apidocs/mapp-fashion-api-documentation
+  - type: ChangeLog
+    url: https://docs.mapp.com/apidocs/changelog-mapp-fashion-api
+- aid: mapp:mapp-recommendations-api
+  name: Mapp Marketing Cloud Recommendations API
+  description: Operations about recommendations
+  humanURL: https://docs.mapp.com/apidocs/engage-api
+  baseURL: https://{engage-host}/api/rest/v19
+  tags:
+  - recommendations
+  properties:
+  - type: OpenAPI
+    url: openapi/mapp-recommendations-api-openapi.yml
+  - type: Documentation
+    url: https://docs.mapp.com/apidocs/engage-api
+  - type: GettingStarted
+    url: https://docs.mapp.com/apidocs/getting-started-with-engage-api
+  - type: APIReference
+    url: https://docs.mapp.com/apidocs/engage-api-calls
+  - type: Documentation
+    url: https://docs.mapp.com/apidocs/analytics-api
+  - type: APIReference
+    url: https://docs.mapp.com/apidocs/analysis-analytics-api
+  - type: Postman
+    url: >-
+      https://cdn.document360.io/554b9b98-6720-4d8b-9919-c7b203d72648/Images/Documentation/Analytics%20API.postman_collection.json
+  - type: Documentation
+    url: https://docs.mapp.com/apidocs/product-catalog-api
+  - type: APIReference
+    url: https://docs.mapp.com/apidocs/product-catalog-api-api-reference
+  - type: Authentication
+    url: https://docs.mapp.com/apidocs/product-catalog-api-authentification
+  - type: Documentation
+    url: https://docs.mapp.com/apidocs/mapp-fashion-api-documentation
+  - type: ChangeLog
+    url: https://docs.mapp.com/apidocs/changelog-mapp-fashion-api
+- aid: mapp:mapp-related-data-api
+  name: Mapp Marketing Cloud Related Data API
+  description: The Related Data API from Mapp Marketing Cloud — 4 operation(s) for related data.
+  humanURL: https://docs.mapp.com/apidocs/engage-api
+  baseURL: https://{engage-host}/api/rest/v19
+  tags:
+  - Related Data
+  properties:
+  - type: OpenAPI
+    url: openapi/mapp-related-data-api-openapi.yml
+  - type: Documentation
+    url: https://docs.mapp.com/apidocs/engage-api
+  - type: GettingStarted
+    url: https://docs.mapp.com/apidocs/getting-started-with-engage-api
+  - type: APIReference
+    url: https://docs.mapp.com/apidocs/engage-api-calls
+  - type: Documentation
+    url: https://docs.mapp.com/apidocs/analytics-api
+  - type: APIReference
+    url: https://docs.mapp.com/apidocs/analysis-analytics-api
+  - type: Postman
+    url: >-
+      https://cdn.document360.io/554b9b98-6720-4d8b-9919-c7b203d72648/Images/Documentation/Analytics%20API.postman_collection.json
+  - type: Documentation
+    url: https://docs.mapp.com/apidocs/product-catalog-api
+  - type: APIReference
+    url: https://docs.mapp.com/apidocs/product-catalog-api-api-reference
+  - type: Authentication
+    url: https://docs.mapp.com/apidocs/product-catalog-api-authentification
+  - type: Documentation
+    url: https://docs.mapp.com/apidocs/mapp-fashion-api-documentation
+  - type: ChangeLog
+    url: https://docs.mapp.com/apidocs/changelog-mapp-fashion-api
+- aid: mapp:mapp-segmentation-api
+  name: Mapp Marketing Cloud Segmentation API
+  description: The Segmentation API from Mapp Marketing Cloud — 10 operation(s) for segmentation.
+  humanURL: https://docs.mapp.com/apidocs/engage-api
+  baseURL: https://{engage-host}/api/rest/v19
+  tags:
+  - Segmentation
+  properties:
+  - type: OpenAPI
+    url: openapi/mapp-segmentation-api-openapi.yml
+  - type: Documentation
+    url: https://docs.mapp.com/apidocs/engage-api
+  - type: GettingStarted
+    url: https://docs.mapp.com/apidocs/getting-started-with-engage-api
+  - type: APIReference
+    url: https://docs.mapp.com/apidocs/engage-api-calls
+  - type: Documentation
+    url: https://docs.mapp.com/apidocs/analytics-api
+  - type: APIReference
+    url: https://docs.mapp.com/apidocs/analysis-analytics-api
+  - type: Postman
+    url: >-
+      https://cdn.document360.io/554b9b98-6720-4d8b-9919-c7b203d72648/Images/Documentation/Analytics%20API.postman_collection.json
+  - type: Documentation
+    url: https://docs.mapp.com/apidocs/product-catalog-api
+  - type: APIReference
+    url: https://docs.mapp.com/apidocs/product-catalog-api-api-reference
+  - type: Authentication
+    url: https://docs.mapp.com/apidocs/product-catalog-api-authentification
+  - type: Documentation
+    url: https://docs.mapp.com/apidocs/mapp-fashion-api-documentation
+  - type: ChangeLog
+    url: https://docs.mapp.com/apidocs/changelog-mapp-fashion-api
+- aid: mapp:mapp-system-api
+  name: Mapp Marketing Cloud System API
+  description: The System API from Mapp Marketing Cloud — 2 operation(s) for system.
+  humanURL: https://docs.mapp.com/apidocs/engage-api
+  baseURL: https://{engage-host}/api/rest/v19
+  tags:
+  - System
+  properties:
+  - type: OpenAPI
+    url: openapi/mapp-system-api-openapi.yml
+  - type: Documentation
+    url: https://docs.mapp.com/apidocs/engage-api
+  - type: GettingStarted
+    url: https://docs.mapp.com/apidocs/getting-started-with-engage-api
+  - type: APIReference
+    url: https://docs.mapp.com/apidocs/engage-api-calls
+  - type: Documentation
+    url: https://docs.mapp.com/apidocs/analytics-api
+  - type: APIReference
+    url: https://docs.mapp.com/apidocs/analysis-analytics-api
+  - type: Postman
+    url: >-
+      https://cdn.document360.io/554b9b98-6720-4d8b-9919-c7b203d72648/Images/Documentation/Analytics%20API.postman_collection.json
+  - type: Documentation
+    url: https://docs.mapp.com/apidocs/product-catalog-api
+  - type: APIReference
+    url: https://docs.mapp.com/apidocs/product-catalog-api-api-reference
+  - type: Authentication
+    url: https://docs.mapp.com/apidocs/product-catalog-api-authentification
+  - type: Documentation
+    url: https://docs.mapp.com/apidocs/mapp-fashion-api-documentation
+  - type: ChangeLog
+    url: https://docs.mapp.com/apidocs/changelog-mapp-fashion-api
+- aid: mapp:mapp-system-user-api
+  name: Mapp Marketing Cloud System User API
+  description: The System User API from Mapp Marketing Cloud — 5 operation(s) for system user.
+  humanURL: https://docs.mapp.com/apidocs/engage-api
+  baseURL: https://{engage-host}/api/rest/v19
+  tags:
+  - System User
+  properties:
+  - type: OpenAPI
+    url: openapi/mapp-system-user-api-openapi.yml
+  - type: Documentation
+    url: https://docs.mapp.com/apidocs/engage-api
+  - type: GettingStarted
+    url: https://docs.mapp.com/apidocs/getting-started-with-engage-api
+  - type: APIReference
+    url: https://docs.mapp.com/apidocs/engage-api-calls
+  - type: Documentation
+    url: https://docs.mapp.com/apidocs/analytics-api
+  - type: APIReference
+    url: https://docs.mapp.com/apidocs/analysis-analytics-api
+  - type: Postman
+    url: >-
+      https://cdn.document360.io/554b9b98-6720-4d8b-9919-c7b203d72648/Images/Documentation/Analytics%20API.postman_collection.json
+  - type: Documentation
+    url: https://docs.mapp.com/apidocs/product-catalog-api
+  - type: APIReference
+    url: https://docs.mapp.com/apidocs/product-catalog-api-api-reference
+  - type: Authentication
+    url: https://docs.mapp.com/apidocs/product-catalog-api-authentification
+  - type: Documentation
+    url: https://docs.mapp.com/apidocs/mapp-fashion-api-documentation
+  - type: ChangeLog
+    url: https://docs.mapp.com/apidocs/changelog-mapp-fashion-api
+- aid: mapp:mapp-usage-statistics-api
+  name: Mapp Marketing Cloud Usage Statistics API
+  description: >-
+    The Usage Statistics API from Mapp Marketing Cloud — 2 operation(s) for usage statistics.
+  humanURL: https://docs.mapp.com/apidocs/engage-api
+  baseURL: https://{engage-host}/api/rest/v19
+  tags:
+  - Usage Statistics
+  properties:
+  - type: OpenAPI
+    url: openapi/mapp-usage-statistics-api-openapi.yml
+  - type: Documentation
+    url: https://docs.mapp.com/apidocs/engage-api
+  - type: GettingStarted
+    url: https://docs.mapp.com/apidocs/getting-started-with-engage-api
+  - type: APIReference
+    url: https://docs.mapp.com/apidocs/engage-api-calls
+  - type: Documentation
+    url: https://docs.mapp.com/apidocs/analytics-api
+  - type: APIReference
+    url: https://docs.mapp.com/apidocs/analysis-analytics-api
+  - type: Postman
+    url: >-
+      https://cdn.document360.io/554b9b98-6720-4d8b-9919-c7b203d72648/Images/Documentation/Analytics%20API.postman_collection.json
+  - type: Documentation
+    url: https://docs.mapp.com/apidocs/product-catalog-api
+  - type: APIReference
+    url: https://docs.mapp.com/apidocs/product-catalog-api-api-reference
+  - type: Authentication
+    url: https://docs.mapp.com/apidocs/product-catalog-api-authentification
+  - type: Documentation
+    url: https://docs.mapp.com/apidocs/mapp-fashion-api-documentation
+  - type: ChangeLog
+    url: https://docs.mapp.com/apidocs/changelog-mapp-fashion-api
+- aid: mapp:mapp-user-api
+  name: Mapp Marketing Cloud User API
+  description: The User API from Mapp Marketing Cloud — 18 operation(s) for user.
+  humanURL: https://docs.mapp.com/apidocs/engage-api
+  baseURL: https://{engage-host}/api/rest/v19
+  tags:
+  - User
+  properties:
+  - type: OpenAPI
+    url: openapi/mapp-user-api-openapi.yml
+  - type: Documentation
+    url: https://docs.mapp.com/apidocs/engage-api
+  - type: GettingStarted
+    url: https://docs.mapp.com/apidocs/getting-started-with-engage-api
+  - type: APIReference
+    url: https://docs.mapp.com/apidocs/engage-api-calls
+  - type: Documentation
+    url: https://docs.mapp.com/apidocs/analytics-api
+  - type: APIReference
+    url: https://docs.mapp.com/apidocs/analysis-analytics-api
+  - type: Postman
+    url: >-
+      https://cdn.document360.io/554b9b98-6720-4d8b-9919-c7b203d72648/Images/Documentation/Analytics%20API.postman_collection.json
+  - type: Documentation
+    url: https://docs.mapp.com/apidocs/product-catalog-api
+  - type: APIReference
+    url: https://docs.mapp.com/apidocs/product-catalog-api-api-reference
+  - type: Authentication
+    url: https://docs.mapp.com/apidocs/product-catalog-api-authentification
+  - type: Documentation
+    url: https://docs.mapp.com/apidocs/mapp-fashion-api-documentation
+  - type: ChangeLog
+    url: https://docs.mapp.com/apidocs/changelog-mapp-fashion-api
+- aid: mapp:mapp-variant-data-bulk-operations-api
+  name: Mapp Marketing Cloud Variant Data Bulk Operations API
+  description: Endpoints for variant data bulk operations
+  humanURL: https://docs.mapp.com/apidocs/engage-api
+  baseURL: https://{engage-host}/api/rest/v19
+  tags:
+  - Variant Data Bulk Operations
+  properties:
+  - type: OpenAPI
+    url: openapi/mapp-variant-data-bulk-operations-api-openapi.yml
+  - type: Documentation
+    url: https://docs.mapp.com/apidocs/engage-api
+  - type: GettingStarted
+    url: https://docs.mapp.com/apidocs/getting-started-with-engage-api
+  - type: APIReference
+    url: https://docs.mapp.com/apidocs/engage-api-calls
+  - type: Documentation
+    url: https://docs.mapp.com/apidocs/analytics-api
+  - type: APIReference
+    url: https://docs.mapp.com/apidocs/analysis-analytics-api
+  - type: Postman
+    url: >-
+      https://cdn.document360.io/554b9b98-6720-4d8b-9919-c7b203d72648/Images/Documentation/Analytics%20API.postman_collection.json
+  - type: Documentation
+    url: https://docs.mapp.com/apidocs/product-catalog-api
+  - type: APIReference
+    url: https://docs.mapp.com/apidocs/product-catalog-api-api-reference
+  - type: Authentication
+    url: https://docs.mapp.com/apidocs/product-catalog-api-authentification
+  - type: Documentation
+    url: https://docs.mapp.com/apidocs/mapp-fashion-api-documentation
+  - type: ChangeLog
+    url: https://docs.mapp.com/apidocs/changelog-mapp-fashion-api
+- aid: mapp:mapp-variant-data-operations-api
+  name: Mapp Marketing Cloud Variant Data Operations API
+  description: Endpoints for variant data operations
+  humanURL: https://docs.mapp.com/apidocs/engage-api
+  baseURL: https://{engage-host}/api/rest/v19
+  tags:
+  - Variant Data Operations
+  properties:
+  - type: OpenAPI
+    url: openapi/mapp-variant-data-operations-api-openapi.yml
+  - type: Documentation
+    url: https://docs.mapp.com/apidocs/engage-api
+  - type: GettingStarted
+    url: https://docs.mapp.com/apidocs/getting-started-with-engage-api
+  - type: APIReference
+    url: https://docs.mapp.com/apidocs/engage-api-calls
+  - type: Documentation
+    url: https://docs.mapp.com/apidocs/analytics-api
+  - type: APIReference
+    url: https://docs.mapp.com/apidocs/analysis-analytics-api
+  - type: Postman
+    url: >-
+      https://cdn.document360.io/554b9b98-6720-4d8b-9919-c7b203d72648/Images/Documentation/Analytics%20API.postman_collection.json
+  - type: Documentation
+    url: https://docs.mapp.com/apidocs/product-catalog-api
+  - type: APIReference
+    url: https://docs.mapp.com/apidocs/product-catalog-api-api-reference
+  - type: Authentication
+    url: https://docs.mapp.com/apidocs/product-catalog-api-authentification
+  - type: Documentation
+    url: https://docs.mapp.com/apidocs/mapp-fashion-api-documentation
+  - type: ChangeLog
+    url: https://docs.mapp.com/apidocs/changelog-mapp-fashion-api
+- aid: mapp:mapp-whiteboard-api
+  name: Mapp Marketing Cloud Whiteboard API
+  description: The Whiteboard API from Mapp Marketing Cloud — 8 operation(s) for whiteboard.
+  humanURL: https://docs.mapp.com/apidocs/engage-api
+  baseURL: https://{engage-host}/api/rest/v19
+  tags:
+  - Whiteboard
+  properties:
+  - type: OpenAPI
+    url: openapi/mapp-whiteboard-api-openapi.yml
+  - type: Documentation
+    url: https://docs.mapp.com/apidocs/engage-api
+  - type: GettingStarted
+    url: https://docs.mapp.com/apidocs/getting-started-with-engage-api
+  - type: APIReference
+    url: https://docs.mapp.com/apidocs/engage-api-calls
+  - type: Documentation
+    url: https://docs.mapp.com/apidocs/analytics-api
+  - type: APIReference
+    url: https://docs.mapp.com/apidocs/analysis-analytics-api
+  - type: Postman
+    url: >-
+      https://cdn.document360.io/554b9b98-6720-4d8b-9919-c7b203d72648/Images/Documentation/Analytics%20API.postman_collection.json
+  - type: Documentation
+    url: https://docs.mapp.com/apidocs/product-catalog-api
+  - type: APIReference
+    url: https://docs.mapp.com/apidocs/product-catalog-api-api-reference
+  - type: Authentication
+    url: https://docs.mapp.com/apidocs/product-catalog-api-authentification
   - type: Documentation
     url: https://docs.mapp.com/apidocs/mapp-fashion-api-documentation
   - type: ChangeLog
     url: https://docs.mapp.com/apidocs/changelog-mapp-fashion-api
 common:
+- type: Overlay
+  url: overlays/mapp-engage-overlay.yaml
+- type: Overlay
+  url: overlays/mapp-intelligence-analytics-overlay.yaml
+- type: Overlay
+  url: overlays/mapp-product-catalog-overlay.yaml
+- type: Overlay
+  url: overlays/mapp-fashion-overlay.yaml
 - type: TrustCenter
   url: security/mapp-trust-center.yml
 - type: Packages
