@@ -9,6 +9,18 @@ description: 'Mapp is a German-headquartered marketing technology vendor whose M
   (OAuth2 client-credentials on api.mapp.com/api/analytics), the Product Catalog Public API, and the Mapp Fashion
   recommendation API. Mapp publishes machine-readable OpenAPI fragments for every endpoint on docs.mapp.com,
   an llms.txt documentation index, published list pricing, and an ISO 27001/27017/27018/27701/22301 trust center.'
+deliveryModel:
+  model: saas
+  open_source: false
+  commercial: true
+  callable_host: true
+  label: Hosted service · you call their endpoint
+  confidence: high
+  source:
+  - openapi
+  - pricing
+  generated: '2026-08-28'
+  method: derived
 image: https://mapp.com/wp-content/uploads/2026/05/mapp-default-open-graph-image-square.png
 url: https://raw.githubusercontent.com/api-evangelist/mapp/refs/heads/main/apis.yml
 x-type: company
@@ -1263,6 +1275,9 @@ apis:
   - type: ChangeLog
     url: https://docs.mapp.com/apidocs/changelog-mapp-fashion-api
 common:
+- type: CapabilityMap
+  url: capabilities/mapp-capability-edges.yml
+  name: Mapp Marketing Cloud Business Capability Map
 - type: Overlay
   url: overlays/mapp-engage-overlay.yaml
 - type: Overlay
