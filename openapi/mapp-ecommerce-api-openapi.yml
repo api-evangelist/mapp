@@ -1,0 +1,227 @@
+openapi: 3.2.0
+info:
+  title: Mapp Engage public Ecommerce API
+  version: '1'
+  description: 'Mapp Engage REST API (REST 2.0, incremental version v19). Assembled verbatim from the per-operation OpenAPI fragments Mapp publishes on each endpoint page of https://docs.mapp.com/apidocs/. The base URL is tenant-specific: take your Mapp Engage login host and append /api/rest/v19.'
+  contact:
+    name: Mapp Technical Support
+    url: https://mapp.com/tech-support/
+servers:
+- url: /api/rest/v19
+security:
+- basicAuth: []
+tags:
+- name: Ecommerce
+paths:
+  /ecommerce/createWishlistItem:
+    post:
+      tags:
+      - Ecommerce
+      summary: Create a wish list item
+      description: 'Create a wish list item<br>Request body example:<br><br> <pre>{<br>  "productSKU": "2022-01-13-2",<br>  "timestamp": "2022-01-14T17:25:43.511Z",<br>  "productPrice": "1",<br>  "size": "1"<br>}</pre>'
+      operationId: createWishlistItem
+      parameters:
+      - name: userEmail
+        in: query
+        description: Email of the user
+        required: true
+        schema:
+          type: string
+      - name: wishlistItem
+        in: query
+        description: Wish list item
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: ''
+        '400':
+          description: Required parameters are missing or incorrect.
+  /ecommerce/createAbandonedBrowseItem:
+    post:
+      tags:
+      - Ecommerce
+      summary: Create an abandoned browse item
+      description: 'Create an abandoned browse item<br>Request body example:<br><br><pre>{<br>  "productSKU": "2022-01-13-2",<br>  "timestamp": "2022-01-14T17:25:43.511Z",<br>  "productPrice": "1",<br>  "size": "1"<br>}</pre>'
+      operationId: createAbandonedBrowseItem
+      parameters:
+      - name: userEmail
+        in: query
+        description: Email of the user
+        required: true
+        schema:
+          type: string
+      - name: wishlistItem
+        in: query
+        description: Ecommerce item
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: ''
+        '400':
+          description: Required parameters are missing or incorrect.
+  /ecommerce/createAbandonedCartItem:
+    post:
+      tags:
+      - Ecommerce
+      summary: Create an abandoned cart item
+      description: 'Create an abandoned cart item<br>Request body example:<br><br><pre>{<br>  "productSKU": "2022-01-13-2",<br>  "timestamp": "2022-01-14T17:25:43.511Z",<br>  "productPrice": "1",<br>  "size": "1"<br>}</pre>'
+      operationId: createAbandonedCartItem
+      parameters:
+      - name: userEmail
+        in: query
+        description: Email of the user
+        required: true
+        schema:
+          type: string
+      - name: wishlistItem
+        in: query
+        description: Ecommerce item
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: ''
+        '400':
+          description: Required parameters are missing or incorrect.
+  /ecommerce/removeTransaction:
+    delete:
+      tags:
+      - Ecommerce
+      summary: Delete a transaction
+      description: Delete transaction
+      operationId: removeTransaction
+      parameters:
+      - name: userEmail
+        in: query
+        description: Email of the user for which the transaction should be removed
+        required: true
+        schema:
+          type: string
+      - name: orderId
+        in: query
+        description: OrderId of the transaction to be removedOrderId of the transaction to be removed
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: ''
+        '400':
+          description: Required parameters are missing or incorrect.
+  /ecommerce/removeWishlistItem:
+    delete:
+      tags:
+      - Ecommerce
+      summary: Delete a wish list item
+      description: Delete wishlist item
+      operationId: removeWishlistItem
+      parameters:
+      - name: userEmail
+        in: query
+        description: Email of the user for which the wishlist item should be removed
+        required: true
+        schema:
+          type: string
+      - name: productSKU
+        in: query
+        description: ProductSKU of the wishlist item to be removed
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: ''
+        '400':
+          description: Required parameters are missing or incorrect.
+  /ecommerce/removeAbandonedBrowseItem:
+    delete:
+      tags:
+      - Ecommerce
+      summary: Delete an abandoned browse item
+      description: Delete an abandoned browse item
+      operationId: removeAbandonedBrowseItem
+      parameters:
+      - name: userEmail
+        in: query
+        description: Email of the user for which the abandonedBrowse item should be removed
+        required: true
+        schema:
+          type: string
+      - name: productSKU
+        in: query
+        description: ProductSKU of the abandonedBrowse item to be removed
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: ''
+        '400':
+          description: Required parameters are missing or incorrect.
+  /ecommerce/removeAbandonedCartItem:
+    delete:
+      tags:
+      - Ecommerce
+      summary: Delete an abandoned cart item
+      description: Delete an abandoned cart item
+      operationId: removeAbandonedCartItem
+      parameters:
+      - name: userEmail
+        in: query
+        description: Email of the user for which the abandonedCart item should be removed
+        required: true
+        schema:
+          type: string
+      - name: productSKU
+        in: query
+        description: ProductSKU of the abandonedCart item to be removed
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: ''
+        '400':
+          description: Required parameters are missing or incorrect.
+  /ecommerce/registerTransaction:
+    post:
+      tags:
+      - Ecommerce
+      summary: Register a transaction
+      description: 'Register an ecommerce transaction<br>Request body example - with custom columns:<br><br><pre>{<br>   "transactionItems": [<br>       {<br>           "orderId": "20220204",<br>           "productName": "BOSS bag",<br>            "productSKU": "XXX-123-ABC",<br>            "category": "Exclusive bags",<br>            "brand": "BOSS",<br>            "storeId": "gdg4535fsgdfg",<br>            "purchaseSource": "http://www.mango.com",<br>            "discountValue": "0",<br>            "variant": "BLACK",<br>            "productQuantity": "2",<br>            "discountPercentage": "2",<br>            "imageURL": "http://www.boss.com/bag.jpg",<br>            "productURL": "http://www.boss.com/bag.jpg",<br>            "currency": "PLN",<br>            "timestamp": "2022-02-03T18:25:43",<br>            "productPrice": "45",<br>            "customDetail1": "90",<br>            "customDetail2": "2022-02-03",<br>            "customDetail3": "Sent"                                          <br>       } <br>   ]<br>}</pre><br><br>Request body example - 2 items:<br><br><pre>{<br>   "transactionItems": [<br>       {<br>           "orderId": "123",<br>           "productName": "BOSS bag",<br>            "productSKU": "XXX-123-ABC",<br>            "category": "Exclusive bags",<br>            "brand": "BOSS",<br>            "storeId": "gdg4535fsgdfg",<br>            "purchaseSource": "http://www.mango.com",<br>            "discountValue": "0",<br>            "variant": "BLACK",<br>            "productQuantity": "1",<br>            "discountPercentage": "2",<br>            "imageURL": "http://www.boss.com/bag.jpg",<br>            "productURL": "http://www.boss.com/bag.jpg",<br>            "currency": "PLN",<br>            "timestamp": "2021-12-15T18:25:43",<br>            "productPrice": "45"<br>       },<br>       {<br>           "orderId": "124",<br>           "productName": "Black Socks",<br>            "productSKU": "XXX-123-UIO",<br>            "category": "Premium Socks",<br>            "brand": "Atlantic",<br>            "storeId": "gdg4535fsgdfg",<br>            "purchaseSource": "http://www.mango.com",<br>            "discountValue": "0",<br>            "variant": "RED",<br>            "productQuantity": "2",<br>            "discountPercentage": "1",<br>            "imageURL": "http://www.atlantic.com/socks.jpg",<br>            "productURL": "http://www.atlantic.com/socks.jpg",<br>            "currency": "PLN",<br>            "timestamp": "2021-12-15T18:25:43",<br>            "productPrice": "12"<br>       }<br>   ]<br>}</pre>'
+      operationId: registerTransaction
+      parameters:
+      - name: userEmail
+        in: query
+        description: Email of the user
+        required: true
+        schema:
+          type: string
+      - name: transaction
+        in: query
+        description: Transaction item
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: ''
+        '400':
+          description: Required parameters are missing or incorrect.
+components:
+  securitySchemes:
+    basicAuth:
+      type: http
+      scheme: basic
+      description: HTTP Basic authentication with a Mapp Engage system user of type API (or Hybrid).
+x-apievangelist-provenance:
+  method: searched
+  generated: '2026-08-12'
+  source: https://docs.mapp.com/apidocs/ (per-endpoint OpenAPI fragments)
+  note: Union of the OpenAPI JSON fragments Mapp publishes on each endpoint page. Mapp does not serve one consolidated document at a public URL; the tenant-served Swagger lives at https://<your-engage-host>/apidoc/swagger.json and requires a tenant. Operation bodies, parameters, responses, tags, summaries and descriptions are verbatim from Mapp. The swagger/basePath/schemes/securityDefinitions envelope is added by API Evangelist from the published Getting Started guide; no operation content was authored.
+  duplicate_operation_ids_suffixed: 30

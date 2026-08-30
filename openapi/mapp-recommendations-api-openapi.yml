@@ -1,0 +1,273 @@
+openapi: 3.2.0
+info:
+  title: Mapp Fashion Recommendations API
+  version: '10'
+  description: 'Mapp Fashion (Dressipi) recommendation API. Assembled verbatim from the per-operation OpenAPI fragments Mapp publishes on each endpoint page of https://docs.mapp.com/apidocs/. The base URL is customer-specific: https://your-domain.com/api/{endpoint}.'
+security:
+- api_key: []
+  user_token: []
+tags:
+- name: recommendations
+  description: Operations about recommendations
+paths:
+  /recommendations/facetted:
+    post:
+      summary: return facetted recommendations for a user
+      description: "The facetted recommendations api allows retrieval of the most recommended garments for a user.\nThe result set can be filtered by specifying one or more filters. Optionally retrieval of information\nabout the number of hits for other values of the filter are returned\n\nThe currently recognized aggregations are\n\n- garment_category\n- brand\n- occasion\n- must_have\n- retailer_labels (previously known as retailer_categories): significance dependent on retailer and data present in feed\n- store: if dressipi has been provided with per-store availability data, this filters or aggregates on availability by store\n- feature_ids (dressipi feature ids)\n- not_features_ids (dressipi feature ids). This returns results without any of the listed feature ids\n- price\n- reduced_by (range filter that accepts values from 0 to 100)\n- season: filters or aggregates on the season a garment belongs to. Allowed season codes are of the form `ss_YYYY` (spring/summer) or `aw_YYYY` (autumn/winter), e.g. `ss_2024`, `aw_2024`\n\nThe retailer_labels aggregation allows you to query against fields in the product feed consumed by dressipi (these should\nbe agreed with dressipi)\n\nFor example to request a garment category of 1 (dresses) submit\n\n```\n{\n  \"facets\": [\n    {\n      \"name\": \"garment_category\",\n      \"value\": [1]\n    }\n  ]\n}\n```\n\nMultiple values can be passed for a single filter, these will be or-ed.\n\nFor example, to select garments that have all of\n\n- feature id 1 or 2,\n- feature id 3 or 4\n\nsubmit\n```\n{\n  \"facets\": [\n    {\n      \"name\": \"feature_ids\",\n      \"filters\": [\n        {\"value\": [1,2]},\n        {\"value\": [3,4]}\n      ]\n    }\n  ]\n}\n```\n\nMultiple filters can be passed, these will be and-ed (Specifying multiple filters with the same name is not supported)\nFor example, to return items matching a specific retailer label and available from a specific store, submit\n\n```\n{\n  \"facets\": [\n    {\n      \"name\": \"retailer_labels\",\n      \"value\": [1,2]\n    },\n    {\n      \"name\": \"store\",\n      \"value\": [\"storeID1\",\"storeID2\"]\n    }\n  ]\n}\n```\n\n\nIf the size for a facet is set to non 0, count information will be returned about other filter values. Conceptually, the count returned in an agggregation bucket is the number of results you would get if the query was filtered by that aggregation value.\n\nNumerical facets use a slightly different syntax, for example\n\n```\n{\n  \"facets\": [\n    {\n      \"name\": \"price\",\n      \"filters\": [\n        {\n          \"from\": 50,\n          \"to\": 100\n        }\n      ],\n      \"ranges\": [\n        {\"to\": 50},\n        {\"from\": 50, \"to\": 100},\n        {\"from\": 100}\n      ]\n    }\n  ]\n}\n```\nreturns items whose price between 50 (inclusive) and 100 and the number of results within each of the indicated price ranges.\n\n\n```\n{\n  \"facets\": [\n    {\n      \"name\": \"reduced_by\",\n      \"filters\": [\n        {\n          \"from\": 30\n        }\n      ]\n    }\n  ]\n}\n```\n\nReturns items reduced by at least 30%\n\n\n```\n{\n  \"facets\": [\n    {\n      \"name\": \"season\",\n      \"filters\": [\n        {\"value\": [\"ss_2026\"]}\n      ]\n    }\n  ]\n}\n```\n\nReturns items belonging to the Spring/Summer 2026 season\n\n\nDepending on the garment_format requested, extra fields may be present on the garment, however `garment_id` and `raw_garment_id`\nwill always be present\n"
+      parameters:
+      - in: query
+        name: garment_format
+        description: 'The desired response format.
+
+
+          The response includes a description of the outfits / similar items but no data on the items themselves: since these may be repeated within the response, garment data is provided separately in the response.
+
+
+          The `detailed` format includes the most amount of item metadata (name, description, price etc).
+
+
+          The `document` format only includes item identifiers, and if requested dressipi generated information about the item, such as predicted size.
+
+
+          The `retailer_ids` format only returns the item identifiers.
+
+          '
+        required: false
+        schema:
+          type: string
+          enum:
+          - detailed
+          - document
+          - retailer_ids
+          default: retailer_ids
+      - in: query
+        name: fields
+        description: A list of garment attributes to fetch. Only supported for garment_format=document or detailed. Custom fields may be available - contact dressipi for details
+        required: false
+        schema:
+          type: array
+          items:
+            type: string
+            enum:
+            - size
+            - why
+            - verdict
+            - recommendedness
+            - features
+            - occasions
+            - garment_category_id
+            - owned
+            - department
+            - eans
+      - in: query
+        name: pretty
+        description: 'If true, pretty print json output. This increases response size and should usually be off in production environments
+
+          '
+        required: false
+        schema:
+          type: boolean
+      - in: query
+        name: include_dressipi_ids
+        description: 'Controls whether dressipi garment ids (raw_garment_id) are included in response
+
+          '
+        required: false
+        schema:
+          type: boolean
+          default: true
+      - in: query
+        name: page
+        description: 'The page from which to start results
+
+          '
+        required: false
+        schema:
+          type: integer
+          format: int32
+          default: 1
+      - in: query
+        name: per_page
+        description: 'The number of result to return per page
+
+          '
+        required: false
+        schema:
+          type: integer
+          format: int32
+          default: 12
+      - in: query
+        name: device_type
+        description: 'A device type identifier. This allows segmenting a/b test statistics
+
+          in the same way as you do.
+
+          '
+        required: false
+        schema:
+          type: string
+      - in: query
+        name: locale
+        description: 'A locale parameter describing what stock information to use and what language to return text in (if applicable). This parameter will only
+
+          function if the corresponding information is in the product feed & processed accordingly. If stock local and UI language are not the same,
+
+          specify the language parameter in addition to this one.
+
+          '
+        required: false
+        schema:
+          type: string
+      - in: query
+        name: language
+        description: 'Allows you to specify a locale used for feed attributes such as product name that should be localized using a different locale to price &
+
+          stock information. This parameter will only function if the corresponding information is in the product feed & processed accordingly.
+
+          '
+        required: false
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Information about the recommended garments
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FacettedRecommendationsResponse'
+        '422':
+          description: error message
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      tags:
+      - recommendations
+      operationId: postRecommendationsFacetted
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/postRecommendationsFacetted'
+        required: true
+  /recommendations/themed:
+    get:
+      summary: return themed recommendations for a user
+      description: 'The themed recommendations api allows retrieval of the most recommended garments for a user matching a theme.
+
+        Themes should be agreed in advance with dressipi.
+
+
+        This is the api equivalent of the plp widget.
+
+        '
+      parameters:
+      - in: query
+        name: garment_format
+        description: 'The desired response format.
+
+
+          The response includes a description of the outfits / similar items but no data on the items themselves: since these may be repeated within the response, garment data is provided separately in the response.
+
+
+          The `detailed` format includes the most amount of item metadata (name, description, price etc).
+
+
+          The `document` format only includes item identifiers, and if requested dressipi generated information about the item, such as predicted size.
+
+
+          The `retailer_ids` format only returns the item identifiers.
+
+          '
+        required: false
+        schema:
+          type: string
+          enum:
+          - detailed
+          - document
+          - retailer_ids
+          default: retailer_ids
+      - in: query
+        name: pretty
+        description: 'If true, pretty print Json output. This increases response size and should usually be off in production environments
+
+          '
+        required: false
+        schema:
+          type: boolean
+      - in: query
+        name: include_dressipi_ids
+        description: 'Controls whether dressipi garment ids (raw_garment_id) are included in response
+
+          '
+        required: false
+        schema:
+          type: boolean
+          default: true
+      - in: query
+        name: device_type
+        description: 'A device type identifier. This allows segmenting a/b test statistics
+
+          in the same way as you do.
+
+          '
+        required: false
+        schema:
+          type: string
+      - in: query
+        name: locale
+        description: 'A locale parameter describing what stock information to use and what language to return text in (if applicable). This parameter will only
+
+          function if the corresponding information is in the product feed & processed accordingly. If stock local and UI language are not the same,
+
+          specify the language parameter in addition to this one.
+
+          '
+        required: false
+        schema:
+          type: string
+      - in: query
+        name: language
+        description: 'Allows you to specify a locale used for feed attributes such as product name that should be localized using a different locale to price &
+
+          stock information. This parameter will only function if the corresponding information is in the product feed & processed accordingly.
+
+          '
+        required: false
+        schema:
+          type: string
+      - in: query
+        name: theme
+        description: The theme identifier, as agreed with Dressipi.
+        required: true
+        schema:
+          type: string
+      - in: query
+        name: count
+        description: The number of recommendations to return
+        required: false
+        schema:
+          type: integer
+          format: int32
+          default: 6
+      responses:
+        '200':
+          description: Information about the related garments
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ThemedRecommendationsResponse'
+        '422':
+          description: error message
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      tags:
+      - recommendations
+      operationId: getRecommendationsThemed
+x-apievangelist-provenance:
+  method: searched
+  generated: '2026-08-12'
+  source: https://docs.mapp.com/apidocs/ (per-endpoint OpenAPI fragments, Mapp Fashion API)
+  note: Union of the Swagger 2.0 fragments Mapp publishes per endpoint. The swagger/schemes envelope is added by API Evangelist; Mapp does not publish securityDefinitions for the api_key/user_token schemes its security block references, so they are recorded in authentication/ rather than invented here.

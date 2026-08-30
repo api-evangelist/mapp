@@ -1,0 +1,296 @@
+openapi: 3.2.0
+info:
+  title: Mapp Engage public Async API
+  version: '1'
+  description: 'Mapp Engage REST API (REST 2.0, incremental version v19). Assembled verbatim from the per-operation OpenAPI fragments Mapp publishes on each endpoint page of https://docs.mapp.com/apidocs/. The base URL is tenant-specific: take your Mapp Engage login host and append /api/rest/v19.'
+  contact:
+    name: Mapp Technical Support
+    url: https://mapp.com/tech-support/
+servers:
+- url: /api/rest/v19
+security:
+- basicAuth: []
+tags:
+- name: Async
+paths:
+  /async/getNextIndex:
+    get:
+      tags:
+      - Async
+      summary: Get the next result index for a topic
+      description: Returns the next index for the given topic relative to the last call to "async/poll". This call is useful when switching from calling "async/poll" (with a managed index) to calling "async/pollByIndex" where the index is managed by the user. The result value can be used as value for parameter "index" in a follow-up call to "async/pollByIndex".
+      operationId: getNextIndex
+      parameters:
+      - name: topic
+        in: query
+        description: Name of the topic.
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: integer
+                format: int64
+            application/xml:
+              schema:
+                type: integer
+                format: int64
+        '400':
+          description: ''
+  /async/getPollCount:
+    get:
+      tags:
+      - Async
+      summary: Get the polled result count for a topic
+      description: Returns the number of result items that were retrieved/polled for a certain topic.
+      operationId: getPollCount
+      parameters:
+      - name: topic
+        in: query
+        description: Name of the topic.
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: integer
+                format: int64
+            application/xml:
+              schema:
+                type: integer
+                format: int64
+        '400':
+          description: Required parameters are missing or incorrect.
+  /async/getSubmitCount:
+    get:
+      tags:
+      - Async
+      summary: Get the submitted job count for a topic
+      description: Returns the number of job results that were submitted for a specific topic.
+      operationId: getSubmitCount
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: integer
+                format: int64
+            application/xml:
+              schema:
+                type: integer
+                format: int64
+        '400':
+          description: ''
+  /async/pollByType:
+    get:
+      tags:
+      - Async
+      summary: Poll results for a topic by event type
+      description: Retrieves a specific number of results for a topic from the result queue.<br>Request body example:<br><br><pre>{<br>    "type":"linkClick ",<br>    "limit":"10000"<br>}</pre><br>
+      operationId: pollByType
+      parameters:
+      - name: type
+        in: query
+        description: 'Type of events you want to check values for:
+
+          allMessages (Includes all other types EXCEPT sentToMta), linkClick, mtaResponse, smsResponse, readTrack, forwardTrack, conversion, skipTracking, sendTransactional, unsubscribe, sentToMta.
+
+          To get all available types, you must be able to make at least two separate calls. 1. To allMessages type, and 2. To sentToMta type.'
+        required: true
+        schema:
+          type: string
+      - name: limit
+        in: query
+        description: Number of events to poll.
+        required: true
+        schema:
+          type: integer
+          format: int64
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+            application/xml:
+              schema:
+                type: array
+                items:
+                  type: object
+        '400':
+          description: Parameters Type and limit are mandatory, but missing or incorrect / given type does not exist.
+  /async/pollByIndex:
+    get:
+      tags:
+      - Async
+      summary: Poll results for a topic by index
+      description: Retrieves a specific number of results for a topic from the result queue, starting from the given offset.
+      operationId: pollByIndex
+      parameters:
+      - name: topic
+        in: query
+        description: Name of the topic.
+        required: true
+        schema:
+          type: string
+      - name: index
+        in: query
+        description: A number of the offset to start from.
+        required: true
+        schema:
+          type: integer
+          format: int64
+      - name: limit
+        in: query
+        description: A number of result items to retrieve.
+        required: true
+        schema:
+          type: integer
+          format: int32
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+            application/xml:
+              schema:
+                type: array
+                items:
+                  type: object
+        '400':
+          description: Required parameters are missing or incorrect.
+  /async/pollByRange:
+    get:
+      tags:
+      - Async
+      summary: Poll results for a topic within a time range
+      description: Retrieves a specific number of results for a topic from the result queue in the designated period.<br>Request body example:<br><br><pre>{<br>    "type":"linkClick",<br>    "from":"1683637275"<br>    "to":"1683720075"<br>    "limit":"86400"<br>}</pre>
+      operationId: pollByRange
+      parameters:
+      - name: type
+        in: query
+        description: Type of events customer would like to poll (e.g allMessages [This TYPE consolidates all types below except for sentToMta, therefore 2-10 below are included in allMessages], linkClick, mtaResponse, smsResponse, readTrack, forwardTrack, conversion, skipTracking, sendTransactional, unsubscribe, sentToMta [This type must be called separately. For any customer to get all available types their web-service must be able to make at least two separate calls. 1. To allMessages type, and 2. To sentToMta type])
+        required: true
+        schema:
+          type: string
+      - name: from
+        in: query
+        description: 'Opening timestamp from when the customer would like to get events (warning: timestamp is a time of inserting event to the database, not time of occurring of the event, so if the event happened at 31st of January at 23:59:59 but we had a delay in inserting and it was inserted of 1st of February then timestamp will be on February).'
+        required: true
+        schema:
+          type: integer
+          format: int64
+      - name: to
+        in: query
+        description: Closing timestamp.
+        required: true
+        schema:
+          type: integer
+          format: int64
+      - name: limit
+        in: query
+        description: A number of events to fetch.
+        required: true
+        schema:
+          type: integer
+          format: int64
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+            application/xml:
+              schema:
+                type: array
+                items:
+                  type: object
+        '400':
+          description: Required parameters are missing or incorrect.
+  /async/poll:
+    get:
+      tags:
+      - Async
+      summary: Poll results for a topic
+      description: 'Retrieves a certain amount of results for a topic from the result queue. The result items that were retrieved are deleted from the server once they have been transmitted. <br>Request body example:<br><br><pre>{<br>  "name": "twitter_logo.png",<br>  "contentType": "image/png",<br>  "content": "iVBORw0KGgoAAAANSUhEUgAAABUAAAARCAYAAAAyhueAAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAASFJREFUeNqslM0NgkAQhRdiAdiAgQ6468EO1INntQOpwFABdqBe9aAdiIl3twS1AbECfJPMkhVZftSXjJPsDh87z2WsNE1Fb3d3z+POVVQIdQ5ShJhqywdEgEgQQ1qwutsbFT4QM4DXFcALwi3YJqDD2bPx4/PGCg/OSw46NwAFA0nU7d7ObUYAHxF+wYMDUU8jiz19aG9TihEbyuS3oSavNmoT5Sm1thA/CkCLsvJ0In5XdnsIKkv+gCaSGZQ8QF7+AXrST0peBH8Ar9+grKfuS1Mgd/wBjb/0lmChvmBr14GgMy5qoiA/N+zcPSNfPN2fCoVF86KlDQxqvc93tl8DaBxALcAi/qLqKuaWpalAffsOz8iB4ZRSzYIymNJLgAEAYsJkJOLW//gAAAAASUVORK5CYII="<br>}</pre>'
+      operationId: poll
+      parameters:
+      - name: topic
+        in: query
+        description: Name of the topic.
+        required: true
+        schema:
+          type: string
+      - name: limit
+        in: query
+        description: A number of result items to retrieve.
+        required: true
+        schema:
+          type: integer
+          format: int32
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+            application/xml:
+              schema:
+                type: array
+                items:
+                  type: object
+        '400':
+          description: Required parameters are missing or incorrect.
+  /async/submit:
+    get:
+      tags:
+      - Async
+      summary: Submit an asynchronous job for a topic
+      description: Initiates an asynchronous job by providing a topic name (script name) and input data (arguments).<br>The script name references an API script that is individually created for your system.<br>CEP receives the request and processes the script asynchronously.<br/><br>Results can be polled from the result queue by topic name.
+      operationId: submit
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: string
+            application/xml:
+              schema:
+                type: string
+        '400':
+          description: Required parameters are missing or incorrect.
+components:
+  securitySchemes:
+    basicAuth:
+      type: http
+      scheme: basic
+      description: HTTP Basic authentication with a Mapp Engage system user of type API (or Hybrid).
+x-apievangelist-provenance:
+  method: searched
+  generated: '2026-08-12'
+  source: https://docs.mapp.com/apidocs/ (per-endpoint OpenAPI fragments)
+  note: Union of the OpenAPI JSON fragments Mapp publishes on each endpoint page. Mapp does not serve one consolidated document at a public URL; the tenant-served Swagger lives at https://<your-engage-host>/apidoc/swagger.json and requires a tenant. Operation bodies, parameters, responses, tags, summaries and descriptions are verbatim from Mapp. The swagger/basePath/schemes/securityDefinitions envelope is added by API Evangelist from the published Getting Started guide; no operation content was authored.
+  duplicate_operation_ids_suffixed: 30

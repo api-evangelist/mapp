@@ -1,0 +1,519 @@
+openapi: 3.2.0
+info:
+  title: Mapp Engage public User API
+  version: '1'
+  description: 'Mapp Engage REST API (REST 2.0, incremental version v19). Assembled verbatim from the per-operation OpenAPI fragments Mapp publishes on each endpoint page of https://docs.mapp.com/apidocs/. The base URL is tenant-specific: take your Mapp Engage login host and append /api/rest/v19.'
+  contact:
+    name: Mapp Technical Support
+    url: https://mapp.com/tech-support/
+servers:
+- url: /api/rest/v19
+security:
+- basicAuth: []
+tags:
+- name: User
+paths:
+  /user/create:
+    post:
+      tags:
+      - User
+      summary: Create a user
+      description: 'Creates a new user. Requires either an email or a mobile number since these fields are used as the unique user identifier in the system.<br>Request body example:<br><pre>[<br>  {"name" : "user.lastname", "value" : "Smith"},<br>  {"name" : "DateOfBirth", "value" : "1970-05-05"},<br>  {"name" : "ISOlanguagecode", "value" : "fr"},<br>  {"name": "user.ISOCountryCode", "value": "FR"} <br>]</pre>'
+      operationId: createUser
+      parameters:
+      - name: email
+        in: query
+        description: Email of the user
+        required: true
+        schema:
+          type: string
+      - name: mobileNumber
+        in: query
+        description: Mobile number of the user
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/User'
+        '400':
+          description: User with email does already exist. / One of the parameters 'email' or 'mobileNumber' must not be empty.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                $ref: '#/components/schemas/Attribute'
+  /user/deleteByEmail:
+    delete:
+      tags:
+      - User
+      summary: Delete a user by email
+      description: Deletes the user identified by the email address.
+      operationId: deleteByEmail
+      parameters:
+      - name: email
+        in: query
+        description: Email of the user
+        required: false
+        schema:
+          type: string
+      responses:
+        '204':
+          description: ''
+        '400':
+          description: Parameter 'email' is mandatory, but missing or incorrect.
+  /user/deleteByMobileNumber:
+    delete:
+      tags:
+      - User
+      summary: Delete a user by mobile number
+      description: Deletes the user identified by the mobile number.
+      operationId: deleteByMobileNumber
+      parameters:
+      - name: mobileNumber
+        in: query
+        description: Mobile number of the user
+        required: false
+        schema:
+          type: string
+      responses:
+        '204':
+          description: ''
+        '400':
+          description: Parameter 'mobileNumber' is mandatory, but missing or incorrect.
+  /user/delete:
+    delete:
+      tags:
+      - User
+      summary: Delete a user
+      description: Deletes the user identified by the specified ID
+      operationId: deleteUser
+      parameters:
+      - name: userId
+        in: query
+        description: User id
+        required: false
+        schema:
+          type: integer
+          format: int64
+      responses:
+        '204':
+          description: ''
+        '400':
+          description: Parameter 'userID' is mandatory, but missing or incorrect.
+        '404':
+          description: Not Found
+  /user/getByEmail:
+    get:
+      tags:
+      - User
+      summary: Get a user by email
+      description: Returns user data from the profile identified by the provided email address. This includes the unique user ID, email address, mobile number, and profile identifier value.
+      operationId: getUserByEmail
+      parameters:
+      - name: email
+        in: query
+        description: Email of the user
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: 'Example response:<br><br>{<br>    "id": 18067305231,<br>    "email": "test@test.com",<br>    "mobileNumber": null,<br>    "identifier": null<br>}'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/User'
+        '400':
+          description: Parameter 'email' is not a valid email address. / User with email does not exist.
+  /user/getByIdentifier:
+    get:
+      tags:
+      - User
+      summary: Get a user by identifier
+      description: Returns the user identified by the specified identifier. If there are more users with the same identifier, the response refers to the last user where this identifier has been assigned.
+      operationId: getByIdentifier
+      parameters:
+      - name: identifier
+        in: query
+        description: Identifier of the user
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: 'Example response:<br><br>{<br>    "id": 18067305231,<br>    "email": "test@test.com",<br>    "mobileNumber": null,<br>    "identifier": null<br>}'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/User'
+        '400':
+          description: ''
+  /user/getByMobileNumber:
+    get:
+      tags:
+      - User
+      summary: Get a user by mobile number
+      description: Returns the user identified by the specified identifier. If there are more users with the same identifier, the response refers to the last user where this identifier has been assigned
+      operationId: getByMobileNumber
+      parameters:
+      - name: mobileNumber
+        in: query
+        description: Mobile number of the user
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: 'Example response: <br>{<br>    "id": 18067305231,<br>    "email": "test@test.com",<br>    "mobileNumber": null,<br>    "identifier": null<br>}'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/User'
+        '400':
+          description: User with mobile number does not exist. / Parameter 'mobileNumber' is not a valid phone number.
+  /user/getMessageHistory:
+    get:
+      tags:
+      - User
+      summary: Get a user's message history
+      description: Retrieves the message history for a recipient for a set time frame.<br>The maximum time frame is 31 days. The maximum number of messages returned is 5000. sendDate is presented as Datetim
+      operationId: getMessageHistory
+      parameters:
+      - name: userId
+        in: query
+        description: User id
+        required: false
+        schema:
+          type: integer
+          format: int64
+      - name: fromDate
+        in: query
+        description: Start date of time frame in ISO 8601 date time format.
+        required: false
+        schema:
+          type: string
+      - name: toDate
+        in: query
+        description: End date of time frame in ISO 8601 date time format.
+        required: false
+        schema:
+          type: string
+      responses:
+        '200':
+          description: 'Example response: <br>[<br>  {<br>    "messageID": [354476555],<br>    "externalTransactionId": {},<br>    "externalMessageID": {},<br>    "messageName": ["Test"],<br>    "messageSubject": ["Test"],<br>    "groupId": [353599854],<br>    "groupName": ["Test"],<br>    "groupEmail": ["test@test.com"],<br>    "sendDate": [1491216661590],<br>    "messageType": ["single"],<br>    "status": ["Sent"],<br>    "clicked": [true],<br>    "opened": [false]<br>  }<br>]'
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+            application/xml:
+              schema:
+                type: array
+                items:
+                  type: object
+        '400':
+          description: Parameter 'userID' is mandatory, but missing or incorrect./ user with the given id does not exist.
+  /user/getProfileByEmail:
+    get:
+      tags:
+      - User
+      summary: Get a user's profile by email
+      description: Returns the user's profile, this is identified by the email address.
+      operationId: getProfileByEmail
+      parameters:
+      - name: email
+        in: query
+        description: Email of the user
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: 'Example response: <br>[{<br>    "name": "user.ISOLanguageCode",<br>    "value": "it" }, {<br>    "name": "user.Email",<br>    "value": "test@test.com" }, {<br>    "name": "user.EmailDomain",<br>    "value": "test.de" }, {<br>    "name": "user.LastName",<br>    "value": "Cloned" }, {<br>    "name": "user.FirstName",<br>    "value": "Test" }, {<br>    "name": "user.ISOCountryCode",<br>    "value": "IT" }<br>}]'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/User'
+        '400':
+          description: Parameter 'email' is mandatory, but missing or incorrect./ user with the given email does not exist.
+  /user/getProfileByMobileNumber:
+    get:
+      tags:
+      - User
+      summary: Get a user's profile by mobile number
+      description: Returns the user's profile, identified by the mobile number
+      operationId: getProfileByMobileNumber
+      parameters:
+      - name: mobileNumber
+        in: query
+        description: Mobile number of the user
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: 'Example response: <br>{<br>    "name": "user.ISOLanguageCode",<br>    "value": "it" }, {<br>    "name": "user.Email",<br>    "value": "test@test.com" }, {<br>    "name": "user.EmailDomain",<br>    "value": "test.de" }, {<br>    "name": "user.LastName",<br>    "value": "Cloned" }, {<br>    "name": "user.FirstName",<br>    "value": "Test" }, {<br>    "name": "user.ISOCountryCode",<br>    "value": "IT" }<br>}'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/User'
+        '400':
+          description: Parameter 'mobileNumber' is mandatory, but missing or incorrect./ user with the given mobileNumber does not exist.
+  /user/getProfile:
+    get:
+      tags:
+      - User
+      summary: Get a user's profile
+      description: Returns the user's profile (only attributes with a value are shown). The profile consists of attributes that contain user data. All attributes can be accessed system-wide.
+      operationId: getProfile
+      parameters:
+      - name: userId
+        in: query
+        description: ID of the user
+        required: true
+        schema:
+          type: integer
+          format: int64
+      responses:
+        '200':
+          description: 'Example response: <br>[{<br>    "name": "user.ISOLanguageCode",<br>    "value": "it" }, {<br>    "name": "user.Email",<br>    "value": "test@test.com" }, {<br>    "name": "user.EmailDomain",<br>    "value": "test.de" }, {<br>    "name": "user.LastName",<br>    "value": "Cloned" }, {<br>    "name": "user.FirstName",<br>    "value": "Test" }, {<br>    "name": "user.ISOCountryCode",<br>    "value": "IT" }<br>}]'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/User'
+        '400':
+          description: Parameter 'userID' is mandatory, but missing or incorrect./ user with the given id does not exist.
+        '404':
+          description: 'Error response: {<br>"errorActor": "CLIENT",<br>"errorCode": "INVALID_REQUEST",<br>"message": "Not Found"<br>}'
+  /user/get:
+    get:
+      tags:
+      - User
+      summary: Get a user
+      description: Returns the user identified by the specified user ID.
+      operationId: getUser
+      parameters:
+      - name: userId
+        in: query
+        description: ID of the user
+        required: true
+        schema:
+          type: integer
+          format: int64
+      responses:
+        '200':
+          description: 'Example response: <br>{<br>    "id": 18067305231,<br>    "email": "test@test.com",<br>    "mobileNumber": null,<br>    "identifier": null<br>}'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/User'
+        '400':
+          description: Parameter 'userID' is mandatory, but missing or incorrect./ user with the given id does not exist.Error response
+        '404':
+          description: 'Error response: {<br>"errorActor": "CLIENT",<br>"errorCode": "INVALID_REQUEST",<br>"message": "Not Found"<br>}'
+  /user/replaceProfileByEmail:
+    post:
+      tags:
+      - User
+      summary: Replace a user's profile by email
+      description: 'Replaces all attribute values for a specific user. All attribute values that are transmitted with the method are added and replace any existing values.<br><br>Any currently existing attribute values that are not found in the API call are deleted (except for Member attributes).<br>Request body example: <br><pre>[<br>  {"name" : "user.firstname", "value" : "FirstName"},<br>  {"name" : "user.lastname", "value" : "LastName"}<br>]</pre><br><br><b>Maximum character lengths for standard attribute values:</b><ul><li><code>FirstName</code>: 50</li><li><code>LastName</code>: 50</li><li><code>Nickname</code>: 20</li><li><code>ZipCode</code>: 10</li><li><code>Identifier</code>: 2000</li><li><code>Photo</code>: 2000</li></ul>Other standard attributes (<code>Email</code>, <code>MobileNumber</code>, <code>ISOCountryCode</code>, <code>ISOLanguageCode</code>, <code>TimeZone</code>, <code>Title</code>, <code>DateOfBirth</code>) are validated by format/enum, not by length. Note that <code>Email</code> is stored in a column of length 129.<br><br><b>Custom attribute values</b> are limited to 2000 characters.<br><br>Values exceeding these limits are rejected with HTTP 400 (<code>INVALID_PARAMETER</code>); during contact import, oversized values are silently truncated.'
+      operationId: replaceProfileByEmail
+      parameters:
+      - name: email
+        in: query
+        description: Email of the user
+        required: false
+        schema:
+          type: string
+      responses:
+        '204':
+          description: ''
+        '400':
+          description: Parameter 'email' is mandatory, but missing or incorrect./ user with the given email does not exist.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                $ref: '#/components/schemas/Attribute'
+  /user/replaceProfileByMobileNumber:
+    post:
+      tags:
+      - User
+      summary: Replace a user's profile by mobile number
+      description: 'Replaces all attribute values for a specific user. All attribute values that are transmitted with the method are added and replace any existing values.<br><br>Any currently existing attribute values that are not found in the API call are deleted (except for Member attributes).<br>Request body example: <br><pre>[<br>  {"name" : "user.firstname", "value" : "FirstName"},<br>  {"name" : "user.lastname", "value" : "LastName"}<br>]</pre><br><br><b>Maximum character lengths for standard attribute values:</b><ul><li><code>FirstName</code>: 50</li><li><code>LastName</code>: 50</li><li><code>Nickname</code>: 20</li><li><code>ZipCode</code>: 10</li><li><code>Identifier</code>: 2000</li><li><code>Photo</code>: 2000</li></ul>Other standard attributes (<code>Email</code>, <code>MobileNumber</code>, <code>ISOCountryCode</code>, <code>ISOLanguageCode</code>, <code>TimeZone</code>, <code>Title</code>, <code>DateOfBirth</code>) are validated by format/enum, not by length. Note that <code>Email</code> is stored in a column of length 129.<br><br><b>Custom attribute values</b> are limited to 2000 characters.<br><br>Values exceeding these limits are rejected with HTTP 400 (<code>INVALID_PARAMETER</code>); during contact import, oversized values are silently truncated.'
+      operationId: replaceProfileByMobileNumber
+      parameters:
+      - name: mobileNumber
+        in: query
+        description: Mobile number of the user
+        required: false
+        schema:
+          type: string
+      responses:
+        '204':
+          description: ''
+        '400':
+          description: Parameter 'mobileNumber' is mandatory, but missing or incorrect./ user with the given mobileNumber does not exist.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                $ref: '#/components/schemas/Attribute'
+  /user/replaceProfile:
+    post:
+      tags:
+      - User
+      summary: Replace a user's profile
+      description: 'Replaces all attribute values for a specific user. All attribute values that are transmitted with the method are added and replace any existing values.<br><br>Any currently existing attribute values that are not found in the API call are deleted (except for Member attributes).<br>Request body example: <br><pre>[<br>  {"name" : "user.firstname", "value" : "John"},<br>  {"name" : "user.lastname", "value" : "Smith"}<br>]</pre> <br><br>Request body example - erase mobile number:<br>[<br>  <pre>{"name" : "user.MobileNumber", "value" : null}<br>]</pre><br><br><b>Maximum character lengths for standard attribute values:</b><ul><li><code>FirstName</code>: 50</li><li><code>LastName</code>: 50</li><li><code>Nickname</code>: 20</li><li><code>ZipCode</code>: 10</li><li><code>Identifier</code>: 2000</li><li><code>Photo</code>: 2000</li></ul>Other standard attributes (<code>Email</code>, <code>MobileNumber</code>, <code>ISOCountryCode</code>, <code>ISOLanguageCode</code>, <code>TimeZone</code>, <code>Title</code>, <code>DateOfBirth</code>) are validated by format/enum, not by length. Note that <code>Email</code> is stored in a column of length 129.<br><br><b>Custom attribute values</b> are limited to 2000 characters.<br><br>Values exceeding these limits are rejected with HTTP 400 (<code>INVALID_PARAMETER</code>); during contact import, oversized values are silently truncated.'
+      operationId: replaceProfile
+      parameters:
+      - name: userId
+        in: query
+        description: ID of the user
+        required: false
+        schema:
+          type: integer
+          format: int64
+      responses:
+        '204':
+          description: ''
+        '400':
+          description: Parameter 'userID' is mandatory, but missing or incorrect./ user with the given id does not exist.
+        '404':
+          description: Not Found
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                $ref: '#/components/schemas/Attribute'
+  /user/updateProfileByEmail:
+    post:
+      tags:
+      - User
+      summary: Update a user's profile by email
+      description: 'Updates a user identified via email. Updates all data stored in the attributes with the information saved in the attribute list. This method only changes the information that is explicitly mentioned. Attributes that are not mentioned are not changed (there is also a replace method to change the entire profile of a user and to delete attribute values if the attribute is not mentioned for the user).<br>Request body example: <br><pre>[<br>  {"name" : "user.firstname", "value" : "John"},<br>  {"name" : "user.lastname", "value" : "Smith"}<br>]</pre> <br><br>Request body example - erase mobile number:<br><pre>[<br>  {"name" : "user.MobileNumber", "value" : null}<br>]</pre><br><br><b>Maximum character lengths for standard attribute values:</b><ul><li><code>FirstName</code>: 50</li><li><code>LastName</code>: 50</li><li><code>Nickname</code>: 20</li><li><code>ZipCode</code>: 10</li><li><code>Identifier</code>: 2000</li><li><code>Photo</code>: 2000</li></ul>Other standard attributes (<code>Email</code>, <code>MobileNumber</code>, <code>ISOCountryCode</code>, <code>ISOLanguageCode</code>, <code>TimeZone</code>, <code>Title</code>, <code>DateOfBirth</code>) are validated by format/enum, not by length. Note that <code>Email</code> is stored in a column of length 129.<br><br><b>Custom attribute values</b> are limited to 2000 characters.<br><br>Values exceeding these limits are rejected with HTTP 400 (<code>INVALID_PARAMETER</code>); during contact import, oversized values are silently truncated.'
+      operationId: updateProfileByEmail
+      parameters:
+      - name: email
+        in: query
+        description: Email of the user
+        required: false
+        schema:
+          type: string
+      responses:
+        '204':
+          description: ''
+        '400':
+          description: 'Email address not existing in the Engage system provided as a parameter.<br><br>Example:<br><pre>{<br>  "errorActor": "CLIENT",<br>  "errorCode": "NO_SUCH_OBJECT",<br>  "message": "User with email=no.email@example.com does not exist.",<br>  "objectType": "User",<br>  "propertyName": "email",<br>  "propertyValue": "no.email@example.com"<br>}</pre>'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                $ref: '#/components/schemas/Attribute'
+  /user/updateProfileByMobileNumber:
+    post:
+      tags:
+      - User
+      summary: Update a user's profile by mobile number
+      description: 'Updates a user identified via mobile number. Updates all data stored in the attributes with the information saved in the attribute list. This method only changes the information that is explicitly mentioned. Attributes that are not mentioned are not changed (there is also a replace method to change the entire profile of a user and to delete attribute values if the attribute is not mentioned for the user).<br>Request body example: <br><pre>[<br>  {"name" : "user.firstname", "value" : "FirstName"},<br>  {"name" : "user.lastname", "value" : "LastName"}<br>]</pre><br><br><b>Maximum character lengths for standard attribute values:</b><ul><li><code>FirstName</code>: 50</li><li><code>LastName</code>: 50</li><li><code>Nickname</code>: 20</li><li><code>ZipCode</code>: 10</li><li><code>Identifier</code>: 2000</li><li><code>Photo</code>: 2000</li></ul>Other standard attributes (<code>Email</code>, <code>MobileNumber</code>, <code>ISOCountryCode</code>, <code>ISOLanguageCode</code>, <code>TimeZone</code>, <code>Title</code>, <code>DateOfBirth</code>) are validated by format/enum, not by length. Note that <code>Email</code> is stored in a column of length 129.<br><br><b>Custom attribute values</b> are limited to 2000 characters.<br><br>Values exceeding these limits are rejected with HTTP 400 (<code>INVALID_PARAMETER</code>); during contact import, oversized values are silently truncated.'
+      operationId: updateProfileByMobileNumber
+      parameters:
+      - name: mobileNumber
+        in: query
+        description: Mobile number of the user
+        required: false
+        schema:
+          type: string
+      responses:
+        '204':
+          description: ''
+        '400':
+          description: Parameter 'mobileNumber' is mandatory, but missing or incorrect./ user with the given mobileNumber does not exist.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                $ref: '#/components/schemas/Attribute'
+  /user/updateProfile:
+    post:
+      tags:
+      - User
+      summary: Update a user's profile
+      description: 'Updates the user''s profile with the information saved in the attribute list. Attributes that are not mentioned are not changed.<br>Note: There is also a user replaceProfile method to<br><br>1) change the entire profile of a user and<br><br>2) to delete attribute values if the attribute is not mentioned for the user.<br><br>Request body example: <br><pre>[<br>  {"name" : "user.firstname", "value" : "John"},<br>  {"name" : "user.lastname", "value" : "Smith"},<br>  {"name": "user.ISOCountryCode", "value": "FR"} <br>]</pre>  <br><br>Request body example - erase mobile number:<br>[<br>  <pre>{"name" : "user.MobileNumber", "value" : null}<br>]</pre><br><br><b>Maximum character lengths for standard attribute values:</b><ul><li><code>FirstName</code>: 50</li><li><code>LastName</code>: 50</li><li><code>Nickname</code>: 20</li><li><code>ZipCode</code>: 10</li><li><code>Identifier</code>: 2000</li><li><code>Photo</code>: 2000</li></ul>Other standard attributes (<code>Email</code>, <code>MobileNumber</code>, <code>ISOCountryCode</code>, <code>ISOLanguageCode</code>, <code>TimeZone</code>, <code>Title</code>, <code>DateOfBirth</code>) are validated by format/enum, not by length. Note that <code>Email</code> is stored in a column of length 129.<br><br><b>Custom attribute values</b> are limited to 2000 characters.<br><br>Values exceeding these limits are rejected with HTTP 400 (<code>INVALID_PARAMETER</code>); during contact import, oversized values are silently truncated.'
+      operationId: updateProfile
+      parameters:
+      - name: userId
+        in: query
+        description: ID of the user
+        required: false
+        schema:
+          type: integer
+          format: int64
+      responses:
+        '204':
+          description: ''
+        '400':
+          description: Parameter 'userId' is mandatory but no value was specified. / The request didn't contain a request entity. / User with id does not exist.
+        '404':
+          description: Parameter 'userID' is mandatory, but missing or incorrect./ user with the given id does not exist.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                $ref: '#/components/schemas/Attribute'
+components:
+  securitySchemes:
+    basicAuth:
+      type: http
+      scheme: basic
+      description: HTTP Basic authentication with a Mapp Engage system user of type API (or Hybrid).
+x-apievangelist-provenance:
+  method: searched
+  generated: '2026-08-12'
+  source: https://docs.mapp.com/apidocs/ (per-endpoint OpenAPI fragments)
+  note: Union of the OpenAPI JSON fragments Mapp publishes on each endpoint page. Mapp does not serve one consolidated document at a public URL; the tenant-served Swagger lives at https://<your-engage-host>/apidoc/swagger.json and requires a tenant. Operation bodies, parameters, responses, tags, summaries and descriptions are verbatim from Mapp. The swagger/basePath/schemes/securityDefinitions envelope is added by API Evangelist from the published Getting Started guide; no operation content was authored.
+  duplicate_operation_ids_suffixed: 30

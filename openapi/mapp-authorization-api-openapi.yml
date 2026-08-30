@@ -1,0 +1,179 @@
+openapi: 3.2.0
+info:
+  title: Mapp Fashion Authorization API
+  version: '10'
+  description: 'Mapp Fashion (Dressipi) recommendation API. Assembled verbatim from the per-operation OpenAPI fragments Mapp publishes on each endpoint page of https://docs.mapp.com/apidocs/. The base URL is customer-specific: https://your-domain.com/api/{endpoint}.'
+security:
+- api_key: []
+  user_token: []
+tags:
+- name: authorization
+  description: Operations for obtaining or refreshing JWTs
+paths:
+  /oauth/authorize:
+    get:
+      summary: start the process of obtaining a JWT
+      description: 'This is an oauth2 compliant authorize endpoint (see https://tools.ietf.org/html/rfc6749) with the following limitations:
+
+
+        - Only grant code flow is allowed
+
+        - PKCE is mandatory i.e. you must generate a code_verifier (a randomly generated secret) and include its url safe base64 encoded SHA256 hash as the code_challenge parameter
+
+        - Only the S256 code challenge method is supported
+
+        - The redirect URI must be set to urn:ietf:wg:oauth:2.0:oob:auto
+
+
+        This api returns a grant code that can then be exchanged for a JWT
+
+
+        This will create a new profile in the dressipi database and should therefore only be used if no refresh token is available.
+
+
+        code_challenge is constructed in the following manner:
+
+
+        - Pick a random code_verifier value, for example 1tBnEmtSImyCykPHxHYBdzpSFhKEj0Q1LuiHd4fdDlY
+
+        - code challenge = Base64-url-encode(SHA256(code_verifier)):  p7CN1Zi4o5ARn1mYNvNFvj2r5cKkr2k6y7a573eHJXQ in the example above
+
+
+        For more details on PKCE see https://tools.ietf.org/html/rfc7636, appendix A has the definition of base64-url-encode
+
+        '
+      parameters:
+      - in: query
+        name: redirect_uri
+        required: true
+        schema:
+          type: string
+          enum:
+          - urn:ietf:wg:oauth:2.0:oob:auto
+      - in: query
+        name: response_type
+        required: true
+        schema:
+          type: string
+          enum:
+          - code
+      - in: query
+        name: client_id
+        description: the api client id supplied by dressipi
+        required: true
+        schema:
+          type: string
+      - in: query
+        name: state
+        description: a randomly generated state value
+        required: true
+        schema:
+          type: string
+      - in: query
+        name: code_challenge
+        description: a urlsafe base64 encoded, SHA256 hash of the code verifier (a cryptographically secure randomly generated string).
+        required: true
+        schema:
+          type: string
+      - in: query
+        name: code_challenge_method
+        required: true
+        schema:
+          type: string
+          enum:
+          - S256
+      responses:
+        '200':
+          description: Information about the authorization
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthorizationResponse'
+        '400':
+          description: oauth2 error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+      tags:
+      - authorization
+      operationId: getOauthAuthorize
+  /oauth/token:
+    post:
+      summary: exchange a grant code or refresh token for a JWT
+      description: 'This allows the client to exchange a previously obtained grant code or refresh token for an access token for immediate use and a refresh token for subsequent requests.
+
+
+        It may return an updated refresh token, in which case the stored refresh token should be updated
+
+
+        The redirect URI must be set to urn:ietf:wg:oauth:2.0:oob:auto
+
+
+        When exchanging a grant code from the authorize endpoint:
+
+        - set grant_type to authorization_code
+
+        - set code to the code returned by the authorize endpoint
+
+
+        When refreshing a token:
+
+        - set grant_type to refresh_token
+
+        - set refresh_token to the previously obtained refresh token
+
+
+        '
+      responses:
+        '200':
+          description: The generated tokens
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TokenResponse'
+        '400':
+          description: oauth2 error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+      tags:
+      - authorization
+      operationId: postOauthToken
+      requestBody:
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                redirect_uri:
+                  type: string
+                  enum:
+                  - urn:ietf:wg:oauth:2.0:oob:auto
+                grant_type:
+                  type: string
+                  enum:
+                  - authorization_code
+                  - refresh_token
+                code:
+                  type: string
+                  description: the authorization_code previously obtained
+                refresh_token:
+                  type: string
+                  description: the refresh_token previously obtained
+                client_id:
+                  type: string
+                  description: the api client id supplied by dressipi
+                code_verifier:
+                  type: string
+                  description: for authorization_code requests, the code_verifier that was used to generate the associated code_challenge
+              required:
+              - redirect_uri
+              - grant_type
+              - client_id
+x-apievangelist-provenance:
+  method: searched
+  generated: '2026-08-12'
+  source: https://docs.mapp.com/apidocs/ (per-endpoint OpenAPI fragments, Mapp Fashion API)
+  note: Union of the Swagger 2.0 fragments Mapp publishes per endpoint. The swagger/schemes envelope is added by API Evangelist; Mapp does not publish securityDefinitions for the api_key/user_token schemes its security block references, so they are recorded in authentication/ rather than invented here.

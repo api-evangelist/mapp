@@ -1,0 +1,271 @@
+openapi: 3.2.0
+info:
+  title: Mapp Engage public Contact API
+  version: '1'
+  description: 'Mapp Engage REST API (REST 2.0, incremental version v19). Assembled verbatim from the per-operation OpenAPI fragments Mapp publishes on each endpoint page of https://docs.mapp.com/apidocs/. The base URL is tenant-specific: take your Mapp Engage login host and append /api/rest/v19.'
+  contact:
+    name: Mapp Technical Support
+    url: https://mapp.com/tech-support/
+servers:
+- url: /api/rest/v19
+security:
+- basicAuth: []
+tags:
+- name: Contact
+paths:
+  /contact/anonymize:
+    get:
+      tags:
+      - Contact
+      summary: Anonymize a contact
+      description: Anonymizes contact PII data based on GDPR regulations.
+      operationId: anonymize
+      parameters:
+      - name: contactId
+        in: query
+        description: The user ID of the contact to perform anonymization for.
+        required: true
+        schema:
+          type: integer
+          format: int64
+      - name: notificationRecipient
+        in: query
+        description: Active system user witch is going to be used for permission checks, and will get system message.
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: boolean
+            application/xml:
+              schema:
+                type: boolean
+        '400':
+          description: Parameter contactId and notificationRecipient are  mandatory, but are missing or incorrect
+        '404':
+          description: 'Error response: {<br>"errorActor": "CLIENT",<br>"errorCode": "INVALID_REQUEST",<br>"message": "Not Found"<br>}'
+  /contact/checkUpdateVersion:
+    get:
+      tags:
+      - Contact
+      summary: Check contact update version
+      description: Checks if profile update with specified update version (timestamp) has been saved in Data Store.
+      operationId: checkUpdateVersion
+      parameters:
+      - name: contactIdentifier
+        in: query
+        description: The contact identifier. The same that is used in the "Update" method. It is described here ContactIdentifier.
+        required: true
+        schema:
+          type: string
+      - name: updateVersion
+        in: query
+        description: The timestamp to be checked.
+        required: true
+        schema:
+          type: integer
+          format: int64
+      responses:
+        '200':
+          description: Boolean value
+          content:
+            application/json:
+              schema:
+                type: boolean
+            application/xml:
+              schema:
+                type: boolean
+        '400':
+          description: '{<br>"errorActor": "CLIENT",<br>"errorCode": "INVALID_REQUEST",<br>"message": "Bad Request"<br>}'
+  /contact/create:
+    post:
+      tags:
+      - Contact
+      summary: Create a contact
+      description: 'Creates a new contact using the information provided in the contact object.<br><br>Check Contact_ for possible identifiers in the body.<br>Request body examples:<br><br><pre>{<br>"emailAddress": "test20210203@dropmail.mapp.com",<br>"attributes":<br>[<br>{"name": "FirstName", "value": "John"},<br>{"name": "LastName", "value": "Smith"},<br>{"name": "mobileNumber", "value": "33505606709"},<br>{"name": "user.ISOCountryCode", "value": "FR"}<br>]<br>}<br><br>{<br>  "emailAddress" : "testuser@dropmail.mapp.com"<br>}</pre>'
+      operationId: create
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Contact'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/Contact'
+        '400':
+          description: Such contact already exists
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Contact'
+  /contact/delete:
+    post:
+      tags:
+      - Contact
+      summary: Delete a contact
+      description: Deletes the contact identified by the specified identifier.<br>Request body example:<br><br>{<br>    "type":"EMAIL",<br>    "value":"test@test.com"<br>}
+      operationId: delete
+      responses:
+        '200':
+          description: ''
+        '400':
+          description: ''
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ContactIdentifier'
+  /contact/export:
+    get:
+      tags:
+      - Contact
+      summary: Export a contact (GDPR)
+      description: Pushes asynchronous GDPR contact export, which will send system message with the link in the end.
+      operationId: export
+      parameters:
+      - name: contactId
+        in: query
+        description: The user ID of the contact to perform export for.
+        required: true
+        schema:
+          type: integer
+          format: int64
+      - name: notificationRecipient
+        in: query
+        description: Active system user which is going to be used for permission checks, and will get system message.
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: boolean
+            application/xml:
+              schema:
+                type: boolean
+        '400':
+          description: Parameter contactId and notificationRecipient are  mandatory, but are missing or incorrect.
+        '404':
+          description: 'Error response: {<br>"errorActor": "CLIENT",<br>"errorCode": "INVALID_REQUEST",<br>"message": "Not Found"<br>}'
+  /contact/get:
+    post:
+      tags:
+      - Contact
+      summary: Get a contact
+      description: 'Returns a contact object that matches the specified identifier.<br>Request body examples:<br><br><pre>{<br>    "type":"EMAIL",<br>    "value":"test@test.com"<br>}<br><br>{<br>    "type":"MOBILE",<br>    "value":"48505606707"<br>}</pre><br>Note: Do not confuse user/get, which is a GET call requiring a user id, with contact/get, which is a POST call requiring a post body containing the identifier to query (email, mobile).'
+      operationId: get
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Contact'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/Contact'
+        '400':
+          description: 'Bad request. Can have several meanings:<br><ul><li>Error message “cannot deserialize value”: Missing or typo in request body JSON. Remember that EMAIL or MOBILE keywords are case-sensitive and MUST be written in uppercase.</li><li>Error in formatted JSON block: Check the “errorCode” and “message” keys for the error and details, for example:</li><pre>{<br>    "errorActor": "CLIENT",<br>    "errorCode": "NO_SUCH_OBJECT",<br>    "message": "Contact with identifier=nobody.here@example.com does not exist.",<br>    "objectType": "Contact",<br>    "propertyName": "identifier",<br>    "propertyValue": "nobody.here@example.com"<br>}</pre></ul>'
+        '403':
+          description: Incorrect system user login credentials. Check username password, and check that the corresponding system user account is Type “API” or “Hybrid”.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ContactIdentifier'
+  /contact/update:
+    post:
+      tags:
+      - Contact
+      summary: Update a contact
+      description: 'Can be used to update contacts. <br>Please Note: If an attribute, for example, mobileNumber, is not included or left empty, any existing value will be removed from the contact’s profile. <br>Request body examples:<br><br><pre>{<br>    "emailAddress": "test20200529@dropmail.mapp.com",<br>    "attributes":<br>    [<br>    {"name": "FirstName", "value": "John"},<br>    {"name": "LastName", "value": "Smith"},             <br>    {"name": "mobileNumber", "value": "335056067010"}, <br>    {"name": "user.ISOCountryCode", "value": "FR"}                        <br>    ]<br>}</pre><br><br>ContactIdentifierType values: EMAIL - The identifier is an email address.<br>MOBILE - The identifier is a mobile number.<br>APP_ALIAS - The identifier is a mobile app alias.<br>EXTERNAL - The identifier is a value generated by an external system.<br>ID - Identifier.'
+      operationId: update
+      parameters:
+      - name: identifierType
+        in: query
+        description: The type of identifier to be used for the contact update.
+        required: true
+        schema:
+          type: string
+          enum:
+          - APP_ALIAS
+          - EMAIL
+          - EXTERNAL
+          - ID
+          - MOBILE
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Contact'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/Contact'
+        '400':
+          description: Parameter unifiedIdentifierName and identifierType are  mandatory, but are missing or incorrect.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Contact'
+  /contact/updateMultichannelContact:
+    post:
+      tags:
+      - Contact
+      summary: Update a multichannel contact
+      description: 'Updates the profile data of an existing multichannel contact,<br><br>setting correctly mobile alias.<br>Request body examples:<br><br><pre>{<br>    "emailAddress": "test20200529@dropmail.mapp.com",<br>    "attributes":<br>    [<br>    {"name": "FirstName", "value": "John"},<br>    {"name": "LastName", "value": "Smith"},             <br>    {"name": "mobileNumber", "value": "335056067010"}, <br>    {"name": "user.ISOCountryCode", "value": "FR"}                        <br>    ]<br>}</pre><br><br>ContactIdentifierType values: EMAIL - The identifier is an email address.<br>MOBILE - The identifier is a mobile number.<br>APP_ALIAS - The identifier is a mobile app alias.<br>EXTERNAL - The identifier is a value generated by an external system.<br>ID - Identifier.'
+      operationId: updateMultichannelContact
+      parameters:
+      - name: identifierType
+        in: query
+        description: The type of identifier to be used for the contact update.
+        required: true
+        schema:
+          type: string
+          enum:
+          - APP_ALIAS
+          - EMAIL
+          - EXTERNAL
+          - ID
+          - MOBILE
+      responses:
+        '200':
+          description: Boolean value
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Contact'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/Contact'
+        '400':
+          description: Parameter unifiedIdentifierName and identifierType are  mandatory, but are missing or incorrect.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Contact'
+components:
+  securitySchemes:
+    basicAuth:
+      type: http
+      scheme: basic
+      description: HTTP Basic authentication with a Mapp Engage system user of type API (or Hybrid).
+x-apievangelist-provenance:
+  method: searched
+  generated: '2026-08-12'
+  source: https://docs.mapp.com/apidocs/ (per-endpoint OpenAPI fragments)
+  note: Union of the OpenAPI JSON fragments Mapp publishes on each endpoint page. Mapp does not serve one consolidated document at a public URL; the tenant-served Swagger lives at https://<your-engage-host>/apidoc/swagger.json and requires a tenant. Operation bodies, parameters, responses, tags, summaries and descriptions are verbatim from Mapp. The swagger/basePath/schemes/securityDefinitions envelope is added by API Evangelist from the published Getting Started guide; no operation content was authored.
+  duplicate_operation_ids_suffixed: 30

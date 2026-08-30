@@ -1,0 +1,127 @@
+openapi: 3.2.0
+info:
+  title: Mapp Engage public Related Data API
+  version: '1'
+  description: 'Mapp Engage REST API (REST 2.0, incremental version v19). Assembled verbatim from the per-operation OpenAPI fragments Mapp publishes on each endpoint page of https://docs.mapp.com/apidocs/. The base URL is tenant-specific: take your Mapp Engage login host and append /api/rest/v19.'
+  contact:
+    name: Mapp Technical Support
+    url: https://mapp.com/tech-support/
+servers:
+- url: /api/rest/v19
+security:
+- basicAuth: []
+tags:
+- name: Related Data
+paths:
+  /relatedData/createRecord:
+    post:
+      tags:
+      - Related Data
+      summary: Create a related data record
+      description: 'Adds ONE record to a data set. The data to insert is defined in a JSON block submitted in the request body. <br>The JSON block must contain the dataset''s name, the key value, and a data array of name and value elements. The name references the column in the related data set, and the value contains the data to be inserted into the corresponding columns. <br><br>datasetName (String, required) - Name of the related data set. All related data records reside within a data set identified by a unique name.<br>key (String, required) - Key defining which record(s) to select from the data set.<br>data (Attribute, optional) - An optional list of name, value pair.<br>Request body example:<br><br> <pre>{<br>  "datasetName": "products",<br>  "key": "testuser@domain.com",<br>  "data": [<br>    {<br>      "name": "productname",<br>      "value": "bicycle"        <br>    },<br>    {<br>      "name": "quantity",<br>      "value": "1"     <br>    }   <br>  ]<br>}</pre>'
+      operationId: createRecord
+      responses:
+        '200':
+          description: ''
+        '400':
+          description: RelatedDataList with dataSetName=products does not exist.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RelatedDataRecord'
+  /relatedData/deleteRecords:
+    post:
+      tags:
+      - Related Data
+      summary: Delete related data records
+      description: 'Delete a record in a related data set.<br>Request body example:<br><br> <pre>{"datasetName": "products",<br> "key": "testuser@domain.com",<br> "filter":<br>    [{<br>        "name":"bicycle",<br>          "value":"14"<br>     }]<br>}</pre>'
+      operationId: deleteRecords
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: integer
+                format: int64
+            application/xml:
+              schema:
+                type: integer
+                format: int64
+        '400':
+          description: ''
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RelatedDataFilter'
+  /relatedData/getRecordsByKey:
+    get:
+      tags:
+      - Related Data
+      summary: Get related data records by key
+      description: 'Returns all related data records stored under the specified key in a related data set.<br><br>Response body example - 1 record:<br><br><pre>[<br>    {<br>        "datasetName": "products",<br>        "key": "test-user@example.com",<br>        "data": [<br>            { "name": "hairColor", "value": "green" },<br>            { "name": "eyeColor", "value": "blue" }<br>        ]<br>    }<br>]</pre><br><br>Response body example - empty result:<br><br><pre>[]</pre>'
+      operationId: getRecordsByKey
+      parameters:
+      - name: datasetName
+        in: query
+        description: Name of the related data set
+        required: true
+        schema:
+          type: string
+      - name: key
+        in: query
+        description: Key defining which record(s) to select from the data set
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/RelatedDataRecord'
+        '400':
+          description: ''
+  /relatedData/updateRecords:
+    post:
+      tags:
+      - Related Data
+      summary: Update related data records
+      description: 'Updates all or specific records for a key in a related data set. For the requests without filter, the behavior is the same as in file import ("delete all + add").<br><br>There is no possibility to update the unique RD column. The unique column is treated as a part of the key that''s why to change such entities it needs to be deleted and created as the new row.<br>Request body example:<br><br> <pre>{<br>  "datasetName": "products",<br>  "key": "testuser@domain.com",<br>  "data": [<br>    {<br>      "name": "quantity",<br>      "value": "14"        <br>    } <br>  ]<br>  ,<br>  "filter": [{<br>      "name": "bicycle",<br>      "value": "1"      <br>    }]<br>}</pre>'
+      operationId: updateRecords
+      responses:
+        '200':
+          description: Successful response - number of deleted previous occurrences for the specified key. One record was added
+          content:
+            application/json:
+              schema:
+                type: integer
+                format: int64
+            application/xml:
+              schema:
+                type: integer
+                format: int64
+        '400':
+          description: ''
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RelatedDataRecordAndFilter'
+components:
+  securitySchemes:
+    basicAuth:
+      type: http
+      scheme: basic
+      description: HTTP Basic authentication with a Mapp Engage system user of type API (or Hybrid).
+x-apievangelist-provenance:
+  method: searched
+  generated: '2026-08-12'
+  source: https://docs.mapp.com/apidocs/ (per-endpoint OpenAPI fragments)
+  note: Union of the OpenAPI JSON fragments Mapp publishes on each endpoint page. Mapp does not serve one consolidated document at a public URL; the tenant-served Swagger lives at https://<your-engage-host>/apidoc/swagger.json and requires a tenant. Operation bodies, parameters, responses, tags, summaries and descriptions are verbatim from Mapp. The swagger/basePath/schemes/securityDefinitions envelope is added by API Evangelist from the published Getting Started guide; no operation content was authored.
+  duplicate_operation_ids_suffixed: 30

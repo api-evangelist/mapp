@@ -1,0 +1,170 @@
+openapi: 3.2.0
+info:
+  title: Mapp Engage public Prepared Message API
+  version: '1'
+  description: 'Mapp Engage REST API (REST 2.0, incremental version v19). Assembled verbatim from the per-operation OpenAPI fragments Mapp publishes on each endpoint page of https://docs.mapp.com/apidocs/. The base URL is tenant-specific: take your Mapp Engage login host and append /api/rest/v19.'
+  contact:
+    name: Mapp Technical Support
+    url: https://mapp.com/tech-support/
+servers:
+- url: /api/rest/v19
+security:
+- basicAuth: []
+tags:
+- name: Prepared Message
+paths:
+  /preparedmessage/find:
+    post:
+      tags:
+      - Prepared Message
+      summary: Find prepared messages
+      description: 'Returns list of prepared messages. At least one of the following two fields is mandatory:<br><br>''lastUpdateDateFrom''<br><br>''creationDateFrom'' - must be within 31 days of CreationDateTo.<br><br>CreationDateTo if is not given then by default is currentDate, if is given than obligatory is to use creationDateFrom as well.<br><br>To get the result faster, use limit (1-500) <br>Request body examples:<br><br><pre>{<br> "externalMessageId": "MessageID"<br>} <br><br>{<br> "creationDateFrom": "2020-07-10",<br> "messageName" : "MessageToBeArchived",<br> "limit":1<br>} <br><br>{<br>"creationDateFrom": "2020-07-10",<br>"creationDateTo" : "2020-07-15",<br>"messageName" : "MessageToBeArchived",<br>"limit":1<br>} <br><br>{<br> "lastUpdateDateFrom": "2020-07-17",<br> "messageName" : "MessageToBeArchived",<br> "limit":1<br>} <br><br>{<br> "lastUpdateDateFrom": "2020-07-10",<br> "creationDateTo" : "2020-07-15",<br> "messageName" : "MessageToBeArchived",<br> "limit":1<br>} <br><br>{<br>"creationDateFrom": "2020-07-01",<br>"lastUpdateDateFrom": "2020-07-10",<br>"creationDateTo" : "2020-07-15",<br>"messageName" : "MessageToBeArchived",<br>"limit":1<br>}</pre>'
+      operationId: FindPreparedMessage
+      parameters:
+      - name: preparedMessageFilter
+        in: query
+        description: A filter with the list of prepared message.
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PreparedMessageSummary'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/PreparedMessageSummary'
+        '400':
+          description: ''
+  /preparedmessage/get:
+    get:
+      tags:
+      - Prepared Message
+      summary: Get a prepared message
+      description: Returns a prepared message identified by the messageId, personalized for contactId.<br><br>trackingOverride controls message tracking consent override behavior:<br>1 = no override; per-contact tracking consent applies.<br>2 = full override; open and link-click tracking are enforced for all recipients regardless of individual consent.<br>Any other value is rejected by this API.
+      operationId: GetPreparedMessage
+      parameters:
+      - name: messageId
+        in: query
+        description: The prepared message ID
+        required: true
+        schema:
+          type: integer
+          format: int64
+      - name: contactId
+        in: query
+        description: 'The contact ID to personalize message for. It has to be the member of the prepared message''s group. Note: empty - Leave contact empty to get not personalized (raw) message'
+        required: true
+        schema:
+          type: integer
+          format: int64
+      responses:
+        '200':
+          description: '{<br>   "contactId": 45802709,<br>   "messageId": 7579,<br>   "name": "JohnPreparedWithCustom20220215",<br>   "groupId": 3302,<br>   "groupName": "John20220208",<br>   "selectionId": null,<br>   "selectionName": null,<br>   "channelId": 327699,<br>   "channelName": "DMC Email",<br>   "externalId": null,<br>   "messageCategoryId": null,<br>   "messageCategoryName": null,<br>   "trackingOverride": 2,<br>   "message":    {<br>      "subject": "JohnPreparedWithCustom20220215",<br>      "emailBodyText": null,<br>      "emailBodyHtml": "<html><body>JohnPreparedWithCustom20220215\r\nEmail(standard) tt7177798@gmail.comtt7178198@gmail.com\r\nEmail(Custom) OBFUSCATEDtt71778198@gmail.com<\/body><\/html>",<br>      "smsText": null,<br>      "faxText": null,<br>      "emailHeaders": [],<br>      "attachments": [],<br>      "attachmentReferences": null,<br>      "encoding": "ISO-8859-1",<br>      "encodingSMS": "ISO-8859-1",<br>      "imageHandlingMode": "none"<br>   }<br>}'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PreparedMessage'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/PreparedMessage'
+        '400':
+          description: Please enter a valid prepared message ID, Please enter a valid test contact ID to get the personalized HTML. Leave it blank to get the raw HTML, No membership for user '25493969' in group '2186' found.
+  /preparedmessage/send:
+    get:
+      tags:
+      - Prepared Message
+      summary: Send a prepared message
+      description: Send prepared messages based on a given send datetime.
+      operationId: send
+      parameters:
+      - name: preparedMessageId
+        in: query
+        description: The id of the prepared message you want to send.
+        required: true
+        schema:
+          type: integer
+          format: int64
+      - name: sendDateTime
+        in: query
+        description: Sendout date-time. ISO_8601 format, in URL encoded form
+        required: true
+        schema:
+          type: string
+      - name: processingDateTime
+        in: query
+        description: The preprocessing date-time (optional). ISO_8601 format, in URL encoded form
+        required: false
+        schema:
+          type: string
+      - name: selectionId
+        in: query
+        description: A selection id to associate with the sendout (optional).
+        required: false
+        schema:
+          type: integer
+          format: int64
+      - name: bestSendoutTime
+        in: query
+        description: True/False.
+        required: true
+        schema:
+          type: string
+      - name: bestSendoutTimeDefault
+        in: query
+        description: '17:00.'
+        required: true
+        schema:
+          type: string
+      - name: bestSendoutTimeTimezone
+        in: query
+        description: Europe/Berlin.
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PreparedMessage'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/PreparedMessage'
+        '400':
+          description: ''
+  /preparedmessage/update:
+    post:
+      tags:
+      - Prepared Message
+      summary: Update a prepared message
+      description: Update prepared message.<br><br>trackingOverride controls message tracking consent override behavior:<br>1 = no override; per-contact tracking consent applies.<br>2 = full override; open and link-click tracking are enforced for all recipients regardless of individual consent.<br>Any other value is rejected by this API.<br>On update, omit trackingOverride or send null to preserve the existing stored value; set trackingOverride to 1 explicitly to clear an active override.
+      operationId: UpdatePreparedMessage
+      responses:
+        '204':
+          description: ''
+        '400':
+          description: ''
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PreparedMessage'
+        description: Prepared message body.<br><br>trackingOverride controls message tracking consent override behavior:<br>1 = no override; per-contact tracking consent applies.<br>2 = full override; open and link-click tracking are enforced for all recipients regardless of individual consent.<br>Any other value is rejected by this API.<br>On update, omit trackingOverride or send null to preserve the existing stored value; set trackingOverride to 1 explicitly to clear an active override.
+        required: true
+components:
+  securitySchemes:
+    basicAuth:
+      type: http
+      scheme: basic
+      description: HTTP Basic authentication with a Mapp Engage system user of type API (or Hybrid).
+x-apievangelist-provenance:
+  method: searched
+  generated: '2026-08-12'
+  source: https://docs.mapp.com/apidocs/ (per-endpoint OpenAPI fragments)
+  note: Union of the OpenAPI JSON fragments Mapp publishes on each endpoint page. Mapp does not serve one consolidated document at a public URL; the tenant-served Swagger lives at https://<your-engage-host>/apidoc/swagger.json and requires a tenant. Operation bodies, parameters, responses, tags, summaries and descriptions are verbatim from Mapp. The swagger/basePath/schemes/securityDefinitions envelope is added by API Evangelist from the published Getting Started guide; no operation content was authored.
+  duplicate_operation_ids_suffixed: 30

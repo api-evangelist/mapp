@@ -1,0 +1,122 @@
+openapi: 3.2.0
+info:
+  title: Mapp Engage public Audit Log API
+  version: '1'
+  description: 'Mapp Engage REST API (REST 2.0, incremental version v19). Assembled verbatim from the per-operation OpenAPI fragments Mapp publishes on each endpoint page of https://docs.mapp.com/apidocs/. The base URL is tenant-specific: take your Mapp Engage login host and append /api/rest/v19.'
+  contact:
+    name: Mapp Technical Support
+    url: https://mapp.com/tech-support/
+servers:
+- url: /api/rest/v19
+security:
+- basicAuth: []
+tags:
+- name: Audit Log
+paths:
+  /auditlog/events:
+    get:
+      tags:
+      - Audit Log
+      summary: List Log Tracker audit events
+      description: Returns Log Tracker audit events for a bounded time window.
+      operationId: auditLogEvents
+      parameters:
+      - name: since
+        in: query
+        description: Start of the time window, inclusive.
+        required: true
+        schema:
+          type: string
+      - name: until
+        in: query
+        description: End of the time window, exclusive.
+        required: false
+        schema:
+          type: string
+      - name: actionCategory
+        in: query
+        description: Optional Log Tracker action category filter.
+        required: false
+        schema:
+          type: string
+          enum:
+          - ACCESS
+          - API
+          - AUTOMATION
+          - BLACKLIST
+          - COUPON
+          - EXPORT
+          - GROUP
+          - IMPORT
+          - LANDING_PAGE
+          - MAPPING
+          - MESSAGE
+          - MISC
+          - PREPROCESSING
+          - RELATED_DATA
+          - SELECTION
+      - name: entryType
+        in: query
+        description: Optional comma-separated list of event types.
+        required: false
+        schema:
+          type: string
+      - name: executorId
+        in: query
+        description: Optional executor system user ID filter.
+        required: false
+        schema:
+          type: integer
+          format: int64
+      - name: referenceType
+        in: query
+        description: Optional reference entity type filter.
+        required: false
+        schema:
+          type: string
+      - name: referenceId
+        in: query
+        description: Optional referenced entity ID filter.
+        required: false
+        schema:
+          type: integer
+          format: int64
+      - name: pageSize
+        in: query
+        description: Maximum number of rows to request.
+        required: false
+        schema:
+          type: integer
+          format: int32
+      - name: pageToken
+        in: query
+        description: Opaque cursor token.
+        required: false
+        schema:
+          type: string
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuditLogEventsResult'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/AuditLogEventsResult'
+        '400':
+          description: Invalid request parameters.
+        '403':
+          description: Missing Log Tracker permission.
+components:
+  securitySchemes:
+    basicAuth:
+      type: http
+      scheme: basic
+      description: HTTP Basic authentication with a Mapp Engage system user of type API (or Hybrid).
+x-apievangelist-provenance:
+  method: searched
+  generated: '2026-08-12'
+  source: https://docs.mapp.com/apidocs/ (per-endpoint OpenAPI fragments)
+  note: Union of the OpenAPI JSON fragments Mapp publishes on each endpoint page. Mapp does not serve one consolidated document at a public URL; the tenant-served Swagger lives at https://<your-engage-host>/apidoc/swagger.json and requires a tenant. Operation bodies, parameters, responses, tags, summaries and descriptions are verbatim from Mapp. The swagger/basePath/schemes/securityDefinitions envelope is added by API Evangelist from the published Getting Started guide; no operation content was authored.
+  duplicate_operation_ids_suffixed: 30

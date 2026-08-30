@@ -1,0 +1,260 @@
+openapi: 3.2.0
+info:
+  title: Product Catalog - Public Catalog Metadata Operations API
+  version: 1.0.1
+  description: Endpoints for catalog metadata operations
+servers:
+- url: https://api.mapp.com
+security:
+- Keycloak: []
+tags:
+- name: Catalog Metadata Operations
+  description: Endpoints for catalog metadata operations
+paths:
+  /api/product-catalog/v1/catalogs/metadata/attribute/{catalogId}:
+    get:
+      tags:
+      - Catalog Metadata Operations
+      summary: Get all attributes assigned to a catalog
+      description: Returns all active attributes assigned to the specified catalog. Inactive attributes are not returned by this endpoint.
+      operationId: getCatalogAttributes
+      parameters:
+      - name: catalogId
+        in: path
+        description: Catalog identifier whose assigned attributes should be returned.
+        required: true
+        schema:
+          type: integer
+          format: int64
+      responses:
+        '200':
+          description: Catalog attributes found
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CatalogAttributeDTO'
+              example:
+              - name: color
+                dataType: MAP
+                localizedAttributeKeyType: LANGUAGE_COUNTRY
+                localizedAttributeValueType: STRING
+                catalogType: SOURCE
+              - name: price
+                dataType: MAP
+                localizedAttributeKeyType: COUNTRY
+                localizedAttributeValueType: DECIMAL
+                catalogType: SOURCE
+              - name: fashion_material
+                dataType: STRING
+                localizedAttributeKeyType: null
+                localizedAttributeValueType: null
+                catalogType: ENRICHED
+        '500':
+          description: Unexpected error while fetching catalog attributes.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                message: Unexpected error while processing request
+                httpStatus: 500
+                errorCode: 500 Internal Server Error
+                timestamp: '2026-07-08T12:00:00Z'
+        '204':
+          description: No active attributes are assigned to the catalog.
+  /api/product-catalog/v1/catalogs/metadata/catalog/workspace:
+    get:
+      tags:
+      - Catalog Metadata Operations
+      summary: Get catalog metadata for a workspace
+      description: Returns the metadata of the catalog assigned to a workspace,  which a token you authorize with belongs to
+      operationId: getCatalogMetadataByWorkspace
+      parameters: []
+      responses:
+        '204':
+          description: No catalog is assigned to the requested workspace, or the assigned catalog lookup returned an empty body.
+        '404':
+          description: Assigned catalog was not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                message: 'Product feed not found for companyId: 456 and feedId: 123'
+                httpStatus: 404
+                errorCode: 404 Not Found
+                timestamp: '2026-07-08T12:00:00Z'
+        '200':
+          description: Catalog metadata found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CatalogDTO'
+              example:
+                id: 123
+                name: Spring Fashion Catalog
+                description: Primary product catalog for spring assortment
+                enrichReady: true
+                createDate: '2026-07-08T12:00:00Z'
+                modifyDate: '2026-07-08T13:30:00Z'
+                creatorId: 789
+        '500':
+          description: Unexpected error while fetching catalog metadata.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                message: Unexpected error while processing request
+                httpStatus: 500
+                errorCode: 500 Internal Server Error
+                timestamp: '2026-07-08T12:00:00Z'
+components:
+  schemas:
+    CatalogAttributeDTO:
+      type: object
+      properties:
+        name:
+          type: string
+          description: Unique attribute name as defined in the catalog
+        dataType:
+          type: string
+          description: 'Data type of a catalog attribute value:
+
+            - `STRING` — plain text value (e.g. `"blue"`)
+
+            - `NUMBER` — integer or decimal value (e.g. `42`, `3.14`)
+
+            - `BOOLEAN` — boolean value (`true` or `false`)
+
+            - `JSON` — arbitrary JSON object (e.g. `{"key": "value"}`)
+
+            - `MAP` — flat key-value map (e.g. `{"en": "blue", "de": "blau"}`)
+
+            - `LIST` — ordered list of scalar values (e.g. `["S", "M", "L"]`)
+
+            - `LIST_OF_MAPS` — list of key-value maps (e.g. `[{"color": "red"}, {"color": "blue"}]`)
+
+            - `MAP_OF_LISTS` — map where each key holds a list of values (e.g. `{"sizes": ["S", "M"], "colors": ["red"]}`)'
+          enum:
+          - STRING
+          - NUMBER
+          - BOOLEAN
+          - JSON
+          - MAP
+          - LIST
+          - LIST_OF_MAPS
+          - MAP_OF_LISTS
+        localizedAttributeKeyType:
+          type: string
+          description: 'Type of localized attribute key, determining the expected key format:
+
+            - `COUNTRY_CODE` — ISO 3166-1 alpha-2 two-letter country code (e.g. `US`, `DE`)
+
+            - `LANGUAGE_CODE` — ISO 639-1 two-letter language code (e.g. `en`, `de`)
+
+            - `LANGUAGE_CODE_COUNTRY_CODE` — BCP 47 language-country tag, hyphen-separated (e.g. `en-US`, `de-DE`)
+
+            - `CURRENCY` — ISO 4217 three-letter currency code (e.g. `USD`, `EUR`)
+
+            - `NUMBER` — numeric value, integer or decimal (e.g. `42`, `3.14`)
+
+            - `STRING` — arbitrary string value'
+          enum:
+          - COUNTRY_CODE
+          - LANGUAGE_CODE
+          - LANGUAGE_CODE_COUNTRY_CODE
+          - CURRENCY
+          - NUMBER
+          - STRING
+        localizedAttributeValueType:
+          type: string
+          description: 'Type of localized attribute value, determining the expected value format:
+
+            - `STRING` — arbitrary string value (e.g. `sample text`)
+
+            - `NUMBER` — numeric value, integer or decimal (e.g. `42`, `3.14`)
+
+            - `BOOLEAN` — boolean value (`true` or `false`)
+
+            - `COUNTRY_CODE` — ISO 3166-1 alpha-2 two-letter country code (e.g. `US`, `DE`)
+
+            - `LANGUAGE_CODE` — ISO 639-1 two-letter language code (e.g. `en`, `de`)
+
+            - `CURRENCY` — ISO 4217 three-letter currency code (e.g. `USD`, `EUR`)
+
+            - `LANGUAGE_CODE_COUNTRY_CODE` — BCP 47 language-country tag, hyphen-separated (e.g. `en-US`, `de-DE`)'
+          enum:
+          - STRING
+          - NUMBER
+          - BOOLEAN
+          - COUNTRY_CODE
+          - LANGUAGE_CODE
+          - CURRENCY
+          - LANGUAGE_CODE_COUNTRY_CODE
+        catalogType:
+          type: string
+          description: Catalog data layer this attribute originates from
+          enum:
+          - SOURCE
+          - ENRICHED
+          - COMBINED
+      description: Represents a single product catalog attribute with its data type and optional localization metadata
+    ErrorResponse:
+      type: object
+      properties:
+        message:
+          type: string
+        httpStatus:
+          type: integer
+          format: int32
+        errorCode:
+          type: string
+        timestamp:
+          type: string
+          format: date-time
+    CatalogDTO:
+      type: object
+      properties:
+        id:
+          type: integer
+          description: Catalog identifier
+          format: int64
+          readOnly: true
+        name:
+          type: string
+          description: Catalog name
+        description:
+          type: string
+          description: Catalog description
+        enrichReady:
+          type: boolean
+          description: Whether enriched catalog data is ready
+        createDate:
+          type: string
+          description: Catalog creation date
+          format: date-time
+          readOnly: true
+        modifyDate:
+          type: string
+          description: Catalog last modification date
+          format: date-time
+          readOnly: true
+        creatorId:
+          type: integer
+          description: Identifier of the user who created the catalog
+          format: int64
+          readOnly: true
+      description: Public catalog metadata
+  securitySchemes:
+    Keycloak:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+x-apievangelist-provenance:
+  method: searched
+  generated: '2026-08-12'
+  source: https://docs.mapp.com/apidocs/ (per-endpoint OpenAPI fragments, Product Catalog API)
+  note: Union of the OpenAPI 3.0.1 fragments Mapp publishes on each Product Catalog endpoint page. Content verbatim.

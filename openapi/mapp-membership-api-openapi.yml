@@ -1,0 +1,583 @@
+openapi: 3.2.0
+info:
+  title: Mapp Engage public Membership API
+  version: '1'
+  description: 'Mapp Engage REST API (REST 2.0, incremental version v19). Assembled verbatim from the per-operation OpenAPI fragments Mapp publishes on each endpoint page of https://docs.mapp.com/apidocs/. The base URL is tenant-specific: take your Mapp Engage login host and append /api/rest/v19.'
+  contact:
+    name: Mapp Technical Support
+    url: https://mapp.com/tech-support/
+servers:
+- url: /api/rest/v19
+security:
+- basicAuth: []
+tags:
+- name: Membership
+paths:
+  /membership/create:
+    get:
+      tags:
+      - Membership
+      summary: Create a membership
+      description: Subscribes a contact to a group, creating a new membership. Unlike normal subscription, a notification is not sent.
+      operationId: CreateMembership
+      parameters:
+      - name: userId
+        in: query
+        description: ID of the user.
+        required: true
+        schema:
+          type: integer
+          format: int64
+      - name: groupId
+        in: query
+        description: ID of the group.
+        required: true
+        schema:
+          type: integer
+          format: int64
+      responses:
+        '200':
+          description: 'Example response: <br>{<br>    "userId": 18076325029,<br>    "groupId": 1800116178,<br>    "attributes": []<br>}'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Membership'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/Membership'
+        '400':
+          description: userId and groupId are mandatory, but are missing or incorrect. / User with id does not exist. / Group with id does not exist.
+        '404':
+          description: 'Error response: {<br>"errorActor": "CLIENT",<br>"errorCode": "INVALID_REQUEST",<br>"message": "Not Found"<br>}'
+  /membership/delete:
+    delete:
+      tags:
+      - Membership
+      summary: Delete a membership
+      description: Deletes an existing membership (meaning the user is unsubscribed from the group). This call differs from the unsubscribe method in that the user is not notified about the unsubscription
+      operationId: DeleteMembership
+      parameters:
+      - name: userId
+        in: query
+        description: ID of the user.
+        required: true
+        schema:
+          type: integer
+          format: int64
+      - name: groupId
+        in: query
+        description: ID of the group.
+        required: true
+        schema:
+          type: integer
+          format: int64
+      responses:
+        '204':
+          description: 'Example response: <br>{<br>    "userId": 18076325029,<br>    "groupId": 1800116178,<br>    "attributes": []<br>}'
+        '400':
+          description: userId and groupId are mandatory, but are missing or incorrect. / User with id does not exist. / Group with id does not exist.
+        '404':
+          description: 'Error response: {<br>"errorActor": "CLIENT",<br>"errorCode": "INVALID_REQUEST",<br>"message": "Not Found"<br>}'
+  /membership/findAllByEmail:
+    get:
+      tags:
+      - Membership
+      summary: Find all memberships for a user by email
+      description: Returns the membership information of a user identified by email.
+      operationId: findAllByEmail
+      parameters:
+      - name: email
+        in: query
+        description: Email of the user
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: 'Example response: <br><br>[{<br>    "userId": 18061450504,<br>    "groupId": 1800116178,<br>    "attributes": [] }, {<br>    "userId": 18061450504,<br>    "groupId": 1800138927,<br>    "attributes": []<br>}]'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Membership'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/Membership'
+        '400':
+          description: email is mandatory, but is missing or incorrect. / User with email does not exist.
+  /membership/findAll:
+    get:
+      tags:
+      - Membership
+      summary: Find all memberships for a user
+      description: Returns a list of membership objects, one membership object for each group in which the user is a member.
+      operationId: findAll
+      parameters:
+      - name: userId
+        in: query
+        description: ID of the user
+        required: true
+        schema:
+          type: integer
+          format: int64
+      responses:
+        '200':
+          description: 'Example response: <br>[{<br>    "userId": 18061450504,<br>    "groupId": 1800116178,<br>    "attributes": [] }, {<br>    "userId": 18061450504,<br>    "groupId": 1800138927,<br>    "attributes": []<br>}]'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Membership'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/Membership'
+        '400':
+          description: userId is mandatory, but is missing or incorrect. / User with id does not exist.
+        '404':
+          description: Not found
+  /membership/getByEmail:
+    get:
+      tags:
+      - Membership
+      summary: Get a membership by email
+      description: Retrieves the membership information of a contact identified by email in a group specified by groupId.
+      operationId: getByEmail
+      parameters:
+      - name: email
+        in: query
+        description: Email of the user.
+        required: true
+        schema:
+          type: string
+      - name: groupId
+        in: query
+        description: ID of the group.
+        required: true
+        schema:
+          type: integer
+          format: int64
+      responses:
+        '200':
+          description: 'Example response:<br><br>{<br>    "userId": 18223800009,<br>    "groupId": 1800190005,<br>    "attributes": [{<br>        "name": "member.bounceCounter",<br>        "value": "0"<br>    }, {<br>        "name": "member.type",<br>        "value": "normal"<br>    }, {<br>        "name": "member.readMode",<br>        "value": "mail"<br>    }, {<br>        "name": "member.creationDate",<br>        "value": "2015-07-21 16:10:30.0"<br>    }, {<br>        "name": "member.bounced",<br>        "value": "false"<br>    }, {<br>        "name": "member.role",<br>        "value": "member"<br>    }, {<br>        "name": "member.messageCounter",<br>        "value": "0"<br>    }, {<br>        "name": "member.systemWideDeactivated",<br>        "value": "false"<br>    }]<br>}'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Membership'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/Membership'
+        '400':
+          description: 'Bad email or group, for example:<br><br><pre>{<br>  "errorActor": "CLIENT",<br>  "errorCode": "NO_SUCH_OBJECT",<br>  "message": "User with email=no.email@example.com does not exist.",<br>  "objectType": "User",<br>  "propertyName": "email",<br>  "propertyValue": "no.email@example.com"<br>}</pre><br><br>Correct email, but that contact is not a member of the specified group:<br><br><pre>{<br>  "errorActor": "CLIENT",<br>  "errorCode": "NO_SUCH_OBJECT",<br>  "message": "Membership with membership=userId:18152367016/groupId:2400792595 does not exist.",<br>  "objectType": "Membership",<br>  "propertyName": "membership",<br>  "propertyValue": "userId:18152367016/groupId:2400792595"<br>}</pre>'
+  /membership/get:
+    get:
+      tags:
+      - Membership
+      summary: Get a membership
+      description: Retrieves the membership information of a user identified by the userId in a group identified by groupId.
+      operationId: GetMembership
+      parameters:
+      - name: userId
+        in: query
+        description: ID of the user.
+        required: true
+        schema:
+          type: integer
+          format: int64
+      - name: groupId
+        in: query
+        description: ID of the group.
+        required: true
+        schema:
+          type: integer
+          format: int64
+      responses:
+        '200':
+          description: 'Example response: <br><br>{<br>    "userId": 18223800009,<br>    "groupId": 1800190005,<br>    "attributes": [{<br>        "name": "member.bounceCounter",<br>        "value": "0"<br>    }, {<br>        "name": "member.type",<br>        "value": "normal"<br>    }, {<br>        "name": "member.readMode",<br>        "value": "mail"<br>    }, {<br>        "name": "member.creationDate",<br>        "value": "2015-07-21 16:10:30.0"<br>    }, {<br>        "name": "member.bounced",<br>        "value": "false"<br>    }, {<br>        "name": "member.role",<br>        "value": "member"<br>    }, {<br>        "name": "member.messageCounter",<br>        "value": "0"<br>    }, {<br>        "name": "member.systemWideDeactivated",<br>        "value": "false"<br>    }]<br>}'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Membership'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/Membership'
+        '400':
+          description: userId and groupId are mandatory, but are missing or incorrect. / User with id does not exist. / Group with id does not exist.
+        '404':
+          description: 'Error response: {<br>"errorActor": "CLIENT",<br>"errorCode": "INVALID_REQUEST",<br>"message": "Not Found"<br>}'
+  /membership/getAttributesByEmail:
+    get:
+      tags:
+      - Membership
+      summary: Get membership attributes by email
+      description: Returns a collection of member attributes for a user within the specified group.<br>Member attributes are used to save information for an individual user, but in the context of a specific group.<br>A member attribute contains a specific value for each recipient. The user is identified by the email
+      operationId: getAttributesByEmail
+      parameters:
+      - name: email
+        in: query
+        description: Email of the user
+        required: true
+        schema:
+          type: string
+      - name: groupId
+        in: query
+        description: ID of the group
+        required: true
+        schema:
+          type: integer
+          format: int64
+      responses:
+        '200':
+          description: 'Example response: <br>[{<br>    "name": "attribute1",<br>    "value": "0001" }, {<br>    "name": "attribute2",<br>    "value": "0002"<br>}]'
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+            application/xml:
+              schema:
+                type: array
+                items:
+                  type: object
+        '400':
+          description: userId and groupId are mandatory, but are missing or incorrect.
+        '404':
+          description: 'Error response: {<br>"errorActor": "CLIENT",<br>"errorCode": "INVALID_REQUEST",<br>"message": "Not Found"<br>}'
+  /membership/getAttributes:
+    get:
+      tags:
+      - Membership
+      summary: Get membership attributes
+      description: Returns a collection of member attributes for a user within the specified group.<br>Member attributes are used to save information for an individual user but in the context of a specific group.<br>A member attribute contains a specific value for each recipient
+      operationId: GetMembershipAttributes
+      parameters:
+      - name: userId
+        in: query
+        description: ID of the user
+        required: true
+        schema:
+          type: integer
+          format: int64
+      - name: groupId
+        in: query
+        description: ID of the group
+        required: true
+        schema:
+          type: integer
+          format: int64
+      responses:
+        '200':
+          description: 'Example response: <br>[{<br>    "name": "attribute1",<br>    "value": "0001" }, {<br>    "name": "attribute2",<br>    "value": "0002"<br>}]'
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+            application/xml:
+              schema:
+                type: array
+                items:
+                  type: object
+        '400':
+          description: userId and groupId are mandatory, but are missing or incorrect.
+        '404':
+          description: '{<br>"errorActor": "CLIENT",<br>"errorCode": "INVALID_REQUEST",<br>"message": "Not Found"<br>}'
+  /membership/replaceAttributes:
+    post:
+      tags:
+      - Membership
+      summary: Replace membership attributes
+      description: 'Replaces the member attributes for a contact within a group where the contact is a member<br>Request body example: <br><br><pre>[{<br>"name" : "attribute1",<br>"value" : "0001"<br>},<br>{<br>"name" : "attribute2",<br>"value" : "0002"<br>}]</pre>'
+      operationId: replaceAttributes
+      parameters:
+      - name: userId
+        in: query
+        description: ID of the user
+        required: true
+        schema:
+          type: integer
+          format: int64
+      - name: groupId
+        in: query
+        description: ID of the group
+        required: true
+        schema:
+          type: integer
+          format: int64
+      responses:
+        '200':
+          description: ''
+        '400':
+          description: userId and groupId are mandatory, but are missing or incorrect.
+        '404':
+          description: 'Error response: {<br>"errorActor": "CLIENT",<br>"errorCode": "INVALID_REQUEST",<br>"message": "Not Found"<br>}'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                $ref: '#/components/schemas/Attribute'
+  /membership/subscribeByEmail:
+    post:
+      tags:
+      - Membership
+      summary: Subscribe a contact to a group by email
+      description: Subscribes a recipient to a group.<br>The recipient must exist in the system.<br><br>Example:<br><code>https://<Engage System Domain>/api/rest/v19/membership/subscribeByEmail?email=j.mcexample@example.com&groupId=12345978&subscriptionMode=OPT_IN</code>
+      operationId: subscribeByEmail
+      parameters:
+      - name: email
+        in: query
+        description: 'Email of the user.<br><br>Important note! Some special characters in an email address must be URL encoded, such as the "+", "]" and "]" characters, for example:<br><br>name+surname@test.com should be encoded as name%2Bsurname@test.com<br><br>name[surname@test.com should be encoded as name%5Bsurname@test.com<br><br>name]surname@test.com should be encoded as name%5Dsurname@test.com<br><br>The "@" symbol used to separate the local part from the domain can be used with or without being URL encoded. Engage will accept both formats as the separator symbol. For example, both the following addresses are valid and identical for Engage:
+
+          my.address@example.com or my.address%40example.com'
+        required: true
+        schema:
+          type: string
+      - name: groupId
+        in: query
+        description: ID of the group
+        required: true
+        schema:
+          type: integer
+          format: int64
+          enum:
+          - 0-100
+      - name: subscriptionMode
+        in: query
+        description: CONFIRMED_OPT_IN - New contacts receive a welcome message via email when they are added to the group. Despite the label used for this value, the contact does not need to confirm the subscription. A single opt-in subscription.``<br>DOUBLE_OPT_IN - New contacts receive an invitation to join the group via email. The contact must accept the invitation before they are added to the group. A double opt-in subscription.<br>OPT_IN - New contacts are added to the group without notification.
+        required: true
+        schema:
+          type: string
+          enum:
+          - CONFIRMED_OPT_IN
+          - DOUBLE_OPT_IN
+          - OPT_IN
+      responses:
+        '204':
+          description: ''
+        '400':
+          description: Parameter 'email' is not a valid email address. / User with email does not exist. / Group with id is archived.
+        '404':
+          description: 'Error response: {<br>"errorActor": "CLIENT",<br>"errorCode": "INVALID_REQUEST",<br>"message": "Not Found"<br>}'
+  /membership/subscribe:
+    post:
+      tags:
+      - Membership
+      summary: Subscribe a user to a group
+      description: Subscribes a user to a group. With this call, the subscription is handled as a self subscription.<br>Depending on the subscription mode used, the user may have to confirm the subscription (opt-in) and may be notified of the successful subscription.
+      operationId: subscribe
+      parameters:
+      - name: userId
+        in: query
+        description: ID of the user
+        required: true
+        schema:
+          type: integer
+          format: int64
+      - name: groupId
+        in: query
+        description: ID of the group
+        required: true
+        schema:
+          type: integer
+          format: int64
+      - name: subscriptionMode
+        in: query
+        description: CONFIRMED_OPT_IN - New contacts receive a welcome message via email when they are added to the group. The contact does not need to confirm the subscription. A single opt-in subscription.<br>DOUBLE_OPT_IN - New contacts receive an invitation to join the group via email. The contact must accept the invitation before they are added to the group. A double opt-in subscription<br>OPT_IN - New contacts are added to the group without notification. OPT_IN is creating self-subscribers
+        required: true
+        schema:
+          type: string
+          enum:
+          - CONFIRMED_OPT_IN
+          - DOUBLE_OPT_IN
+          - OPT_IN
+      responses:
+        '204':
+          description: ''
+        '400':
+          description: Parameter 'userId' is mandatory but no value was specified. / User with id does not exist.
+        '404':
+          description: Not found
+  /membership/unsubscribeByEmail:
+    post:
+      tags:
+      - Membership
+      summary: Unsubscribe a contact from a group by email
+      description: Unsubscribes a contact from a group based on their email address. An unsubscription confirmation email is sent to the contact.
+      operationId: unsubscribeByEmail
+      parameters:
+      - name: email
+        in: query
+        description: Email of the user.
+        required: true
+        schema:
+          type: string
+      - name: groupId
+        in: query
+        description: ID of the group.
+        required: true
+        schema:
+          type: integer
+          format: int64
+      responses:
+        '204':
+          description: ''
+        '400':
+          description: email and groupId are mandatory, but are missing or incorrect. / User with email does not exist. / Group with id does not exist.
+  /membership/unsubscribeFromMessageByEmail:
+    post:
+      tags:
+      - Membership
+      summary: Unsubscribe a contact from a message by email
+      description: Unsubscribes a user from a group based on an email address. The unsubscription is associated with a specific message. An unsubscribe confirmation email is sent to the user. Returns success only when the user is unsubscribed from the group and the unsubscription is associated with the specified message.
+      operationId: unsubscribeFromMessageByEmail
+      parameters:
+      - name: email
+        in: query
+        description: Email of the user.
+        required: true
+        schema:
+          type: string
+      - name: groupId
+        in: query
+        description: ID of the group.
+        required: true
+        schema:
+          type: integer
+          format: int64
+      - name: messageId
+        in: query
+        description: ID of the message.
+        required: true
+        schema:
+          type: integer
+          format: int64
+      responses:
+        '204':
+          description: ''
+        '400':
+          description: email, groupId and messageId are mandatory, but are missing or incorrect. / User with email does not exist. / Group with id does not exist. / Message with id does not exist. / Membership with groupId does not exist.
+        '404':
+          description: 'Error response: {<br>"errorActor": "CLIENT",<br>"errorCode": "INVALID_REQUEST",<br>"message": "Not Found"<br>}'
+  /membership/unsubscribe:
+    post:
+      tags:
+      - Membership
+      summary: Unsubscribe a user from a group
+      description: Unsubscribes a user from a group. A notification is sent to the manager.
+      operationId: unsubscribe
+      parameters:
+      - name: userId
+        in: query
+        description: ID of the user
+        required: true
+        schema:
+          type: integer
+          format: int64
+      - name: groupId
+        in: query
+        description: ID of the group
+        required: true
+        schema:
+          type: integer
+          format: int64
+      - name: unsubscriptionMode
+        in: query
+        description: CONFIRMED_OPT_IN - Contacts receive a message via email when they are removed from the group. Despite the label used for this value, the contact does not need to confirm the unsubscription. A single opt-in unsubscription.<br>OPT_IN - Contacts are removed from the group without notification email.
+        required: true
+        schema:
+          type: string
+          enum:
+          - CONFIRMED_OPT_IN
+          - OPT_IN
+      responses:
+        '204':
+          description: ''
+        '400':
+          description: userId, groupId and unsubscriptionMode are mandatory, but are missing or incorrect. / User with id does not exist. / Group with id does not exist.
+        '404':
+          description: 'Error response: {<br>"errorActor": "CLIENT",<br>"errorCode": "INVALID_REQUEST",<br>"message": "Not Found"<br>}'
+  /membership/unsubscribeFromMessage:
+    post:
+      tags:
+      - Membership
+      summary: Unsubscribe a user from a message
+      description: Unsubscribes a user from a group. The unsubscription is associated with a specific message. Notification is sent to the group manager.<br>Returns success only when the user is unsubscribed from the group and the unsubscription is associated with the specified message.
+      operationId: unsubscribeFromMessage
+      parameters:
+      - name: userId
+        in: query
+        description: ID of the user.
+        required: true
+        schema:
+          type: integer
+          format: int64
+      - name: groupId
+        in: query
+        description: ID of the group.
+        required: true
+        schema:
+          type: integer
+          format: int64
+      - name: messageId
+        in: query
+        description: ID of the message.
+        required: true
+        schema:
+          type: integer
+          format: int64
+      responses:
+        '204':
+          description: ''
+        '400':
+          description: userId, groupId and messageId are mandatory, but are missing or incorrect. / User with id does not exist. / Group with id does not exist. / Message with id does not exist. / Membership with groupId does not exist.
+        '404':
+          description: 'Error response: {<br>"errorActor": "CLIENT",<br>"errorCode": "INVALID_REQUEST",<br>"message": "Not Found"<br>}'
+  /membership/updateAttributes:
+    post:
+      tags:
+      - Membership
+      summary: Update membership attributes
+      description: 'Updates the member attributes for a user within a group if the user is a member of the group.<br><br>If an attribute already exists, the value will be updated<br><br>If not, a new attribute will be created.<br>Request body example: <br>[<br><pre>[<br>  {"name":"car","value":"BMW"},<br>  {"name":"mascot","value":"cat"},<br>  {"name":"age","value":"18"}<br>]</pre>'
+      operationId: updateAttributes
+      parameters:
+      - name: userId
+        in: query
+        description: ID of the user
+        required: true
+        schema:
+          type: integer
+          format: int64
+      - name: groupId
+        in: query
+        description: ID of the group
+        required: true
+        schema:
+          type: integer
+          format: int64
+      responses:
+        '200':
+          description: ''
+        '400':
+          description: userId and groupId are mandatory, but are missing or incorrect.
+        '404':
+          description: Not found
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                $ref: '#/components/schemas/Attribute'
+components:
+  securitySchemes:
+    basicAuth:
+      type: http
+      scheme: basic
+      description: HTTP Basic authentication with a Mapp Engage system user of type API (or Hybrid).
+x-apievangelist-provenance:
+  method: searched
+  generated: '2026-08-12'
+  source: https://docs.mapp.com/apidocs/ (per-endpoint OpenAPI fragments)
+  note: Union of the OpenAPI JSON fragments Mapp publishes on each endpoint page. Mapp does not serve one consolidated document at a public URL; the tenant-served Swagger lives at https://<your-engage-host>/apidoc/swagger.json and requires a tenant. Operation bodies, parameters, responses, tags, summaries and descriptions are verbatim from Mapp. The swagger/basePath/schemes/securityDefinitions envelope is added by API Evangelist from the published Getting Started guide; no operation content was authored.
+  duplicate_operation_ids_suffixed: 30

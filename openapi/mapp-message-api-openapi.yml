@@ -1,0 +1,476 @@
+openapi: 3.2.0
+info:
+  title: Mapp Engage public Message API
+  version: '1'
+  description: 'Mapp Engage REST API (REST 2.0, incremental version v19). Assembled verbatim from the per-operation OpenAPI fragments Mapp publishes on each endpoint page of https://docs.mapp.com/apidocs/. The base URL is tenant-specific: take your Mapp Engage login host and append /api/rest/v19.'
+  contact:
+    name: Mapp Technical Support
+    url: https://mapp.com/tech-support/
+servers:
+- url: /api/rest/v19
+security:
+- basicAuth: []
+tags:
+- name: Message
+paths:
+  /message/find:
+    post:
+      tags:
+      - Message
+      summary: Find messages
+      description: 'Returns a list of message summary objects that contain information about the messages that match the filter criteria.<br>You can use this method to retrieve information about a message that has been sent or saved as a prepared message<br>Request body example:<br><pre>{<br>  "groupId": 650557972,<br>  "sendoutDateFrom": "2018-09-01T00:00:00",<br>  "sendoutDateTo": "2018-10-01T00:00:00"<br>}</pre><br><br>Request body 2 example:<br><pre>{<br>  "sendoutDateFrom": "2018-09-01T00:00:00",<br>  "sendoutDateTo": "2018-10-01T00:00:00"<br>}</pre>'
+      operationId: FindMessage
+      parameters:
+      - name: messageFilter
+        in: query
+        description: A filter with the list of returned messages.
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+            application/xml:
+              schema:
+                type: array
+                items:
+                  type: object
+        '400':
+          description: 'Missing parameter (messageFilter) or parameter value, or invalid, for example:<br><br><pre>{<br>  "errorActor": "CLIENT",<br>  "errorCode": "MISSING_PARAMETER",<br>  "message": "Parameter ''messageFilter'' is mandatory but no value was specified.",<br>  "parameterName": "messageFilter",<br>  "propertyName": null,<br>  "value": "null"<br>}</pre><br><br>'
+  /message/getHistorical:
+    get:
+      tags:
+      - Message
+      summary: Get historical message data
+      description: Make sure the "datastore_rmo" feature switch is on. In case of trouble contact Support.<br><br>Fetch a specific (group) message as it was sent to a defined contact, including resolved personalizations.
+      operationId: getHistorical
+      parameters:
+      - name: messageId
+        in: query
+        description: ID of the (sent) message to fetch.
+        required: true
+        schema:
+          type: integer
+          format: int64
+      - name: contactId
+        in: query
+        description: ID of the contact for whom the message shall be personalized.
+        required: true
+        schema:
+          type: integer
+          format: int64
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HistoricalMessage'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/HistoricalMessage'
+        '400':
+          description: 'Missing parameter (messageId/contactId) or parameter value, for example:<br><br><pre>{<br>  "errorActor": "CLIENT",<br>  "errorCode": "MISSING_PARAMETER",<br>  "message": "Parameter ''messageId'' is mandatory but no value was specified.",<br>  "parameterName": "messageId",<br>  "propertyName": null,<br>  "value": "null"<br>}</pre><br><br>Message ID / ContactId does not exist, for example:<br><br><pre>{<br>  "errorActor": "CLIENT",<br>  "errorCode": "NO_SUCH_OBJECT",<br>  "message": "Message with id=24011454555 does not exist.",<br>  "objectType": "Message",<br>  "propertyName": "id",<br>  "propertyValue": "24011454555"<br>}</pre>'
+  /message/getStatisticsByExternalMessageId:
+    get:
+      tags:
+      - Message
+      summary: Get message statistics by external ID
+      description: Retrieves statistical data for a sent message that is identified by the external message ID.
+      operationId: getStatisticsByExternalMessageId
+      parameters:
+      - name: externalMessageId
+        in: query
+        description: External ID of the message
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: 'Example response: <br><br><pre>{<br>    "messageId": 1800228386,<br>    "messageName": "Test_Export Campaign Winter Bottom March 2014",<br>    "messageSubject": "Winter Bottom",<br>    "externalMessageId": "ExternalWinter",<br>    "groupId": 1800138893,<br>    "groupName": "Test_Export",<br>    "groupSize": 20,<br>    "sendoutStartDate": 1404721300908,<br>    "sendoutEndDate": 1404721301837,<br>    "selectionName": null,<br>    "statisticValues": [{<br>        "name": "sentsPerFormat",<br>        "value": "email-html-multipart=16" }, {<br>        "name": "uniqueClicker",<br>        "value": "5" }, {<br>        "name": "uniqueConfirmedOpener",<br>        "value": "16" }, {<br>        "name": "clickRate",<br>        "value": "31.25" }],<br>    "senderProfile": "forced"      <br>}</pre>'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageStatistics'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/MessageStatistics'
+        '400':
+          description: 'Missing parameter (externalMessageId) or parameter value, for example:<br><br><pre>{<br>  "errorActor": "CLIENT",<br>  "errorCode": "MISSING_PARAMETER",<br>  "message": "Parameter ''externalMessageId'' is mandatory but no value was specified.",<br>  "parameterName": "externalMessageId",<br>  "propertyName": null,<br>  "value": "null"<br>}</pre><br><br>External Message ID does not exist, for example:<br><br><pre>{<br>  "errorActor": "CLIENT",<br>  "errorCode": "NO_SUCH_OBJECT",<br>  "message": "Message with id=24011454555 does not exist.",<br>  "objectType": "Message",<br>  "propertyName": "externalMessageId",<br>  "propertyValue": "24011454555"<br>}</pre>'
+  /message/getStatistics:
+    get:
+      tags:
+      - Message
+      summary: Get message statistics
+      description: Retrieves statistical data for a sent message.
+      operationId: getStatistics
+      parameters:
+      - name: messageId
+        in: query
+        description: ID of the message
+        required: true
+        schema:
+          type: integer
+          format: int64
+      responses:
+        '200':
+          description: 'Example response: <br><br><pre>{<br>    "messageId": 1800228386,<br>    "messageName": "Test_Export Campaign Winter Bottom March 2014",<br>    "messageSubject": "Winter Bottom",<br>    "externalMessageId": "ExternalWinter",<br>    "groupId": 1800138893,<br>    "groupName": "Test_Export",<br>    "groupSize": 20,<br>    "sendoutStartDate": 1404721300908,<br>    "sendoutEndDate": 1404721301837,<br>    "selectionName": null,<br>    "statisticValues": [{<br>        "name": "sentsPerFormat",<br>        "value": "email-html-multipart=16" }, {<br>        "name": "uniqueClickers",<br>        "value": "5" }, {<br>        "name": "uniqueConfirmedOpener",<br>        "value": "16" }, {<br>        "name": "clickRate",<br>        "value": "31.25" }],<br>    "senderProfile": "forced"<br>}</pre>'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageStatistics'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/MessageStatistics'
+        '400':
+          description: 'Missing parameter (messageId) or parameter value, for example:<br><br><pre>{<br>  "errorActor": "CLIENT",<br>  "errorCode": "MISSING_PARAMETER",<br>  "message": "Parameter ''messageID'' is mandatory, but missing or incorrect./ message with the given id does not exist.",<br>  "parameterName": "messageId",<br>  "propertyName": null,<br>  "value": "null"<br>}</pre><br><br>Message ID does not exist, for example:<br><br><pre>{<br>  "errorActor": "CLIENT",<br>  "errorCode": "NO_SUCH_OBJECT",<br>  "message": "Message with id=24011454555 does not exist.",<br>  "objectType": "Message",<br>  "propertyName": "id",<br>  "propertyValue": "24011454555"<br>}</pre>'
+  /message/getTimeDistributionByExternalMessageId:
+    post:
+      tags:
+      - Message
+      summary: Get message time distribution by external ID
+      description: Retrieves statistical time distribution information for a specific sent message.
+      operationId: getTimeDistributionByExternalMessageId
+      parameters:
+      - name: messageId
+        in: query
+        description: ID of the message
+        required: true
+        schema:
+          type: string
+      - name: interval
+        in: query
+        description: 'Interval values: DAILY or HOURLY'
+        required: true
+        schema:
+          type: string
+          enum:
+          - DAILY
+          - HOURLY
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageTimeDistribution'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/MessageTimeDistribution'
+        '400':
+          description: 'Missing parameter (messageId/interval) or parameter value, for example:<br><br><pre>{<br>  "errorActor": "CLIENT",<br>  "errorCode": "MISSING_PARAMETER",<br>  "message": "Parameter ''messageId'' is mandatory but no value was specified.",<br>  "parameterName": "messageId",<br>  "propertyName": null,<br>  "value": "null"<br>}</pre><br><br>Message ID does not exist, for example:<br><br><pre>{<br>  "errorActor": "CLIENT",<br>  "errorCode": "NO_SUCH_OBJECT",<br>  "message": "Message with id=24011454555 does not exist.",<br>  "objectType": "Message",<br>  "propertyName": "id",<br>  "propertyValue": "24011454555"<br>}</pre>'
+  /message/getTimeDistribution:
+    post:
+      tags:
+      - Message
+      summary: Get message time distribution
+      description: Retrieves statistical time distribution information for a specific sent message.
+      operationId: getTimeDistribution
+      parameters:
+      - name: messageId
+        in: query
+        description: ID of the message
+        required: true
+        schema:
+          type: integer
+          format: int64
+      - name: interval
+        in: query
+        description: 'Interval values: DAILY or HOURLY'
+        required: true
+        schema:
+          type: string
+          enum:
+          - DAILY
+          - HOURLY
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageTimeDistribution'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/MessageTimeDistribution'
+        '400':
+          description: 'Missing parameter (messageId) or parameter value, for example:<br><br><pre>{<br>  "errorActor": "CLIENT",<br>  "errorCode": "MISSING_PARAMETER",<br>  "message": "Parameter ''messageId'' is mandatory but no value was specified.",<br>  "parameterName": "messageId",<br>  "propertyName": null,<br>  "value": "null"<br>}</pre><br><br>Message ID does not exist, for example:<br><br><pre>{<br>  "errorActor": "CLIENT",<br>  "errorCode": "NO_SUCH_OBJECT",<br>  "message": "Message with id=24011454555 does not exist.",<br>  "objectType": "Message",<br>  "propertyName": "id",<br>  "propertyValue": "24011454555"<br>}</pre>'
+  /message/getUsedPersonalizations:
+    get:
+      tags:
+      - Message
+      summary: Get used personalizations for a message
+      description: Returns the names of all user and group attributes that are referenced within the header and content area of a prepared message. The reference to the attributes is a personalization placeholder in the body of the message. All of these placeholders are replaced with individual user or message information during sendout. Be aware that this method does not return member attributes.
+      operationId: getUsedPersonalizations
+      parameters:
+      - name: messageId
+        in: query
+        description: ID of the message
+        required: false
+        schema:
+          type: integer
+          format: int64
+      responses:
+        '200':
+          description: 'Example response: <br>["user.FirstName"]'
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+            application/xml:
+              schema:
+                type: array
+                items:
+                  type: object
+        '400':
+          description: ''
+  /message/getManyUsedPersonalizations:
+    post:
+      tags:
+      - Message
+      summary: Get used personalizations for multiple messages
+      description: Returns the names of all user and group attributes that are referenced within the header and content area of a prepared message. The reference to the attributes is a personalization placeholder in the body of the message. All of these placeholders are replaced with individual user or message information during sendout.<br>Be aware that this method does not return member attributes.<br>Request body example:<br><br><pre>["1800249553","1800202306"]</pre>
+      operationId: getManyUsedPersonalizations
+      responses:
+        '200':
+          description: 'Example response: <br>[<br>{<br>"  entityKey": "81374",<br>"  code": null,<br>"  message": ""<br>},<br>{<br>"  entityKey": "81376",<br>"  code": null,<br>"  message": "user.FirstName"<br>}<br>]'
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+            application/xml:
+              schema:
+                type: array
+                items:
+                  type: object
+        '400':
+          description: 'Message ID does not exist, for example:<br><br><pre>{<br>  "errorActor": "CLIENT",<br>  "errorCode": "NO_SUCH_OBJECT",<br>  "message": "Message with id=24011454555 does not exist.",<br>  "objectType": "Message",<br>  "propertyName": "id",<br>  "propertyValue": "24011454555"<br>}</pre>'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                type: string
+  /message/sendSingle:
+    post:
+      tags:
+      - Message
+      summary: Send a single message
+      description: 'Sends a prepared message as a single message to a specific user. <br><br>This method automatically adds the user who receives the email to the group of the prepared message.<br>Attachments can be encoded using base64encode.org.<br>Request body example: <br><br><pre>{<br>"parameters":<br>    [{"name" : "Parameter Name 1","value" : "Parameter Value 1"},<br>     {"name" : "Parameter Name 2","value": "Parameter Value 2"}],<br>     "attachments":<br>    [{"name" : "image.png",<br>    "contentType" : "application.png",<br>    "content" : "BASE64ENCODING"}]<br>}</pre>'
+      operationId: sendSingle
+      parameters:
+      - name: messageId
+        in: query
+        description: ID of the message
+        required: false
+        schema:
+          type: integer
+          format: int64
+      - name: recipientId
+        in: query
+        description: ID of the user
+        required: false
+        schema:
+          type: integer
+          format: int64
+      - name: senderProfileName
+        in: query
+        description: TLS sender profile. Requires a Feature Switch and setting up profile name in Mapp Engage. (optional)
+        required: false
+        schema:
+          type: string
+      responses:
+        '204':
+          description: ''
+        '400':
+          description: 'Missing parameter (messageId/recipientId) or parameter value, for example:<br><br><pre>{<br>  "errorActor": "CLIENT",<br>  "errorCode": "MISSING_PARAMETER",<br>  "message": "Parameter ''messageId'' is mandatory but no value was specified.",<br>  "parameterName": "messageId",<br>  "propertyName": null,<br>  "value": "null"<br>}</pre><br><br>Message ID or recipient does not exist, for example:<br><br><pre>{<br>  "errorActor": "CLIENT",<br>  "errorCode": "NO_SUCH_OBJECT",<br>  "message": "Message with id=24011454555 does not exist.",<br>  "objectType": "Message",<br>  "propertyName": "id",<br>  "propertyValue": "24011454555"<br>}</pre>'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MessageContent'
+  /message/sendTransactionalWithEventDetails:
+    post:
+      tags:
+      - Message
+      summary: Send a transactional message with event details
+      description: 'Sends a previously prepared message as a transactional message including transaction details such as purchase confirmation, <br>and adds user as member to group the prepared message belong to .<br> Please be aware this may cause that user to be unexpectedly subscribed or re-subscribed to that group. <br><br>User can iterate through the list of items using for each expression to access the individual item.<br><br>User can specify any number of attributes aka transaction_details and access them using expression language.<br><br>It is strongly recommended to use the same structure for each item. <br><br>EXPLANATION<br>Var value refers to a single object inside the list of itemDetails, the name can by anything, in this case, it''s the product.<br><br>Items value refers to eventDetails which is a placeholder for the list of items we want to show.<br>Max value is a limit of items to be displayed.<br>If you have max=50 but your JSON has less items, all of them will be displayed.<br>In the case of JSON with a number greater than the limit, the first 50 items will be shown and the rest will be ignored.<br>Inside ForEach, user can access itemDetails property using an array index with the name of the property user wants to access<br><br>Note that all query parameters are case-sensitive. Take a look at an example below:<br>- not "eventdetails" but "eventDetails"<br>- not "itemdetails " but "itemDetails"<br> "Request body example: <br><br>"<pre>{<br>"parameters":<br>   [<br>       {"name" : "Parameter Name 1","value" : "Parameter Value 1"},<br>       {"name" : "Parameter Name 2","value": "Parameter Value 2"}<br>   ],<br>  "attachments": [<br>    {<br>      "name": "twitter_logo.png",<br>      "contentType": "image/png",<br>      "content": "iVBORw0KGgoAAAANSUhEUgAAABUAAAARCAYAAAAyhueAAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAASFJREFUeNqslM0NgkAQhRdiAdiAgQ6468EO1INntQOpwFABdqBe9aAdiIl3twS1AbECfJPMkhVZftSXjJPsDh87z2WsNE1Fb3d3z+POVVQIdQ5ShJhqywdEgEgQQ1qwutsbFT4QM4DXFcALwi3YJqDD2bPx4/PGCg/OSw46NwAFA0nU7d7ObUYAHxF+wYMDUU8jiz19aG9TihEbyuS3oSavNmoT5Sm1thA/CkCLsvJ0In5XdnsIKkv+gCaSGZQ8QF7+AXrST0peBH8Ar9+grKfuS1Mgd/wBjb/0lmChvmBr14GgMy5qoiA/N+zcPSNfPN2fCoVF86KlDQxqvc93tl8DaBxALcAi/qLqKuaWpalAffsOz8iB4ZRSzYIymNJLgAEAYsJkJOLW//gAAAAASUVORK5CYII="<br>    }<br>  ],<br>"transaction": false   /*(optional attribute)*/<br>"eventDetailsProcessing":   /*(optional attribute)*/<br>   {<br>      "groupBy":"brandName",<br>      "groupLabel":"brandName",<br>      "valueField":"productName"<br>   },<br>"eventDetails":<br>   [<br>      {<br>          "itemDetails":[<br>                {"name":"productName","value":"Chair C1"},<br>                {"name":"brandName", "value":"aaa aaa"}<br>              ]<br>      },<br>      {<br>          "itemDetails":[<br>                {"name":"productName","value":"Sofa S1"},<br>                {"name":"brandName", "value":"bbb bbb"}<br>              ]<br> <br>      },<br>      {<br>          "itemDetails":[<br>               {"name":"productName","value":"Bed B1"},<br>                {"name":"brandName", "value":"cccc cccc"}<br>              ]<br> <br>      }<br>   ]<br>}</pre>'
+      operationId: sendTransactionalWithEventDetails
+      parameters:
+      - name: messageId
+        in: query
+        description: ID of the message or prepared message
+        required: false
+        schema:
+          type: integer
+          format: int64
+      - name: externalTransactionFormula
+        in: query
+        description: External transactional identifier
+        required: false
+        schema:
+          type: string
+      - name: recipientId
+        in: query
+        description: ID of the user
+        required: false
+        schema:
+          type: integer
+          format: int64
+      responses:
+        '204':
+          description: ''
+        '400':
+          description: 'Missing parameter (messageId/recipientId) or parameter value, for example:<br><br><pre>{<br>  "errorActor": "CLIENT",<br>  "errorCode": "MISSING_PARAMETER",<br>  "message": "Parameter ''messageId'' is mandatory but no value was specified.",<br>  "parameterName": "messageId",<br>  "propertyName": null,<br>  "value": "null"<br>}</pre><br><br>Message ID or recipient does not exist, for example:<br><br><pre>{<br>  "errorActor": "CLIENT",<br>  "errorCode": "NO_SUCH_OBJECT",<br>  "message": "Message with id=24011454555 does not exist.",<br>  "objectType": "Message",<br>  "propertyName": "id",<br>  "propertyValue": "24011454555"<br>}</pre>'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TransactionalMessageContent'
+  /message/sendTransactional:
+    post:
+      tags:
+      - Message
+      summary: Send a transactional message
+      description: 'Sends a prepared message as a transactional message, and adds user as member to group the prepared message belong to. <br> Please be aware this may cause that user to be unexpectedly subscribed or re-subscribed to that group. <br>Attachments may be added as part of the JSON payload. If you wish to attach a file to the message, the data must be Base64 encoded <br>and added as the value of the attachment’s content string, as demonstrated below. Request body example with attachment: <br><br><pre>{<br>"parameters":<br>  [{"name" : "Parameter Name 1","value" : "Parameter Value 1"},<br>   {"name" : "Parameter Name 2","value": "Parameter Value 2"}],<br>    "attachments":<br>    [{"name" : "twitter_logo.png",<br>      "contentType" : "image/png",<br>      "content": "iVBORw0KGgoAAAANSUhEUgAAABUAAAARCAYAAAAyhueAAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAASFJREFUeNqslM0NgkAQhRdiAdiAgQ6468EO1INntQOpwFABdqBe9aAdiIl3twS1AbECfJPMkhVZftSXjJPsDh87z2WsNE1Fb3d3z+POVVQIdQ5ShJhqywdEgEgQQ1qwutsbFT4QM4DXFcALwi3YJqDD2bPx4/PGCg/OSw46NwAFA0nU7d7ObUYAHxF+wYMDUU8jiz19aG9TihEbyuS3oSavNmoT5Sm1thA/CkCLsvJ0In5XdnsIKkv+gCaSGZQ8QF7+AXrST0peBH8Ar9+grKfuS1Mgd/wBjb/0lmChvmBr14GgMy5qoiA/N+zcPSNfPN2fCoVF86KlDQxqvc93tl8DaBxALcAi/qLqKuaWpalAffsOz8iB4ZRSzYIymNJLgAEAYsJkJOLW//gAAAAASUVORK5CYII="}]<br>}</pre>'
+      operationId: sendTransactional
+      parameters:
+      - name: messageId
+        in: query
+        description: ID of the message or prepared message
+        required: false
+        schema:
+          type: integer
+          format: int64
+      - name: externalTransactionFormula
+        in: query
+        description: External transactional identifier. If not available, "null" can be used.
+        required: false
+        schema:
+          type: string
+      - name: recipientId
+        in: query
+        description: ID of the user
+        required: false
+        schema:
+          type: integer
+          format: int64
+      - name: senderProfileName
+        in: query
+        description: TLS sender profile. Requires a Feature Switch and setting up a profile name in Mapp Engage. (optional)
+        required: false
+        schema:
+          type: string
+      responses:
+        '204':
+          description: ''
+        '400':
+          description: 'Missing parameter (messageId/recipientId) or parameter value, for example:<br><br><pre>{<br>  "errorActor": "CLIENT",<br>  "errorCode": "MISSING_PARAMETER",<br>  "message": "Parameter ''messageId'' is mandatory but no value was specified.",<br>  "parameterName": "messageId",<br>  "propertyName": null,<br>  "value": "null"<br>}</pre><br><br>Message ID or recipient does not exist, for example:<br><br><pre>{<br>  "errorActor": "CLIENT",<br>  "errorCode": "NO_SUCH_OBJECT",<br>  "message": "Message with id=24011454555 does not exist.",<br>  "objectType": "Message",<br>  "propertyName": "id",<br>  "propertyValue": "24011454555"<br>}</pre>'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MessageContent'
+  /message/validateList:
+    post:
+      tags:
+      - Message
+      summary: Validate a list of messages
+      description: 'Validates a list of messages for the following functionality: checks that the message is valid (InvalidObjectError -> objecttype message), checks that the message does not contain any invalid content store items, checks that the message does not use archived Attributes (InvalidObjectError -> objecttype attribute).<br>Request body example:<br><br><pre>["1800249570","1800202306"]</pre>'
+      operationId: validateList
+      responses:
+        '200':
+          description: 'Example response: <br><br>[{<br>    "entityId": 1800249570,<br>    "errorCode": "ARCHIVED_ATTRIBUTE",<br>    "errorMessage": "Message contains archived attribute(s) user.CustomAttribute.Attribute1"<br>}, {<br>    "entityId": 1800202306,<br>    "errorCode": null,<br>    "errorMessage": null<br>}]'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MethodResult'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/MethodResult'
+        '400':
+          description: ''
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                type: integer
+                format: int64
+  /message/validate:
+    get:
+      tags:
+      - Message
+      summary: Validate a message
+      description: 'Validates a prepared message for the following functionality: check that message is valid (InvalidObjectError -> objecttype message), check that message does not contain invalid content store items, check that message does not use archived Attributes (InvalidObjectError -> objecttype attribute).<br>Request body example:<br><br><pre>["1800249570","1800202306"]</pre>'
+      operationId: validate
+      parameters:
+      - name: messageId
+        in: query
+        description: ID of the message
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: 'Example response: <br>{<br>    "entityKey": "1800249570",<br>    "code": "ARCHIVED_ATTRIBUTE",<br>    "message": "Message contains archived attribute(s) user.CustomAttribute.Attribute1."<br>}'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CallResult'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/CallResult'
+        '400':
+          description: 'Message ID does not exist, for example:<br><br><pre>{<br>  "errorActor": "CLIENT",<br>  "errorCode": "NO_SUCH_OBJECT",<br>  "message": "Message with id=24011454555 does not exist.",<br>  "objectType": "Message",<br>  "propertyName": "id",<br>  "propertyValue": "24011454555"<br>}</pre>'
+  /message/validateMany:
+    post:
+      tags:
+      - Message
+      summary: Validate many messages
+      description: 'Validates many messages for the following functionality: checks that the message is valid (InvalidObjectError -> objecttype message), checks that the message does not contain any invalid content store items, checks that the message does not use archived Attributes (InvalidObjectError -> objecttype attribute).<br>Request body example:<br><br><pre>["1800249570","1800202306"]</pre>'
+      operationId: validateMany
+      responses:
+        '200':
+          description: 'Example response: <br><br>[{<br>    "entityId": 1800249570,<br>    "errorCode": "ARCHIVED_ATTRIBUTE",<br>    "errorMessage": "Message contains archived attribute(s) user.CustomAttribute.Attribute1"<br>}, {<br>    "entityId": 1800202306,<br>    "errorCode": null,<br>    "errorMessage": null<br>}]'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CallResult'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/CallResult'
+        '400':
+          description: 'Message does not exist, for example:<br><br><pre>{<br>  "errorActor": "CLIENT",<br>  "errorCode": "NO_SUCH_OBJECT",<br>  "message": "Message with id=24011454555 does not exist.",<br>  "objectType": "Message",<br>  "propertyName": "id",<br>  "propertyValue": "24011454555"<br>}</pre>'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                type: integer
+                format: int64
+components:
+  securitySchemes:
+    basicAuth:
+      type: http
+      scheme: basic
+      description: HTTP Basic authentication with a Mapp Engage system user of type API (or Hybrid).
+x-apievangelist-provenance:
+  method: searched
+  generated: '2026-08-12'
+  source: https://docs.mapp.com/apidocs/ (per-endpoint OpenAPI fragments)
+  note: Union of the OpenAPI JSON fragments Mapp publishes on each endpoint page. Mapp does not serve one consolidated document at a public URL; the tenant-served Swagger lives at https://<your-engage-host>/apidoc/swagger.json and requires a tenant. Operation bodies, parameters, responses, tags, summaries and descriptions are verbatim from Mapp. The swagger/basePath/schemes/securityDefinitions envelope is added by API Evangelist from the published Getting Started guide; no operation content was authored.
+  duplicate_operation_ids_suffixed: 30

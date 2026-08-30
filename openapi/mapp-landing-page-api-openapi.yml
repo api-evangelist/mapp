@@ -1,0 +1,122 @@
+openapi: 3.2.0
+info:
+  title: Mapp Engage public Landing Page API
+  version: '1'
+  description: 'Mapp Engage REST API (REST 2.0, incremental version v19). Assembled verbatim from the per-operation OpenAPI fragments Mapp publishes on each endpoint page of https://docs.mapp.com/apidocs/. The base URL is tenant-specific: take your Mapp Engage login host and append /api/rest/v19.'
+  contact:
+    name: Mapp Technical Support
+    url: https://mapp.com/tech-support/
+servers:
+- url: /api/rest/v19
+security:
+- basicAuth: []
+tags:
+- name: Landing Page
+paths:
+  /landingpage/delete:
+    delete:
+      tags:
+      - Landing Page
+      summary: Delete a landing page
+      description: Deletes the landing page with the specified landing page ID. It works only if the landing page is inactive.
+      operationId: deleteLandingPage
+      parameters:
+      - name: landingpageId
+        in: query
+        description: ID of the landing page
+        required: true
+        schema:
+          type: integer
+          format: int64
+      responses:
+        '204':
+          description: ''
+        '400':
+          description: ''
+  /landingpage/deleteMany:
+    post:
+      tags:
+      - Landing Page
+      summary: Delete multiple landing pages
+      description: Deletes the landing pages with the specified landing page IDs. It works only if landing pages are inactive.<br>Request body example:<br><br><pre>["626","627"]</pre>
+      operationId: deleteMany
+      responses:
+        '204':
+          description: 'Example response: <br><br>{<br>1 <br>}'
+        '400':
+          description: ''
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                type: integer
+                format: int64
+  /landingpage/find:
+    post:
+      tags:
+      - Landing Page
+      summary: Find landing pages
+      description: Find the landing page.
+      operationId: FindLandingPage
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+            application/xml:
+              schema:
+                type: array
+                items:
+                  type: object
+        '400':
+          description: ''
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LandingpageFilter'
+  /landingpage/getStatus:
+    get:
+      tags:
+      - Landing Page
+      summary: Get a landing page's status
+      description: Returns the publishing status of a landing page. Because these pages are usually associated with the lifetime of a particular email campaign, they may have a differing publishing status. Previously published pages that have become inactive because they are no longer valid are sometimes redirected to another default page. Possible states are:<br><br><pre>PUBLISHED<br><br>INACTIVE<br><br>SCHEDULED</pre>
+      operationId: getStatus
+      parameters:
+      - name: landingpageId
+        in: query
+        description: ID of the landing page
+        required: true
+        schema:
+          type: integer
+          format: int64
+      responses:
+        '200':
+          description: 'Example response: <br><br>{<br>PUBLISHED <br>}'
+          content:
+            application/json:
+              schema:
+                type: string
+            application/xml:
+              schema:
+                type: string
+        '400':
+          description: ''
+components:
+  securitySchemes:
+    basicAuth:
+      type: http
+      scheme: basic
+      description: HTTP Basic authentication with a Mapp Engage system user of type API (or Hybrid).
+x-apievangelist-provenance:
+  method: searched
+  generated: '2026-08-12'
+  source: https://docs.mapp.com/apidocs/ (per-endpoint OpenAPI fragments)
+  note: Union of the OpenAPI JSON fragments Mapp publishes on each endpoint page. Mapp does not serve one consolidated document at a public URL; the tenant-served Swagger lives at https://<your-engage-host>/apidoc/swagger.json and requires a tenant. Operation bodies, parameters, responses, tags, summaries and descriptions are verbatim from Mapp. The swagger/basePath/schemes/securityDefinitions envelope is added by API Evangelist from the published Getting Started guide; no operation content was authored.
+  duplicate_operation_ids_suffixed: 30

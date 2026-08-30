@@ -1,0 +1,213 @@
+openapi: 3.2.0
+info:
+  title: Mapp Engage public Whiteboard API
+  version: '1'
+  description: 'Mapp Engage REST API (REST 2.0, incremental version v19). Assembled verbatim from the per-operation OpenAPI fragments Mapp publishes on each endpoint page of https://docs.mapp.com/apidocs/. The base URL is tenant-specific: take your Mapp Engage login host and append /api/rest/v19.'
+  contact:
+    name: Mapp Technical Support
+    url: https://mapp.com/tech-support/
+servers:
+- url: /api/rest/v19
+security:
+- basicAuth: []
+tags:
+- name: Whiteboard
+paths:
+  /whiteboard/save:
+    post:
+      tags:
+      - Whiteboard
+      summary: Creates or updates a whiteboard. Schema-validates the body against the whiteboard JSON Schema before delegating to the downstream save flow.
+      description: ''
+      operationId: save
+      responses:
+        '200':
+          description: The outcome of the save operation (UpsertResult).
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UpsertResult'
+        '400':
+          description: The supplied whiteboard JSON failed schema validation.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AgentAutomationPayload'
+  /whiteboard/delete:
+    delete:
+      tags:
+      - Whiteboard
+      summary: Deletes a whiteboard by id. Removes per-user data, statistics and labels via the downstream service.
+      description: ''
+      operationId: delete_5
+      parameters:
+      - name: id
+        in: query
+        description: ID of the whiteboard to delete
+        required: true
+        schema:
+          type: integer
+          format: int64
+      responses:
+        '204':
+          description: The deletion completed.
+        '400':
+          description: id was not supplied or was invalid, or no whiteboard exists for the supplied id.
+  /whiteboard/publish:
+    post:
+      tags:
+      - Whiteboard
+      summary: Publishes a whiteboard. Schema-validates the DiagramData JSON before delegating to the downstream publish flow.
+      description: ''
+      operationId: publish_2
+      responses:
+        '200':
+          description: The structured activation result.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ActivationResult'
+        '400':
+          description: The supplied DiagramData JSON failed schema validation, or no whiteboard exists for the specified id.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AgentPublishPayload'
+  /whiteboard/get:
+    get:
+      tags:
+      - Whiteboard
+      summary: Returns a single whiteboard (all versions) by id.
+      description: ''
+      operationId: get_6
+      parameters:
+      - name: id
+        in: query
+        description: ID of the whiteboard to return
+        required: true
+        schema:
+          type: integer
+          format: int64
+      responses:
+        '200':
+          description: Pass-through whiteboard JSON (all versions).
+          content:
+            application/json:
+              schema:
+                type: string
+        '400':
+          description: id was not supplied or was invalid, or no whiteboard exists for the supplied id.
+  /whiteboard/listTemplates:
+    get:
+      tags:
+      - Whiteboard
+      summary: Returns the active static whiteboard templates served by the Audience Interaction Planner service.
+      description: ''
+      operationId: listTemplates
+      responses:
+        '200':
+          description: The active static whiteboard templates.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/WhiteboardTemplate'
+  /whiteboard/find:
+    get:
+      tags:
+      - Whiteboard
+      summary: Returns a paginated list of whiteboard summaries for the calling customer, optionally filtered by name / status and ordered by last update date.
+      description: ''
+      operationId: find_3
+      parameters:
+      - name: nameFilter
+        in: query
+        description: Substring filter on whiteboard name (>= 3 chars)
+        required: false
+        schema:
+          type: string
+      - name: statusFilter
+        in: query
+        description: AutomationStatus value (DRAFT, ACTIVE, ...)
+        required: false
+        schema:
+          type: string
+      - name: sortByDate
+        in: query
+        description: ASC or DESC, applied to lastUpdateDate
+        required: false
+        schema:
+          type: string
+      - name: page
+        in: query
+        description: 1-based page index, defaults to 1
+        required: false
+        schema:
+          type: integer
+          format: int64
+      - name: limit
+        in: query
+        description: Page size, defaults to 100
+        required: false
+        schema:
+          type: integer
+          format: int64
+      responses:
+        '200':
+          description: A page of whiteboard summaries and the total matching count.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WhiteboardPage'
+        '400':
+          description: An invalid sort direction or status value was supplied.
+  /whiteboard/schema:
+    get:
+      tags:
+      - Whiteboard
+      summary: Returns the canonical whiteboard JSON Schema served by the Audience Interaction Planner service.
+      description: ''
+      operationId: schema_2
+      responses:
+        '200':
+          description: The raw JSON Schema document.
+          content:
+            application/json:
+              schema:
+                type: string
+  /whiteboard/validate:
+    post:
+      tags:
+      - Whiteboard
+      summary: Validates a whiteboard. Runs the full model-level validation suite and returns a structured ValidationResult.
+      description: ''
+      operationId: validate_2
+      responses:
+        '200':
+          description: The structured validation result.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationResult'
+        '400':
+          description: The supplied JSON could not be parsed or the payload wrapper was malformed.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AgentAutomationPayload'
+components:
+  securitySchemes:
+    basicAuth:
+      type: http
+      scheme: basic
+      description: HTTP Basic authentication with a Mapp Engage system user of type API (or Hybrid).
+x-apievangelist-provenance:
+  method: searched
+  generated: '2026-08-12'
+  source: https://docs.mapp.com/apidocs/ (per-endpoint OpenAPI fragments)
+  note: Union of the OpenAPI JSON fragments Mapp publishes on each endpoint page. Mapp does not serve one consolidated document at a public URL; the tenant-served Swagger lives at https://<your-engage-host>/apidoc/swagger.json and requires a tenant. Operation bodies, parameters, responses, tags, summaries and descriptions are verbatim from Mapp. The swagger/basePath/schemes/securityDefinitions envelope is added by API Evangelist from the published Getting Started guide; no operation content was authored.
+  duplicate_operation_ids_suffixed: 30

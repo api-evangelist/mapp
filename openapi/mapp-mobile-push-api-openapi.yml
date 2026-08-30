@@ -1,0 +1,237 @@
+openapi: 3.2.0
+info:
+  title: Mapp Engage public Mobile Push API
+  version: '1'
+  description: 'Mapp Engage REST API (REST 2.0, incremental version v19). Assembled verbatim from the per-operation OpenAPI fragments Mapp publishes on each endpoint page of https://docs.mapp.com/apidocs/. The base URL is tenant-specific: take your Mapp Engage login host and append /api/rest/v19.'
+  contact:
+    name: Mapp Technical Support
+    url: https://mapp.com/tech-support/
+servers:
+- url: /api/rest/v19
+security:
+- basicAuth: []
+tags:
+- name: Mobile Push
+paths:
+  /mobilePush/cancelPushSend:
+    post:
+      tags:
+      - Mobile Push
+      summary: Cancel a push message send
+      description: Cancel message send.
+      operationId: cancelPushSend
+      parameters:
+      - name: messageId
+        in: query
+        description: The message ID.
+        required: true
+        schema:
+          type: integer
+          format: int64
+      responses:
+        '204':
+          description: ''
+        '400':
+          description: One of the parameters is invalid / The message ID or user ID cannot be found. / An unexpected backend error occurred.
+        '404':
+          description: 'Error response: {<br>"errorActor": "CLIENT",<br>"errorCode": "INVALID_REQUEST",<br>"message": "Not Found"<br>}'
+  /mobilePush/createAndSchedulePushMessage:
+    post:
+      tags:
+      - Mobile Push
+      summary: Create and schedule a push message
+      description: 'Create and schedule push message.<br>Request body example:<br><br><pre>{<br>    "name" : "test name",<br>    "appId" : "1585031493269",<br>    "selectionPlanId" : "768E488C-45C2-4A6F-800B-C569586F1DC5",<br>    "content" : "This is iOS test push ",<br>    "messageTitle" : "Hello",<br>    "description" : "description", <br>    "notificationSound" : "sound1.mp3",<br>    "pushActionType" : "LAUNCH_APP",<br>    "pushActionParams" : "www.test.com",<br>    "buttonCategory" : "apx_read_open",<br>    "buttonActionType" : "OPEN_LANDING_PAGE",<br>    "buttonActionParams" : "https://www.google.com/",<br>    "mediaType" : "IMAGE",<br>    "mediaUrl" : "https://staging11.shortest-route.com/qatest/imgproxy/img/110/5ac68ca5498a5.png",<br>    "scheduledTime" : "2020-07-31T12:44:46.966Z",<br>    "timeZone" : "Europe/Budapest",<br>    "messagePriority" : "normal",<br>    "archiveOnCompleted" : "true"<br>}</pre> <br><br>Another example:<br><br><pre>{<br>    "name" : "test Silvia3",<br>    "appId" : "207084",<br>    "selectionPlanId" : "D5398D44-73C8-4B1E-8E99-711BC9CAEBB8",<br>    "content": "yo yo yo 😎",<br>    "messageTitle": "hello 😁",<br>    "notificationSound": "",<br>    "pushActionType": "LAUNCH_APP",<br>    "buttonLanguageCode": "en",<br>    "scheduledTime" : "2024-08-31T12:44:46.966Z",<br>    "timeZone" : "Europe/Rome",<br>    "messagePriority" : "high",<br>    "archiveOnCompleted" : "false"<br>}</pre> <br><br> Required parameters: name, appId, content, messageTitle <br><br>pushActionType enum values [LAUNCH_APP, OPEN_LANDING_PAGE, OPEN_DEEP_LINK, OPEN_STORE]<br>buttonCategory enum values [apx_yes_no_open, apx_acc_dec_open, apx_buy_open, apx_read_open]<br>buttonActionType enum values [LAUNCH_APP, OPEN_LANDING_PAGE, OPEN_DEEP_LINK, OPEN_STORE]<br>mediaType enum values [IMAGE, VIDEO]<br><br>IMPORTANT: messagePriority (optional) - Please note that this feature is not activated by default. Please contact your Customer Success Manager to request activation.<br>'
+      operationId: createAndSchedulePushMessage
+      responses:
+        '200':
+          description: 'Example response: <br>{<br>    "status" : "success",<br>    "messageId" : 1,<br>}'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PushMessageResponse'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/PushMessageResponse'
+        '400':
+          description: ''
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PushMessage'
+        description: An object that contains a definition of the push message to be created.
+        required: true
+  /mobilePush/deletePushMessage:
+    delete:
+      tags:
+      - Mobile Push
+      summary: Delete a prepared push message
+      description: Delete prepared push message.
+      operationId: deletePushMessage
+      parameters:
+      - name: messageId
+        in: query
+        description: The campaign ID of the prepared message to be deleted.
+        required: true
+        schema:
+          type: integer
+          format: int64
+      responses:
+        '204':
+          description: ''
+        '400':
+          description: One of the parameters is invalid / The message ID or user ID cannot be found. / An unexpected backend error occurred.
+        '404':
+          description: 'Error response: {<br>"errorActor": "CLIENT",<br>"errorCode": "INVALID_REQUEST",<br>"message": "Not Found"<br>}'
+  /mobilePush/getPushMessage:
+    get:
+      tags:
+      - Mobile Push
+      summary: Get a prepared push message
+      description: Get push message.
+      operationId: getPushMessage
+      parameters:
+      - name: messageId
+        in: query
+        description: The message ID.
+        required: true
+        schema:
+          type: integer
+          format: int64
+      responses:
+        '200':
+          description: 'Example response: <br>{<br>    "messageId" : 1,<br>    "status" : "COMPLETED"<br>    "owner" : {<br>        "firstName" : "Radmila",<br>        "lastName" : "Petrovic",<br>        "email" : "radmila.petrovic@mapp.com"<br>    },<br>    "lastModified" : "2020-07-31T12:44:46.966Z",<br>    "name" : "test name",<br>    "appId" : "1585031493269",<br>    "selectionPlanId" : "768E488C-45C2-4A6F-800B-C569586F1DC5",<br>    "content" : "This is iOS test push ",<br>    "messageTitle" : "Hello",<br>    "description" : "description",<br>    "notificationSound" : "sound1.mp3",<br>    "pushActionType" : "LAUNCH_APP",<br>    "pushActionParams" : "www.test.com",<br>    "buttonCategory" : "apx_read_open",<br>    "buttonActionType" : "OPEN_LANDING_PAGE",<br>    "buttonActionParams" : "https://www.google.com/",<br>    "mediaType" : "IMAGE", - optional<br>    "mediaUrl" : "https://staging11.shortest-route.com/qatest/imgproxy/img/110/5ac68ca5498a5.png",<br>    "scheduledTime" : "2020-07-31T12:44:46.966Z",<br>    "timeZone" : "Europe/Budapest"<br>    "messagePriority" : "HIGH"<br>}'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PushMessage'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/PushMessage'
+        '400':
+          description: One of the parameters is invalid / The message ID or user ID cannot be found. / An unexpected backend error occurred.
+        '404':
+          description: 'Error response: {<br>"errorActor": "CLIENT",<br>"errorCode": "INVALID_REQUEST",<br>"message": "Not Found"<br>}'
+  /mobilePush/pausePushSend:
+    post:
+      tags:
+      - Mobile Push
+      summary: Pause a push message send
+      description: Pause message send.
+      operationId: pausePushSend
+      parameters:
+      - name: messageId
+        in: query
+        description: The message ID.
+        required: true
+        schema:
+          type: integer
+          format: int64
+      responses:
+        '204':
+          description: ''
+        '400':
+          description: One of the parameters is invalid / The message ID or user ID cannot be found. / An unexpected backend error occurred.
+        '404':
+          description: 'Error response: {<br>"errorActor": "CLIENT",<br>"errorCode": "INVALID_REQUEST",<br>"message": "Not Found"<br>}'
+  /mobilePush/resumePushSend:
+    post:
+      tags:
+      - Mobile Push
+      summary: Resume a push message send
+      description: Resume message send.
+      operationId: resumePushSend
+      parameters:
+      - name: messageId
+        in: query
+        description: The message ID.
+        required: true
+        schema:
+          type: integer
+          format: int64
+      responses:
+        '204':
+          description: ''
+        '400':
+          description: One of the parameters is invalid / The message ID or user ID cannot be found. / An unexpected backend error occurred.
+        '404':
+          description: 'Error response: {<br>"errorActor": "CLIENT",<br>"errorCode": "INVALID_REQUEST",<br>"message": "Not Found"<br>}'
+  /mobilePush/sendSingle:
+    post:
+      tags:
+      - Mobile Push
+      summary: Send a single mobile push message
+      description: Sends single mobile push message to the specified recipient.
+      operationId: SendSingleMobilePush
+      parameters:
+      - name: recipientId
+        in: query
+        description: The user ID of the intended message recipient.
+        required: true
+        schema:
+          type: integer
+          format: int64
+      - name: campaignId
+        in: query
+        description: The campaign ID of the prepared message to be sent.
+        required: true
+        schema:
+          type: integer
+          format: int64
+      responses:
+        '204':
+          description: ''
+        '400':
+          description: One of the parameters is invalid / The message ID or user ID cannot be found. / An unexpected backend error occurred.
+        '404':
+          description: 'Error response: {<br>"errorActor": "CLIENT",<br>"errorCode": "INVALID_REQUEST",<br>"message": "Not Found"<br>}'
+  /mobilePush/multiTenantSendSingle:
+    post:
+      tags:
+      - Mobile Push
+      summary: Send a single multi-tenant mobile push message
+      description: Sends single mobile push message to the specified recipient with child users personalization.
+      operationId: MultiTenantSendSingleMobilePush
+      responses:
+        '204':
+          description: ''
+        '400':
+          description: One of the parameters is invalid / The message ID or user ID cannot be found. / An unexpected backend error occurred.
+        '404':
+          description: 'Error response: {<br>"errorActor": "CLIENT",<br>"errorCode": "INVALID_REQUEST",<br>"message": "Not Found"<br>}'
+  /mobilePush/updatePushMessage:
+    put:
+      tags:
+      - Mobile Push
+      summary: Update a prepared push message
+      description: 'Update prepared push message.<br>Request body example:<br><br><pre>{<br>    "messageId" : 1<br>    "name" : "test name",<br>    "appId" : "1585031493269",<br>    "selectionPlanId" : "768E488C-45C2-4A6F-800B-C569586F1DC5",<br>    "content" : "This is iOS test push ",<br>    "messageTitle" : "Hello",<br>    "description" : "description",<br>    "notificationSound" : "sound1.mp3",<br>    "pushActionType" : "LAUNCH_APP",<br>    "pushActionParams" : "www.test.com",<br>    "buttonCategory" : "apx_read_open",<br>    "buttonActionType" : "OPEN_LANDING_PAGE",<br>    "buttonActionParams" : "https://www.google.com/",<br>    "mediaType" : "IMAGE", - optional<br>    "mediaUrl" : "https://staging11.shortest-route.com/qatest/imgproxy/img/110/5ac68ca5498a5.png",<br>    "scheduledTime" : "2020-07-31T12:44:46.966Z",<br>    "timeZone" : "Europe/Budapest"<br>    "messagePriority" : "high"<br>}</pre> <br><br> Required parameters: messageId, name, appId, content, messageTitle <br><br>pushActionType enum values [LAUNCH_APP, OPEN_LANDING_PAGE, OPEN_DEEP_LINK, OPEN_STORE]<br>buttonCategory enum values [apx_yes_no_open, apx_acc_dec_open, apx_buy_open, apx_read_open]<br>buttonActionType enum values [LAUNCH_APP, OPEN_LANDING_PAGE, OPEN_DEEP_LINK, OPEN_STORE]<br>mediaType enum values [IMAGE, VIDEO]<br><br>IMPORTANT: messagePriority (optional) - Please note that this feature is not activated by default. Please contact your Customer Success Manager to request activation.<br>'
+      operationId: updatePushMessage
+      responses:
+        '200':
+          description: 'Example response: <br>{<br>    "messageId": 1,<br>    "messageStatus": "SCHEDULED"<br>}'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PushMessageResponse'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/PushMessageResponse'
+        '400':
+          description: (PushCampaign with messageId=<id> does not exist)
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PushMessage'
+components:
+  securitySchemes:
+    basicAuth:
+      type: http
+      scheme: basic
+      description: HTTP Basic authentication with a Mapp Engage system user of type API (or Hybrid).
+x-apievangelist-provenance:
+  method: searched
+  generated: '2026-08-12'
+  source: https://docs.mapp.com/apidocs/ (per-endpoint OpenAPI fragments)
+  note: Union of the OpenAPI JSON fragments Mapp publishes on each endpoint page. Mapp does not serve one consolidated document at a public URL; the tenant-served Swagger lives at https://<your-engage-host>/apidoc/swagger.json and requires a tenant. Operation bodies, parameters, responses, tags, summaries and descriptions are verbatim from Mapp. The swagger/basePath/schemes/securityDefinitions envelope is added by API Evangelist from the published Getting Started guide; no operation content was authored.
+  duplicate_operation_ids_suffixed: 30

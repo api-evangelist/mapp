@@ -1,0 +1,220 @@
+openapi: 3.2.0
+info:
+  title: Mapp Engage public Blacklist API
+  version: '1'
+  description: 'Mapp Engage REST API (REST 2.0, incremental version v19). Assembled verbatim from the per-operation OpenAPI fragments Mapp publishes on each endpoint page of https://docs.mapp.com/apidocs/. The base URL is tenant-specific: take your Mapp Engage login host and append /api/rest/v19.'
+  contact:
+    name: Mapp Technical Support
+    url: https://mapp.com/tech-support/
+servers:
+- url: /api/rest/v19
+security:
+- basicAuth: []
+tags:
+- name: Blacklist
+paths:
+  /blacklist/createGroupEntries:
+    post:
+      tags:
+      - Blacklist
+      summary: Create group blacklist entries
+      description: 'Adds new entries (email, emailDomain or mobileNumber) to the group blacklist.<br>Request body example:<br><br><pre>[{<br>"type": "EMAIL",<br> "pattern": "test@test.com"<br>}]</pre>'
+      operationId: createGroupEntries
+      parameters:
+      - name: groupId
+        in: query
+        description: ID of the group
+        required: true
+        schema:
+          type: integer
+          format: int64
+      responses:
+        '200':
+          description: 'Example response: <br><br>[{<br>    "success": true,<br>    "id": "test@test.com",<br>    "errorActor": null,<br>    "errorCode": null,<br>    "errorMessage": null<br>}]'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreateResult'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/CreateResult'
+        '400':
+          description: ''
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                $ref: '#/components/schemas/BlacklistEntry'
+  /blacklist/createGroupEntriesHashed:
+    post:
+      tags:
+      - Blacklist
+      summary: Create hashed group blacklist entries
+      description: 'Adds new hashed email entries to the group blacklist. Entries can be hashed using md5hashgenerator.<br>Request body example:<br><br><pre>[<br>    {<br>        "type": "EMAIL",<br>        "pattern":"6a4b6cb2045fd55f706eaebd6ab5d4f7"<br>    },<br>    {<br>        "type": "EMAIL",<br>        "pattern":"0dbfb46341bc3d195db23e4015b20847"<br>    }<br>]</pre>'
+      operationId: createGroupEntriesHashed
+      parameters:
+      - name: groupId
+        in: query
+        description: The group ID.
+        required: true
+        schema:
+          type: integer
+          format: int64
+      - name: hashed
+        in: query
+        description: Hashing algorithm used to hash given entries. Either 'clear-text' or 'md5'
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreateResult'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/CreateResult'
+        '400':
+          description: ''
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                $ref: '#/components/schemas/BlacklistEntry'
+  /blacklist/createSystemEntriesHashed:
+    post:
+      tags:
+      - Blacklist
+      summary: Create hashed system blacklist entries
+      description: 'Adds new entries (email, email domain, mobile number, or mobile app alias) to the system blacklist. Entries can be hashed using md5hashgenerator.<br>Request body example:<br><br><pre>[<br>    {<br>        "type": "EMAIL",<br>        "pattern":"6a4b6cb2045fd55f706eaebd6ab5d4f7"<br>    },<br>    {<br>        "type": "EMAIL",<br>        "pattern":"0dbfb46341bc3d195db23e4015b20847"<br>    }<br>]</pre>'
+      operationId: createSystemEntriesHashed
+      parameters:
+      - name: hashed
+        in: query
+        description: the hashing algorithm used to hash given entries. Either 'clear-text' or 'md5'
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreateResult'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/CreateResult'
+        '400':
+          description: ''
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                $ref: '#/components/schemas/BlacklistEntry'
+  /blacklist/createSystemEntries:
+    post:
+      tags:
+      - Blacklist
+      summary: Create system blacklist entries
+      description: 'Adds new entries (email, email domain or mobile number) to the system blacklist. <br>Request body examples:<br><br><pre>[{<br>"type": "EMAIL",<br> "pattern": "test@test.com"<br>}]<br><br>[{<br>"type": "PHONE_NUMBER",<br>"pattern": "336789012345"<br>}]</pre>'
+      operationId: createSystemEntries
+      responses:
+        '200':
+          description: 'Example response: <br><br>[{<br>    "success": true,<br>    "id": "test@test.com",<br>    "errorActor": null,<br>    "errorCode": null,<br>    "errorMessage": null<br>}]'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreateResult'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/CreateResult'
+        '400':
+          description: ''
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                $ref: '#/components/schemas/BlacklistEntry'
+  /blacklist/deleteGroupEntries:
+    post:
+      tags:
+      - Blacklist
+      summary: Delete group blacklist entries
+      description: 'Deletes entries (email, email domain or mobile number) from the group blacklist.<br>Request body example:<br><br><pre>[{<br>"type": "EMAIL",<br> "pattern": "test@test.com"<br>}]</pre>'
+      operationId: deleteGroupEntries
+      parameters:
+      - name: groupId
+        in: query
+        description: ID of the group.
+        required: true
+        schema:
+          type: integer
+          format: int64
+      responses:
+        '200':
+          description: 'Example response: <br><br>[{<br>    "success": true,<br>    "id": "test@test.com",<br>    "errorActor": null,<br>    "errorCode": null,<br>    "errorMessage": null<br>}]'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreateResult'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/CreateResult'
+        '400':
+          description: ''
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                $ref: '#/components/schemas/BlacklistEntry'
+  /blacklist/deleteSystemEntries:
+    post:
+      tags:
+      - Blacklist
+      summary: Delete system blacklist entries
+      description: 'Deletes entries (email, email domain or mobile number ) from the system blacklist.<br>Request body example:<br><br><pre>[{<br>"type": "EMAIL",<br> "pattern": "test@test.com"<br>}]</pre>'
+      operationId: deleteSystemEntries
+      responses:
+        '200':
+          description: 'Example response: <br><br>[{<br>    "success": true,<br>    "id": "test@test.com",<br>    "errorActor": null,<br>    "errorCode": null,<br>    "errorMessage": null<br>}]'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreateResult'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/CreateResult'
+        '400':
+          description: ''
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                $ref: '#/components/schemas/BlacklistEntry'
+components:
+  securitySchemes:
+    basicAuth:
+      type: http
+      scheme: basic
+      description: HTTP Basic authentication with a Mapp Engage system user of type API (or Hybrid).
+x-apievangelist-provenance:
+  method: searched
+  generated: '2026-08-12'
+  source: https://docs.mapp.com/apidocs/ (per-endpoint OpenAPI fragments)
+  note: Union of the OpenAPI JSON fragments Mapp publishes on each endpoint page. Mapp does not serve one consolidated document at a public URL; the tenant-served Swagger lives at https://<your-engage-host>/apidoc/swagger.json and requires a tenant. Operation bodies, parameters, responses, tags, summaries and descriptions are verbatim from Mapp. The swagger/basePath/schemes/securityDefinitions envelope is added by API Evangelist from the published Getting Started guide; no operation content was authored.
+  duplicate_operation_ids_suffixed: 30

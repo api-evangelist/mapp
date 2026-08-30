@@ -1,0 +1,114 @@
+openapi: 3.2.0
+info:
+  title: Mapp Engage public Automation API
+  version: '1'
+  description: 'Mapp Engage REST API (REST 2.0, incremental version v19). Assembled verbatim from the per-operation OpenAPI fragments Mapp publishes on each endpoint page of https://docs.mapp.com/apidocs/. The base URL is tenant-specific: take your Mapp Engage login host and append /api/rest/v19.'
+  contact:
+    name: Mapp Technical Support
+    url: https://mapp.com/tech-support/
+servers:
+- url: /api/rest/v19
+security:
+- basicAuth: []
+tags:
+- name: Automation
+paths:
+  /automation/find:
+    post:
+      tags:
+      - Automation
+      summary: Find automations
+      description: Returns information about one or more time-based / event-based automations.
+      operationId: find
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AutomationDetails'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/AutomationDetails'
+        '400':
+          description: ''
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AutomationFilter'
+  /automation/getDetails:
+    post:
+      tags:
+      - Automation
+      summary: Get automation details
+      description: Returns detailed information for an time-based / event-based automation.
+      operationId: getDetails
+      parameters:
+      - name: automationType
+        in: query
+        description: Type of the automation, values [EVENT_BASED, TIME_BASED]
+        required: true
+        schema:
+          type: string
+          enum:
+          - EVENT_BASED
+          - TIME_BASED
+      - name: automationId
+        in: query
+        description: ID of the automation
+        required: true
+        schema:
+          type: integer
+          format: int64
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AutomationDetails'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/AutomationDetails'
+        '400':
+          description: ''
+  /automation/runOnce:
+    get:
+      tags:
+      - Automation
+      summary: Run a time-based automation once
+      description: Performs one execution of the specified time-based automation. Execution takes place immediately.<br>Run once does not change the status or schedule of the automation.<br>You can only use this method to run an existing time-based automation.
+      operationId: runOnce
+      parameters:
+      - name: automationId
+        in: query
+        description: ID of the automation
+        required: true
+        schema:
+          type: integer
+          format: int64
+      responses:
+        '200':
+          description: 'Example response: {<br>"processId": null,<br>"processingType": "SYNC"<br>}'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RunOnceResult'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/RunOnceResult'
+        '400':
+          description: ''
+components:
+  securitySchemes:
+    basicAuth:
+      type: http
+      scheme: basic
+      description: HTTP Basic authentication with a Mapp Engage system user of type API (or Hybrid).
+x-apievangelist-provenance:
+  method: searched
+  generated: '2026-08-12'
+  source: https://docs.mapp.com/apidocs/ (per-endpoint OpenAPI fragments)
+  note: Union of the OpenAPI JSON fragments Mapp publishes on each endpoint page. Mapp does not serve one consolidated document at a public URL; the tenant-served Swagger lives at https://<your-engage-host>/apidoc/swagger.json and requires a tenant. Operation bodies, parameters, responses, tags, summaries and descriptions are verbatim from Mapp. The swagger/basePath/schemes/securityDefinitions envelope is added by API Evangelist from the published Getting Started guide; no operation content was authored.
+  duplicate_operation_ids_suffixed: 30

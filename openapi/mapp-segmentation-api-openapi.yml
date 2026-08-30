@@ -1,0 +1,268 @@
+openapi: 3.2.0
+info:
+  title: Mapp Engage public Segmentation API
+  version: '1'
+  description: 'Mapp Engage REST API (REST 2.0, incremental version v19). Assembled verbatim from the per-operation OpenAPI fragments Mapp publishes on each endpoint page of https://docs.mapp.com/apidocs/. The base URL is tenant-specific: take your Mapp Engage login host and append /api/rest/v19.'
+  contact:
+    name: Mapp Technical Support
+    url: https://mapp.com/tech-support/
+servers:
+- url: /api/rest/v19
+security:
+- basicAuth: []
+tags:
+- name: Segmentation
+paths:
+  /segmentation/create:
+    post:
+      tags:
+      - Segmentation
+      summary: Create a selection plan
+      description: "Creates a new selection plan. The request body is a wrapper whose <code>json</code> field carries the raw plan JSON document <b>as a string</b> (escaped). The plan must contain at least <code>name</code> and <code>nodes</code>; validate it against <code>schema</code> first. Returns the new plan's id.<br/><br/><b>Example body</b><pre>{\n  \"json\": \"{\\\"name\\\":\\\"My plan\\\",\\\"timeZoneId\\\":\\\"Europe/Belgrade\\\",\\\"nodes\\\":[ ... ]}\"\n}</pre>"
+      operationId: create_5
+      responses:
+        '200':
+          description: The new plan's id, e.g. {"id":"..."}.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SegmentationReference'
+        '400':
+          description: bad request
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SegmentationPayload'
+        description: Wrapper carrying the raw plan JSON document as a string in its 'json' field.
+  /segmentation/delete:
+    delete:
+      tags:
+      - Segmentation
+      summary: Delete a selection plan
+      description: Permanently deletes a selection plan by ID. <b>Irreversible.</b> Selection Builder responds 204 No Content on success.
+      operationId: delete_3
+      parameters:
+      - name: id
+        in: query
+        description: ID of the plan to delete (GUID).
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Plan deleted.
+        '400':
+          description: bad request
+  /segmentation/find:
+    post:
+      tags:
+      - Segmentation
+      summary: Find selection plans
+      description: "Returns a paged list of selection plans (without node detail). Filter, sort and paging criteria are supplied in the request body; all fields are optional - send an empty body or <code>{}</code> to list with server defaults.<br/><br/><b>Body fields</b> (all optional):<ul><li><b>page</b> - zero-based page index (default 0).</li><li><b>size</b> - page size (default: server page size).</li><li><b>sort</b> - array of <code>\"field,asc|desc\"</code>; the first entry is the primary key, the rest are tie-breakers. E.g. <code>\"overviewCount.size,desc\"</code>, <code>\"createdOn,asc\"</code>.</li><li><b>name</b> - case-insensitive substring match on plan name.</li><li><b>status</b> - exact status, e.g. <code>draft</code> or <code>published</code>.</li><li><b>labels</b> - label filter.</li><li><b>id</b> - substring match on plan id.</li><li><b>selectionTermId</b> - match on the published selection term id.</li><li><b>createdByName</b> - case-insensitive substring on the creator's display name.</li><li><b>createdBefore / updatedBefore / publishedBefore</b> - ISO-8601 timestamp upper bounds.</li></ul><b>Example body</b><pre>{\n  \"page\": 0,\n  \"size\": 3,\n  \"sort\": [\"overviewCount.size,desc\", \"createdOn,asc\"],\n  \"name\": \"544\"\n}</pre>"
+      operationId: find_2
+      responses:
+        '200':
+          description: A paged list of matching plans (without node detail).
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SegmentationSearchResult'
+        '400':
+          description: bad request
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SegmentationSearchRequest'
+        description: Filter, sort and paging criteria. All fields optional - send {} for server defaults. See the operation description for the full field list.
+  /segmentation/getCount:
+    get:
+      tags:
+      - Segmentation
+      summary: Get a segment count
+      description: Returns segment count size for requested selection plan id.
+      operationId: getCount
+      parameters:
+      - name: termId
+        in: query
+        description: ID of selection term user wants to get a count for.
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Returned count result with last updated date
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SelectionCountResult'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/SelectionCountResult'
+        '400':
+          description: Provided term ID is invalid, No term id found for specified ID, An unexpected backend error has occurred.
+  /segmentation/get:
+    get:
+      tags:
+      - Segmentation
+      summary: Get a selection plan
+      description: 'Returns a single selection plan by ID in <b>FULL</b> - every node with its complete selector configuration. This is the lossless read: the returned shape is exactly what <code>update</code> accepts, so a fetch-modify-resubmit round-trip is safe. Use this (not <code>preview</code>) whenever the plan will be edited and saved back.'
+      operationId: get_2
+      parameters:
+      - name: id
+        in: query
+        description: ID of the plan to retrieve (GUID), e.g. FF784C2A-B3FD-4851-A49A-ECC807E8F8A2.
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: The full plan as a JSON document.
+          content:
+            application/json:
+              schema:
+                type: string
+        '400':
+          description: bad request
+  /segmentation/schema:
+    get:
+      tags:
+      - Segmentation
+      summary: Get the selection plan schema
+      description: Returns the selection plan JSON schema as a string. The schema describes every node type, selector and field (including the string-boolean fields such as <code>negated</code>, <code>caseSensitive</code>, <code>present</code> and <code>ignoreYear</code>, which are serialized as the strings <code>"true"</code>/<code>"false"</code>). Fetch it once and validate a plan body against it before calling <code>create</code> or <code>update</code>. Takes no parameters.
+      operationId: schema
+      responses:
+        '200':
+          description: The schema as a JSON document string.
+          content:
+            application/json:
+              schema:
+                type: string
+        '400':
+          description: bad request
+  /segmentation/preview:
+    get:
+      tags:
+      - Segmentation
+      summary: Preview a selection plan
+      description: 'Returns a single selection plan by ID in <b>REDUCED</b> form: identity, status, time zone and a lightweight node tree (node types, and per criterion selector type / operator / property / values) but <b>no</b> selector configuration. Cheap to render and reason over. <b>Lossy</b> - never feed this back into <code>update</code>; use <code>get</code> for round-trips.'
+      operationId: preview
+      parameters:
+      - name: id
+        in: query
+        description: ID of the plan to preview (GUID), e.g. FF784C2A-B3FD-4851-A49A-ECC807E8F8A2.
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: The reduced plan view as a JSON document.
+          content:
+            application/json:
+              schema:
+                type: string
+        '400':
+          description: bad request
+  /segmentation/publish:
+    post:
+      tags:
+      - Segmentation
+      summary: Publish a selection plan
+      description: Publishes a selection plan by ID, making it the live published version and assigning a selection term id. There is no request body - publishing acts on the plan already saved by <code>create</code>/<code>update</code>. The plan is fully validated on publish (drafts may save with invalid criteria, but publish rejects them). Returns the published plan's metadata (without node detail).
+      operationId: publish
+      parameters:
+      - name: id
+        in: query
+        description: ID of the plan to publish (GUID).
+        required: true
+        schema:
+          type: string
+      - name: isBeta
+        in: query
+        description: Use the beta calculation path. Defaults to false.
+        required: false
+        schema:
+          type: boolean
+      - name: fastCountMode
+        in: query
+        description: Fast-count mode. Defaults to 'off'.
+        required: false
+        schema:
+          type: string
+      responses:
+        '200':
+          description: The published plan's metadata (without node detail).
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SegmentationInfo'
+        '400':
+          description: bad request
+  /segmentation/triggerCount:
+    post:
+      tags:
+      - Segmentation
+      summary: Trigger a segment count
+      description: Returns count size for requested termId.
+      operationId: triggerCount
+      parameters:
+      - name: termId
+        in: query
+        description: ID of selection term user wants to get a count for.
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Returns uuid of order for submitted termId
+          content:
+            application/json:
+              schema:
+                type: string
+            application/xml:
+              schema:
+                type: string
+        '400':
+          description: Provided term ID is invalid, No term id found for specified ID, An unexpected backend error has occurred.
+  /segmentation/update:
+    put:
+      tags:
+      - Segmentation
+      summary: Update a selection plan
+      description: "Overwrites an existing selection plan. The query parameter <code>id</code> identifies the plan; the request body is a wrapper whose <code>json</code> field carries the full plan JSON document <b>as a string</b> (escaped). Update replaces the <b>whole</b> plan, so fetch the current plan with <code>get</code> first, modify it, then send it back here. If the plan JSON also contains an id it must match the query <code>id</code>. Returns the updated plan.<br/><br/><b>Example body</b><pre>{\n  \"json\": \"{\\\"id\\\":\\\"FF784C2A-...\\\",\\\"name\\\":\\\"My plan\\\",\\\"nodes\\\":[ ... ]}\"\n}</pre>"
+      operationId: update_5
+      parameters:
+      - name: id
+        in: query
+        description: ID of the plan to update (GUID).
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: The updated plan as a JSON document.
+          content:
+            application/json:
+              schema:
+                type: string
+        '400':
+          description: bad request
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SegmentationPayload'
+        description: Wrapper carrying the full plan JSON document as a string in its 'json' field.
+components:
+  securitySchemes:
+    basicAuth:
+      type: http
+      scheme: basic
+      description: HTTP Basic authentication with a Mapp Engage system user of type API (or Hybrid).
+x-apievangelist-provenance:
+  method: searched
+  generated: '2026-08-12'
+  source: https://docs.mapp.com/apidocs/ (per-endpoint OpenAPI fragments)
+  note: Union of the OpenAPI JSON fragments Mapp publishes on each endpoint page. Mapp does not serve one consolidated document at a public URL; the tenant-served Swagger lives at https://<your-engage-host>/apidoc/swagger.json and requires a tenant. Operation bodies, parameters, responses, tags, summaries and descriptions are verbatim from Mapp. The swagger/basePath/schemes/securityDefinitions envelope is added by API Evangelist from the published Getting Started guide; no operation content was authored.
+  duplicate_operation_ids_suffixed: 30

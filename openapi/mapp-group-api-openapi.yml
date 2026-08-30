@@ -1,0 +1,395 @@
+openapi: 3.2.0
+info:
+  title: Mapp Engage public Group API
+  version: '1'
+  description: 'Mapp Engage REST API (REST 2.0, incremental version v19). Assembled verbatim from the per-operation OpenAPI fragments Mapp publishes on each endpoint page of https://docs.mapp.com/apidocs/. The base URL is tenant-specific: take your Mapp Engage login host and append /api/rest/v19.'
+  contact:
+    name: Mapp Technical Support
+    url: https://mapp.com/tech-support/
+servers:
+- url: /api/rest/v19
+security:
+- basicAuth: []
+tags:
+- name: Group
+paths:
+  /group/activate:
+    post:
+      tags:
+      - Group
+      summary: Activate groups
+      description: Activates archived groups.<br>Request body example:<br><br><pre>["1800123820", "1800146953"]</pre>
+      operationId: activate
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+            application/xml:
+              schema:
+                type: array
+                items:
+                  type: object
+        '204':
+          description: 'Example response: <br><br>[{<br>    "entityKey": "1800123820",<br>    "code": null,<br>    "message": null }, {<br>    "entityKey": "1800146953",<br>    "code": null,<br>    "message": null<br>}]'
+        '400':
+          description: Provided list of groupIds is empty
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                type: integer
+                format: int64
+  /group/archive:
+    post:
+      tags:
+      - Group
+      summary: Archive groups
+      description: Archive a list of groups and any dependent subgroups. Other dependent objects, such as triggers and scheduled tasks, are not archived.<br>Request body example:<br><br><pre>["1800123820", "1800146953"]</pre>
+      operationId: archive
+      responses:
+        '200':
+          description: 'Example response: <br><br>[{<br>"entityKey": "80375",<br>"code": null,<br>"message": null<br>}]'
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+            application/xml:
+              schema:
+                type: array
+                items:
+                  type: object
+        '400':
+          description: Provided list of groupIds is empty
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                type: integer
+                format: int64
+  /group/clone:
+    post:
+      tags:
+      - Group
+      summary: Clone a group
+      description: 'Creates a clone of a group that already exists in the system.<br>Most of the sendout options and delivery settings are identical for the original and the clone.<br>Group members are not copied<br>Request body example:<br><br><pre>{<br>"name" : "Group Name",<br>"description" : "Description of the group",<br>"email" : "group@test.com",<br>"includePreparedMessages" : "true",<br>"includeTestUsers" : "false"<br>}</pre>'
+      operationId: clone
+      parameters:
+      - name: groupId
+        in: query
+        description: ID of the group to be cloned
+        required: true
+        schema:
+          type: integer
+          format: int64
+      responses:
+        '200':
+          description: 'Example response: <br><br>{<br>"id": 80376,<br>"name": "CloneOfTestGroup0803022-1",<br>"description": "magna labore dolor eu Lorem",<br>"email": "cloneoftestgroup0803022-1@docker01.dmclab.muc.domeus.com"<br>}'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Group'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/Group'
+        '400':
+          description: Required parameters are missing or incorrect. Group with groupId cannot be found
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GroupCloneOptions'
+  /group/create:
+    post:
+      tags:
+      - Group
+      summary: Create a group
+      description: Create a new group.<br>For domain, check Mapp Engage > Create > New Group<br>Returns Object Already Exists Exception
+      operationId: CreateGroup
+      parameters:
+      - name: name
+        in: query
+        description: The name of the group.
+        required: true
+        schema:
+          type: string
+      - name: email
+        in: query
+        description: The email address of the group.
+        required: true
+        schema:
+          type: string
+      - name: description
+        in: query
+        description: The description of the group.
+        required: false
+        schema:
+          type: string
+      - name: groupCategoryId
+        in: query
+        description: The group category
+        required: false
+        schema:
+          type: integer
+          format: int64
+      - name: isoCountryCode
+        in: query
+        description: The ISO country code
+        required: true
+        schema:
+          type: string
+      - name: isoLanguageCode
+        in: query
+        description: The ISO language code
+        required: true
+        schema:
+          type: string
+      - name: isSuperGroup
+        in: query
+        description: Should be a supergroup
+        required: true
+        schema:
+          type: boolean
+      - name: groupTemplateId
+        in: query
+        description: The ID of groupTemplate
+        required: false
+        schema:
+          type: integer
+          format: int64
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: integer
+                format: int64
+            application/xml:
+              schema:
+                type: integer
+                format: int64
+        '204':
+          description: 'Example response: <br><br>{<br>1900328197<br>}'
+        '400':
+          description: Required parameters are missing or incorrect / Group already exists
+  /group/findIdsByAttributes:
+    post:
+      tags:
+      - Group
+      summary: Find group IDs by attributes
+      description: 'Returns a list of group IDs for all groups in the system that use the specified group attributes.<br>Group attributes are only available in the group context and consist of a unique name and a value.<br>Please note that attributes like Group Name or Email cannot be used here.<br>Request body example:<br><br><pre>[{<br>"name" : " GroupAttributeName ",<br>"value" : "12345"<br>}]</pre>'
+      operationId: findIdsByAttributes
+      responses:
+        '200':
+          description: 'Example response: <br><br>[1800123829]'
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+            application/xml:
+              schema:
+                type: array
+                items:
+                  type: object
+        '400':
+          description: '"message": "The provided JSON object representation is incorrect."'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                $ref: '#/components/schemas/Attribute'
+  /group/get:
+    get:
+      tags:
+      - Group
+      summary: Get a group
+      description: Returns the group object of the specified group. The group is identified by group ID.
+      operationId: GetGroup
+      parameters:
+      - name: groupId
+        in: query
+        description: ID of the group to be cloned
+        required: true
+        schema:
+          type: integer
+          format: int64
+      responses:
+        '200':
+          description: 'Example response: <br><br><br>{<br>    "id": 1800150437,<br>    "name": "Group Name",<br>    "description": "Description of the group",<br>    "email": "group@test.com"<br>}'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Group'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/Group'
+        '400':
+          description: Required parameters are missing or incorrect. Group with groupId cannot be found
+        '404':
+          description: 'Error response: {<br>"errorActor": "CLIENT",<br>"errorCode": "INVALID_REQUEST",<br>"message": "Not Found"<br>}'
+  /group/getAttributes:
+    get:
+      tags:
+      - Group
+      summary: Get group attributes
+      description: Provides a list of all group attributes.
+      operationId: getAttributes
+      parameters:
+      - name: groupId
+        in: query
+        description: ID of the group for which we request the parameters.
+        required: true
+        schema:
+          type: integer
+          format: int64
+      responses:
+        '200':
+          description: 'Example response: <br><br>[{<br>    "name": "Test",<br>    "value": "12345" }, {<br>    "name": "TestRest",<br>    "value": "12345"<br>}]'
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+            application/xml:
+              schema:
+                type: array
+                items:
+                  type: object
+        '400':
+          description: Required parameters are missing or incorrect.
+        '404':
+          description: 'Error response: {<br>"errorActor": "CLIENT",<br>"errorCode": "INVALID_REQUEST",<br>"message": "Not Found"<br>}'
+  /group/getAllGroupSettingsTemplates:
+    get:
+      tags:
+      - Group
+      summary: List group settings templates
+      description: Gets all GroupSettingsTemplates that are defined in the system.<br>GroupSettingTemplates predefine several settings in a template and can be applied using /group/overrideGroupSettings call.<br>The mechanism for using GroupSettingTemplates is only available in a special configuration.
+      operationId: getAllGroupSettingsTemplates
+      responses:
+        '200':
+          description: 'Example response: <br><br>[{<br>"id": 1,<br>"name": "test template 0903"<br>}]'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GroupSettingsTemplate'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/GroupSettingsTemplate'
+        '400':
+          description: ''
+  /group/getPreparedMessages:
+    get:
+      tags:
+      - Group
+      summary: List prepared messages for a group
+      description: Returns all of the prepared messages for a specific group.
+      operationId: getPreparedMessages
+      parameters:
+      - name: groupId
+        in: query
+        description: ID of the group for which we request the messages
+        required: true
+        schema:
+          type: integer
+          format: int64
+      responses:
+        '200':
+          description: 'Example response: <br><br>[1800197358]'
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+            application/xml:
+              schema:
+                type: array
+                items:
+                  type: object
+        '400':
+          description: 'Required parameters are missing or incorrect. Error response: {<br>"errorActor": "CLIENT",<br>"errorCode": "PERMISSION_DENIED",<br>"message": "Permission ''message_view'' denied: SystemUser ''1'' on group ''803725555''.",<br>"errorId": null<br>}'
+        '404':
+          description: 'Error response: {<br>"errorActor": "CLIENT",<br>"errorCode": "INVALID_REQUEST",<br>"message": "Not Found"<br>}'
+  /group/overrideGroupSettings:
+    post:
+      tags:
+      - Group
+      summary: Override group settings
+      description: Overwrites the existing group settings with a new template.
+      operationId: GroupOverrideGroupSettings
+      parameters:
+      - name: groupId
+        in: query
+        description: ID of the group for which we change the settings.
+        required: true
+        schema:
+          type: integer
+          format: int64
+      - name: settingsId
+        in: query
+        description: ID of the configuration template.
+        required: true
+        schema:
+          type: integer
+          format: int64
+      responses:
+        '204':
+          description: ''
+        '400':
+          description: 'Required parameters are missing or incorrect. Error response: {<br>"errorActor": "CLIENT",<br>"errorCode": "MISSING_PARAMETER",<br>"message": "Parameter ''groupId'' is mandatory but no value was specified.",<br>"parameterName": "groupId",<br>"propertyName": null,<br>"value": "null"<br>}'
+  /group/setAttributes:
+    post:
+      tags:
+      - Group
+      summary: Set group attributes
+      description: 'Creates and updates the group attributes. Existing attributes are overwritten.<br>Request body example:<br><br><pre>[{<br>"name" : "GroupAttributeName",<br>"value" : "12345"<br>}]</pre>'
+      operationId: setAttributes
+      parameters:
+      - name: groupId
+        in: query
+        description: ID of the group for which we request the parameters.
+        required: true
+        schema:
+          type: integer
+          format: int64
+      responses:
+        '204':
+          description: 'Example response: <br><br>{<br>1}'
+        '400':
+          description: Required parameters are missing or incorrect.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                $ref: '#/components/schemas/Attribute'
+components:
+  securitySchemes:
+    basicAuth:
+      type: http
+      scheme: basic
+      description: HTTP Basic authentication with a Mapp Engage system user of type API (or Hybrid).
+x-apievangelist-provenance:
+  method: searched
+  generated: '2026-08-12'
+  source: https://docs.mapp.com/apidocs/ (per-endpoint OpenAPI fragments)
+  note: Union of the OpenAPI JSON fragments Mapp publishes on each endpoint page. Mapp does not serve one consolidated document at a public URL; the tenant-served Swagger lives at https://<your-engage-host>/apidoc/swagger.json and requires a tenant. Operation bodies, parameters, responses, tags, summaries and descriptions are verbatim from Mapp. The swagger/basePath/schemes/securityDefinitions envelope is added by API Evangelist from the published Getting Started guide; no operation content was authored.
+  duplicate_operation_ids_suffixed: 30

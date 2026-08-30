@@ -1,0 +1,345 @@
+openapi: 3.2.0
+info:
+  title: Mapp Engage public Meta API
+  version: '1'
+  description: 'Mapp Engage REST API (REST 2.0, incremental version v19). Assembled verbatim from the per-operation OpenAPI fragments Mapp publishes on each endpoint page of https://docs.mapp.com/apidocs/. The base URL is tenant-specific: take your Mapp Engage login host and append /api/rest/v19.'
+  contact:
+    name: Mapp Technical Support
+    url: https://mapp.com/tech-support/
+servers:
+- url: /api/rest/v19
+security:
+- basicAuth: []
+tags:
+- name: Meta
+paths:
+  /meta/activateAttributeDefinitions:
+    post:
+      tags:
+      - Meta
+      summary: Activate attribute definitions
+      description: 'Reactivates archived custom attributes that are named in the parameter list. After activation, they can be used in personalization during the message composition process.<br>Request body example: <br><br><pre>["attributename"]</pre>'
+      operationId: activateAttributeDefinitions
+      responses:
+        '204':
+          description: ''
+        '400':
+          description: ''
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                type: string
+  /meta/archiveAttributeDefinitions:
+    post:
+      tags:
+      - Meta
+      summary: Archive attribute definitions
+      description: 'Archives custom attributes. An archived attribute is still stored in the system. The attributes can still be in use for existing messages and sendouts, but they are not available in the GUI message creation process (i.e. personalization builder).<br>Request body example: <br><br><pre>["attributename"]</pre>'
+      operationId: archiveAttributeDefinitions
+      responses:
+        '204':
+          description: ''
+        '400':
+          description: ''
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                type: string
+  /meta/attachTags:
+    post:
+      tags:
+      - Meta
+      summary: Attach tags
+      description: Attach tags
+      operationId: attachTags
+      parameters:
+      - name: entityId
+        in: query
+        description: Entity id
+        required: true
+        schema:
+          type: integer
+          format: int64
+      - name: entityType
+        in: query
+        description: Entity type
+        required: true
+        schema:
+          type: string
+      responses:
+        '204':
+          description: ''
+        '400':
+          description: ''
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                type: string
+  /meta/createAttributeDefinitions:
+    post:
+      tags:
+      - Meta
+      summary: Create attribute definitions
+      description: 'Creates a new data field (custom user attribute) where information about users can be stored. With the standard setup, you are permitted to create a limited number of custom attributes with different data types.<br>Each custom user attribute has a unique name. If an attribute is no longer needed, it may be archived. Please contact your customer support representative if you need to delete an attribute.<br>Request body example: <br><br><pre>[{<br>"name": "attributename",<br>"type": "STRING",<br>"enumerationValues":<br>[<br>"value1",<br>"value2",<br>"value3"<br>],<br>"active": "true"<br>}]</pre>'
+      operationId: createAttributeDefinitions
+      responses:
+        '204':
+          description: ''
+        '400':
+          description: ''
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                $ref: '#/components/schemas/AttributeDefinition'
+  /meta/createLinkCategories:
+    post:
+      tags:
+      - Meta
+      summary: Create link categories
+      description: 'Creates new link categories. Link categories are automatically assigned to a link via a regex pattern.<br>The link categories group together different links for statistical purposes and can be used to trigger automated processes when a link of a certain category is clicked.<br>The name and pattern are mandatory inputs for the category. The ID is automatically assigned by the system<br>Request body example: <br><br><pre>[{<br>"id": "",<br>"name": "TestApi",<br>"description" : "Rest Api Call",<br>"pattern": "TestAp[i]"<br>}]</pre>'
+      operationId: createLinkCategories
+      responses:
+        '204':
+          description: ''
+        '400':
+          description: ''
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                $ref: '#/components/schemas/LinkCategory'
+  /meta/deleteLinkCategory:
+    post:
+      tags:
+      - Meta
+      summary: Delete a link category
+      description: Delete link category
+      operationId: deleteLinkCategory
+      responses:
+        '204':
+          description: ''
+        '400':
+          description: ''
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                type: string
+  /meta/detachTags:
+    post:
+      tags:
+      - Meta
+      summary: Detach tags
+      description: Detach tags
+      operationId: detachTags
+      parameters:
+      - name: entityId
+        in: query
+        description: Entity id
+        required: false
+        schema:
+          type: integer
+          format: int64
+      - name: entityType
+        in: query
+        description: Entity type
+        required: false
+        schema:
+          type: string
+      - name: tags
+        in: query
+        description: Entity tags
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: array
+          items:
+            type: string
+      responses:
+        '200':
+          description: ''
+        '400':
+          description: ''
+  /meta/findByTags:
+    post:
+      tags:
+      - Meta
+      summary: Find entities by tags
+      description: Find by tags
+      operationId: findByTags
+      parameters:
+      - name: tags
+        in: query
+        description: Tags
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: array
+          items:
+            type: string
+      - name: entityType
+        in: query
+        description: Entity type
+        required: false
+        schema:
+          type: string
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TaggedEntity'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/TaggedEntity'
+        '400':
+          description: ''
+  /meta/getAttributeDefinitions:
+    get:
+      tags:
+      - Meta
+      summary: Get attribute definitions
+      description: Returns a list of all active custom attributes that are defined for the users. Attributes with the status 'archived' or 'system' are not included in the list.
+      operationId: getAttributeDefinitions
+      responses:
+        '200':
+          description: '[{<br>    "name": "NumberName",<br>    "type": "NUMBER",<br>    "enumerationValues": null,<br>    "active": null },{<br>    "name": "StringName",<br>    "type": "STRING",<br>    "enumerationValues": ["1"],<br>    "active": null<br>}]'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AttributeDefinition'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/AttributeDefinition'
+        '400':
+          description: ''
+  /meta/getLinkCategories:
+    get:
+      tags:
+      - Meta
+      summary: Get link categories
+      description: Get link categories
+      operationId: getLinkCategories
+      responses:
+        '200':
+          description: List of Link categories
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LinkCategory'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/LinkCategory'
+        '400':
+          description: ''
+  /meta/getTags:
+    get:
+      tags:
+      - Meta
+      summary: Get tags
+      description: Get tags
+      operationId: getTags
+      parameters:
+      - name: entityId
+        in: query
+        description: Entity id
+        required: false
+        schema:
+          type: integer
+          format: int64
+      - name: entityType
+        in: query
+        description: Entity type
+        required: false
+        schema:
+          type: string
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TaggedEntity'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/TaggedEntity'
+        '404':
+          description: ''
+  /meta/mergeAttributeDefinitions:
+    post:
+      tags:
+      - Meta
+      summary: Merge attribute definitions
+      description: 'Updates the list of custom attributes that are available on the interface. It is used to archive, activate, and create custom attributes. This call affects every custom attribute that is available in your system. It updates all of the attributes that are available for saving user data and reusing it in a different context. If an attribute is not mentioned, it is automatically deactivated. Errors and changes are delivered at the end of the process when all attributes are processed. The update cannot be used in an interactional way. Errors do not stop the update process. The attribute with the error is skipped and the process continues with the next attribute. It is not possible to change the attribute name, type, or enumeration with this method. The results of the merge method are as follows: * New attributes are created if the attribute is listed and did not exist before. * Custom attributes that are not listed are archived. * Custom attributes that are listed and are identical to the ones that already exist have no state change. * Custom attributes that are archived and not listed remain archived. * Custom attributes that have a state other than archived/active generate an error and remain unchanged.<br>Request body example: <br><br><pre>[{<br>"name": "attributename",<br>"type": "STRING",<br>"enumerationValues":<br>[<br>"value1",<br>"value2",<br>"value3"<br>],<br>"active": "true"<br>}]</pre>'
+      operationId: mergeAttributeDefinitions
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+            application/xml:
+              schema:
+                type: array
+                items:
+                  type: object
+        '400':
+          description: ''
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                $ref: '#/components/schemas/AttributeDefinition'
+  /meta/updateLinkCategory:
+    post:
+      tags:
+      - Meta
+      summary: Update a link category
+      description: Update link categoriy
+      operationId: updateLinkCategory
+      responses:
+        '204':
+          description: ''
+        '400':
+          description: ''
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LinkCategory'
+components:
+  securitySchemes:
+    basicAuth:
+      type: http
+      scheme: basic
+      description: HTTP Basic authentication with a Mapp Engage system user of type API (or Hybrid).
+x-apievangelist-provenance:
+  method: searched
+  generated: '2026-08-12'
+  source: https://docs.mapp.com/apidocs/ (per-endpoint OpenAPI fragments)
+  note: Union of the OpenAPI JSON fragments Mapp publishes on each endpoint page. Mapp does not serve one consolidated document at a public URL; the tenant-served Swagger lives at https://<your-engage-host>/apidoc/swagger.json and requires a tenant. Operation bodies, parameters, responses, tags, summaries and descriptions are verbatim from Mapp. The swagger/basePath/schemes/securityDefinitions envelope is added by API Evangelist from the published Getting Started guide; no operation content was authored.
+  duplicate_operation_ids_suffixed: 30

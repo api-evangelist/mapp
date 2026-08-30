@@ -1,0 +1,654 @@
+openapi: 3.2.0
+info:
+  title: Analytics Available Objects API
+  description: "OpenAPI 3.0 Specification of Mapp Intelligence AnalyticsAPI \n\n In order to use these endpoints you must authorize by using a valid OAuth clientID configured in Mapp Intelligence Settings section."
+  version: 1.0.0
+  contact:
+    name: Technical Support Mapp Digital
+    url: https://mapp.com/tech-support/
+servers:
+- url: https://api.mapp.com/api/analytics
+  description: Production
+security:
+- oauth_security_scheme:
+  - mapp.intelligence-api
+tags:
+- name: Available Objects
+  description: Get information about available objects you can use to build Analysis
+paths:
+  /query-objects:
+    get:
+      tags:
+      - Available Objects
+      summary: List all available dimensions and metrics
+      description: List all available dimensions and metrics
+      externalDocs:
+        url: https://documentation.mapp.com
+      parameters:
+      - name: language
+        in: query
+        description: "Optional standard ISO-639-1 language code for translation (when applicable).\n\nOnly \"de\" and \"en\" supported for the moment. \n\nDefault is  \"en\""
+        required: 'false'
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/QueryObjects'
+              examples:
+                Query Objects:
+                  $ref: '#/components/examples/queryObjectExample'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+  /dynamic-timefilters:
+    get:
+      tags:
+      - Available Objects
+      summary: List all available dynamic timefilters
+      description: List all available dynamic timefilter value.
+      externalDocs:
+        url: https://documentation.mapp.com
+      parameters:
+      - name: language
+        in: query
+        description: "Optional standard ISO-639-1 language code for translation (when applicable).\n\nOnly \"de\" and \"en\" supported for the moment. \n\nDefault is  \"en\""
+        required: 'false'
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/DynamicTimeFilterDefinition'
+              examples:
+                DynamicTimeFilters:
+                  value:
+                  - title: Today
+                    name: today
+                    dynamicFilter:
+                      name: time_dynamic
+                      connector: AND
+                      filterPredicate: LIKE
+                      value1: today
+                      value2: ''
+                      context: NONE
+                  - title: Today, 7 days ago
+                    name: before_7_days
+                    dynamicFilter:
+                      name: time_dynamic
+                      connector: AND
+                      filterPredicate: LIKE
+                      value1: before_7_days
+                      value2: ''
+                      context: NONE
+                  - title: Today, 14 days ago
+                    name: before_14_days
+                    dynamicFilter:
+                      name: time_dynamic
+                      connector: AND
+                      filterPredicate: LIKE
+                      value1: before_14_days
+                      value2: ''
+                      context: NONE
+        '403':
+          $ref: '#/components/responses/Forbidden'
+  /segments:
+    get:
+      tags:
+      - Available Objects
+      summary: List all available segments
+      description: List all available segments
+      externalDocs:
+        url: https://documentation.mapp.com
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/SegmentDefinition'
+              examples:
+                Segments:
+                  value:
+                  - id: '67'
+                    title: Social media Visitor
+                    description: Visitor which came from Social Media
+                  - id: '95'
+                    title: Returning Visitor
+                    description: User with at least 5 Visits
+        '403':
+          $ref: '#/components/responses/Forbidden'
+components:
+  schemas:
+    Problem:
+      type: object
+      properties:
+        status:
+          type: integer
+          description: HTTP Status Code
+        statusCode:
+          type: string
+          description: Specific Mapp Error Code
+        title:
+          type: string
+          description: Short description of the problem
+        detail:
+          type: string
+          description: Detailed informations about the problem
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Error'
+        warnings:
+          type: array
+          items:
+            $ref: '#/components/schemas/Warning'
+    ConnectorPredicateEnum:
+      type: string
+      description: Connectors
+      enum:
+      - AND
+      - OR
+    FilterPredicateEnum:
+      type: string
+      description: Filter predicates
+      enum:
+      - EQUAL
+      - UNEQUAL
+      - LESS
+      - LESSEQUAL
+      - GREATER
+      - GREATEREQUAL
+      - BETWEEN
+      - LIKE
+      - NOT_LIKE
+    Metric:
+      title: Metric
+      type: object
+      description: Description of a metric
+      properties:
+        name:
+          type: string
+          description: API name of the metric
+        dataType:
+          $ref: '#/components/schemas/DataTypeEnum'
+        title:
+          type: string
+          description: Human readable name of the metric. Localized
+        elementType:
+          $ref: '#/components/schemas/ElementTypeEnum'
+        metricDisplayType:
+          $ref: '#/components/schemas/DisplayTypeEnum'
+        context:
+          $ref: '#/components/schemas/ContextEnum'
+        sortable:
+          type: boolean
+          description: Indicates if object can be sorted.
+      required:
+      - name
+      - dataType
+      - title
+      - elementType
+      - metricDisplayType
+    Warning:
+      type: object
+      properties:
+        name:
+          type: string
+          description: 'Each warnings has specific properties described in following table:
+
+
+            | Warning| Description | Relevant parameters |
+
+            | ---------------- | ------------| -----------------------------------|
+
+            | FilterLogicalCubeMismatch | At least one filter is ignored due to incompatibily with Dimensions and Metrics used. | List of incomptible filter objects in _names_ array. |
+
+            | InvalidMetricContext | Metric used in an invalid context. | List of metric with invalid context in _aliases_ array. |
+
+            | SortingEnforced |  Sorting criteria has been added automatically | List of objects that were sorted automatically in _aliases_ array. |
+
+            | NoSortingDefined |  Sorting criteria is required for some dimensions. | List of dimensions requiring a sorting in _names_ array. |
+
+            | SortingLimitExceeded | 3 sorting criteria are allowed. All additional sorting criteria have been omitted.| List of columns ignored for sorting in _aliases_ array. |
+
+            | SortingRemoved | A requested sorting criteria has been removed | List of objects that were removed automatically in _aliases_ array. |
+
+            | TodayRemoved | Today date has been removed from calculation time range because the selected datasource does not contain it. | daysInDataSource, todayDate|'
+          enum:
+          - FilterLogicalCubeMismatch
+          - InvalidMetricContext
+          - SortingEnforced
+          - NoSortingDefined
+          - SortingLimitExceeded
+          - SortingRemoved
+          - TodayRemoved
+        parameters:
+          type: object
+          properties:
+            arrangeTypes:
+              type: array
+              description: List of internal object names (dimension, metrics, filter, ...) that corresponds to the warning.
+              items:
+                type: string
+            aliases:
+              type: array
+              description: List of columns aliases that corresponds to the error. See Result Header alias property.
+              items:
+                type: string
+            names:
+              type: array
+              description: List of object names (dimension, metrics, filter, ...) that corresponds to the warning.
+              items:
+                type: string
+            daysInDataSource:
+              type: string
+              description: Number of days in the datasource which is beeing cut
+            todayDate:
+              type: string
+              description: Date of the day being cut
+    ElementTypeEnum:
+      type: string
+      description: Type of element
+      enum:
+      - CAMPAIGNS_ATTRIBUTION
+      - CUSTOM_CATEGORY
+      - CUSTOM_FORMULA
+      - CUSTOM_METRIC
+      - CUSTOM_PARAMETER
+      - CUSTOM_PROCESS
+      - CUSTOM_SOURCE
+      - CUSTOM_VISITOR_GROUPS_TRAFFIC
+      - CUSTOM_WEBSITE_GOALS
+      - DEFAULT_DIMENSION
+      - DEFAULT_METRIC
+      - PREDEFINED_FORMULA
+      - PREDEFINED_METRIC
+    Dimension:
+      title: Dimension
+      type: object
+      description: Description of a Dimension element
+      properties:
+        name:
+          type: string
+          description: API name of the dimension
+        dataType:
+          $ref: '#/components/schemas/DataTypeEnum'
+        title:
+          type: string
+          description: Human readable name of the metric. Localized
+        elementType:
+          $ref: '#/components/schemas/ElementTypeEnum'
+        context:
+          $ref: '#/components/schemas/ContextEnum'
+        mapping:
+          type: object
+          description: Optional list of Mapping values
+          additionalProperties:
+            type: string
+        timeFormatPattern:
+          description: Standard datetime pattern. Indicates that current STRING represents a Date
+          type: string
+        sortable:
+          type: boolean
+          description: Indicates if object can be sorted.
+      required:
+      - name
+      - dataType
+      - title
+      - elementType
+    SegmentDefinition:
+      title: SegmentDefinition
+      description: User segment
+      type: object
+      properties:
+        id:
+          type: integer
+          description: ID of the segment to be used in analysis
+        title:
+          type: string
+          description: Name of the segment
+        description:
+          type: string
+          description: Description of the segment
+      required:
+      - id
+      - title
+      - description
+    DynamicTimeFilterDefinition:
+      title: DynamicTimeFilterDefinition
+      description: Dynamic Time Filter
+      type: object
+      properties:
+        title:
+          type: string
+          description: Human readable description of the dynamic time filter (localized)
+        name:
+          type: string
+          description: API name of the filter value
+        dynamicFilter:
+          type: object
+          description: Snippet code which can be used in analysis
+          properties:
+            name:
+              type: string
+              description: API Name of the filtered dimension
+            filterPredicate:
+              $ref: '#/components/schemas/FilterPredicateEnum'
+            connector:
+              $ref: '#/components/schemas/ConnectorPredicateEnum'
+            context:
+              $ref: '#/components/schemas/ContextEnum'
+            value1:
+              type: string
+              description: Value to be filtered on.
+            value2:
+              type: string
+              description: Second value to be filtered on. Only relevant for BETWEEN.
+          required:
+          - name
+          - connector
+          - filterPredicate
+          - value1
+          - value2
+          - context
+      required:
+      - title
+      - name
+      - dynamicFilter
+    ContextEnum:
+      type: string
+      description: Context to evaluate the metric/dimension. If context property is not given or empty the default context of the object will be used. The default context can be identified from the context property in the response list of /query-objects.
+      enum:
+      - VISITOR
+      - SESSION
+      - PAGE
+      - ACTION
+      - ATOMIC
+      - NONE
+    QueryObjects:
+      title: QueryObjects
+      type: object
+      properties:
+        metrics:
+          type: array
+          description: List of available metrics
+          items:
+            $ref: '#/components/schemas/Metric'
+        dimensions:
+          type: array
+          description: List of available dimensions
+          items:
+            $ref: '#/components/schemas/Dimension'
+      required:
+      - metrics
+      - dimensions
+    DisplayTypeEnum:
+      type: string
+      description: Indicate how the data should be displayed
+      enum:
+      - NORMAL
+      - TIME
+      - CURRENCY
+      - DISTRIBUTION
+      - COMPARE
+    DataTypeEnum:
+      type: string
+      description: Type of data
+      enum:
+      - STRING
+      - NUMBER
+      - GENERIC
+    Error:
+      type: object
+      properties:
+        name:
+          type: string
+          description: 'Each error has specific properties described in following table:
+
+
+            | Error| Description | Relevant parameters |
+
+            | ---------------- | ------------| -----------------------------------|
+
+            | UnmappedName | At least one object name cannot be found. | List of objects not found in _names_ array. |
+
+            | PivotIncompatibleMetric | Metric not usable in Pivot detected.| List of incompatible Metrics in _names_ array. |
+
+            | PivotIncompatibleDimension |Dimension not usable in Pivot detected. | List of incompatible Dimensions in _names_ array. |
+
+            | AnalysisLogicalCubeMismatch | All Dimensions and Metrics are not compatible. | List of incompatible objects in _names_ array. |
+
+            | InvalidSortingCriteria | Sorting is applied on a non-sortable object.| List of invalid sorted objects in _names_ array. |
+
+            | TimeFilterMissing | Each query must have a minimum of one Time Filter.| N/A |
+
+            | InvalidSegmentNoneContainer | A segment container has context set to NONE but either its connector is not set to AND or its inOrNotIn property is not set to IN.| N/A |'
+          enum:
+          - UnmappedName
+          - PivotIncompatibleMetric
+          - PivotIncompatibleDimension
+          - AnalysisLogicalCubeMismatch
+          - InvalidSortingCriteria
+          - TimeFilterMissing
+          - InvalidSegmentNoneContainer
+        parameters:
+          type: object
+          properties:
+            arrangeTypes:
+              type: array
+              description: List of internal object names (dimension, metrics, filter, ...) that corresponds to the error.
+              items:
+                type: string
+            aliases:
+              type: array
+              description: List of columns aliases that corresponds to the error. See Result Header alias property.
+              items:
+                type: string
+            names:
+              type: array
+              description: List of object names (dimension, metrics, filter, ...) that corresponds to the error.
+              items:
+                type: string
+  examples:
+    queryObjectExample:
+      value:
+        metrics:
+        - name: alexaRanking
+          context: NONE
+          dataType: NUMBER
+          sortable: 'true'
+          title: Alexa Ranking
+          elementType: DEFAULT_METRIC
+          metricDisplayType: NORMAL
+        - name: attribution_1_order_qty
+          context: ACTION
+          dataType: NUMBER
+          sortable: 'true'
+          title: Qty Orders (Attribution last session, external), Order
+          elementType: CAMPAIGNS_ATTRIBUTION
+          metricDisplayType: NORMAL
+        - name: custom_metric_1000853
+          context: SESSION
+          dataType: NUMBER
+          sortable: 'true'
+          title: Android Users (Segment)
+          elementType: CUSTOM_METRIC
+          metricDisplayType: NORMAL
+        - name: media_chapter_1
+          context: ATOMIC
+          dataType: NUMBER
+          sortable: 'true'
+          title: Media Chapter 1
+          elementType: DEFAULT_METRIC
+          metricDisplayType: NORMAL
+        - name: page_category_number_13_sum
+          context: NONE
+          dataType: NUMBER
+          sortable: 'true'
+          title: Social Metrics
+          elementType: CUSTOM_CATEGORY
+          metricDisplayType: NORMAL
+        - name: products_viewed_qty
+          context: ATOMIC
+          dataType: NUMBER
+          sortable: 'true'
+          title: Qty Product Views
+          elementType: DEFAULT_METRIC
+          metricDisplayType: NORMAL
+        dimensions:
+        - name: attribution_1
+          context: NONE
+          dataType: NUMBER
+          sortable: 'true'
+          title: Attribution (last session, external) of Order
+          elementType: CAMPAIGNS_ATTRIBUTION
+          mapping:
+            ? ''
+            : No Filter
+            '*': All
+        - name: attribution_2
+          context: NONE
+          dataType: NUMBER
+          sortable: 'true'
+          title: Attribution (multiple, external) of Order
+          elementType: CAMPAIGNS_ATTRIBUTION
+          mapping:
+            ? ''
+            : No Filter
+            '*': All
+        - name: device_deviceClass
+          context: SESSION
+          dataType: NUMBER
+          sortable: 'true'
+          title: Device Class
+          elementType: DEFAULT_DIMENSION
+          mapping:
+            '0': PC / Laptop
+            '1': Smartphone
+            '2': Tablet
+            '3': TV
+            '4': Console
+            '5': Smartwatch
+            '6': E-Reader
+            '7': Mediahub
+            '8': other
+            '1000': unknown
+            ? ''
+            : No filter
+        - name: device_model
+          context: SESSION
+          dataType: STRING
+          sortable: 'false'
+          title: Device Model
+          elementType: DEFAULT_DIMENSION
+        - name: user_country
+          context: SESSION
+          dataType: STRING
+          sortable: 'false'
+          title: URM - Country
+          elementType: DEFAULT_DIMENSION
+        - name: user_gender
+          context: SESSION
+          dataType: NUMBER
+          sortable: 'true'
+          title: URM - Gender
+          elementType: DEFAULT_DIMENSION
+          mapping:
+            '0': unknown
+            '1': Man
+            '2': Woman
+            ? ''
+            : No filter
+        - name: user_id
+          context: SESSION
+          dataType: STRING
+          sortable: 'false'
+          title: URM - Visitor Id
+          elementType: DEFAULT_DIMENSION
+        - name: user_lastVisit
+          context: SESSION
+          dataType: NUMBER
+          sortable: 'true'
+          title: URM - Last Visit
+          elementType: DEFAULT_DIMENSION
+          mapping:
+            '0': 'No'
+            '1': 'Yes'
+            ? ''
+            : No filter
+        - name: user_lastVisitWithPurchase
+          context: SESSION
+          dataType: NUMBER
+          sortable: 'true'
+          title: URM - Last Visit with a Purchase
+          elementType: DEFAULT_DIMENSION
+          mapping:
+            '0': 'No'
+            '1': 'Yes'
+            ? ''
+            : No filter
+        - name: user_macroStatus
+          context: SESSION
+          dataType: NUMBER
+          sortable: 'true'
+          title: URM - Customer Macro Status
+          elementType: DEFAULT_DIMENSION
+          mapping:
+            '0': unknown
+            '1': Offsite
+            '2': Onsite
+            '3': Product view
+            '4': Abandoned basket
+            '5': Registration
+            '6': New Customer
+            '7': Returning buyer
+            ? ''
+            : No filter
+        - name: visitors_newVsReturning
+          context: SESSION
+          dataType: NUMBER
+          sortable: 'true'
+          title: New vs. Returning
+          elementType: DEFAULT_DIMENSION
+          mapping:
+            '0': Returning
+            '1': New
+            '2': Unknown
+            ? ''
+            : No filter
+  responses:
+    Forbidden:
+      description: No permission to execute operation
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          examples:
+            AnalysisNotFound:
+              summary: Invalid Token
+              value:
+                title: Invalid Token
+                status: '403'
+                detail: Token not valid
+                statusCode: INVALID_TOKEN
+  securitySchemes:
+    oauth_security_scheme:
+      type: oauth2
+      flows:
+        clientCredentials:
+          tokenUrl: https://auth.mapp.com/oauth2/token
+x-apievangelist-provenance:
+  method: searched
+  generated: '2026-08-12'
+  source: https://docs.mapp.com/apidocs/ (per-endpoint OpenAPI fragments, Analytics API)
+  note: Union of the OpenAPI 3.0.3 fragments Mapp publishes on each Analytics API endpoint page. Content verbatim.

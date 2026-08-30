@@ -1,0 +1,194 @@
+openapi: 3.2.0
+info:
+  title: Mapp Engage public Draft Message API
+  version: '1'
+  description: 'Mapp Engage REST API (REST 2.0, incremental version v19). Assembled verbatim from the per-operation OpenAPI fragments Mapp publishes on each endpoint page of https://docs.mapp.com/apidocs/. The base URL is tenant-specific: take your Mapp Engage login host and append /api/rest/v19.'
+  contact:
+    name: Mapp Technical Support
+    url: https://mapp.com/tech-support/
+servers:
+- url: /api/rest/v19
+security:
+- basicAuth: []
+tags:
+- name: Draft Message
+paths:
+  /draftmessage/create:
+    post:
+      tags:
+      - Draft Message
+      summary: Create a draft message
+      description: 'Creates a new message as a draft.<br>Request body example:<br><br><pre>{<br>    "name": "Test Draft Message",<br>    "externalId": null,<br>    "messageCategoryId": null,<br>    "message":<br>    {<br>        "subject": "This is draft test",<br>        "emailBodyText": null,<br>        "emailBodyHtml": "Test",<br>        "smsText": null,<br>        "faxText": null,<br>        "emailHeaders":<br>        [<br>        ],<br>        "attachments":<br>        [<br>        ],<br>        "attachmentReferences": null,<br>        "encoding": "ISO-8859-1",<br>        "encodingSMS": "ISO-8859-1",<br>        "imageHandlingMode": "none"<br>    }<br>}</pre><br><br>Example body with from and Reply-to headers:<br><br><br><pre>{<br>    "name": "Test Draft Message",<br>    "externalId": null,<br>    "messageCategoryId": null,<br>    "message":<br>    {<br>        "subject": "This is draft test",<br>        "emailBodyText": null,<br>        "emailBodyHtml": "Test",<br>        "smsText": null,<br>        "faxText": null,<br>        "emailHeaders":<br>        [{"name":"from","value":"John<info@qamanual.staging11.shortest-route.com>"},<br>         {"name":"Reply-to","value":"Bob <info@qamanual.staging11.shortest-route.com>"}],       <br>        "attachments":[],<br>        "attachmentReferences": null,<br>        "encoding": "ISO-8859-1",<br>        "encodingSMS": "ISO-8859-1",<br>        "imageHandlingMode": "none"<br>    }<br>}</pre><br>ImageHandlingMode values:<br><pre>"none" - Image links are unchanged <br>"inline" - Image are inlined (Offline HTML) <br>"host" - Image are Hosted in Mapp Engage (Online HTML)<br></pre>'
+      operationId: CreateDraftMessage
+      responses:
+        '200':
+          description: 'Example response when dmarcTrue=true and domain not matching: <br><br>{<br>   "errorActor": null,<br>   "errorCode": "INVALID_PARAMETER",<br>   "message": "reply-to email must contain valid email domain",<br>   "parameterName": null,<br>   "propertyName": null,<br>   "value": null<br>}'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DraftMessage'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/DraftMessage'
+        '400':
+          description: ''
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DraftMessage'
+  /draftmessage/delete:
+    delete:
+      tags:
+      - Draft Message
+      summary: Delete a draft message
+      description: Deletes a draft message identified by the specified draft message ID.
+      operationId: DeleteDraftMessage
+      parameters:
+      - name: draftMessageId
+        in: query
+        description: ID of draft message
+        required: true
+        schema:
+          type: integer
+          format: int64
+      responses:
+        '204':
+          description: ''
+        '404':
+          description: ''
+  /draftmessage/find:
+    post:
+      tags:
+      - Draft Message
+      summary: Find draft messages
+      description: 'Finds draft messages specified by a draft message filter. Note: required date format "YYYY-DD-MM"'
+      operationId: FindDraftMessage
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+            application/xml:
+              schema:
+                type: array
+                items:
+                  type: object
+        '400':
+          description: ''
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DraftMessageFilter'
+  /draftmessage/get:
+    get:
+      tags:
+      - Draft Message
+      summary: Get a draft message
+      description: Returns a draft message identified by the specified draft message ID.
+      operationId: GetDraftMessage
+      parameters:
+      - name: draftMessageId
+        in: query
+        description: ID of draft message
+        required: true
+        schema:
+          type: integer
+          format: int64
+      responses:
+        '200':
+          description: 'Example response: <br><br>{<br>    "id": 18060600,<br>    "name": "Test",<br>    "externalId": null,<br>    "messageCategoryId": null,<br>    "message": {<br>        "subject": "Test",<br>        "emailBodyText": null,<br>        "emailBodyHtml": "<html><body>Test</body></html>",<br>        "smsText": null,<br>        "faxText": null,<br>        "emailHeaders": [],<br>        "attachments": [],<br>        "attachmentReferences": null,<br>        "encoding": "ISO-8859-1",<br>        "encodingSMS": "ISO-8859-1",<br>        "imageHandlingMode": "none"<br>    }<br>}'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DraftMessage'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/DraftMessage'
+        '400':
+          description: ''
+        '404':
+          description: 'Error response: {<br>"errorActor": "CLIENT",<br>"errorCode": "INVALID_REQUEST",<br>"message": "Not Found"<br>}'
+  /draftmessage/saveAsPreparedMessage:
+    get:
+      tags:
+      - Draft Message
+      summary: Save a draft message as a prepared message
+      description: Saves draft message as a prepared message. The channel ID is available at the "Information" panel for each channel, at "Administration > Channels".
+      operationId: saveAsPreparedMessage
+      parameters:
+      - name: draftMessageId
+        in: query
+        description: The draft message to be used in creating the prepared message
+        required: true
+        schema:
+          type: integer
+          format: int64
+      - name: groupId
+        in: query
+        description: The id of the group to perform sendout on
+        required: true
+        schema:
+          type: integer
+          format: int64
+      - name: channelId
+        in: query
+        description: The channel id associated with the message
+        required: false
+        schema:
+          type: integer
+          format: int64
+      - name: senderProfileName
+        in: query
+        description: TLS sender profile. Requires a Feature Switch and setting up a profile name in Mapp Engage. (optional)
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: string
+            application/xml:
+              schema:
+                type: string
+        '204':
+          description: ''
+        '400':
+          description: ''
+  /draftmessage/update:
+    post:
+      tags:
+      - Draft Message
+      summary: Update a draft message
+      description: 'Updates a message draft.<br>Request body example:<br><br><pre>{<br>    "id": 18060600,<br>    "name": "Test Draft Message",<br>    "externalId": null,<br>    "messageCategoryId": null,<br>    "message":<br>    {<br>        "subject": "This is draft test",<br>        "emailBodyText": null,<br>        "emailBodyHtml": "Test",<br>        "smsText": null,<br>        "faxText": null,<br>        "emailHeaders":<br>        [<br>        ],<br>        "attachments":<br>        [<br>        ],<br>        "attachmentReferences": null,<br>        "encoding": "ISO-8859-1",<br>        "encodingSMS": "ISO-8859-1",<br>        "imageHandlingMode": "none"<br>    }<br>}</pre>'
+      operationId: UpdateDraftMessage
+      responses:
+        '200':
+          description: ''
+        '400':
+          description: ''
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DraftMessage'
+components:
+  securitySchemes:
+    basicAuth:
+      type: http
+      scheme: basic
+      description: HTTP Basic authentication with a Mapp Engage system user of type API (or Hybrid).
+x-apievangelist-provenance:
+  method: searched
+  generated: '2026-08-12'
+  source: https://docs.mapp.com/apidocs/ (per-endpoint OpenAPI fragments)
+  note: Union of the OpenAPI JSON fragments Mapp publishes on each endpoint page. Mapp does not serve one consolidated document at a public URL; the tenant-served Swagger lives at https://<your-engage-host>/apidoc/swagger.json and requires a tenant. Operation bodies, parameters, responses, tags, summaries and descriptions are verbatim from Mapp. The swagger/basePath/schemes/securityDefinitions envelope is added by API Evangelist from the published Getting Started guide; no operation content was authored.
+  duplicate_operation_ids_suffixed: 30
