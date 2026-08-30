@@ -186,6 +186,8 @@ apis:
   humanURL: https://docs.mapp.com/apidocs/engage-api
   baseURL: https://{engage-host}/api/rest/v19
   tags:
+  - Authorization
+  tags_raw:
   - authorization
   properties:
   - type: OpenAPI
@@ -483,6 +485,8 @@ apis:
   humanURL: https://docs.mapp.com/apidocs/engage-api
   baseURL: https://{engage-host}/api/rest/v19
   tags:
+  - E-Commerce
+  tags_raw:
   - Ecommerce
   properties:
   - type: OpenAPI
@@ -583,6 +587,8 @@ apis:
   humanURL: https://docs.mapp.com/apidocs/engage-api
   baseURL: https://{engage-host}/api/rest/v19
   tags:
+  - Item
+  tags_raw:
   - items
   properties:
   - type: OpenAPI
@@ -849,6 +855,8 @@ apis:
   humanURL: https://docs.mapp.com/apidocs/engage-api
   baseURL: https://{engage-host}/api/rest/v19
   tags:
+  - Processes
+  tags_raw:
   - Process
   properties:
   - type: OpenAPI
@@ -949,6 +957,8 @@ apis:
   humanURL: https://docs.mapp.com/apidocs/engage-api
   baseURL: https://{engage-host}/api/rest/v19
   tags:
+  - Recommendations
+  tags_raw:
   - recommendations
   properties:
   - type: OpenAPI
