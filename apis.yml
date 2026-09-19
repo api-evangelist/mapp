@@ -169,6 +169,8 @@ apis:
   humanURL: https://docs.mapp.com/apidocs/engage-api
   baseURL: https://{engage-host}/api/rest/v19
   tags:
+  - Audit Logs
+  tags_raw:
   - Audit Log
   properties:
   - type: OpenAPI
@@ -638,6 +640,8 @@ apis:
   humanURL: https://docs.mapp.com/apidocs/engage-api
   baseURL: https://{engage-host}/api/rest/v19
   tags:
+  - Landing Pages
+  tags_raw:
   - Landing Page
   properties:
   - type: OpenAPI
