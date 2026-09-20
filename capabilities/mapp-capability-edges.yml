@@ -11,7 +11,7 @@ capability_model:
   attribution: Turbo EA Capabilities by Vincent Verdet — Turbo EA, https://github.com/vincentmakes/turbo-ea-capabilities,
     CC BY 4.0
   notice: NOTICE
-edge_count: 9
+edge_count: 10
 edges:
 - tag: Mobile Push
   spec_file: mapp-mobile-push-api-openapi.yml
@@ -74,6 +74,16 @@ edges:
     messages
   reason: Management and dispatch of prepared marketing messages in a campaign execution platform; digital
     marketing automation is the best fit, though it could also be seen as content management.
+- tag: Landing Page
+  spec_file: mapp-landing-page-api-openapi.yml
+  capability_id: BC-400.60
+  capability_id_l1: BC-400
+  capability_name: Digital Marketing Management
+  confidence: 0.7
+  evidence: '"Find landing pages", "Get a landing page''s status", "Delete multiple landing pages"'
+  reason: Management of marketing landing pages within the campaign platform is web/digital marketing
+    asset management. Operations are limited to find/delete/status, so not maximal confidence.
+  recovered_from: sweep-20260829T005356Z-edges.json
 - tag: Message
   spec_file: mapp-message-api-openapi.yml
   capability_id: BC-400.60
