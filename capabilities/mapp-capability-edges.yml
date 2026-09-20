@@ -1,0 +1,107 @@
+slug: mapp
+provider: Mapp Marketing Cloud
+generated_by: planning/capability-mapping/scripts/classify_capabilities.py
+model: claude-opus-5
+frame:
+- Telecommunications
+min_confidence: 0.7
+capability_model:
+  source: https://github.com/vincentmakes/turbo-ea-capabilities
+  license: CC-BY-4.0
+  attribution: Turbo EA Capabilities by Vincent Verdet — Turbo EA, https://github.com/vincentmakes/turbo-ea-capabilities,
+    CC BY 4.0
+  notice: NOTICE
+edge_count: 9
+edges:
+- tag: Mobile Push
+  spec_file: mapp-mobile-push-api-openapi.yml
+  capability_id: BC-400.60
+  capability_id_l1: BC-400
+  capability_name: Digital Marketing Management
+  confidence: 0.85
+  evidence: POST /mobilePush/createAndSchedulePushMessage  Create and schedule a push message; POST /mobilePush/sendSingle  Send
+    a single mobile push message
+  reason: Cross-channel campaign execution via mobile push messaging is digital marketing / marketing
+    automation, an outbound campaign channel.
+- tag: Segmentation
+  spec_file: mapp-segmentation-api-openapi.yml
+  capability_id: BC-420.20
+  capability_id_l1: BC-420
+  capability_name: Customer Segmentation Management
+  confidence: 0.85
+  evidence: POST /segmentation/create  Create a selection plan; GET /segmentation/getCount  Get a segment
+    count
+  reason: Creation, preview, counting and publication of selection plans (segments) over the contact base
+    is customer segmentation management.
+- tag: Contact
+  spec_file: mapp-contact-api-openapi.yml
+  capability_id: BC-420.10
+  capability_id_l1: BC-420
+  capability_name: Customer Data Management
+  confidence: 0.8
+  evidence: POST /contact/create 'Create a contact', POST /contact/update, GET /contact/anonymize 'Anonymize
+    a contact', GET /contact/export 'Export a contact (GDPR)'
+  reason: Full CRUD lifecycle over customer contact records including multichannel contact update, anonymisation
+    and GDPR export — this is the customer master record of the marketing cloud, i.e. Customer Data Management.
+    Some overlap with privacy/data-subject rights, but the dominant surface is contact record maintenance.
+- tag: Profile Attributes
+  spec_file: mapp-profile-attributes-api-openapi.yml
+  capability_id: BC-420.10
+  capability_id_l1: BC-420
+  capability_name: Customer Data Management
+  confidence: 0.8
+  evidence: POST /profileAttributes/create  Create a profile attribute; GET /profileAttributes/list  List
+    profile attributes
+  reason: Defines and maintains the attribute schema of customer/recipient profiles in the marketing database
+    — customer data management.
+- tag: User
+  spec_file: mapp-user-api-openapi.yml
+  capability_id: BC-420.10
+  capability_id_l1: BC-420
+  capability_name: Customer Data Management
+  confidence: 0.8
+  evidence: GET /user/getProfileByEmail  Get a user's profile by email; DELETE /user/deleteByMobileNumber  Delete
+    a user by mobile number
+  reason: In Mapp Engage a 'user' is a marketing contact/recipient; CRUD and profile lookup by email/mobile
+    is customer contact data management, not employee or admin identity.
+- tag: Prepared Message
+  spec_file: mapp-prepared-message-api-openapi.yml
+  capability_id: BC-400.60
+  capability_id_l1: BC-400
+  capability_name: Digital Marketing Management
+  confidence: 0.75
+  evidence: GET /preparedmessage/send  Send a prepared message; POST /preparedmessage/find  Find prepared
+    messages
+  reason: Management and dispatch of prepared marketing messages in a campaign execution platform; digital
+    marketing automation is the best fit, though it could also be seen as content management.
+- tag: Message
+  spec_file: mapp-message-api-openapi.yml
+  capability_id: BC-400.60
+  capability_id_l1: BC-400
+  capability_name: Digital Marketing Management
+  confidence: 0.7
+  evidence: POST /message/sendTransactional 'Send a transactional message'; POST /message/sendSingle;
+    GET /message/getStatistics 'Get message statistics'; GET /message/getUsedPersonalizations
+  reason: Sending of personalised single and transactional marketing messages plus delivery statistics
+    and time distribution — the core cross-channel campaign execution surface of Mapp Engage, i.e. digital
+    marketing automation and its measurement.
+- tag: Product Data Operations
+  spec_file: mapp-product-data-operations-api-openapi.yml
+  capability_id: BC-610.20
+  capability_id_l1: BC-610
+  capability_name: Master Data Management
+  confidence: 0.7
+  evidence: GET /api/product-catalog/v1/catalogs/{catalogId}/products/{productId}/variants  listVariants  List
+    variants of a product
+  reason: Product catalog data retrieval of product variants — maintenance of product master data feeding
+    marketing/recommendations, best matched to master data management rather than telecom product catalogue.
+- tag: System User
+  spec_file: mapp-system-user-api-openapi.yml
+  capability_id: BC-620.20
+  capability_id_l1: BC-620
+  capability_name: Identity & Access Management
+  confidence: 0.7
+  evidence: POST /systemuser/create  Create a system user; POST /systemuser/updatePassword  Update a system
+    user's password
+  reason: Administrative account lifecycle and credential management for platform operators — identity
+    and access management.
