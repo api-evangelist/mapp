@@ -207,7 +207,11 @@ paths:
       tags:
       - Membership
       summary: Get membership attributes by email
-      description: Returns a collection of member attributes for a user within the specified group.<br>Member attributes are used to save information for an individual user, but in the context of a specific group.<br>A member attribute contains a specific value for each recipient. The user is identified by the email
+      description: 'Returns a collection of member attributes for a user within the specified group.
+
+        Member attributes are used to save information for an individual user, but in the context of a specific group.
+
+        A member attribute contains a specific value for each recipient. The user is identified by the email'
       operationId: getAttributesByEmail
       parameters:
       - name: email
@@ -246,7 +250,11 @@ paths:
       tags:
       - Membership
       summary: Get membership attributes
-      description: Returns a collection of member attributes for a user within the specified group.<br>Member attributes are used to save information for an individual user but in the context of a specific group.<br>A member attribute contains a specific value for each recipient
+      description: 'Returns a collection of member attributes for a user within the specified group.
+
+        Member attributes are used to save information for an individual user but in the context of a specific group.
+
+        A member attribute contains a specific value for each recipient'
       operationId: GetMembershipAttributes
       parameters:
       - name: userId
@@ -286,7 +294,26 @@ paths:
       tags:
       - Membership
       summary: Replace membership attributes
-      description: 'Replaces the member attributes for a contact within a group where the contact is a member<br>Request body example: <br><br><pre>[{<br>"name" : "attribute1",<br>"value" : "0001"<br>},<br>{<br>"name" : "attribute2",<br>"value" : "0002"<br>}]</pre>'
+      description: 'Replaces the member attributes for a contact within a group where the contact is a member
+
+        Request body example:
+
+
+        [{
+
+        "name" : "attribute1",
+
+        "value" : "0001"
+
+        },
+
+        {
+
+        "name" : "attribute2",
+
+        "value" : "0002"
+
+        }]'
       operationId: replaceAttributes
       parameters:
       - name: userId
@@ -322,7 +349,14 @@ paths:
       tags:
       - Membership
       summary: Subscribe a contact to a group by email
-      description: Subscribes a recipient to a group.<br>The recipient must exist in the system.<br><br>Example:<br><code>https://<Engage System Domain>/api/rest/v19/membership/subscribeByEmail?email=j.mcexample@example.com&groupId=12345978&subscriptionMode=OPT_IN</code>
+      description: 'Subscribes a recipient to a group.
+
+        The recipient must exist in the system.
+
+
+        Example:
+
+        https:///api/rest/v19/membership/subscribeByEmail?email=j.mcexample@example.com&groupId=12345978&subscriptionMode=OPT_IN'
       operationId: subscribeByEmail
       parameters:
       - name: email
@@ -364,7 +398,9 @@ paths:
       tags:
       - Membership
       summary: Subscribe a user to a group
-      description: Subscribes a user to a group. With this call, the subscription is handled as a self subscription.<br>Depending on the subscription mode used, the user may have to confirm the subscription (opt-in) and may be notified of the successful subscription.
+      description: 'Subscribes a user to a group. With this call, the subscription is handled as a self subscription.
+
+        Depending on the subscription mode used, the user may have to confirm the subscription (opt-in) and may be notified of the successful subscription.'
       operationId: subscribe
       parameters:
       - name: userId
@@ -502,7 +538,9 @@ paths:
       tags:
       - Membership
       summary: Unsubscribe a user from a message
-      description: Unsubscribes a user from a group. The unsubscription is associated with a specific message. Notification is sent to the group manager.<br>Returns success only when the user is unsubscribed from the group and the unsubscription is associated with the specified message.
+      description: 'Unsubscribes a user from a group. The unsubscription is associated with a specific message. Notification is sent to the group manager.
+
+        Returns success only when the user is unsubscribed from the group and the unsubscription is associated with the specified message.'
       operationId: unsubscribeFromMessage
       parameters:
       - name: userId
@@ -538,7 +576,28 @@ paths:
       tags:
       - Membership
       summary: Update membership attributes
-      description: 'Updates the member attributes for a user within a group if the user is a member of the group.<br><br>If an attribute already exists, the value will be updated<br><br>If not, a new attribute will be created.<br>Request body example: <br>[<br><pre>[<br>  {"name":"car","value":"BMW"},<br>  {"name":"mascot","value":"cat"},<br>  {"name":"age","value":"18"}<br>]</pre>'
+      description: 'Updates the member attributes for a user within a group if the user is a member of the group.
+
+
+        If an attribute already exists, the value will be updated
+
+
+        If not, a new attribute will be created.
+
+        Request body example:
+
+        [
+
+
+        [
+
+        {"name":"car","value":"BMW"},
+
+        {"name":"mascot","value":"cat"},
+
+        {"name":"age","value":"18"}
+
+        ]'
       operationId: updateAttributes
       parameters:
       - name: userId

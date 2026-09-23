@@ -78,7 +78,11 @@ paths:
       tags:
       - Automation
       summary: Run a time-based automation once
-      description: Performs one execution of the specified time-based automation. Execution takes place immediately.<br>Run once does not change the status or schedule of the automation.<br>You can only use this method to run an existing time-based automation.
+      description: 'Performs one execution of the specified time-based automation. Execution takes place immediately.
+
+        Run once does not change the status or schedule of the automation.
+
+        You can only use this method to run an existing time-based automation.'
       operationId: runOnce
       parameters:
       - name: automationId

@@ -95,7 +95,18 @@ paths:
       tags:
       - Async
       summary: Poll results for a topic by event type
-      description: Retrieves a specific number of results for a topic from the result queue.<br>Request body example:<br><br><pre>{<br>    "type":"linkClick ",<br>    "limit":"10000"<br>}</pre><br>
+      description: 'Retrieves a specific number of results for a topic from the result queue.
+
+        Request body example:
+
+
+        {
+
+        "type":"linkClick ",
+
+        "limit":"10000"
+
+        }'
       operationId: pollByType
       parameters:
       - name: type
@@ -180,7 +191,22 @@ paths:
       tags:
       - Async
       summary: Poll results for a topic within a time range
-      description: Retrieves a specific number of results for a topic from the result queue in the designated period.<br>Request body example:<br><br><pre>{<br>    "type":"linkClick",<br>    "from":"1683637275"<br>    "to":"1683720075"<br>    "limit":"86400"<br>}</pre>
+      description: 'Retrieves a specific number of results for a topic from the result queue in the designated period.
+
+        Request body example:
+
+
+        {
+
+        "type":"linkClick",
+
+        "from":"1683637275"
+
+        "to":"1683720075"
+
+        "limit":"86400"
+
+        }'
       operationId: pollByRange
       parameters:
       - name: type
@@ -231,7 +257,20 @@ paths:
       tags:
       - Async
       summary: Poll results for a topic
-      description: 'Retrieves a certain amount of results for a topic from the result queue. The result items that were retrieved are deleted from the server once they have been transmitted. <br>Request body example:<br><br><pre>{<br>  "name": "twitter_logo.png",<br>  "contentType": "image/png",<br>  "content": "iVBORw0KGgoAAAANSUhEUgAAABUAAAARCAYAAAAyhueAAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAASFJREFUeNqslM0NgkAQhRdiAdiAgQ6468EO1INntQOpwFABdqBe9aAdiIl3twS1AbECfJPMkhVZftSXjJPsDh87z2WsNE1Fb3d3z+POVVQIdQ5ShJhqywdEgEgQQ1qwutsbFT4QM4DXFcALwi3YJqDD2bPx4/PGCg/OSw46NwAFA0nU7d7ObUYAHxF+wYMDUU8jiz19aG9TihEbyuS3oSavNmoT5Sm1thA/CkCLsvJ0In5XdnsIKkv+gCaSGZQ8QF7+AXrST0peBH8Ar9+grKfuS1Mgd/wBjb/0lmChvmBr14GgMy5qoiA/N+zcPSNfPN2fCoVF86KlDQxqvc93tl8DaBxALcAi/qLqKuaWpalAffsOz8iB4ZRSzYIymNJLgAEAYsJkJOLW//gAAAAASUVORK5CYII="<br>}</pre>'
+      description: 'Retrieves a certain amount of results for a topic from the result queue. The result items that were retrieved are deleted from the server once they have been transmitted.
+
+        Request body example:
+
+
+        {
+
+        "name": "twitter_logo.png",
+
+        "contentType": "image/png",
+
+        "content": "iVBORw0KGgoAAAANSUhEUgAAABUAAAARCAYAAAAyhueAAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAASFJREFUeNqslM0NgkAQhRdiAdiAgQ6468EO1INntQOpwFABdqBe9aAdiIl3twS1AbECfJPMkhVZftSXjJPsDh87z2WsNE1Fb3d3z+POVVQIdQ5ShJhqywdEgEgQQ1qwutsbFT4QM4DXFcALwi3YJqDD2bPx4/PGCg/OSw46NwAFA0nU7d7ObUYAHxF+wYMDUU8jiz19aG9TihEbyuS3oSavNmoT5Sm1thA/CkCLsvJ0In5XdnsIKkv+gCaSGZQ8QF7+AXrST0peBH8Ar9+grKfuS1Mgd/wBjb/0lmChvmBr14GgMy5qoiA/N+zcPSNfPN2fCoVF86KlDQxqvc93tl8DaBxALcAi/qLqKuaWpalAffsOz8iB4ZRSzYIymNJLgAEAYsJkJOLW//gAAAAASUVORK5CYII="
+
+        }'
       operationId: poll
       parameters:
       - name: topic
@@ -268,7 +307,14 @@ paths:
       tags:
       - Async
       summary: Submit an asynchronous job for a topic
-      description: Initiates an asynchronous job by providing a topic name (script name) and input data (arguments).<br>The script name references an API script that is individually created for your system.<br>CEP receives the request and processes the script asynchronously.<br/><br>Results can be polled from the result queue by topic name.
+      description: 'Initiates an asynchronous job by providing a topic name (script name) and input data (arguments).
+
+        The script name references an API script that is individually created for your system.
+
+        CEP receives the request and processes the script asynchronously.
+
+
+        Results can be polled from the result queue by topic name.'
       operationId: submit
       responses:
         '200':

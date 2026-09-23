@@ -37,7 +37,24 @@ paths:
       tags:
       - Content
       summary: Store a file in the Content Store
-      description: 'Stores a file in the Content Store. Enter name, contentType and base64-encoded content.<br>The file can be encoded using base64encode.org<br>File size limit is 512kB.<br>Request body example:<br><br><pre>{<br>  "name": "twitter_logo.png",<br>  "contentType": "image/png",<br>  "content": "iVBORw0KGgoAAAANSUhEUgAAABUAAAARCAYAAAAyhueAAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAASFJREFUeNqslM0NgkAQhRdiAdiAgQ6468EO1INntQOpwFABdqBe9aAdiIl3twS1AbECfJPMkhVZftSXjJPsDh87z2WsNE1Fb3d3z+POVVQIdQ5ShJhqywdEgEgQQ1qwutsbFT4QM4DXFcALwi3YJqDD2bPx4/PGCg/OSw46NwAFA0nU7d7ObUYAHxF+wYMDUU8jiz19aG9TihEbyuS3oSavNmoT5Sm1thA/CkCLsvJ0In5XdnsIKkv+gCaSGZQ8QF7+AXrST0peBH8Ar9+grKfuS1Mgd/wBjb/0lmChvmBr14GgMy5qoiA/N+zcPSNfPN2fCoVF86KlDQxqvc93tl8DaBxALcAi/qLqKuaWpalAffsOz8iB4ZRSzYIymNJLgAEAYsJkJOLW//gAAAAASUVORK5CYII="<br>}</pre>'
+      description: 'Stores a file in the Content Store. Enter name, contentType and base64-encoded content.
+
+        The file can be encoded using base64encode.org
+
+        File size limit is 512kB.
+
+        Request body example:
+
+
+        {
+
+        "name": "twitter_logo.png",
+
+        "contentType": "image/png",
+
+        "content": "iVBORw0KGgoAAAANSUhEUgAAABUAAAARCAYAAAAyhueAAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAASFJREFUeNqslM0NgkAQhRdiAdiAgQ6468EO1INntQOpwFABdqBe9aAdiIl3twS1AbECfJPMkhVZftSXjJPsDh87z2WsNE1Fb3d3z+POVVQIdQ5ShJhqywdEgEgQQ1qwutsbFT4QM4DXFcALwi3YJqDD2bPx4/PGCg/OSw46NwAFA0nU7d7ObUYAHxF+wYMDUU8jiz19aG9TihEbyuS3oSavNmoT5Sm1thA/CkCLsvJ0In5XdnsIKkv+gCaSGZQ8QF7+AXrST0peBH8Ar9+grKfuS1Mgd/wBjb/0lmChvmBr14GgMy5qoiA/N+zcPSNfPN2fCoVF86KlDQxqvc93tl8DaBxALcAi/qLqKuaWpalAffsOz8iB4ZRSzYIymNJLgAEAYsJkJOLW//gAAAAASUVORK5CYII="
+
+        }'
       operationId: store
       responses:
         '200':

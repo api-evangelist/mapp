@@ -240,19 +240,6 @@ components:
             fashion_season: summer
           items:
             $ref: '#/components/schemas/VariantFlatViewResponse'
-    ErrorResponse:
-      type: object
-      properties:
-        message:
-          type: string
-        httpStatus:
-          type: integer
-          format: int32
-        errorCode:
-          type: string
-        timestamp:
-          type: string
-          format: date-time
     PaginationCursorDTO:
       type: object
       properties:
@@ -592,6 +579,19 @@ components:
           EU: '38'
         fashion_material: leather
         fashion_season: summer
+    ErrorResponse:
+      type: object
+      properties:
+        message:
+          type: string
+        httpStatus:
+          type: integer
+          format: int32
+        errorCode:
+          type: string
+        timestamp:
+          type: string
+          format: date-time
   securitySchemes:
     Keycloak:
       type: http

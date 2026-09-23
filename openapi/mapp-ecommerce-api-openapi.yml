@@ -18,7 +18,22 @@ paths:
       tags:
       - Ecommerce
       summary: Create a wish list item
-      description: 'Create a wish list item<br>Request body example:<br><br> <pre>{<br>  "productSKU": "2022-01-13-2",<br>  "timestamp": "2022-01-14T17:25:43.511Z",<br>  "productPrice": "1",<br>  "size": "1"<br>}</pre>'
+      description: 'Create a wish list item
+
+        Request body example:
+
+
+        {
+
+        "productSKU": "2022-01-13-2",
+
+        "timestamp": "2022-01-14T17:25:43.511Z",
+
+        "productPrice": "1",
+
+        "size": "1"
+
+        }'
       operationId: createWishlistItem
       parameters:
       - name: userEmail
@@ -43,7 +58,22 @@ paths:
       tags:
       - Ecommerce
       summary: Create an abandoned browse item
-      description: 'Create an abandoned browse item<br>Request body example:<br><br><pre>{<br>  "productSKU": "2022-01-13-2",<br>  "timestamp": "2022-01-14T17:25:43.511Z",<br>  "productPrice": "1",<br>  "size": "1"<br>}</pre>'
+      description: 'Create an abandoned browse item
+
+        Request body example:
+
+
+        {
+
+        "productSKU": "2022-01-13-2",
+
+        "timestamp": "2022-01-14T17:25:43.511Z",
+
+        "productPrice": "1",
+
+        "size": "1"
+
+        }'
       operationId: createAbandonedBrowseItem
       parameters:
       - name: userEmail
@@ -68,7 +98,22 @@ paths:
       tags:
       - Ecommerce
       summary: Create an abandoned cart item
-      description: 'Create an abandoned cart item<br>Request body example:<br><br><pre>{<br>  "productSKU": "2022-01-13-2",<br>  "timestamp": "2022-01-14T17:25:43.511Z",<br>  "productPrice": "1",<br>  "size": "1"<br>}</pre>'
+      description: 'Create an abandoned cart item
+
+        Request body example:
+
+
+        {
+
+        "productSKU": "2022-01-13-2",
+
+        "timestamp": "2022-01-14T17:25:43.511Z",
+
+        "productPrice": "1",
+
+        "size": "1"
+
+        }'
       operationId: createAbandonedCartItem
       parameters:
       - name: userEmail
@@ -143,7 +188,6 @@ paths:
       tags:
       - Ecommerce
       summary: Delete an abandoned browse item
-      description: Delete an abandoned browse item
       operationId: removeAbandonedBrowseItem
       parameters:
       - name: userEmail
@@ -168,7 +212,6 @@ paths:
       tags:
       - Ecommerce
       summary: Delete an abandoned cart item
-      description: Delete an abandoned cart item
       operationId: removeAbandonedCartItem
       parameters:
       - name: userEmail
@@ -193,7 +236,144 @@ paths:
       tags:
       - Ecommerce
       summary: Register a transaction
-      description: 'Register an ecommerce transaction<br>Request body example - with custom columns:<br><br><pre>{<br>   "transactionItems": [<br>       {<br>           "orderId": "20220204",<br>           "productName": "BOSS bag",<br>            "productSKU": "XXX-123-ABC",<br>            "category": "Exclusive bags",<br>            "brand": "BOSS",<br>            "storeId": "gdg4535fsgdfg",<br>            "purchaseSource": "http://www.mango.com",<br>            "discountValue": "0",<br>            "variant": "BLACK",<br>            "productQuantity": "2",<br>            "discountPercentage": "2",<br>            "imageURL": "http://www.boss.com/bag.jpg",<br>            "productURL": "http://www.boss.com/bag.jpg",<br>            "currency": "PLN",<br>            "timestamp": "2022-02-03T18:25:43",<br>            "productPrice": "45",<br>            "customDetail1": "90",<br>            "customDetail2": "2022-02-03",<br>            "customDetail3": "Sent"                                          <br>       } <br>   ]<br>}</pre><br><br>Request body example - 2 items:<br><br><pre>{<br>   "transactionItems": [<br>       {<br>           "orderId": "123",<br>           "productName": "BOSS bag",<br>            "productSKU": "XXX-123-ABC",<br>            "category": "Exclusive bags",<br>            "brand": "BOSS",<br>            "storeId": "gdg4535fsgdfg",<br>            "purchaseSource": "http://www.mango.com",<br>            "discountValue": "0",<br>            "variant": "BLACK",<br>            "productQuantity": "1",<br>            "discountPercentage": "2",<br>            "imageURL": "http://www.boss.com/bag.jpg",<br>            "productURL": "http://www.boss.com/bag.jpg",<br>            "currency": "PLN",<br>            "timestamp": "2021-12-15T18:25:43",<br>            "productPrice": "45"<br>       },<br>       {<br>           "orderId": "124",<br>           "productName": "Black Socks",<br>            "productSKU": "XXX-123-UIO",<br>            "category": "Premium Socks",<br>            "brand": "Atlantic",<br>            "storeId": "gdg4535fsgdfg",<br>            "purchaseSource": "http://www.mango.com",<br>            "discountValue": "0",<br>            "variant": "RED",<br>            "productQuantity": "2",<br>            "discountPercentage": "1",<br>            "imageURL": "http://www.atlantic.com/socks.jpg",<br>            "productURL": "http://www.atlantic.com/socks.jpg",<br>            "currency": "PLN",<br>            "timestamp": "2021-12-15T18:25:43",<br>            "productPrice": "12"<br>       }<br>   ]<br>}</pre>'
+      description: 'Register an ecommerce transaction
+
+        Request body example - with custom columns:
+
+
+        {
+
+        "transactionItems": [
+
+        {
+
+        "orderId": "20220204",
+
+        "productName": "BOSS bag",
+
+        "productSKU": "XXX-123-ABC",
+
+        "category": "Exclusive bags",
+
+        "brand": "BOSS",
+
+        "storeId": "gdg4535fsgdfg",
+
+        "purchaseSource": "http://www.mango.com",
+
+        "discountValue": "0",
+
+        "variant": "BLACK",
+
+        "productQuantity": "2",
+
+        "discountPercentage": "2",
+
+        "imageURL": "http://www.boss.com/bag.jpg",
+
+        "productURL": "http://www.boss.com/bag.jpg",
+
+        "currency": "PLN",
+
+        "timestamp": "2022-02-03T18:25:43",
+
+        "productPrice": "45",
+
+        "customDetail1": "90",
+
+        "customDetail2": "2022-02-03",
+
+        "customDetail3": "Sent"
+
+        }
+
+        ]
+
+        }
+
+
+        Request body example - 2 items:
+
+
+        {
+
+        "transactionItems": [
+
+        {
+
+        "orderId": "123",
+
+        "productName": "BOSS bag",
+
+        "productSKU": "XXX-123-ABC",
+
+        "category": "Exclusive bags",
+
+        "brand": "BOSS",
+
+        "storeId": "gdg4535fsgdfg",
+
+        "purchaseSource": "http://www.mango.com",
+
+        "discountValue": "0",
+
+        "variant": "BLACK",
+
+        "productQuantity": "1",
+
+        "discountPercentage": "2",
+
+        "imageURL": "http://www.boss.com/bag.jpg",
+
+        "productURL": "http://www.boss.com/bag.jpg",
+
+        "currency": "PLN",
+
+        "timestamp": "2021-12-15T18:25:43",
+
+        "productPrice": "45"
+
+        },
+
+        {
+
+        "orderId": "124",
+
+        "productName": "Black Socks",
+
+        "productSKU": "XXX-123-UIO",
+
+        "category": "Premium Socks",
+
+        "brand": "Atlantic",
+
+        "storeId": "gdg4535fsgdfg",
+
+        "purchaseSource": "http://www.mango.com",
+
+        "discountValue": "0",
+
+        "variant": "RED",
+
+        "productQuantity": "2",
+
+        "discountPercentage": "1",
+
+        "imageURL": "http://www.atlantic.com/socks.jpg",
+
+        "productURL": "http://www.atlantic.com/socks.jpg",
+
+        "currency": "PLN",
+
+        "timestamp": "2021-12-15T18:25:43",
+
+        "productPrice": "12"
+
+        }
+
+        ]
+
+        }'
       operationId: registerTransaction
       parameters:
       - name: userEmail

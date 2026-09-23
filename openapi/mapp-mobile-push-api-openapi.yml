@@ -40,7 +40,97 @@ paths:
       tags:
       - Mobile Push
       summary: Create and schedule a push message
-      description: 'Create and schedule push message.<br>Request body example:<br><br><pre>{<br>    "name" : "test name",<br>    "appId" : "1585031493269",<br>    "selectionPlanId" : "768E488C-45C2-4A6F-800B-C569586F1DC5",<br>    "content" : "This is iOS test push ",<br>    "messageTitle" : "Hello",<br>    "description" : "description", <br>    "notificationSound" : "sound1.mp3",<br>    "pushActionType" : "LAUNCH_APP",<br>    "pushActionParams" : "www.test.com",<br>    "buttonCategory" : "apx_read_open",<br>    "buttonActionType" : "OPEN_LANDING_PAGE",<br>    "buttonActionParams" : "https://www.google.com/",<br>    "mediaType" : "IMAGE",<br>    "mediaUrl" : "https://staging11.shortest-route.com/qatest/imgproxy/img/110/5ac68ca5498a5.png",<br>    "scheduledTime" : "2020-07-31T12:44:46.966Z",<br>    "timeZone" : "Europe/Budapest",<br>    "messagePriority" : "normal",<br>    "archiveOnCompleted" : "true"<br>}</pre> <br><br>Another example:<br><br><pre>{<br>    "name" : "test Silvia3",<br>    "appId" : "207084",<br>    "selectionPlanId" : "D5398D44-73C8-4B1E-8E99-711BC9CAEBB8",<br>    "content": "yo yo yo 😎",<br>    "messageTitle": "hello 😁",<br>    "notificationSound": "",<br>    "pushActionType": "LAUNCH_APP",<br>    "buttonLanguageCode": "en",<br>    "scheduledTime" : "2024-08-31T12:44:46.966Z",<br>    "timeZone" : "Europe/Rome",<br>    "messagePriority" : "high",<br>    "archiveOnCompleted" : "false"<br>}</pre> <br><br> Required parameters: name, appId, content, messageTitle <br><br>pushActionType enum values [LAUNCH_APP, OPEN_LANDING_PAGE, OPEN_DEEP_LINK, OPEN_STORE]<br>buttonCategory enum values [apx_yes_no_open, apx_acc_dec_open, apx_buy_open, apx_read_open]<br>buttonActionType enum values [LAUNCH_APP, OPEN_LANDING_PAGE, OPEN_DEEP_LINK, OPEN_STORE]<br>mediaType enum values [IMAGE, VIDEO]<br><br>IMPORTANT: messagePriority (optional) - Please note that this feature is not activated by default. Please contact your Customer Success Manager to request activation.<br>'
+      description: 'Create and schedule push message.
+
+        Request body example:
+
+
+        {
+
+        "name" : "test name",
+
+        "appId" : "1585031493269",
+
+        "selectionPlanId" : "768E488C-45C2-4A6F-800B-C569586F1DC5",
+
+        "content" : "This is iOS test push ",
+
+        "messageTitle" : "Hello",
+
+        "description" : "description",
+
+        "notificationSound" : "sound1.mp3",
+
+        "pushActionType" : "LAUNCH_APP",
+
+        "pushActionParams" : "www.test.com",
+
+        "buttonCategory" : "apx_read_open",
+
+        "buttonActionType" : "OPEN_LANDING_PAGE",
+
+        "buttonActionParams" : "https://www.google.com/",
+
+        "mediaType" : "IMAGE",
+
+        "mediaUrl" : "https://staging11.shortest-route.com/qatest/imgproxy/img/110/5ac68ca5498a5.png",
+
+        "scheduledTime" : "2020-07-31T12:44:46.966Z",
+
+        "timeZone" : "Europe/Budapest",
+
+        "messagePriority" : "normal",
+
+        "archiveOnCompleted" : "true"
+
+        }
+
+
+        Another example:
+
+
+        {
+
+        "name" : "test Silvia3",
+
+        "appId" : "207084",
+
+        "selectionPlanId" : "D5398D44-73C8-4B1E-8E99-711BC9CAEBB8",
+
+        "content": "yo yo yo 😎",
+
+        "messageTitle": "hello 😁",
+
+        "notificationSound": "",
+
+        "pushActionType": "LAUNCH_APP",
+
+        "buttonLanguageCode": "en",
+
+        "scheduledTime" : "2024-08-31T12:44:46.966Z",
+
+        "timeZone" : "Europe/Rome",
+
+        "messagePriority" : "high",
+
+        "archiveOnCompleted" : "false"
+
+        }
+
+
+        Required parameters: name, appId, content, messageTitle
+
+
+        pushActionType enum values [LAUNCH_APP, OPEN_LANDING_PAGE, OPEN_DEEP_LINK, OPEN_STORE]
+
+        buttonCategory enum values [apx_yes_no_open, apx_acc_dec_open, apx_buy_open, apx_read_open]
+
+        buttonActionType enum values [LAUNCH_APP, OPEN_LANDING_PAGE, OPEN_DEEP_LINK, OPEN_STORE]
+
+        mediaType enum values [IMAGE, VIDEO]
+
+
+        IMPORTANT: messagePriority (optional) - Please note that this feature is not activated by default. Please contact your Customer Success Manager to request activation.'
       operationId: createAndSchedulePushMessage
       responses:
         '200':
@@ -204,7 +294,65 @@ paths:
       tags:
       - Mobile Push
       summary: Update a prepared push message
-      description: 'Update prepared push message.<br>Request body example:<br><br><pre>{<br>    "messageId" : 1<br>    "name" : "test name",<br>    "appId" : "1585031493269",<br>    "selectionPlanId" : "768E488C-45C2-4A6F-800B-C569586F1DC5",<br>    "content" : "This is iOS test push ",<br>    "messageTitle" : "Hello",<br>    "description" : "description",<br>    "notificationSound" : "sound1.mp3",<br>    "pushActionType" : "LAUNCH_APP",<br>    "pushActionParams" : "www.test.com",<br>    "buttonCategory" : "apx_read_open",<br>    "buttonActionType" : "OPEN_LANDING_PAGE",<br>    "buttonActionParams" : "https://www.google.com/",<br>    "mediaType" : "IMAGE", - optional<br>    "mediaUrl" : "https://staging11.shortest-route.com/qatest/imgproxy/img/110/5ac68ca5498a5.png",<br>    "scheduledTime" : "2020-07-31T12:44:46.966Z",<br>    "timeZone" : "Europe/Budapest"<br>    "messagePriority" : "high"<br>}</pre> <br><br> Required parameters: messageId, name, appId, content, messageTitle <br><br>pushActionType enum values [LAUNCH_APP, OPEN_LANDING_PAGE, OPEN_DEEP_LINK, OPEN_STORE]<br>buttonCategory enum values [apx_yes_no_open, apx_acc_dec_open, apx_buy_open, apx_read_open]<br>buttonActionType enum values [LAUNCH_APP, OPEN_LANDING_PAGE, OPEN_DEEP_LINK, OPEN_STORE]<br>mediaType enum values [IMAGE, VIDEO]<br><br>IMPORTANT: messagePriority (optional) - Please note that this feature is not activated by default. Please contact your Customer Success Manager to request activation.<br>'
+      description: 'Update prepared push message.
+
+        Request body example:
+
+
+        {
+
+        "messageId" : 1
+
+        "name" : "test name",
+
+        "appId" : "1585031493269",
+
+        "selectionPlanId" : "768E488C-45C2-4A6F-800B-C569586F1DC5",
+
+        "content" : "This is iOS test push ",
+
+        "messageTitle" : "Hello",
+
+        "description" : "description",
+
+        "notificationSound" : "sound1.mp3",
+
+        "pushActionType" : "LAUNCH_APP",
+
+        "pushActionParams" : "www.test.com",
+
+        "buttonCategory" : "apx_read_open",
+
+        "buttonActionType" : "OPEN_LANDING_PAGE",
+
+        "buttonActionParams" : "https://www.google.com/",
+
+        "mediaType" : "IMAGE", - optional
+
+        "mediaUrl" : "https://staging11.shortest-route.com/qatest/imgproxy/img/110/5ac68ca5498a5.png",
+
+        "scheduledTime" : "2020-07-31T12:44:46.966Z",
+
+        "timeZone" : "Europe/Budapest"
+
+        "messagePriority" : "high"
+
+        }
+
+
+        Required parameters: messageId, name, appId, content, messageTitle
+
+
+        pushActionType enum values [LAUNCH_APP, OPEN_LANDING_PAGE, OPEN_DEEP_LINK, OPEN_STORE]
+
+        buttonCategory enum values [apx_yes_no_open, apx_acc_dec_open, apx_buy_open, apx_read_open]
+
+        buttonActionType enum values [LAUNCH_APP, OPEN_LANDING_PAGE, OPEN_DEEP_LINK, OPEN_STORE]
+
+        mediaType enum values [IMAGE, VIDEO]
+
+
+        IMPORTANT: messagePriority (optional) - Please note that this feature is not activated by default. Please contact your Customer Success Manager to request activation.'
       operationId: updatePushMessage
       responses:
         '200':

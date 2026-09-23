@@ -45,7 +45,9 @@ paths:
       tags:
       - CMS
       summary: List CMS message definitions
-      description: Returns a list of all CMS messages that are saved in the system.<br>Every CMS message contains detailed information that identifies the message and the template that was used for creation.
+      description: 'Returns a list of all CMS messages that are saved in the system.
+
+        Every CMS message contains detailed information that identifies the message and the template that was used for creation.'
       operationId: getMessageDefinitions
       responses:
         '200':

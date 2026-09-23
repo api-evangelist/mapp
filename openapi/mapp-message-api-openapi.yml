@@ -18,7 +18,34 @@ paths:
       tags:
       - Message
       summary: Find messages
-      description: 'Returns a list of message summary objects that contain information about the messages that match the filter criteria.<br>You can use this method to retrieve information about a message that has been sent or saved as a prepared message<br>Request body example:<br><pre>{<br>  "groupId": 650557972,<br>  "sendoutDateFrom": "2018-09-01T00:00:00",<br>  "sendoutDateTo": "2018-10-01T00:00:00"<br>}</pre><br><br>Request body 2 example:<br><pre>{<br>  "sendoutDateFrom": "2018-09-01T00:00:00",<br>  "sendoutDateTo": "2018-10-01T00:00:00"<br>}</pre>'
+      description: 'Returns a list of message summary objects that contain information about the messages that match the filter criteria.
+
+        You can use this method to retrieve information about a message that has been sent or saved as a prepared message
+
+        Request body example:
+
+
+        {
+
+        "groupId": 650557972,
+
+        "sendoutDateFrom": "2018-09-01T00:00:00",
+
+        "sendoutDateTo": "2018-10-01T00:00:00"
+
+        }
+
+
+        Request body 2 example:
+
+
+        {
+
+        "sendoutDateFrom": "2018-09-01T00:00:00",
+
+        "sendoutDateTo": "2018-10-01T00:00:00"
+
+        }'
       operationId: FindMessage
       parameters:
       - name: messageFilter
@@ -48,7 +75,10 @@ paths:
       tags:
       - Message
       summary: Get historical message data
-      description: Make sure the "datastore_rmo" feature switch is on. In case of trouble contact Support.<br><br>Fetch a specific (group) message as it was sent to a defined contact, including resolved personalizations.
+      description: 'Make sure the "datastore_rmo" feature switch is on. In case of trouble contact Support.
+
+
+        Fetch a specific (group) message as it was sent to a defined contact, including resolved personalizations.'
       operationId: getHistorical
       parameters:
       - name: messageId
@@ -237,7 +267,14 @@ paths:
       tags:
       - Message
       summary: Get used personalizations for multiple messages
-      description: Returns the names of all user and group attributes that are referenced within the header and content area of a prepared message. The reference to the attributes is a personalization placeholder in the body of the message. All of these placeholders are replaced with individual user or message information during sendout.<br>Be aware that this method does not return member attributes.<br>Request body example:<br><br><pre>["1800249553","1800202306"]</pre>
+      description: 'Returns the names of all user and group attributes that are referenced within the header and content area of a prepared message. The reference to the attributes is a personalization placeholder in the body of the message. All of these placeholders are replaced with individual user or message information during sendout.
+
+        Be aware that this method does not return member attributes.
+
+        Request body example:
+
+
+        ["1800249553","1800202306"]'
       operationId: getManyUsedPersonalizations
       responses:
         '200':
@@ -267,7 +304,33 @@ paths:
       tags:
       - Message
       summary: Send a single message
-      description: 'Sends a prepared message as a single message to a specific user. <br><br>This method automatically adds the user who receives the email to the group of the prepared message.<br>Attachments can be encoded using base64encode.org.<br>Request body example: <br><br><pre>{<br>"parameters":<br>    [{"name" : "Parameter Name 1","value" : "Parameter Value 1"},<br>     {"name" : "Parameter Name 2","value": "Parameter Value 2"}],<br>     "attachments":<br>    [{"name" : "image.png",<br>    "contentType" : "application.png",<br>    "content" : "BASE64ENCODING"}]<br>}</pre>'
+      description: 'Sends a prepared message as a single message to a specific user.
+
+
+        This method automatically adds the user who receives the email to the group of the prepared message.
+
+        Attachments can be encoded using base64encode.org.
+
+        Request body example:
+
+
+        {
+
+        "parameters":
+
+        [{"name" : "Parameter Name 1","value" : "Parameter Value 1"},
+
+        {"name" : "Parameter Name 2","value": "Parameter Value 2"}],
+
+        "attachments":
+
+        [{"name" : "image.png",
+
+        "contentType" : "application.png",
+
+        "content" : "BASE64ENCODING"}]
+
+        }'
       operationId: sendSingle
       parameters:
       - name: messageId
@@ -305,7 +368,134 @@ paths:
       tags:
       - Message
       summary: Send a transactional message with event details
-      description: 'Sends a previously prepared message as a transactional message including transaction details such as purchase confirmation, <br>and adds user as member to group the prepared message belong to .<br> Please be aware this may cause that user to be unexpectedly subscribed or re-subscribed to that group. <br><br>User can iterate through the list of items using for each expression to access the individual item.<br><br>User can specify any number of attributes aka transaction_details and access them using expression language.<br><br>It is strongly recommended to use the same structure for each item. <br><br>EXPLANATION<br>Var value refers to a single object inside the list of itemDetails, the name can by anything, in this case, it''s the product.<br><br>Items value refers to eventDetails which is a placeholder for the list of items we want to show.<br>Max value is a limit of items to be displayed.<br>If you have max=50 but your JSON has less items, all of them will be displayed.<br>In the case of JSON with a number greater than the limit, the first 50 items will be shown and the rest will be ignored.<br>Inside ForEach, user can access itemDetails property using an array index with the name of the property user wants to access<br><br>Note that all query parameters are case-sensitive. Take a look at an example below:<br>- not "eventdetails" but "eventDetails"<br>- not "itemdetails " but "itemDetails"<br> "Request body example: <br><br>"<pre>{<br>"parameters":<br>   [<br>       {"name" : "Parameter Name 1","value" : "Parameter Value 1"},<br>       {"name" : "Parameter Name 2","value": "Parameter Value 2"}<br>   ],<br>  "attachments": [<br>    {<br>      "name": "twitter_logo.png",<br>      "contentType": "image/png",<br>      "content": "iVBORw0KGgoAAAANSUhEUgAAABUAAAARCAYAAAAyhueAAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAASFJREFUeNqslM0NgkAQhRdiAdiAgQ6468EO1INntQOpwFABdqBe9aAdiIl3twS1AbECfJPMkhVZftSXjJPsDh87z2WsNE1Fb3d3z+POVVQIdQ5ShJhqywdEgEgQQ1qwutsbFT4QM4DXFcALwi3YJqDD2bPx4/PGCg/OSw46NwAFA0nU7d7ObUYAHxF+wYMDUU8jiz19aG9TihEbyuS3oSavNmoT5Sm1thA/CkCLsvJ0In5XdnsIKkv+gCaSGZQ8QF7+AXrST0peBH8Ar9+grKfuS1Mgd/wBjb/0lmChvmBr14GgMy5qoiA/N+zcPSNfPN2fCoVF86KlDQxqvc93tl8DaBxALcAi/qLqKuaWpalAffsOz8iB4ZRSzYIymNJLgAEAYsJkJOLW//gAAAAASUVORK5CYII="<br>    }<br>  ],<br>"transaction": false   /*(optional attribute)*/<br>"eventDetailsProcessing":   /*(optional attribute)*/<br>   {<br>      "groupBy":"brandName",<br>      "groupLabel":"brandName",<br>      "valueField":"productName"<br>   },<br>"eventDetails":<br>   [<br>      {<br>          "itemDetails":[<br>                {"name":"productName","value":"Chair C1"},<br>                {"name":"brandName", "value":"aaa aaa"}<br>              ]<br>      },<br>      {<br>          "itemDetails":[<br>                {"name":"productName","value":"Sofa S1"},<br>                {"name":"brandName", "value":"bbb bbb"}<br>              ]<br> <br>      },<br>      {<br>          "itemDetails":[<br>               {"name":"productName","value":"Bed B1"},<br>                {"name":"brandName", "value":"cccc cccc"}<br>              ]<br> <br>      }<br>   ]<br>}</pre>'
+      description: 'Sends a previously prepared message as a transactional message including transaction details such as purchase confirmation,
+
+        and adds user as member to group the prepared message belong to .
+
+        Please be aware this may cause that user to be unexpectedly subscribed or re-subscribed to that group.
+
+
+        User can iterate through the list of items using for each expression to access the individual item.
+
+
+        User can specify any number of attributes aka transaction_details and access them using expression language.
+
+
+        It is strongly recommended to use the same structure for each item.
+
+
+        EXPLANATION
+
+        Var value refers to a single object inside the list of itemDetails, the name can by anything, in this case, it''s the product.
+
+
+        Items value refers to eventDetails which is a placeholder for the list of items we want to show.
+
+        Max value is a limit of items to be displayed.
+
+        If you have max=50 but your JSON has less items, all of them will be displayed.
+
+        In the case of JSON with a number greater than the limit, the first 50 items will be shown and the rest will be ignored.
+
+        Inside ForEach, user can access itemDetails property using an array index with the name of the property user wants to access
+
+
+        Note that all query parameters are case-sensitive. Take a look at an example below:
+
+        - not "eventdetails" but "eventDetails"
+
+        - not "itemdetails " but "itemDetails"
+
+        "Request body example:
+
+
+        "
+
+        {
+
+        "parameters":
+
+        [
+
+        {"name" : "Parameter Name 1","value" : "Parameter Value 1"},
+
+        {"name" : "Parameter Name 2","value": "Parameter Value 2"}
+
+        ],
+
+        "attachments": [
+
+        {
+
+        "name": "twitter_logo.png",
+
+        "contentType": "image/png",
+
+        "content": "iVBORw0KGgoAAAANSUhEUgAAABUAAAARCAYAAAAyhueAAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAASFJREFUeNqslM0NgkAQhRdiAdiAgQ6468EO1INntQOpwFABdqBe9aAdiIl3twS1AbECfJPMkhVZftSXjJPsDh87z2WsNE1Fb3d3z+POVVQIdQ5ShJhqywdEgEgQQ1qwutsbFT4QM4DXFcALwi3YJqDD2bPx4/PGCg/OSw46NwAFA0nU7d7ObUYAHxF+wYMDUU8jiz19aG9TihEbyuS3oSavNmoT5Sm1thA/CkCLsvJ0In5XdnsIKkv+gCaSGZQ8QF7+AXrST0peBH8Ar9+grKfuS1Mgd/wBjb/0lmChvmBr14GgMy5qoiA/N+zcPSNfPN2fCoVF86KlDQxqvc93tl8DaBxALcAi/qLqKuaWpalAffsOz8iB4ZRSzYIymNJLgAEAYsJkJOLW//gAAAAASUVORK5CYII="
+
+        }
+
+        ],
+
+        "transaction": false /*(optional attribute)*/
+
+        "eventDetailsProcessing": /*(optional attribute)*/
+
+        {
+
+        "groupBy":"brandName",
+
+        "groupLabel":"brandName",
+
+        "valueField":"productName"
+
+        },
+
+        "eventDetails":
+
+        [
+
+        {
+
+        "itemDetails":[
+
+        {"name":"productName","value":"Chair C1"},
+
+        {"name":"brandName", "value":"aaa aaa"}
+
+        ]
+
+        },
+
+        {
+
+        "itemDetails":[
+
+        {"name":"productName","value":"Sofa S1"},
+
+        {"name":"brandName", "value":"bbb bbb"}
+
+        ]
+
+
+        },
+
+        {
+
+        "itemDetails":[
+
+        {"name":"productName","value":"Bed B1"},
+
+        {"name":"brandName", "value":"cccc cccc"}
+
+        ]
+
+
+        }
+
+        ]
+
+        }'
       operationId: sendTransactionalWithEventDetails
       parameters:
       - name: messageId
@@ -343,7 +533,32 @@ paths:
       tags:
       - Message
       summary: Send a transactional message
-      description: 'Sends a prepared message as a transactional message, and adds user as member to group the prepared message belong to. <br> Please be aware this may cause that user to be unexpectedly subscribed or re-subscribed to that group. <br>Attachments may be added as part of the JSON payload. If you wish to attach a file to the message, the data must be Base64 encoded <br>and added as the value of the attachment’s content string, as demonstrated below. Request body example with attachment: <br><br><pre>{<br>"parameters":<br>  [{"name" : "Parameter Name 1","value" : "Parameter Value 1"},<br>   {"name" : "Parameter Name 2","value": "Parameter Value 2"}],<br>    "attachments":<br>    [{"name" : "twitter_logo.png",<br>      "contentType" : "image/png",<br>      "content": "iVBORw0KGgoAAAANSUhEUgAAABUAAAARCAYAAAAyhueAAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAASFJREFUeNqslM0NgkAQhRdiAdiAgQ6468EO1INntQOpwFABdqBe9aAdiIl3twS1AbECfJPMkhVZftSXjJPsDh87z2WsNE1Fb3d3z+POVVQIdQ5ShJhqywdEgEgQQ1qwutsbFT4QM4DXFcALwi3YJqDD2bPx4/PGCg/OSw46NwAFA0nU7d7ObUYAHxF+wYMDUU8jiz19aG9TihEbyuS3oSavNmoT5Sm1thA/CkCLsvJ0In5XdnsIKkv+gCaSGZQ8QF7+AXrST0peBH8Ar9+grKfuS1Mgd/wBjb/0lmChvmBr14GgMy5qoiA/N+zcPSNfPN2fCoVF86KlDQxqvc93tl8DaBxALcAi/qLqKuaWpalAffsOz8iB4ZRSzYIymNJLgAEAYsJkJOLW//gAAAAASUVORK5CYII="}]<br>}</pre>'
+      description: 'Sends a prepared message as a transactional message, and adds user as member to group the prepared message belong to.
+
+        Please be aware this may cause that user to be unexpectedly subscribed or re-subscribed to that group.
+
+        Attachments may be added as part of the JSON payload. If you wish to attach a file to the message, the data must be Base64 encoded
+
+        and added as the value of the attachment’s content string, as demonstrated below. Request body example with attachment:
+
+
+        {
+
+        "parameters":
+
+        [{"name" : "Parameter Name 1","value" : "Parameter Value 1"},
+
+        {"name" : "Parameter Name 2","value": "Parameter Value 2"}],
+
+        "attachments":
+
+        [{"name" : "twitter_logo.png",
+
+        "contentType" : "image/png",
+
+        "content": "iVBORw0KGgoAAAANSUhEUgAAABUAAAARCAYAAAAyhueAAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAASFJREFUeNqslM0NgkAQhRdiAdiAgQ6468EO1INntQOpwFABdqBe9aAdiIl3twS1AbECfJPMkhVZftSXjJPsDh87z2WsNE1Fb3d3z+POVVQIdQ5ShJhqywdEgEgQQ1qwutsbFT4QM4DXFcALwi3YJqDD2bPx4/PGCg/OSw46NwAFA0nU7d7ObUYAHxF+wYMDUU8jiz19aG9TihEbyuS3oSavNmoT5Sm1thA/CkCLsvJ0In5XdnsIKkv+gCaSGZQ8QF7+AXrST0peBH8Ar9+grKfuS1Mgd/wBjb/0lmChvmBr14GgMy5qoiA/N+zcPSNfPN2fCoVF86KlDQxqvc93tl8DaBxALcAi/qLqKuaWpalAffsOz8iB4ZRSzYIymNJLgAEAYsJkJOLW//gAAAAASUVORK5CYII="}]
+
+        }'
       operationId: sendTransactional
       parameters:
       - name: messageId
@@ -387,7 +602,12 @@ paths:
       tags:
       - Message
       summary: Validate a list of messages
-      description: 'Validates a list of messages for the following functionality: checks that the message is valid (InvalidObjectError -> objecttype message), checks that the message does not contain any invalid content store items, checks that the message does not use archived Attributes (InvalidObjectError -> objecttype attribute).<br>Request body example:<br><br><pre>["1800249570","1800202306"]</pre>'
+      description: 'Validates a list of messages for the following functionality: checks that the message is valid (InvalidObjectError -> objecttype message), checks that the message does not contain any invalid content store items, checks that the message does not use archived Attributes (InvalidObjectError -> objecttype attribute).
+
+        Request body example:
+
+
+        ["1800249570","1800202306"]'
       operationId: validateList
       responses:
         '200':
@@ -414,7 +634,12 @@ paths:
       tags:
       - Message
       summary: Validate a message
-      description: 'Validates a prepared message for the following functionality: check that message is valid (InvalidObjectError -> objecttype message), check that message does not contain invalid content store items, check that message does not use archived Attributes (InvalidObjectError -> objecttype attribute).<br>Request body example:<br><br><pre>["1800249570","1800202306"]</pre>'
+      description: 'Validates a prepared message for the following functionality: check that message is valid (InvalidObjectError -> objecttype message), check that message does not contain invalid content store items, check that message does not use archived Attributes (InvalidObjectError -> objecttype attribute).
+
+        Request body example:
+
+
+        ["1800249570","1800202306"]'
       operationId: validate
       parameters:
       - name: messageId
@@ -440,7 +665,12 @@ paths:
       tags:
       - Message
       summary: Validate many messages
-      description: 'Validates many messages for the following functionality: checks that the message is valid (InvalidObjectError -> objecttype message), checks that the message does not contain any invalid content store items, checks that the message does not use archived Attributes (InvalidObjectError -> objecttype attribute).<br>Request body example:<br><br><pre>["1800249570","1800202306"]</pre>'
+      description: 'Validates many messages for the following functionality: checks that the message is valid (InvalidObjectError -> objecttype message), checks that the message does not contain any invalid content store items, checks that the message does not use archived Attributes (InvalidObjectError -> objecttype attribute).
+
+        Request body example:
+
+
+        ["1800249570","1800202306"]'
       operationId: validateMany
       responses:
         '200':

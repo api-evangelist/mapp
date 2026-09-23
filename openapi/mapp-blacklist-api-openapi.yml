@@ -18,7 +18,18 @@ paths:
       tags:
       - Blacklist
       summary: Create group blacklist entries
-      description: 'Adds new entries (email, emailDomain or mobileNumber) to the group blacklist.<br>Request body example:<br><br><pre>[{<br>"type": "EMAIL",<br> "pattern": "test@test.com"<br>}]</pre>'
+      description: 'Adds new entries (email, emailDomain or mobileNumber) to the group blacklist.
+
+        Request body example:
+
+
+        [{
+
+        "type": "EMAIL",
+
+        "pattern": "test@test.com"
+
+        }]'
       operationId: createGroupEntries
       parameters:
       - name: groupId
@@ -52,7 +63,30 @@ paths:
       tags:
       - Blacklist
       summary: Create hashed group blacklist entries
-      description: 'Adds new hashed email entries to the group blacklist. Entries can be hashed using md5hashgenerator.<br>Request body example:<br><br><pre>[<br>    {<br>        "type": "EMAIL",<br>        "pattern":"6a4b6cb2045fd55f706eaebd6ab5d4f7"<br>    },<br>    {<br>        "type": "EMAIL",<br>        "pattern":"0dbfb46341bc3d195db23e4015b20847"<br>    }<br>]</pre>'
+      description: 'Adds new hashed email entries to the group blacklist. Entries can be hashed using md5hashgenerator.
+
+        Request body example:
+
+
+        [
+
+        {
+
+        "type": "EMAIL",
+
+        "pattern":"6a4b6cb2045fd55f706eaebd6ab5d4f7"
+
+        },
+
+        {
+
+        "type": "EMAIL",
+
+        "pattern":"0dbfb46341bc3d195db23e4015b20847"
+
+        }
+
+        ]'
       operationId: createGroupEntriesHashed
       parameters:
       - name: groupId
@@ -92,7 +126,30 @@ paths:
       tags:
       - Blacklist
       summary: Create hashed system blacklist entries
-      description: 'Adds new entries (email, email domain, mobile number, or mobile app alias) to the system blacklist. Entries can be hashed using md5hashgenerator.<br>Request body example:<br><br><pre>[<br>    {<br>        "type": "EMAIL",<br>        "pattern":"6a4b6cb2045fd55f706eaebd6ab5d4f7"<br>    },<br>    {<br>        "type": "EMAIL",<br>        "pattern":"0dbfb46341bc3d195db23e4015b20847"<br>    }<br>]</pre>'
+      description: 'Adds new entries (email, email domain, mobile number, or mobile app alias) to the system blacklist. Entries can be hashed using md5hashgenerator.
+
+        Request body example:
+
+
+        [
+
+        {
+
+        "type": "EMAIL",
+
+        "pattern":"6a4b6cb2045fd55f706eaebd6ab5d4f7"
+
+        },
+
+        {
+
+        "type": "EMAIL",
+
+        "pattern":"0dbfb46341bc3d195db23e4015b20847"
+
+        }
+
+        ]'
       operationId: createSystemEntriesHashed
       parameters:
       - name: hashed
@@ -125,7 +182,27 @@ paths:
       tags:
       - Blacklist
       summary: Create system blacklist entries
-      description: 'Adds new entries (email, email domain or mobile number) to the system blacklist. <br>Request body examples:<br><br><pre>[{<br>"type": "EMAIL",<br> "pattern": "test@test.com"<br>}]<br><br>[{<br>"type": "PHONE_NUMBER",<br>"pattern": "336789012345"<br>}]</pre>'
+      description: 'Adds new entries (email, email domain or mobile number) to the system blacklist.
+
+        Request body examples:
+
+
+        [{
+
+        "type": "EMAIL",
+
+        "pattern": "test@test.com"
+
+        }]
+
+
+        [{
+
+        "type": "PHONE_NUMBER",
+
+        "pattern": "336789012345"
+
+        }]'
       operationId: createSystemEntries
       responses:
         '200':
@@ -151,7 +228,18 @@ paths:
       tags:
       - Blacklist
       summary: Delete group blacklist entries
-      description: 'Deletes entries (email, email domain or mobile number) from the group blacklist.<br>Request body example:<br><br><pre>[{<br>"type": "EMAIL",<br> "pattern": "test@test.com"<br>}]</pre>'
+      description: 'Deletes entries (email, email domain or mobile number) from the group blacklist.
+
+        Request body example:
+
+
+        [{
+
+        "type": "EMAIL",
+
+        "pattern": "test@test.com"
+
+        }]'
       operationId: deleteGroupEntries
       parameters:
       - name: groupId
@@ -185,7 +273,18 @@ paths:
       tags:
       - Blacklist
       summary: Delete system blacklist entries
-      description: 'Deletes entries (email, email domain or mobile number ) from the system blacklist.<br>Request body example:<br><br><pre>[{<br>"type": "EMAIL",<br> "pattern": "test@test.com"<br>}]</pre>'
+      description: 'Deletes entries (email, email domain or mobile number ) from the system blacklist.
+
+        Request body example:
+
+
+        [{
+
+        "type": "EMAIL",
+
+        "pattern": "test@test.com"
+
+        }]'
       operationId: deleteSystemEntries
       responses:
         '200':

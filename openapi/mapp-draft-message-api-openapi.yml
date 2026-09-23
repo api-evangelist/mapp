@@ -18,7 +18,112 @@ paths:
       tags:
       - Draft Message
       summary: Create a draft message
-      description: 'Creates a new message as a draft.<br>Request body example:<br><br><pre>{<br>    "name": "Test Draft Message",<br>    "externalId": null,<br>    "messageCategoryId": null,<br>    "message":<br>    {<br>        "subject": "This is draft test",<br>        "emailBodyText": null,<br>        "emailBodyHtml": "Test",<br>        "smsText": null,<br>        "faxText": null,<br>        "emailHeaders":<br>        [<br>        ],<br>        "attachments":<br>        [<br>        ],<br>        "attachmentReferences": null,<br>        "encoding": "ISO-8859-1",<br>        "encodingSMS": "ISO-8859-1",<br>        "imageHandlingMode": "none"<br>    }<br>}</pre><br><br>Example body with from and Reply-to headers:<br><br><br><pre>{<br>    "name": "Test Draft Message",<br>    "externalId": null,<br>    "messageCategoryId": null,<br>    "message":<br>    {<br>        "subject": "This is draft test",<br>        "emailBodyText": null,<br>        "emailBodyHtml": "Test",<br>        "smsText": null,<br>        "faxText": null,<br>        "emailHeaders":<br>        [{"name":"from","value":"John<info@qamanual.staging11.shortest-route.com>"},<br>         {"name":"Reply-to","value":"Bob <info@qamanual.staging11.shortest-route.com>"}],       <br>        "attachments":[],<br>        "attachmentReferences": null,<br>        "encoding": "ISO-8859-1",<br>        "encodingSMS": "ISO-8859-1",<br>        "imageHandlingMode": "none"<br>    }<br>}</pre><br>ImageHandlingMode values:<br><pre>"none" - Image links are unchanged <br>"inline" - Image are inlined (Offline HTML) <br>"host" - Image are Hosted in Mapp Engage (Online HTML)<br></pre>'
+      description: 'Creates a new message as a draft.
+
+        Request body example:
+
+
+        {
+
+        "name": "Test Draft Message",
+
+        "externalId": null,
+
+        "messageCategoryId": null,
+
+        "message":
+
+        {
+
+        "subject": "This is draft test",
+
+        "emailBodyText": null,
+
+        "emailBodyHtml": "Test",
+
+        "smsText": null,
+
+        "faxText": null,
+
+        "emailHeaders":
+
+        [
+
+        ],
+
+        "attachments":
+
+        [
+
+        ],
+
+        "attachmentReferences": null,
+
+        "encoding": "ISO-8859-1",
+
+        "encodingSMS": "ISO-8859-1",
+
+        "imageHandlingMode": "none"
+
+        }
+
+        }
+
+
+        Example body with from and Reply-to headers:
+
+
+        {
+
+        "name": "Test Draft Message",
+
+        "externalId": null,
+
+        "messageCategoryId": null,
+
+        "message":
+
+        {
+
+        "subject": "This is draft test",
+
+        "emailBodyText": null,
+
+        "emailBodyHtml": "Test",
+
+        "smsText": null,
+
+        "faxText": null,
+
+        "emailHeaders":
+
+        [{"name":"from","value":"John"},
+
+        {"name":"Reply-to","value":"Bob "}],
+
+        "attachments":[],
+
+        "attachmentReferences": null,
+
+        "encoding": "ISO-8859-1",
+
+        "encodingSMS": "ISO-8859-1",
+
+        "imageHandlingMode": "none"
+
+        }
+
+        }
+
+
+        ImageHandlingMode values:
+
+
+        "none" - Image links are unchanged
+
+        "inline" - Image are inlined (Offline HTML)
+
+        "host" - Image are Hosted in Mapp Engage (Online HTML)'
       operationId: CreateDraftMessage
       responses:
         '200':
@@ -168,7 +273,58 @@ paths:
       tags:
       - Draft Message
       summary: Update a draft message
-      description: 'Updates a message draft.<br>Request body example:<br><br><pre>{<br>    "id": 18060600,<br>    "name": "Test Draft Message",<br>    "externalId": null,<br>    "messageCategoryId": null,<br>    "message":<br>    {<br>        "subject": "This is draft test",<br>        "emailBodyText": null,<br>        "emailBodyHtml": "Test",<br>        "smsText": null,<br>        "faxText": null,<br>        "emailHeaders":<br>        [<br>        ],<br>        "attachments":<br>        [<br>        ],<br>        "attachmentReferences": null,<br>        "encoding": "ISO-8859-1",<br>        "encodingSMS": "ISO-8859-1",<br>        "imageHandlingMode": "none"<br>    }<br>}</pre>'
+      description: 'Updates a message draft.
+
+        Request body example:
+
+
+        {
+
+        "id": 18060600,
+
+        "name": "Test Draft Message",
+
+        "externalId": null,
+
+        "messageCategoryId": null,
+
+        "message":
+
+        {
+
+        "subject": "This is draft test",
+
+        "emailBodyText": null,
+
+        "emailBodyHtml": "Test",
+
+        "smsText": null,
+
+        "faxText": null,
+
+        "emailHeaders":
+
+        [
+
+        ],
+
+        "attachments":
+
+        [
+
+        ],
+
+        "attachmentReferences": null,
+
+        "encoding": "ISO-8859-1",
+
+        "encodingSMS": "ISO-8859-1",
+
+        "imageHandlingMode": "none"
+
+        }
+
+        }'
       operationId: UpdateDraftMessage
       responses:
         '200':

@@ -1,7 +1,10 @@
 openapi: 3.2.0
 info:
   title: Analytics Analysis API
-  description: "OpenAPI 3.0 Specification of Mapp Intelligence AnalyticsAPI \n\n In order to use these endpoints you must authorize by using a valid OAuth clientID configured in Mapp Intelligence Settings section."
+  description: 'OpenAPI 3.0 Specification of Mapp Intelligence AnalyticsAPI
+
+
+    In order to use these endpoints you must authorize by using a valid OAuth clientID configured in Mapp Intelligence Settings section.'
   version: 1.0.0
   contact:
     name: Technical Support Mapp Digital
@@ -38,11 +41,16 @@ paths:
           $ref: '#/components/responses/Forbidden'
         '404':
           $ref: '#/components/responses/NotFound'
+      operationId: deleteAnalysisQueryByCorrelationId
+      x-operation-id-source: derived
     get:
       tags:
       - Analysis
       summary: Get query status
-      description: "Returns status of the analysis query. \n\n Once calculation is SUCCESS, result is  available and can be retrieved by using the provided link (or calculationId)."
+      description: 'Returns status of the analysis query.
+
+
+        Once calculation is SUCCESS, result is available and can be retrieved by using the provided link (or calculationId).'
       externalDocs:
         url: https://documentation.mapp.com
       parameters:
@@ -77,13 +85,14 @@ paths:
           $ref: '#/components/responses/Forbidden'
         '404':
           $ref: '#/components/responses/NotFound'
+      operationId: getAnalysisQueryByCorrelationId
+      x-operation-id-source: derived
   /report-query/{reportCorrelationId}:
     delete:
       tags:
       - Analysis
       operationId: deleteReportAnalysis
       summary: Cancel report calculation query
-      description: Cancel report calculation query
       parameters:
       - name: reportCorrelationId
         in: path
@@ -127,7 +136,6 @@ paths:
       tags:
       - Analysis
       summary: Get report calculation query state
-      description: Get report calculation query state
       operationId: status
       parameters:
       - name: reportCorrelationId
@@ -198,7 +206,14 @@ paths:
       tags:
       - Analysis
       summary: Create calculation query
-      description: "Create a calculation query. \n\n Response will be either \n+ 200 if the result is already available and can be retrieved by using the provided link (or calculationId) \n+ 201 if the calculation is being queued. Status can be polled by using the provided link (or correlationId)."
+      description: 'Create a calculation query.
+
+
+        Response will be either
+
+        + 200 if the result is already available and can be retrieved by using the provided link (or calculationId)
+
+        + 201 if the calculation is being queued. Status can be polled by using the provided link (or correlationId).'
       externalDocs:
         url: https://documentation.mapp.com
       requestBody:
@@ -257,6 +272,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Problem'
+      operationId: postAnalysisQuery
+      x-operation-id-source: derived
   /report-query:
     post:
       tags:
@@ -333,12 +350,13 @@ paths:
           $ref: '#/components/responses/Forbidden'
         '404':
           $ref: '#/components/responses/NotFound'
+      operationId: getAnalysisResultByCalculationId
+      x-operation-id-source: derived
   /analysis-usage/current:
     get:
       tags:
       - Analysis
       summary: Get number of analysis done for current month
-      description: Get number of analysis done for current month
       externalDocs:
         url: https://documentation.mapp.com
       responses:
@@ -357,67 +375,305 @@ paths:
                     year: '2022'
         '403':
           $ref: '#/components/responses/Forbidden'
+      operationId: getAnalysisUsageCurrent
+      x-operation-id-source: derived
 components:
   schemas:
-    ReportElement:
+    Container:
+      type: object
+      properties:
+        filters:
+          type: array
+          description: Array of filters
+          items:
+            $ref: '#/components/schemas/Filter'
+        containers:
+          type: array
+          description: array of containers (recursion)
+          items:
+            $ref: '#/components/schemas/Container'
+        connector:
+          $ref: '#/components/schemas/ConnectorPredicateEnum'
+        context:
+          $ref: '#/components/schemas/ContextEnum'
+        type:
+          description: Indicates how filters must be applied. TIME_ORDER is sequential, NORMAL not
+          type: string
+          enum:
+          - NORMAL
+          - TIME_ORDER
+        inOrNotIn:
+          $ref: '#/components/schemas/InOrNotInPredicateEnum'
+    ContextEnum:
+      type: string
+      description: Context to evaluate the metric/dimension. If context property is not given or empty the default context of the object will be used. The default context can be identified from the context property in the response list of /query-objects.
+      enum:
+      - VISITOR
+      - SESSION
+      - PAGE
+      - ACTION
+      - ATOMIC
+      - NONE
+    InOrNotInPredicateEnum:
+      type: string
+      enum:
+      - IN
+      - NOT_IN
+    SortDirectionEnum:
+      type: string
+      description: Possible sorting directions
+      enum:
+      - ASCENDING
+      - DESCENDING
+    ReportQueryState:
+      type: object
+      properties:
+        reportCorrelationId:
+          type: string
+          description: Correlation Id of the report
+        status:
+          type: string
+          description: Status of the report after complete analysis
+        details:
+          $ref: '#/components/schemas/ReportQueryStateDetails'
+        queryStates:
+          type: array
+          description: List of query state of all caculation queries
+          items:
+            $ref: '#/components/schemas/QueryState'
+    FilterPredicateEnum:
+      type: string
+      description: Filter predicates
+      enum:
+      - EQUAL
+      - UNEQUAL
+      - LESS
+      - LESSEQUAL
+      - GREATER
+      - GREATEREQUAL
+      - BETWEEN
+      - LIKE
+      - NOT_LIKE
+    AnalysisResult:
+      type: object
+      properties:
+        calculationDataType:
+          type: string
+          description: DataType returned
+          enum:
+          - RAW_DATA
+          - RAW_DATA_SAMPLING
+        rows:
+          type: array
+          description: Array of rows
+          items:
+            type: array
+            description: Array of values following the strict order of the headers
+            items: {}
+        rowCount:
+          type: integer
+          description: Number of rows returned.
+        rowCountTotal:
+          type: integer
+          description: Number of rows in the whole resultSet wihtout subtotals
+        headers:
+          type: array
+          items:
+            type: object
+            properties:
+              name:
+                type: string
+                description: Name of the Dimension or Metric
+              alias:
+                type: string
+                description: Generated unique identifier of the column in the analysis.
+              arrangeType:
+                type: string
+                description: Mapp identifier of the Dimension or Metric
+              metric:
+                type: boolean
+                description: Indicates if column is a metric
+              dimension:
+                type: boolean
+                description: Indicates if column is a dimension
+              sumPositions:
+                type: array
+                description: Indicates which rows contains a (sub)total value
+                items:
+                  type: integer
+              pivotGroups:
+                type: array
+                description: Indicates which rows contains a grouping row
+                items:
+                  type: integer
+              sortIndex:
+                type: integer
+                description: Indicates order of sorting when there is more than one sorting column. (starting from 0)
+              sortDirection:
+                $ref: '#/components/schemas/SortDirectionEnum'
+        columnCount:
+          type: integer
+          description: Number of columns
+        warnings:
+          type: array
+          description: Array of warnings occurred during calculation
+          items:
+            $ref: '#/components/schemas/Warning'
+        timerange:
+          type: array
+          description: time range boundaries with format yyyy-MM-dd HH:mm:ss
+          minItems: '2'
+          maxItems: '2'
+          items:
+            type: string
+        timestamp:
+          type: string
+          format: date-time
+          description: Timestamp of the calculation
+    TableQuery:
+      type: object
+      description: Tabular query definition
+      properties:
+        columns:
+          type: array
+          description: Array of columns
+          items:
+            type: object
+            properties:
+              name:
+                type: string
+              sortDirection:
+                $ref: '#/components/schemas/SortDirectionEnum'
+              sortIndex:
+                type: integer
+                description: Indicates order of sorting when there is more than one sorting column. (starting from 0).
+              lowerLimit:
+                type: integer
+              upperLimit:
+                type: integer
+              inTimeSeries:
+                type: boolean
+                description: Optional property indicating if a column will be used in time series view mode; defaults to false. Can be omitted if it's value is not set to true.
+              columnPeriod:
+                $ref: '#/components/schemas/ColumnPeriodEnum'
+              scope:
+                $ref: '#/components/schemas/ScopeEnum'
+              context:
+                $ref: '#/components/schemas/ContextEnum'
+              predefinedContainer:
+                $ref: '#/components/schemas/Container'
+        variant:
+          type: string
+          description: Type of Data Structure
+          enum:
+          - LIST
+          - PIVOT
+          - PIVOT_AS_LIST
+          - COMPARISON
+        predefinedContainer:
+          $ref: '#/components/schemas/Container'
+        predefinedSegmentConnections:
+          type: array
+          items:
+            $ref: '#/components/schemas/Filter'
+        viewMode:
+          $ref: '#/components/schemas/ViewMode'
+      required:
+      - columns
+      - variant
+      - predefinedContainer
+    ColumnPeriodEnum:
+      type: string
+      description: 'Indicates which Time range must be used for the column. ANALYSIS: uses the analysis time range. COLUMN: uses the time filter defined inside the column. ELEMENT: uses the time filter defined inside the element configuration - i.e. custom metric/formula'
+      enum:
+      - ANALYSIS
+      - COLUMN
+      - ELEMENT
+    ReportQueryRequest:
       type: object
       properties:
         id:
           type: integer
-          format: int32
-          description: ID of the element
-        reportId:
-          type: integer
-          format: int32
-          description: ID of the report
+          format: int64
+          description: Id
+        elementIds:
+          type: array
+          items:
+            type: integer
+            format: int64
+            description: Element Ids
+        configuration:
+          $ref: '#/components/schemas/Report'
+        timeFilter:
+          $ref: '#/components/schemas/Filter'
+    Comparison:
+      type: object
+      description: Comparison definition
+      properties:
         type:
           type: string
-          description: Type of the element for eg. Analysis, KPI, Sparkline
-        configJson:
-          type: object
-          description: Different type of queries are possible
-          oneOf:
-          - $ref: '#/components/schemas/TableQuery'
-          - $ref: '#/components/schemas/KpiQuery'
-    Warning:
+          description: Type of comparison
+          enum:
+          - NONE
+          - PERIOD
+          - LIMIT
+          - SLIDING_WINDOW
+        slidingWindowWeekdayAdjust:
+          type: boolean
+        slidingWindowTimeShift:
+          type: string
+          enum:
+          - PRECEDING
+          - PREVIOUS_MONTH
+          - PREVIOUS_QUARTER
+          - PREVIOUS_YEAR
+        filter:
+          $ref: '#/components/schemas/Filter'
+    ConnectorPredicateEnum:
+      type: string
+      description: Connectors
+      enum:
+      - AND
+      - OR
+    Error:
       type: object
       properties:
         name:
           type: string
-          description: 'Each warnings has specific properties described in following table:
+          description: 'Each error has specific properties described in following table:
 
 
-            | Warning| Description | Relevant parameters |
+            | Error| Description | Relevant parameters |
 
             | ---------------- | ------------| -----------------------------------|
 
-            | FilterLogicalCubeMismatch | At least one filter is ignored due to incompatibily with Dimensions and Metrics used. | List of incomptible filter objects in _names_ array. |
+            | UnmappedName | At least one object name cannot be found. | List of objects not found in _names_ array. |
 
-            | InvalidMetricContext | Metric used in an invalid context. | List of metric with invalid context in _aliases_ array. |
+            | PivotIncompatibleMetric | Metric not usable in Pivot detected.| List of incompatible Metrics in _names_ array. |
 
-            | SortingEnforced |  Sorting criteria has been added automatically | List of objects that were sorted automatically in _aliases_ array. |
+            | PivotIncompatibleDimension |Dimension not usable in Pivot detected. | List of incompatible Dimensions in _names_ array. |
 
-            | NoSortingDefined |  Sorting criteria is required for some dimensions. | List of dimensions requiring a sorting in _names_ array. |
+            | AnalysisLogicalCubeMismatch | All Dimensions and Metrics are not compatible. | List of incompatible objects in _names_ array. |
 
-            | SortingLimitExceeded | 3 sorting criteria are allowed. All additional sorting criteria have been omitted.| List of columns ignored for sorting in _aliases_ array. |
+            | InvalidSortingCriteria | Sorting is applied on a non-sortable object.| List of invalid sorted objects in _names_ array. |
 
-            | SortingRemoved | A requested sorting criteria has been removed | List of objects that were removed automatically in _aliases_ array. |
+            | TimeFilterMissing | Each query must have a minimum of one Time Filter.| N/A |
 
-            | TodayRemoved | Today date has been removed from calculation time range because the selected datasource does not contain it. | daysInDataSource, todayDate|'
+            | InvalidSegmentNoneContainer | A segment container has context set to NONE but either its connector is not set to AND or its inOrNotIn property is not set to IN.| N/A |'
           enum:
-          - FilterLogicalCubeMismatch
-          - InvalidMetricContext
-          - SortingEnforced
-          - NoSortingDefined
-          - SortingLimitExceeded
-          - SortingRemoved
-          - TodayRemoved
+          - UnmappedName
+          - PivotIncompatibleMetric
+          - PivotIncompatibleDimension
+          - AnalysisLogicalCubeMismatch
+          - InvalidSortingCriteria
+          - TimeFilterMissing
+          - InvalidSegmentNoneContainer
         parameters:
           type: object
           properties:
             arrangeTypes:
               type: array
-              description: List of internal object names (dimension, metrics, filter, ...) that corresponds to the warning.
+              description: List of internal object names (dimension, metrics, filter, ...) that corresponds to the error.
               items:
                 type: string
             aliases:
@@ -427,15 +683,90 @@ components:
                 type: string
             names:
               type: array
-              description: List of object names (dimension, metrics, filter, ...) that corresponds to the warning.
+              description: List of object names (dimension, metrics, filter, ...) that corresponds to the error.
               items:
                 type: string
-            daysInDataSource:
-              type: string
-              description: Number of days in the datasource which is beeing cut
-            todayDate:
-              type: string
-              description: Date of the day being cut
+    Filter:
+      type: object
+      properties:
+        name:
+          type: string
+          description: Name of the Metric or Dimension being filtered.
+        filterPredicate:
+          $ref: '#/components/schemas/FilterPredicateEnum'
+        connector:
+          $ref: '#/components/schemas/ConnectorPredicateEnum'
+        caseSensitive:
+          type: boolean
+        context:
+          $ref: '#/components/schemas/ContextEnum'
+        intern:
+          type: boolean
+          description: Indicates if filter should be prioritized (Advanced).
+          default: 'false'
+        value1:
+          type: string
+        value2:
+          type: string
+        values1:
+          type: array
+          description: Array of values
+          items:
+            type: string
+        values2:
+          type: array
+          description: Array of values
+          items:
+            type: string
+    SegmentContainer:
+      type: object
+      properties:
+        segmentID:
+          type: string
+          description: ID of the Segment
+        connectorPredicate:
+          type: string
+        inOrNotInPredicate:
+          type: string
+        context:
+          $ref: '#/components/schemas/ContextEnum'
+        position:
+          type: integer
+          description: Indicates segment ordering in case of several Segment
+    KpiQuery:
+      type: object
+      description: KPI query definition
+      properties:
+        elementPeriod:
+          type: string
+          description: 'One of the following periods should be used:
+
+            * ELEMENT: when the time filter is either inherited from the report or the time filter configured in the report element configuration.
+
+            * MONAD: when the time filter is inherited from the custom metric configuration.'
+          enum:
+          - ELEMENT
+          - MONAD
+        type:
+          type: string
+          description: Type of the query
+          enum:
+          - KPI
+          - SPARKLINE
+        metricName:
+          type: string
+          description: name of the metric of the KPI
+        dimensionName:
+          type: string
+          description: name of the dimension of the KPI
+        comparison:
+          $ref: '#/components/schemas/Comparison'
+        predefinedContainer:
+          $ref: '#/components/schemas/Container'
+        predefinedSegmentConnections:
+          type: array
+          items:
+            $ref: '#/components/schemas/Filter'
     AnalysisUsage:
       title: AnalysisUsage
       description: Analysis Usage for a given period
@@ -458,6 +789,23 @@ components:
       - maxCalculationsAllowed
       - month
       - year
+    AnalysisQuery:
+      type: object
+      description: Defintiona of a anaylsis query structure
+      properties:
+        resultType:
+          type: string
+          description: Type of result
+          enum:
+          - DATA_ONLY
+        queryObject:
+          description: Different type of queries are possible
+          oneOf:
+          - $ref: '#/components/schemas/TableQuery'
+          - $ref: '#/components/schemas/KpiQuery'
+      required:
+      - resultType
+      - queryObject
     ViewMode:
       type: object
       properties:
@@ -577,6 +925,154 @@ components:
               - ASCENDING
               - DESCENDING
               - ''
+    ViewModeComparisonSortingItem:
+      type: object
+      description: Sorting of comparison
+      properties:
+        alias:
+          type: string
+          description: alias of the column being sorted
+        direction:
+          $ref: '#/components/schemas/SortDirectionEnum'
+    Problem:
+      type: object
+      properties:
+        status:
+          type: integer
+          description: HTTP Status Code
+        statusCode:
+          type: string
+          description: Specific Mapp Error Code
+        title:
+          type: string
+          description: Short description of the problem
+        detail:
+          type: string
+          description: Detailed informations about the problem
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Error'
+        warnings:
+          type: array
+          items:
+            $ref: '#/components/schemas/Warning'
+    Warning:
+      type: object
+      properties:
+        name:
+          type: string
+          description: 'Each warnings has specific properties described in following table:
+
+
+            | Warning| Description | Relevant parameters |
+
+            | ---------------- | ------------| -----------------------------------|
+
+            | FilterLogicalCubeMismatch | At least one filter is ignored due to incompatibily with Dimensions and Metrics used. | List of incomptible filter objects in _names_ array. |
+
+            | InvalidMetricContext | Metric used in an invalid context. | List of metric with invalid context in _aliases_ array. |
+
+            | SortingEnforced |  Sorting criteria has been added automatically | List of objects that were sorted automatically in _aliases_ array. |
+
+            | NoSortingDefined |  Sorting criteria is required for some dimensions. | List of dimensions requiring a sorting in _names_ array. |
+
+            | SortingLimitExceeded | 3 sorting criteria are allowed. All additional sorting criteria have been omitted.| List of columns ignored for sorting in _aliases_ array. |
+
+            | SortingRemoved | A requested sorting criteria has been removed | List of objects that were removed automatically in _aliases_ array. |
+
+            | TodayRemoved | Today date has been removed from calculation time range because the selected datasource does not contain it. | daysInDataSource, todayDate|'
+          enum:
+          - FilterLogicalCubeMismatch
+          - InvalidMetricContext
+          - SortingEnforced
+          - NoSortingDefined
+          - SortingLimitExceeded
+          - SortingRemoved
+          - TodayRemoved
+        parameters:
+          type: object
+          properties:
+            arrangeTypes:
+              type: array
+              description: List of internal object names (dimension, metrics, filter, ...) that corresponds to the warning.
+              items:
+                type: string
+            aliases:
+              type: array
+              description: List of columns aliases that corresponds to the error. See Result Header alias property.
+              items:
+                type: string
+            names:
+              type: array
+              description: List of object names (dimension, metrics, filter, ...) that corresponds to the warning.
+              items:
+                type: string
+            daysInDataSource:
+              type: string
+              description: Number of days in the datasource which is beeing cut
+            todayDate:
+              type: string
+              description: Date of the day being cut
+    ReportQueryStateDetails:
+      type: object
+      properties:
+        lastUpdatedAt:
+          type: integer
+          description: Last updated time of report in milliseconds since the UNIX epoch
+        reportId:
+          type: integer
+          description: Report Unique Id
+        reportTitle:
+          type: string
+          description: Report Name
+    Report:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int32
+          description: Report Id
+        title:
+          type: string
+        description:
+          type: string
+        reportElements:
+          type: array
+          description: Array of columns
+          items:
+            $ref: '#/components/schemas/ReportElement'
+        timeFilter:
+          $ref: '#/components/schemas/Filter'
+        quickFilters:
+          type: array
+          items:
+            $ref: '#/components/schemas/Filter'
+    ReportElement:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int32
+          description: ID of the element
+        reportId:
+          type: integer
+          format: int32
+          description: ID of the report
+        type:
+          type: string
+          description: Type of the element for eg. Analysis, KPI, Sparkline
+        configJson:
+          type: object
+          description: Different type of queries are possible
+          oneOf:
+          - $ref: '#/components/schemas/TableQuery'
+          - $ref: '#/components/schemas/KpiQuery'
+    ScopeEnum:
+      type: string
+      enum:
+      - OBJECT
+      - NONE
     QueryState:
       title: QueryState
       type: object
@@ -611,512 +1107,175 @@ components:
             reportElementId:
               type: integer
               description: ID of the report element
-    InOrNotInPredicateEnum:
-      type: string
-      enum:
-      - IN
-      - NOT_IN
-    ConnectorPredicateEnum:
-      type: string
-      description: Connectors
-      enum:
-      - AND
-      - OR
-    ColumnPeriodEnum:
-      type: string
-      description: 'Indicates which Time range must be used for the column. ANALYSIS: uses the analysis time range. COLUMN: uses the time filter defined inside the column. ELEMENT: uses the time filter defined inside the element configuration - i.e. custom metric/formula'
-      enum:
-      - ANALYSIS
-      - COLUMN
-      - ELEMENT
-    Problem:
-      type: object
-      properties:
-        status:
-          type: integer
-          description: HTTP Status Code
-        statusCode:
-          type: string
-          description: Specific Mapp Error Code
-        title:
-          type: string
-          description: Short description of the problem
-        detail:
-          type: string
-          description: Detailed informations about the problem
-        errors:
-          type: array
-          items:
-            $ref: '#/components/schemas/Error'
-        warnings:
-          type: array
-          items:
-            $ref: '#/components/schemas/Warning'
-    FilterPredicateEnum:
-      type: string
-      description: Filter predicates
-      enum:
-      - EQUAL
-      - UNEQUAL
-      - LESS
-      - LESSEQUAL
-      - GREATER
-      - GREATEREQUAL
-      - BETWEEN
-      - LIKE
-      - NOT_LIKE
-    ContextEnum:
-      type: string
-      description: Context to evaluate the metric/dimension. If context property is not given or empty the default context of the object will be used. The default context can be identified from the context property in the response list of /query-objects.
-      enum:
-      - VISITOR
-      - SESSION
-      - PAGE
-      - ACTION
-      - ATOMIC
-      - NONE
-    Report:
-      type: object
-      properties:
-        id:
-          type: integer
-          format: int32
-          description: Report Id
-        title:
-          type: string
-        description:
-          type: string
-        reportElements:
-          type: array
-          description: Array of columns
-          items:
-            $ref: '#/components/schemas/ReportElement'
-        timeFilter:
-          $ref: '#/components/schemas/Filter'
-        quickFilters:
-          type: array
-          items:
-            $ref: '#/components/schemas/Filter'
-    Comparison:
-      type: object
-      description: Comparison definition
-      properties:
-        type:
-          type: string
-          description: Type of comparison
-          enum:
-          - NONE
-          - PERIOD
-          - LIMIT
-          - SLIDING_WINDOW
-        slidingWindowWeekdayAdjust:
-          type: boolean
-        slidingWindowTimeShift:
-          type: string
-          enum:
-          - PRECEDING
-          - PREVIOUS_MONTH
-          - PREVIOUS_QUARTER
-          - PREVIOUS_YEAR
-        filter:
-          $ref: '#/components/schemas/Filter'
-    AnalysisQuery:
-      type: object
-      description: Defintiona of a anaylsis query structure
-      properties:
-        resultType:
-          type: string
-          description: Type of result
-          enum:
-          - DATA_ONLY
-        queryObject:
-          description: Different type of queries are possible
-          oneOf:
-          - $ref: '#/components/schemas/TableQuery'
-          - $ref: '#/components/schemas/KpiQuery'
-      required:
-      - resultType
-      - queryObject
-    TableQuery:
-      type: object
-      description: Tabular query definition
-      properties:
-        columns:
-          type: array
-          description: Array of columns
-          items:
-            type: object
-            properties:
-              name:
-                type: string
-              sortDirection:
-                $ref: '#/components/schemas/SortDirectionEnum'
-              sortIndex:
-                type: integer
-                description: Indicates order of sorting when there is more than one sorting column. (starting from 0).
-              lowerLimit:
-                type: integer
-              upperLimit:
-                type: integer
-              inTimeSeries:
-                type: boolean
-                description: Optional property indicating if a column will be used in time series view mode; defaults to false. Can be omitted if it's value is not set to true.
-              columnPeriod:
-                $ref: '#/components/schemas/ColumnPeriodEnum'
-              scope:
-                $ref: '#/components/schemas/ScopeEnum'
-              context:
-                $ref: '#/components/schemas/ContextEnum'
-              predefinedContainer:
-                $ref: '#/components/schemas/Container'
-        variant:
-          type: string
-          description: Type of Data Structure
-          enum:
-          - LIST
-          - PIVOT
-          - PIVOT_AS_LIST
-          - COMPARISON
-        predefinedContainer:
-          $ref: '#/components/schemas/Container'
-        predefinedSegmentConnections:
-          type: array
-          items:
-            $ref: '#/components/schemas/Filter'
-        viewMode:
-          $ref: '#/components/schemas/ViewMode'
-      required:
-      - columns
-      - variant
-      - predefinedContainer
-    AnalysisResult:
-      type: object
-      properties:
-        calculationDataType:
-          type: string
-          description: DataType returned
-          enum:
-          - RAW_DATA
-          - RAW_DATA_SAMPLING
-        rows:
-          type: array
-          description: Array of rows
-          items:
-            type: array
-            description: Array of values following the strict order of the headers
-            items: {}
-        rowCount:
-          type: integer
-          description: Number of rows returned.
-        rowCountTotal:
-          type: integer
-          description: Number of rows in the whole resultSet wihtout subtotals
-        headers:
-          type: array
-          items:
-            type: object
-            properties:
-              name:
-                type: string
-                description: Name of the Dimension or Metric
-              alias:
-                type: string
-                description: Generated unique identifier of the column in the analysis.
-              arrangeType:
-                type: string
-                description: Mapp identifier of the Dimension or Metric
-              metric:
-                type: boolean
-                description: Indicates if column is a metric
-              dimension:
-                type: boolean
-                description: Indicates if column is a dimension
-              sumPositions:
-                type: array
-                description: Indicates which rows contains a (sub)total value
-                items:
-                  type: integer
-              pivotGroups:
-                type: array
-                description: Indicates which rows contains a grouping row
-                items:
-                  type: integer
-              sortIndex:
-                type: integer
-                description: Indicates order of sorting when there is more than one sorting column. (starting from 0)
-              sortDirection:
-                $ref: '#/components/schemas/SortDirectionEnum'
-        columnCount:
-          type: integer
-          description: Number of columns
-        warnings:
-          type: array
-          description: Array of warnings occurred during calculation
-          items:
-            $ref: '#/components/schemas/Warning'
-        timerange:
-          type: array
-          description: time range boundaries with format yyyy-MM-dd HH:mm:ss
-          minItems: '2'
-          maxItems: '2'
-          items:
-            type: string
-        timestamp:
-          type: string
-          format: date-time
-          description: Timestamp of the calculation
-    ReportQueryState:
-      type: object
-      properties:
-        reportCorrelationId:
-          type: string
-          description: Correlation Id of the report
-        status:
-          type: string
-          description: Status of the report after complete analysis
-        details:
-          $ref: '#/components/schemas/ReportQueryStateDetails'
-        queryStates:
-          type: array
-          description: List of query state of all caculation queries
-          items:
-            $ref: '#/components/schemas/QueryState'
-    ReportQueryStateDetails:
-      type: object
-      properties:
-        lastUpdatedAt:
-          type: integer
-          description: Last updated time of report in milliseconds since the UNIX epoch
-        reportId:
-          type: integer
-          description: Report Unique Id
-        reportTitle:
-          type: string
-          description: Report Name
-    SegmentContainer:
-      type: object
-      properties:
-        segmentID:
-          type: string
-          description: ID of the Segment
-        connectorPredicate:
-          type: string
-        inOrNotInPredicate:
-          type: string
-        context:
-          $ref: '#/components/schemas/ContextEnum'
-        position:
-          type: integer
-          description: Indicates segment ordering in case of several Segment
-    SortDirectionEnum:
-      type: string
-      description: Possible sorting directions
-      enum:
-      - ASCENDING
-      - DESCENDING
-    KpiQuery:
-      type: object
-      description: KPI query definition
-      properties:
-        elementPeriod:
-          type: string
-          description: 'One of the following periods should be used:
-
-            * ELEMENT: when the time filter is either inherited from the report or the time filter configured in the report element configuration.
-
-            * MONAD: when the time filter is inherited from the custom metric configuration.'
-          enum:
-          - ELEMENT
-          - MONAD
-        type:
-          type: string
-          description: Type of the query
-          enum:
-          - KPI
-          - SPARKLINE
-        metricName:
-          type: string
-          description: name of the metric of the KPI
-        dimensionName:
-          type: string
-          description: name of the dimension of the KPI
-        comparison:
-          $ref: '#/components/schemas/Comparison'
-        predefinedContainer:
-          $ref: '#/components/schemas/Container'
-        predefinedSegmentConnections:
-          type: array
-          items:
-            $ref: '#/components/schemas/Filter'
-    Container:
-      type: object
-      properties:
-        filters:
-          type: array
-          description: Array of filters
-          items:
-            $ref: '#/components/schemas/Filter'
-        containers:
-          type: array
-          description: array of containers (recursion)
-          items:
-            $ref: '#/components/schemas/Container'
-        connector:
-          $ref: '#/components/schemas/ConnectorPredicateEnum'
-        context:
-          $ref: '#/components/schemas/ContextEnum'
-        type:
-          description: Indicates how filters must be applied. TIME_ORDER is sequential, NORMAL not
-          type: string
-          enum:
-          - NORMAL
-          - TIME_ORDER
-        inOrNotIn:
-          $ref: '#/components/schemas/InOrNotInPredicateEnum'
-    ScopeEnum:
-      type: string
-      enum:
-      - OBJECT
-      - NONE
-    Filter:
-      type: object
-      properties:
-        name:
-          type: string
-          description: Name of the Metric or Dimension being filtered.
-        filterPredicate:
-          $ref: '#/components/schemas/FilterPredicateEnum'
-        connector:
-          $ref: '#/components/schemas/ConnectorPredicateEnum'
-        caseSensitive:
-          type: boolean
-        context:
-          $ref: '#/components/schemas/ContextEnum'
-        intern:
-          type: boolean
-          description: Indicates if filter should be prioritized (Advanced).
-          default: 'false'
-        value1:
-          type: string
-        value2:
-          type: string
-        values1:
-          type: array
-          description: Array of values
-          items:
-            type: string
-        values2:
-          type: array
-          description: Array of values
-          items:
-            type: string
-    ReportQueryRequest:
-      type: object
-      properties:
-        id:
-          type: integer
-          format: int64
-          description: Id
-        elementIds:
-          type: array
-          items:
-            type: integer
-            format: int64
-            description: Element Ids
-        configuration:
-          $ref: '#/components/schemas/Report'
-        timeFilter:
-          $ref: '#/components/schemas/Filter'
-    ViewModeComparisonSortingItem:
-      type: object
-      description: Sorting of comparison
-      properties:
-        alias:
-          type: string
-          description: alias of the column being sorted
-        direction:
-          $ref: '#/components/schemas/SortDirectionEnum'
-    Error:
-      type: object
-      properties:
-        name:
-          type: string
-          description: 'Each error has specific properties described in following table:
-
-
-            | Error| Description | Relevant parameters |
-
-            | ---------------- | ------------| -----------------------------------|
-
-            | UnmappedName | At least one object name cannot be found. | List of objects not found in _names_ array. |
-
-            | PivotIncompatibleMetric | Metric not usable in Pivot detected.| List of incompatible Metrics in _names_ array. |
-
-            | PivotIncompatibleDimension |Dimension not usable in Pivot detected. | List of incompatible Dimensions in _names_ array. |
-
-            | AnalysisLogicalCubeMismatch | All Dimensions and Metrics are not compatible. | List of incompatible objects in _names_ array. |
-
-            | InvalidSortingCriteria | Sorting is applied on a non-sortable object.| List of invalid sorted objects in _names_ array. |
-
-            | TimeFilterMissing | Each query must have a minimum of one Time Filter.| N/A |
-
-            | InvalidSegmentNoneContainer | A segment container has context set to NONE but either its connector is not set to AND or its inOrNotIn property is not set to IN.| N/A |'
-          enum:
-          - UnmappedName
-          - PivotIncompatibleMetric
-          - PivotIncompatibleDimension
-          - AnalysisLogicalCubeMismatch
-          - InvalidSortingCriteria
-          - TimeFilterMissing
-          - InvalidSegmentNoneContainer
-        parameters:
-          type: object
-          properties:
-            arrangeTypes:
-              type: array
-              description: List of internal object names (dimension, metrics, filter, ...) that corresponds to the error.
-              items:
-                type: string
-            aliases:
-              type: array
-              description: List of columns aliases that corresponds to the error. See Result Header alias property.
-              items:
-                type: string
-            names:
-              type: array
-              description: List of object names (dimension, metrics, filter, ...) that corresponds to the error.
-              items:
-                type: string
-  responses:
-    NotFound:
-      description: Entity not found
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Problem'
-          examples:
-            AnalysisNotFound:
-              summary: CorrelationId does not exist
-              value:
-                title: Analysis not found
-                status: '404'
-                detail: Analysis not found
-                statusCode: ANALYSIS_NOT_FOUND
-    Forbidden:
-      description: No permission to execute operation
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Problem'
-          examples:
-            AnalysisNotFound:
-              summary: Invalid Token
-              value:
-                title: Invalid Token
-                status: '403'
-                detail: Token not valid
-                statusCode: INVALID_TOKEN
   examples:
+    analysisCrossTable:
+      value:
+        resultType: DATA_ONLY
+        queryObject:
+          columns:
+          - name: pages
+            scope: OBJECT
+            context: PAGE
+            variant: NORMAL
+            lowerLimit: '1'
+            upperLimit: '20'
+          - name: pages_pageImpressions
+            columnPeriod: ANALYSIS
+            sortDirection: DESCENDING
+            sortIndex: '1'
+            scope: OBJECT
+            context: PAGE
+            variant: NORMAL
+          - name: visits
+            columnPeriod: ANALYSIS
+            scope: OBJECT
+            context: SESSION
+            variant: NORMAL
+          - name: pages_durationAvg
+            columnPeriod: ANALYSIS
+            scope: OBJECT
+            variant: NORMAL
+          - name: visits_bounceRate
+            columnPeriod: ANALYSIS
+            scope: OBJECT
+            variant: NORMAL
+          - name: pages_exitRate
+            columnPeriod: ANALYSIS
+            scope: OBJECT
+            variant: NORMAL
+          viewMode:
+            active: crossTable
+            crossTable:
+              metricName: pages_pageImpressions
+              crossDimensionName: browser_fullName
+              mainDimensionSortDirection: ''
+              metricSortDirection: DESCENDING
+              dimensionUpperLimit: '10'
+              crossDimensionSortDirection: ''
+          variant: LIST
+          predefinedContainer:
+            filters:
+            - name: time_range
+              filterPredicate: BETWEEN
+              connector: AND
+              caseSensitive: 'false'
+              context: NONE
+              value1: '2025-05-20 00:00:00'
+              value2: '2025-06-17 00:00:00'
+            containers: []
+    analysisQueryComparison:
+      value:
+        resultType: DATA_ONLY
+        queryObject:
+          columns:
+          - name: browser_fullName
+            scope: OBJECT
+            context: SESSION
+            variant: NORMAL
+            lowerLimit: '1'
+            upperLimit: '20'
+          - name: visits
+            columnPeriod: ANALYSIS
+            sortDirection: DESCENDING
+            sortIndex: '1'
+            scope: OBJECT
+            context: SESSION
+            variant: NORMAL
+          viewMode:
+            active: comparison
+            comparison:
+              type: time
+              values:
+                time:
+                - name: time_dynamic
+                  value1: last_14_days
+                  value2: ''
+                  filterPredicate: LIKE
+                  connector: AND
+                  context: NONE
+                  caseSensitive: 'false'
+                - name: time_dynamic
+                  value1: last_14_days_previous_year
+                  value2: ''
+                  filterPredicate: LIKE
+                  connector: AND
+                  context: NONE
+                  caseSensitive: 'false'
+                segment: []
+              sorting:
+                time:
+                - resultColumn: '2'
+                  direction: DESCENDING
+                segment: []
+          variant: LIST
+          predefinedContainer:
+            filters:
+            - name: time_range
+              filterPredicate: BETWEEN
+              connector: AND
+              caseSensitive: 'false'
+              context: NONE
+              value1: '2022-12-23 00:00:00'
+              value2: '2023-01-20 00:00:00'
+            containers: []
+    analysisQueryTimeSeries:
+      value:
+        resultType: DATA_ONLY
+        queryObject:
+          columns:
+          - name: pages
+            scope: OBJECT
+            context: PAGE
+            variant: NORMAL
+            lowerLimit: '1'
+            upperLimit: '20'
+          - name: pages_pageImpressions
+            columnPeriod: ANALYSIS
+            sortDirection: DESCENDING
+            sortIndex: '1'
+            scope: OBJECT
+            context: PAGE
+            variant: NORMAL
+            inTimeSeries: 'true'
+          - name: visits
+            columnPeriod: ANALYSIS
+            scope: OBJECT
+            context: SESSION
+            variant: NORMAL
+          - name: pages_durationAvg
+            columnPeriod: ANALYSIS
+            scope: OBJECT
+            variant: NORMAL
+            inTimeSeries: 'true'
+          - name: visits_bounceRate
+            columnPeriod: ANALYSIS
+            scope: OBJECT
+            variant: NORMAL
+          - name: pages_exitRate
+            columnPeriod: ANALYSIS
+            scope: OBJECT
+            variant: NORMAL
+          viewMode:
+            active: timeSeries
+            timeSeries:
+              timeName: time_days
+              values:
+              - Search
+              - Home
+              - Cart
+              top: '3'
+              viewType: top
+          predefinedContainer:
+            filters:
+            - name: time_dynamic
+              connector: AND
+              filterPredicate: LIKE
+              value1: last_28_days
+              value2: ''
+              context: NONE
+              caseSensitive: 'false'
+            containers: []
+          variant: LIST
     analysisResultExample:
       value:
         calculationDataType: RAW_DATA
@@ -1424,119 +1583,68 @@ components:
         - '2021-08-25T22:00:00+00:00'
         - '2021-09-01T22:00:00+00:00'
         timestamp: '2021-09-02T07:15:43.567+00:00'
-    analysisCrossTable:
+    analysisQueryPivot:
       value:
         resultType: DATA_ONLY
         queryObject:
           columns:
-          - name: pages
+          - name: time_days
+            sortDirection: ASCENDING
+            sortIndex: '0'
             scope: OBJECT
-            context: PAGE
-            variant: NORMAL
+            context: NONE
             lowerLimit: '1'
-            upperLimit: '20'
-          - name: pages_pageImpressions
+            upperLimit: '7'
+          - name: os_vendor
+            context: SESSION
+            lowerLimit: '1'
+            upperLimit: '10'
+            scope: OBJECT
+          - name: visits
             columnPeriod: ANALYSIS
             sortDirection: DESCENDING
             sortIndex: '1'
             scope: OBJECT
-            context: PAGE
-            variant: NORMAL
-          - name: visits
-            columnPeriod: ANALYSIS
-            scope: OBJECT
             context: SESSION
-            variant: NORMAL
-          - name: pages_durationAvg
-            columnPeriod: ANALYSIS
-            scope: OBJECT
-            variant: NORMAL
-          - name: visits_bounceRate
-            columnPeriod: ANALYSIS
-            scope: OBJECT
-            variant: NORMAL
-          - name: pages_exitRate
-            columnPeriod: ANALYSIS
-            scope: OBJECT
-            variant: NORMAL
-          viewMode:
-            active: crossTable
-            crossTable:
-              metricName: pages_pageImpressions
-              crossDimensionName: browser_fullName
-              mainDimensionSortDirection: ''
-              metricSortDirection: DESCENDING
-              dimensionUpperLimit: '10'
-              crossDimensionSortDirection: ''
-          variant: LIST
-          predefinedContainer:
-            filters:
-            - name: time_range
-              filterPredicate: BETWEEN
-              connector: AND
-              caseSensitive: 'false'
-              context: NONE
-              value1: '2025-05-20 00:00:00'
-              value2: '2025-06-17 00:00:00'
-            containers: []
-    analysisQueryTimeSeries:
-      value:
-        resultType: DATA_ONLY
-        queryObject:
-          columns:
-          - name: pages
-            scope: OBJECT
-            context: PAGE
-            variant: NORMAL
-            lowerLimit: '1'
-            upperLimit: '20'
           - name: pages_pageImpressions
             columnPeriod: ANALYSIS
-            sortDirection: DESCENDING
-            sortIndex: '1'
             scope: OBJECT
             context: PAGE
-            variant: NORMAL
-            inTimeSeries: 'true'
+          - name: visits_newShare
+            columnPeriod: ANALYSIS
+            scope: OBJECT
+          - name: visit_duration_avg
+            columnPeriod: ANALYSIS
+            scope: OBJECT
+          - name: visits_bounceRate
+            columnPeriod: ANALYSIS
+            scope: OBJECT
           - name: visits
             columnPeriod: ANALYSIS
             scope: OBJECT
             context: SESSION
-            variant: NORMAL
-          - name: pages_durationAvg
-            columnPeriod: ANALYSIS
-            scope: OBJECT
-            variant: NORMAL
-            inTimeSeries: 'true'
-          - name: visits_bounceRate
-            columnPeriod: ANALYSIS
-            scope: OBJECT
-            variant: NORMAL
-          - name: pages_exitRate
-            columnPeriod: ANALYSIS
-            scope: OBJECT
-            variant: NORMAL
-          viewMode:
-            active: timeSeries
-            timeSeries:
-              timeName: time_days
-              values:
-              - Search
-              - Home
-              - Cart
-              top: '3'
-              viewType: top
+            predefinedContainer:
+              filters:
+              - name: os_vendor
+                caseSensitive: 'false'
+                context: SESSION
+                filterPredicate: LIKE
+                connector: AND
+                value1: Apple
+                value2: ''
+              containers: []
+          variant: PIVOT
           predefinedContainer:
             filters:
             - name: time_dynamic
-              connector: AND
               filterPredicate: LIKE
-              value1: last_28_days
-              value2: ''
-              context: NONE
+              connector: AND
               caseSensitive: 'false'
+              context: NONE
+              intern: 'false'
+              value1: last_7_days
+              value2: ''
             containers: []
-          variant: LIST
     reportQueryObject:
       value:
         configuration:
@@ -1806,61 +1914,6 @@ components:
               values: []
           categories: []
           autoRefresh: 'false'
-    analysisQueryComparison:
-      value:
-        resultType: DATA_ONLY
-        queryObject:
-          columns:
-          - name: browser_fullName
-            scope: OBJECT
-            context: SESSION
-            variant: NORMAL
-            lowerLimit: '1'
-            upperLimit: '20'
-          - name: visits
-            columnPeriod: ANALYSIS
-            sortDirection: DESCENDING
-            sortIndex: '1'
-            scope: OBJECT
-            context: SESSION
-            variant: NORMAL
-          viewMode:
-            active: comparison
-            comparison:
-              type: time
-              values:
-                time:
-                - name: time_dynamic
-                  value1: last_14_days
-                  value2: ''
-                  filterPredicate: LIKE
-                  connector: AND
-                  context: NONE
-                  caseSensitive: 'false'
-                - name: time_dynamic
-                  value1: last_14_days_previous_year
-                  value2: ''
-                  filterPredicate: LIKE
-                  connector: AND
-                  context: NONE
-                  caseSensitive: 'false'
-                segment: []
-              sorting:
-                time:
-                - resultColumn: '2'
-                  direction: DESCENDING
-                segment: []
-          variant: LIST
-          predefinedContainer:
-            filters:
-            - name: time_range
-              filterPredicate: BETWEEN
-              connector: AND
-              caseSensitive: 'false'
-              context: NONE
-              value1: '2022-12-23 00:00:00'
-              value2: '2023-01-20 00:00:00'
-            containers: []
     analysisPath:
       value:
         resultType: DATA_ONLY
@@ -1915,68 +1968,35 @@ components:
               value1: '2025-05-20 00:00:00'
               value2: '2025-06-17 00:00:00'
             containers: []
-    analysisQueryPivot:
-      value:
-        resultType: DATA_ONLY
-        queryObject:
-          columns:
-          - name: time_days
-            sortDirection: ASCENDING
-            sortIndex: '0'
-            scope: OBJECT
-            context: NONE
-            lowerLimit: '1'
-            upperLimit: '7'
-          - name: os_vendor
-            context: SESSION
-            lowerLimit: '1'
-            upperLimit: '10'
-            scope: OBJECT
-          - name: visits
-            columnPeriod: ANALYSIS
-            sortDirection: DESCENDING
-            sortIndex: '1'
-            scope: OBJECT
-            context: SESSION
-          - name: pages_pageImpressions
-            columnPeriod: ANALYSIS
-            scope: OBJECT
-            context: PAGE
-          - name: visits_newShare
-            columnPeriod: ANALYSIS
-            scope: OBJECT
-          - name: visit_duration_avg
-            columnPeriod: ANALYSIS
-            scope: OBJECT
-          - name: visits_bounceRate
-            columnPeriod: ANALYSIS
-            scope: OBJECT
-          - name: visits
-            columnPeriod: ANALYSIS
-            scope: OBJECT
-            context: SESSION
-            predefinedContainer:
-              filters:
-              - name: os_vendor
-                caseSensitive: 'false'
-                context: SESSION
-                filterPredicate: LIKE
-                connector: AND
-                value1: Apple
-                value2: ''
-              containers: []
-          variant: PIVOT
-          predefinedContainer:
-            filters:
-            - name: time_dynamic
-              filterPredicate: LIKE
-              connector: AND
-              caseSensitive: 'false'
-              context: NONE
-              intern: 'false'
-              value1: last_7_days
-              value2: ''
-            containers: []
+  responses:
+    NotFound:
+      description: Entity not found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          examples:
+            AnalysisNotFound:
+              summary: CorrelationId does not exist
+              value:
+                title: Analysis not found
+                status: '404'
+                detail: Analysis not found
+                statusCode: ANALYSIS_NOT_FOUND
+    Forbidden:
+      description: No permission to execute operation
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          examples:
+            AnalysisNotFound:
+              summary: Invalid Token
+              value:
+                title: Invalid Token
+                status: '403'
+                detail: Token not valid
+                statusCode: INVALID_TOKEN
   securitySchemes:
     oauth_security_scheme:
       type: oauth2

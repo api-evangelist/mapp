@@ -18,7 +18,26 @@ paths:
       tags:
       - System User
       summary: Create a system user
-      description: Creates the new system user in the system.<br>Request body example:<br><br><pre>{<br>"email":"test1@test.mapp",<br>"firstName":"sf53sd",<br>"lastName":"zf8hzt",<br>"language":"en",<br>"type":"hybrid",<br>"messagingRole":"project_manager"<br>}</pre>
+      description: 'Creates the new system user in the system.
+
+        Request body example:
+
+
+        {
+
+        "email":"test1@test.mapp",
+
+        "firstName":"sf53sd",
+
+        "lastName":"zf8hzt",
+
+        "language":"en",
+
+        "type":"hybrid",
+
+        "messagingRole":"project_manager"
+
+        }'
       operationId: createSystemUser
       parameters:
       - name: createContact
@@ -128,7 +147,18 @@ paths:
       tags:
       - System User
       summary: Update a system user's password
-      description: Updates or create the system user password identified by the specified system user ID.<br>Request body example:<br><br><pre>{<br>    "systemUserId":1234,<br>    "password":"abcd1234"<br>}</pre>
+      description: 'Updates or create the system user password identified by the specified system user ID.
+
+        Request body example:
+
+
+        {
+
+        "systemUserId":1234,
+
+        "password":"abcd1234"
+
+        }'
       operationId: updatePassword
       responses:
         '200':

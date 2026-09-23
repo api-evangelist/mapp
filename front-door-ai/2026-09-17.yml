@@ -1,0 +1,29 @@
+# Front Door AI Index — mapp — 2026-09-17
+# AI vocabulary counted on the provider's root page. Generated; do not edit.
+# `score` is null unless ownership is `own` — see front_door_ai.py.
+front_door_ai:
+  slug: mapp
+  lexicon_version: '1.0'
+  probed_at: '2026-09-17'
+  host: mapp.com
+  final_host: mapp.com
+  ownership: own
+  owner: mapp
+  shares_host_with: null
+  inherited_from: null
+  verdict: scored
+  score: 13
+  host_score: 13
+  density: 10.86
+  words: 1197
+  tiers:
+    agentic: 2
+    core: 11
+    model: 0
+  ambiguous: 11
+  top_terms:
+    AI: 9
+    automation: 6
+    intelligence: 5
+    AI assistant: 2
+    artificial intelligence: 2

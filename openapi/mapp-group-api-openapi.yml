@@ -18,7 +18,12 @@ paths:
       tags:
       - Group
       summary: Activate groups
-      description: Activates archived groups.<br>Request body example:<br><br><pre>["1800123820", "1800146953"]</pre>
+      description: 'Activates archived groups.
+
+        Request body example:
+
+
+        ["1800123820", "1800146953"]'
       operationId: activate
       responses:
         '200':
@@ -51,7 +56,12 @@ paths:
       tags:
       - Group
       summary: Archive groups
-      description: Archive a list of groups and any dependent subgroups. Other dependent objects, such as triggers and scheduled tasks, are not archived.<br>Request body example:<br><br><pre>["1800123820", "1800146953"]</pre>
+      description: 'Archive a list of groups and any dependent subgroups. Other dependent objects, such as triggers and scheduled tasks, are not archived.
+
+        Request body example:
+
+
+        ["1800123820", "1800146953"]'
       operationId: archive
       responses:
         '200':
@@ -82,7 +92,28 @@ paths:
       tags:
       - Group
       summary: Clone a group
-      description: 'Creates a clone of a group that already exists in the system.<br>Most of the sendout options and delivery settings are identical for the original and the clone.<br>Group members are not copied<br>Request body example:<br><br><pre>{<br>"name" : "Group Name",<br>"description" : "Description of the group",<br>"email" : "group@test.com",<br>"includePreparedMessages" : "true",<br>"includeTestUsers" : "false"<br>}</pre>'
+      description: 'Creates a clone of a group that already exists in the system.
+
+        Most of the sendout options and delivery settings are identical for the original and the clone.
+
+        Group members are not copied
+
+        Request body example:
+
+
+        {
+
+        "name" : "Group Name",
+
+        "description" : "Description of the group",
+
+        "email" : "group@test.com",
+
+        "includePreparedMessages" : "true",
+
+        "includeTestUsers" : "false"
+
+        }'
       operationId: clone
       parameters:
       - name: groupId
@@ -114,7 +145,11 @@ paths:
       tags:
       - Group
       summary: Create a group
-      description: Create a new group.<br>For domain, check Mapp Engage > Create > New Group<br>Returns Object Already Exists Exception
+      description: 'Create a new group.
+
+        For domain, check Mapp Engage > Create > New Group
+
+        Returns Object Already Exists Exception'
       operationId: CreateGroup
       parameters:
       - name: name
@@ -188,7 +223,22 @@ paths:
       tags:
       - Group
       summary: Find group IDs by attributes
-      description: 'Returns a list of group IDs for all groups in the system that use the specified group attributes.<br>Group attributes are only available in the group context and consist of a unique name and a value.<br>Please note that attributes like Group Name or Email cannot be used here.<br>Request body example:<br><br><pre>[{<br>"name" : " GroupAttributeName ",<br>"value" : "12345"<br>}]</pre>'
+      description: 'Returns a list of group IDs for all groups in the system that use the specified group attributes.
+
+        Group attributes are only available in the group context and consist of a unique name and a value.
+
+        Please note that attributes like Group Name or Email cannot be used here.
+
+        Request body example:
+
+
+        [{
+
+        "name" : " GroupAttributeName ",
+
+        "value" : "12345"
+
+        }]'
       operationId: findIdsByAttributes
       responses:
         '200':
@@ -280,7 +330,11 @@ paths:
       tags:
       - Group
       summary: List group settings templates
-      description: Gets all GroupSettingsTemplates that are defined in the system.<br>GroupSettingTemplates predefine several settings in a template and can be applied using /group/overrideGroupSettings call.<br>The mechanism for using GroupSettingTemplates is only available in a special configuration.
+      description: 'Gets all GroupSettingsTemplates that are defined in the system.
+
+        GroupSettingTemplates predefine several settings in a template and can be applied using /group/overrideGroupSettings call.
+
+        The mechanism for using GroupSettingTemplates is only available in a special configuration.'
       operationId: getAllGroupSettingsTemplates
       responses:
         '200':
@@ -359,7 +413,18 @@ paths:
       tags:
       - Group
       summary: Set group attributes
-      description: 'Creates and updates the group attributes. Existing attributes are overwritten.<br>Request body example:<br><br><pre>[{<br>"name" : "GroupAttributeName",<br>"value" : "12345"<br>}]</pre>'
+      description: 'Creates and updates the group attributes. Existing attributes are overwritten.
+
+        Request body example:
+
+
+        [{
+
+        "name" : "GroupAttributeName",
+
+        "value" : "12345"
+
+        }]'
       operationId: setAttributes
       parameters:
       - name: groupId

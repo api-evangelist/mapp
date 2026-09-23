@@ -18,7 +18,91 @@ paths:
       tags:
       - Prepared Message
       summary: Find prepared messages
-      description: 'Returns list of prepared messages. At least one of the following two fields is mandatory:<br><br>''lastUpdateDateFrom''<br><br>''creationDateFrom'' - must be within 31 days of CreationDateTo.<br><br>CreationDateTo if is not given then by default is currentDate, if is given than obligatory is to use creationDateFrom as well.<br><br>To get the result faster, use limit (1-500) <br>Request body examples:<br><br><pre>{<br> "externalMessageId": "MessageID"<br>} <br><br>{<br> "creationDateFrom": "2020-07-10",<br> "messageName" : "MessageToBeArchived",<br> "limit":1<br>} <br><br>{<br>"creationDateFrom": "2020-07-10",<br>"creationDateTo" : "2020-07-15",<br>"messageName" : "MessageToBeArchived",<br>"limit":1<br>} <br><br>{<br> "lastUpdateDateFrom": "2020-07-17",<br> "messageName" : "MessageToBeArchived",<br> "limit":1<br>} <br><br>{<br> "lastUpdateDateFrom": "2020-07-10",<br> "creationDateTo" : "2020-07-15",<br> "messageName" : "MessageToBeArchived",<br> "limit":1<br>} <br><br>{<br>"creationDateFrom": "2020-07-01",<br>"lastUpdateDateFrom": "2020-07-10",<br>"creationDateTo" : "2020-07-15",<br>"messageName" : "MessageToBeArchived",<br>"limit":1<br>}</pre>'
+      description: 'Returns list of prepared messages. At least one of the following two fields is mandatory:
+
+
+        ''lastUpdateDateFrom''
+
+
+        ''creationDateFrom'' - must be within 31 days of CreationDateTo.
+
+
+        CreationDateTo if is not given then by default is currentDate, if is given than obligatory is to use creationDateFrom as well.
+
+
+        To get the result faster, use limit (1-500)
+
+        Request body examples:
+
+
+        {
+
+        "externalMessageId": "MessageID"
+
+        }
+
+
+        {
+
+        "creationDateFrom": "2020-07-10",
+
+        "messageName" : "MessageToBeArchived",
+
+        "limit":1
+
+        }
+
+
+        {
+
+        "creationDateFrom": "2020-07-10",
+
+        "creationDateTo" : "2020-07-15",
+
+        "messageName" : "MessageToBeArchived",
+
+        "limit":1
+
+        }
+
+
+        {
+
+        "lastUpdateDateFrom": "2020-07-17",
+
+        "messageName" : "MessageToBeArchived",
+
+        "limit":1
+
+        }
+
+
+        {
+
+        "lastUpdateDateFrom": "2020-07-10",
+
+        "creationDateTo" : "2020-07-15",
+
+        "messageName" : "MessageToBeArchived",
+
+        "limit":1
+
+        }
+
+
+        {
+
+        "creationDateFrom": "2020-07-01",
+
+        "lastUpdateDateFrom": "2020-07-10",
+
+        "creationDateTo" : "2020-07-15",
+
+        "messageName" : "MessageToBeArchived",
+
+        "limit":1
+
+        }'
       operationId: FindPreparedMessage
       parameters:
       - name: preparedMessageFilter
@@ -44,7 +128,16 @@ paths:
       tags:
       - Prepared Message
       summary: Get a prepared message
-      description: Returns a prepared message identified by the messageId, personalized for contactId.<br><br>trackingOverride controls message tracking consent override behavior:<br>1 = no override; per-contact tracking consent applies.<br>2 = full override; open and link-click tracking are enforced for all recipients regardless of individual consent.<br>Any other value is rejected by this API.
+      description: 'Returns a prepared message identified by the messageId, personalized for contactId.
+
+
+        trackingOverride controls message tracking consent override behavior:
+
+        1 = no override; per-contact tracking consent applies.
+
+        2 = full override; open and link-click tracking are enforced for all recipients regardless of individual consent.
+
+        Any other value is rejected by this API.'
       operationId: GetPreparedMessage
       parameters:
       - name: messageId
@@ -142,7 +235,18 @@ paths:
       tags:
       - Prepared Message
       summary: Update a prepared message
-      description: Update prepared message.<br><br>trackingOverride controls message tracking consent override behavior:<br>1 = no override; per-contact tracking consent applies.<br>2 = full override; open and link-click tracking are enforced for all recipients regardless of individual consent.<br>Any other value is rejected by this API.<br>On update, omit trackingOverride or send null to preserve the existing stored value; set trackingOverride to 1 explicitly to clear an active override.
+      description: 'Update prepared message.
+
+
+        trackingOverride controls message tracking consent override behavior:
+
+        1 = no override; per-contact tracking consent applies.
+
+        2 = full override; open and link-click tracking are enforced for all recipients regardless of individual consent.
+
+        Any other value is rejected by this API.
+
+        On update, omit trackingOverride or send null to preserve the existing stored value; set trackingOverride to 1 explicitly to clear an active override.'
       operationId: UpdatePreparedMessage
       responses:
         '204':

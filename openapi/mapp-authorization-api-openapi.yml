@@ -7,7 +7,7 @@ security:
 - api_key: []
   user_token: []
 tags:
-- name: authorization
+- name: Authorization
   description: Operations for obtaining or refreshing JWTs
 paths:
   /oauth/authorize:
@@ -36,12 +36,10 @@ paths:
 
         - Pick a random code_verifier value, for example 1tBnEmtSImyCykPHxHYBdzpSFhKEj0Q1LuiHd4fdDlY
 
-        - code challenge = Base64-url-encode(SHA256(code_verifier)):  p7CN1Zi4o5ARn1mYNvNFvj2r5cKkr2k6y7a573eHJXQ in the example above
+        - code challenge = Base64-url-encode(SHA256(code_verifier)): p7CN1Zi4o5ARn1mYNvNFvj2r5cKkr2k6y7a573eHJXQ in the example above
 
 
-        For more details on PKCE see https://tools.ietf.org/html/rfc7636, appendix A has the definition of base64-url-encode
-
-        '
+        For more details on PKCE see https://tools.ietf.org/html/rfc7636, appendix A has the definition of base64-url-encode'
       parameters:
       - in: query
         name: redirect_uri
@@ -96,7 +94,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
       tags:
-      - authorization
+      - Authorization
       operationId: getOauthAuthorize
   /oauth/token:
     post:
@@ -121,10 +119,7 @@ paths:
 
         - set grant_type to refresh_token
 
-        - set refresh_token to the previously obtained refresh token
-
-
-        '
+        - set refresh_token to the previously obtained refresh token'
       responses:
         '200':
           description: The generated tokens
@@ -139,7 +134,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
       tags:
-      - authorization
+      - Authorization
       operationId: postOauthToken
       requestBody:
         content:

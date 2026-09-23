@@ -38,7 +38,12 @@ paths:
       tags:
       - Landing Page
       summary: Delete multiple landing pages
-      description: Deletes the landing pages with the specified landing page IDs. It works only if landing pages are inactive.<br>Request body example:<br><br><pre>["626","627"]</pre>
+      description: 'Deletes the landing pages with the specified landing page IDs. It works only if landing pages are inactive.
+
+        Request body example:
+
+
+        ["626","627"]'
       operationId: deleteMany
       responses:
         '204':
@@ -86,7 +91,16 @@ paths:
       tags:
       - Landing Page
       summary: Get a landing page's status
-      description: Returns the publishing status of a landing page. Because these pages are usually associated with the lifetime of a particular email campaign, they may have a differing publishing status. Previously published pages that have become inactive because they are no longer valid are sometimes redirected to another default page. Possible states are:<br><br><pre>PUBLISHED<br><br>INACTIVE<br><br>SCHEDULED</pre>
+      description: 'Returns the publishing status of a landing page. Because these pages are usually associated with the lifetime of a particular email campaign, they may have a differing publishing status. Previously published pages that have become inactive because they are no longer valid are sometimes redirected to another default page. Possible states are:
+
+
+        PUBLISHED
+
+
+        INACTIVE
+
+
+        SCHEDULED'
       operationId: getStatus
       parameters:
       - name: landingpageId

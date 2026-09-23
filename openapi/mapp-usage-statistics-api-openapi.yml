@@ -18,7 +18,25 @@ paths:
       tags:
       - Usage Statistics
       summary: Export usage statistics
-      description: 'Export usage statistics<br>Notes: If the request to generate export is successful, then show "Usage Statistics Export Job ID is being generated. The notification user will receive an email when the export is ready."<br><br>If the request to generate export is unsuccessful, then show "The request has failed. Please get in touch with your Account Representative and quote [API error code]."<br>Request body example:<br> <pre>{<br>    "entityKey": "23",<br>    "code": null,<br>    "message": "Usage Statistics Export with exportDefinitonId entity key is being generated. The notification user will receive an email when the export is ready."<br>}</pre>'
+      description: 'Export usage statistics
+
+        Notes: If the request to generate export is successful, then show "Usage Statistics Export Job ID is being generated. The notification user will receive an email when the export is ready."
+
+
+        If the request to generate export is unsuccessful, then show "The request has failed. Please get in touch with your Account Representative and quote [API error code]."
+
+        Request body example:
+
+
+        {
+
+        "entityKey": "23",
+
+        "code": null,
+
+        "message": "Usage Statistics Export with exportDefinitonId entity key is being generated. The notification user will receive an email when the export is ready."
+
+        }'
       operationId: ExportGetUsageStatistics
       parameters:
       - name: fromDate
@@ -65,7 +83,40 @@ paths:
       tags:
       - Usage Statistics
       summary: Get usage statistics
-      description: 'Get usage statistics<br>Request body example:<br><br><pre>{<br>  "name": "totalnoofapi2.0callsresponsesize_/usagestatistics/get",<br>  "description": "Total no. of API 2.0 response sizes sent per method",<br>  "unit": "MB",<br>  "counters": [<br>     {<br>        "timestamp": "2020-08-01",<br>        "value": "0,11"<br>     },<br>     {<br>        "timestamp": "2020-08-02",<br>        "value": "0,11"<br>     }<br>     ]<br>}</pre>'
+      description: 'Get usage statistics
+
+        Request body example:
+
+
+        {
+
+        "name": "totalnoofapi2.0callsresponsesize_/usagestatistics/get",
+
+        "description": "Total no. of API 2.0 response sizes sent per method",
+
+        "unit": "MB",
+
+        "counters": [
+
+        {
+
+        "timestamp": "2020-08-01",
+
+        "value": "0,11"
+
+        },
+
+        {
+
+        "timestamp": "2020-08-02",
+
+        "value": "0,11"
+
+        }
+
+        ]
+
+        }'
       operationId: getUsageStatistics
       parameters:
       - name: fromDate

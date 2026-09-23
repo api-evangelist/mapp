@@ -18,7 +18,22 @@ paths:
       tags:
       - User
       summary: Create a user
-      description: 'Creates a new user. Requires either an email or a mobile number since these fields are used as the unique user identifier in the system.<br>Request body example:<br><pre>[<br>  {"name" : "user.lastname", "value" : "Smith"},<br>  {"name" : "DateOfBirth", "value" : "1970-05-05"},<br>  {"name" : "ISOlanguagecode", "value" : "fr"},<br>  {"name": "user.ISOCountryCode", "value": "FR"} <br>]</pre>'
+      description: 'Creates a new user. Requires either an email or a mobile number since these fields are used as the unique user identifier in the system.
+
+        Request body example:
+
+
+        [
+
+        {"name" : "user.lastname", "value" : "Smith"},
+
+        {"name" : "DateOfBirth", "value" : "1970-05-05"},
+
+        {"name" : "ISOlanguagecode", "value" : "fr"},
+
+        {"name": "user.ISOCountryCode", "value": "FR"}
+
+        ]'
       operationId: createUser
       parameters:
       - name: email
@@ -195,7 +210,9 @@ paths:
       tags:
       - User
       summary: Get a user's message history
-      description: Retrieves the message history for a recipient for a set time frame.<br>The maximum time frame is 31 days. The maximum number of messages returned is 5000. sendDate is presented as Datetim
+      description: 'Retrieves the message history for a recipient for a set time frame.
+
+        The maximum time frame is 31 days. The maximum number of messages returned is 5000. sendDate is presented as Datetim'
       operationId: getMessageHistory
       parameters:
       - name: userId
@@ -348,7 +365,51 @@ paths:
       tags:
       - User
       summary: Replace a user's profile by email
-      description: 'Replaces all attribute values for a specific user. All attribute values that are transmitted with the method are added and replace any existing values.<br><br>Any currently existing attribute values that are not found in the API call are deleted (except for Member attributes).<br>Request body example: <br><pre>[<br>  {"name" : "user.firstname", "value" : "FirstName"},<br>  {"name" : "user.lastname", "value" : "LastName"}<br>]</pre><br><br><b>Maximum character lengths for standard attribute values:</b><ul><li><code>FirstName</code>: 50</li><li><code>LastName</code>: 50</li><li><code>Nickname</code>: 20</li><li><code>ZipCode</code>: 10</li><li><code>Identifier</code>: 2000</li><li><code>Photo</code>: 2000</li></ul>Other standard attributes (<code>Email</code>, <code>MobileNumber</code>, <code>ISOCountryCode</code>, <code>ISOLanguageCode</code>, <code>TimeZone</code>, <code>Title</code>, <code>DateOfBirth</code>) are validated by format/enum, not by length. Note that <code>Email</code> is stored in a column of length 129.<br><br><b>Custom attribute values</b> are limited to 2000 characters.<br><br>Values exceeding these limits are rejected with HTTP 400 (<code>INVALID_PARAMETER</code>); during contact import, oversized values are silently truncated.'
+      description: 'Replaces all attribute values for a specific user. All attribute values that are transmitted with the method are added and replace any existing values.
+
+
+        Any currently existing attribute values that are not found in the API call are deleted (except for Member attributes).
+
+        Request body example:
+
+
+        [
+
+        {"name" : "user.firstname", "value" : "FirstName"},
+
+        {"name" : "user.lastname", "value" : "LastName"}
+
+        ]
+
+
+        Maximum character lengths for standard attribute values:
+
+
+        FirstName: 50
+
+
+        LastName: 50
+
+
+        Nickname: 20
+
+
+        ZipCode: 10
+
+
+        Identifier: 2000
+
+
+        Photo: 2000
+
+
+        Other standard attributes (Email, MobileNumber, ISOCountryCode, ISOLanguageCode, TimeZone, Title, DateOfBirth) are validated by format/enum, not by length. Note that Email is stored in a column of length 129.
+
+
+        Custom attribute values are limited to 2000 characters.
+
+
+        Values exceeding these limits are rejected with HTTP 400 (INVALID_PARAMETER); during contact import, oversized values are silently truncated.'
       operationId: replaceProfileByEmail
       parameters:
       - name: email
@@ -374,7 +435,51 @@ paths:
       tags:
       - User
       summary: Replace a user's profile by mobile number
-      description: 'Replaces all attribute values for a specific user. All attribute values that are transmitted with the method are added and replace any existing values.<br><br>Any currently existing attribute values that are not found in the API call are deleted (except for Member attributes).<br>Request body example: <br><pre>[<br>  {"name" : "user.firstname", "value" : "FirstName"},<br>  {"name" : "user.lastname", "value" : "LastName"}<br>]</pre><br><br><b>Maximum character lengths for standard attribute values:</b><ul><li><code>FirstName</code>: 50</li><li><code>LastName</code>: 50</li><li><code>Nickname</code>: 20</li><li><code>ZipCode</code>: 10</li><li><code>Identifier</code>: 2000</li><li><code>Photo</code>: 2000</li></ul>Other standard attributes (<code>Email</code>, <code>MobileNumber</code>, <code>ISOCountryCode</code>, <code>ISOLanguageCode</code>, <code>TimeZone</code>, <code>Title</code>, <code>DateOfBirth</code>) are validated by format/enum, not by length. Note that <code>Email</code> is stored in a column of length 129.<br><br><b>Custom attribute values</b> are limited to 2000 characters.<br><br>Values exceeding these limits are rejected with HTTP 400 (<code>INVALID_PARAMETER</code>); during contact import, oversized values are silently truncated.'
+      description: 'Replaces all attribute values for a specific user. All attribute values that are transmitted with the method are added and replace any existing values.
+
+
+        Any currently existing attribute values that are not found in the API call are deleted (except for Member attributes).
+
+        Request body example:
+
+
+        [
+
+        {"name" : "user.firstname", "value" : "FirstName"},
+
+        {"name" : "user.lastname", "value" : "LastName"}
+
+        ]
+
+
+        Maximum character lengths for standard attribute values:
+
+
+        FirstName: 50
+
+
+        LastName: 50
+
+
+        Nickname: 20
+
+
+        ZipCode: 10
+
+
+        Identifier: 2000
+
+
+        Photo: 2000
+
+
+        Other standard attributes (Email, MobileNumber, ISOCountryCode, ISOLanguageCode, TimeZone, Title, DateOfBirth) are validated by format/enum, not by length. Note that Email is stored in a column of length 129.
+
+
+        Custom attribute values are limited to 2000 characters.
+
+
+        Values exceeding these limits are rejected with HTTP 400 (INVALID_PARAMETER); during contact import, oversized values are silently truncated.'
       operationId: replaceProfileByMobileNumber
       parameters:
       - name: mobileNumber
@@ -400,7 +505,61 @@ paths:
       tags:
       - User
       summary: Replace a user's profile
-      description: 'Replaces all attribute values for a specific user. All attribute values that are transmitted with the method are added and replace any existing values.<br><br>Any currently existing attribute values that are not found in the API call are deleted (except for Member attributes).<br>Request body example: <br><pre>[<br>  {"name" : "user.firstname", "value" : "John"},<br>  {"name" : "user.lastname", "value" : "Smith"}<br>]</pre> <br><br>Request body example - erase mobile number:<br>[<br>  <pre>{"name" : "user.MobileNumber", "value" : null}<br>]</pre><br><br><b>Maximum character lengths for standard attribute values:</b><ul><li><code>FirstName</code>: 50</li><li><code>LastName</code>: 50</li><li><code>Nickname</code>: 20</li><li><code>ZipCode</code>: 10</li><li><code>Identifier</code>: 2000</li><li><code>Photo</code>: 2000</li></ul>Other standard attributes (<code>Email</code>, <code>MobileNumber</code>, <code>ISOCountryCode</code>, <code>ISOLanguageCode</code>, <code>TimeZone</code>, <code>Title</code>, <code>DateOfBirth</code>) are validated by format/enum, not by length. Note that <code>Email</code> is stored in a column of length 129.<br><br><b>Custom attribute values</b> are limited to 2000 characters.<br><br>Values exceeding these limits are rejected with HTTP 400 (<code>INVALID_PARAMETER</code>); during contact import, oversized values are silently truncated.'
+      description: 'Replaces all attribute values for a specific user. All attribute values that are transmitted with the method are added and replace any existing values.
+
+
+        Any currently existing attribute values that are not found in the API call are deleted (except for Member attributes).
+
+        Request body example:
+
+
+        [
+
+        {"name" : "user.firstname", "value" : "John"},
+
+        {"name" : "user.lastname", "value" : "Smith"}
+
+        ]
+
+
+        Request body example - erase mobile number:
+
+        [
+
+
+        {"name" : "user.MobileNumber", "value" : null}
+
+        ]
+
+
+        Maximum character lengths for standard attribute values:
+
+
+        FirstName: 50
+
+
+        LastName: 50
+
+
+        Nickname: 20
+
+
+        ZipCode: 10
+
+
+        Identifier: 2000
+
+
+        Photo: 2000
+
+
+        Other standard attributes (Email, MobileNumber, ISOCountryCode, ISOLanguageCode, TimeZone, Title, DateOfBirth) are validated by format/enum, not by length. Note that Email is stored in a column of length 129.
+
+
+        Custom attribute values are limited to 2000 characters.
+
+
+        Values exceeding these limits are rejected with HTTP 400 (INVALID_PARAMETER); during contact import, oversized values are silently truncated.'
       operationId: replaceProfile
       parameters:
       - name: userId
@@ -429,7 +588,58 @@ paths:
       tags:
       - User
       summary: Update a user's profile by email
-      description: 'Updates a user identified via email. Updates all data stored in the attributes with the information saved in the attribute list. This method only changes the information that is explicitly mentioned. Attributes that are not mentioned are not changed (there is also a replace method to change the entire profile of a user and to delete attribute values if the attribute is not mentioned for the user).<br>Request body example: <br><pre>[<br>  {"name" : "user.firstname", "value" : "John"},<br>  {"name" : "user.lastname", "value" : "Smith"}<br>]</pre> <br><br>Request body example - erase mobile number:<br><pre>[<br>  {"name" : "user.MobileNumber", "value" : null}<br>]</pre><br><br><b>Maximum character lengths for standard attribute values:</b><ul><li><code>FirstName</code>: 50</li><li><code>LastName</code>: 50</li><li><code>Nickname</code>: 20</li><li><code>ZipCode</code>: 10</li><li><code>Identifier</code>: 2000</li><li><code>Photo</code>: 2000</li></ul>Other standard attributes (<code>Email</code>, <code>MobileNumber</code>, <code>ISOCountryCode</code>, <code>ISOLanguageCode</code>, <code>TimeZone</code>, <code>Title</code>, <code>DateOfBirth</code>) are validated by format/enum, not by length. Note that <code>Email</code> is stored in a column of length 129.<br><br><b>Custom attribute values</b> are limited to 2000 characters.<br><br>Values exceeding these limits are rejected with HTTP 400 (<code>INVALID_PARAMETER</code>); during contact import, oversized values are silently truncated.'
+      description: 'Updates a user identified via email. Updates all data stored in the attributes with the information saved in the attribute list. This method only changes the information that is explicitly mentioned. Attributes that are not mentioned are not changed (there is also a replace method to change the entire profile of a user and to delete attribute values if the attribute is not mentioned for the user).
+
+        Request body example:
+
+
+        [
+
+        {"name" : "user.firstname", "value" : "John"},
+
+        {"name" : "user.lastname", "value" : "Smith"}
+
+        ]
+
+
+        Request body example - erase mobile number:
+
+
+        [
+
+        {"name" : "user.MobileNumber", "value" : null}
+
+        ]
+
+
+        Maximum character lengths for standard attribute values:
+
+
+        FirstName: 50
+
+
+        LastName: 50
+
+
+        Nickname: 20
+
+
+        ZipCode: 10
+
+
+        Identifier: 2000
+
+
+        Photo: 2000
+
+
+        Other standard attributes (Email, MobileNumber, ISOCountryCode, ISOLanguageCode, TimeZone, Title, DateOfBirth) are validated by format/enum, not by length. Note that Email is stored in a column of length 129.
+
+
+        Custom attribute values are limited to 2000 characters.
+
+
+        Values exceeding these limits are rejected with HTTP 400 (INVALID_PARAMETER); during contact import, oversized values are silently truncated.'
       operationId: updateProfileByEmail
       parameters:
       - name: email
@@ -455,7 +665,48 @@ paths:
       tags:
       - User
       summary: Update a user's profile by mobile number
-      description: 'Updates a user identified via mobile number. Updates all data stored in the attributes with the information saved in the attribute list. This method only changes the information that is explicitly mentioned. Attributes that are not mentioned are not changed (there is also a replace method to change the entire profile of a user and to delete attribute values if the attribute is not mentioned for the user).<br>Request body example: <br><pre>[<br>  {"name" : "user.firstname", "value" : "FirstName"},<br>  {"name" : "user.lastname", "value" : "LastName"}<br>]</pre><br><br><b>Maximum character lengths for standard attribute values:</b><ul><li><code>FirstName</code>: 50</li><li><code>LastName</code>: 50</li><li><code>Nickname</code>: 20</li><li><code>ZipCode</code>: 10</li><li><code>Identifier</code>: 2000</li><li><code>Photo</code>: 2000</li></ul>Other standard attributes (<code>Email</code>, <code>MobileNumber</code>, <code>ISOCountryCode</code>, <code>ISOLanguageCode</code>, <code>TimeZone</code>, <code>Title</code>, <code>DateOfBirth</code>) are validated by format/enum, not by length. Note that <code>Email</code> is stored in a column of length 129.<br><br><b>Custom attribute values</b> are limited to 2000 characters.<br><br>Values exceeding these limits are rejected with HTTP 400 (<code>INVALID_PARAMETER</code>); during contact import, oversized values are silently truncated.'
+      description: 'Updates a user identified via mobile number. Updates all data stored in the attributes with the information saved in the attribute list. This method only changes the information that is explicitly mentioned. Attributes that are not mentioned are not changed (there is also a replace method to change the entire profile of a user and to delete attribute values if the attribute is not mentioned for the user).
+
+        Request body example:
+
+
+        [
+
+        {"name" : "user.firstname", "value" : "FirstName"},
+
+        {"name" : "user.lastname", "value" : "LastName"}
+
+        ]
+
+
+        Maximum character lengths for standard attribute values:
+
+
+        FirstName: 50
+
+
+        LastName: 50
+
+
+        Nickname: 20
+
+
+        ZipCode: 10
+
+
+        Identifier: 2000
+
+
+        Photo: 2000
+
+
+        Other standard attributes (Email, MobileNumber, ISOCountryCode, ISOLanguageCode, TimeZone, Title, DateOfBirth) are validated by format/enum, not by length. Note that Email is stored in a column of length 129.
+
+
+        Custom attribute values are limited to 2000 characters.
+
+
+        Values exceeding these limits are rejected with HTTP 400 (INVALID_PARAMETER); during contact import, oversized values are silently truncated.'
       operationId: updateProfileByMobileNumber
       parameters:
       - name: mobileNumber
@@ -481,7 +732,69 @@ paths:
       tags:
       - User
       summary: Update a user's profile
-      description: 'Updates the user''s profile with the information saved in the attribute list. Attributes that are not mentioned are not changed.<br>Note: There is also a user replaceProfile method to<br><br>1) change the entire profile of a user and<br><br>2) to delete attribute values if the attribute is not mentioned for the user.<br><br>Request body example: <br><pre>[<br>  {"name" : "user.firstname", "value" : "John"},<br>  {"name" : "user.lastname", "value" : "Smith"},<br>  {"name": "user.ISOCountryCode", "value": "FR"} <br>]</pre>  <br><br>Request body example - erase mobile number:<br>[<br>  <pre>{"name" : "user.MobileNumber", "value" : null}<br>]</pre><br><br><b>Maximum character lengths for standard attribute values:</b><ul><li><code>FirstName</code>: 50</li><li><code>LastName</code>: 50</li><li><code>Nickname</code>: 20</li><li><code>ZipCode</code>: 10</li><li><code>Identifier</code>: 2000</li><li><code>Photo</code>: 2000</li></ul>Other standard attributes (<code>Email</code>, <code>MobileNumber</code>, <code>ISOCountryCode</code>, <code>ISOLanguageCode</code>, <code>TimeZone</code>, <code>Title</code>, <code>DateOfBirth</code>) are validated by format/enum, not by length. Note that <code>Email</code> is stored in a column of length 129.<br><br><b>Custom attribute values</b> are limited to 2000 characters.<br><br>Values exceeding these limits are rejected with HTTP 400 (<code>INVALID_PARAMETER</code>); during contact import, oversized values are silently truncated.'
+      description: 'Updates the user''s profile with the information saved in the attribute list. Attributes that are not mentioned are not changed.
+
+        Note: There is also a user replaceProfile method to
+
+
+        1) change the entire profile of a user and
+
+
+        2) to delete attribute values if the attribute is not mentioned for the user.
+
+
+        Request body example:
+
+
+        [
+
+        {"name" : "user.firstname", "value" : "John"},
+
+        {"name" : "user.lastname", "value" : "Smith"},
+
+        {"name": "user.ISOCountryCode", "value": "FR"}
+
+        ]
+
+
+        Request body example - erase mobile number:
+
+        [
+
+
+        {"name" : "user.MobileNumber", "value" : null}
+
+        ]
+
+
+        Maximum character lengths for standard attribute values:
+
+
+        FirstName: 50
+
+
+        LastName: 50
+
+
+        Nickname: 20
+
+
+        ZipCode: 10
+
+
+        Identifier: 2000
+
+
+        Photo: 2000
+
+
+        Other standard attributes (Email, MobileNumber, ISOCountryCode, ISOLanguageCode, TimeZone, Title, DateOfBirth) are validated by format/enum, not by length. Note that Email is stored in a column of length 129.
+
+
+        Custom attribute values are limited to 2000 characters.
+
+
+        Values exceeding these limits are rejected with HTTP 400 (INVALID_PARAMETER); during contact import, oversized values are silently truncated.'
       operationId: updateProfile
       parameters:
       - name: userId

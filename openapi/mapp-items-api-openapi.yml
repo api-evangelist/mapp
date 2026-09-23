@@ -7,15 +7,13 @@ security:
 - api_key: []
   user_token: []
 tags:
-- name: items
+- name: Items
   description: Operations for retrieving recommendations or items related to one or more seed items
 paths:
   /items/{id}:
     get:
       summary: Get information about an item by id
-      description: 'Fetches information about a garment. The garment format is implicitly set to detailed.
-
-        '
+      description: Fetches information about a garment. The garment format is implicitly set to detailed.
       parameters:
       - in: path
         name: id
@@ -119,7 +117,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/Error'
       tags:
-      - items
+      - Items
       operationId: getItemsId
   /items/top:
     get:
@@ -133,9 +131,7 @@ paths:
 
         and preferences.
 
-        Currently only available for the womens department
-
-        '
+        Currently only available for the womens department'
       parameters:
       - in: query
         name: garment_format
@@ -270,7 +266,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/Error'
       tags:
-      - items
+      - Items
       operationId: getItemsTop
   /items/{id}/complementary:
     get:
@@ -285,9 +281,7 @@ paths:
         user''s basket.
 
 
-        This is the api equivalent of the shopping basket widget
-
-        '
+        This is the api equivalent of the shopping basket widget'
       parameters:
       - in: query
         name: garment_format
@@ -411,7 +405,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/Error'
       tags:
-      - items
+      - Items
       operationId: getItemsIdComplementary
   /items/{id}/related:
     get:
@@ -421,9 +415,7 @@ paths:
         or outfits (items which as a set complement the source item).''
 
 
-        This is the api equivalent of the outfits widget.
-
-        '
+        This is the api equivalent of the outfits widget.'
       parameters:
       - in: path
         name: id
@@ -663,7 +655,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/Error'
       tags:
-      - items
+      - Items
       operationId: getItemsIdRelated
   /items/basket:
     get:
@@ -675,9 +667,7 @@ paths:
 
         This endpoint provides personalized item recommendations based on the user''s profile
 
-        and preferences.
-
-        '
+        and preferences.'
       parameters:
       - in: query
         name: ids
@@ -817,7 +807,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/BasketRecommendationsResponse'
       tags:
-      - items
+      - Items
       operationId: getItemsBasket
 x-apievangelist-provenance:
   method: searched

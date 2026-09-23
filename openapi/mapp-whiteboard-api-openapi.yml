@@ -17,7 +17,7 @@ paths:
     post:
       tags:
       - Whiteboard
-      summary: Creates or updates a whiteboard. Schema-validates the body against the whiteboard JSON Schema before delegating to the downstream save flow.
+      summary: Creates or updates a whiteboard.
       description: ''
       operationId: save
       responses:
@@ -38,7 +38,7 @@ paths:
     delete:
       tags:
       - Whiteboard
-      summary: Deletes a whiteboard by id. Removes per-user data, statistics and labels via the downstream service.
+      summary: Deletes a whiteboard by id.
       description: ''
       operationId: delete_5
       parameters:
@@ -58,7 +58,7 @@ paths:
     post:
       tags:
       - Whiteboard
-      summary: Publishes a whiteboard. Schema-validates the DiagramData JSON before delegating to the downstream publish flow.
+      summary: Publishes a whiteboard.
       description: ''
       operationId: publish_2
       responses:
@@ -79,7 +79,7 @@ paths:
     get:
       tags:
       - Whiteboard
-      summary: Returns a single whiteboard (all versions) by id.
+      summary: Returns a single whiteboard (all versions) by id
       description: ''
       operationId: get_6
       parameters:
@@ -103,7 +103,7 @@ paths:
     get:
       tags:
       - Whiteboard
-      summary: Returns the active static whiteboard templates served by the Audience Interaction Planner service.
+      summary: Returns the active static whiteboard templates served by the Audience…
       description: ''
       operationId: listTemplates
       responses:
@@ -119,7 +119,7 @@ paths:
     get:
       tags:
       - Whiteboard
-      summary: Returns a paginated list of whiteboard summaries for the calling customer, optionally filtered by name / status and ordered by last update date.
+      summary: Returns a paginated list of whiteboard summaries for the calling customer…
       description: ''
       operationId: find_3
       parameters:
@@ -168,7 +168,7 @@ paths:
     get:
       tags:
       - Whiteboard
-      summary: Returns the canonical whiteboard JSON Schema served by the Audience Interaction Planner service.
+      summary: Returns the canonical whiteboard JSON Schema served by the Audience Interaction…
       description: ''
       operationId: schema_2
       responses:
@@ -182,7 +182,7 @@ paths:
     post:
       tags:
       - Whiteboard
-      summary: Validates a whiteboard. Runs the full model-level validation suite and returns a structured ValidationResult.
+      summary: Validates a whiteboard.
       description: ''
       operationId: validate_2
       responses:

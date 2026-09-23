@@ -18,7 +18,12 @@ paths:
       tags:
       - Meta
       summary: Activate attribute definitions
-      description: 'Reactivates archived custom attributes that are named in the parameter list. After activation, they can be used in personalization during the message composition process.<br>Request body example: <br><br><pre>["attributename"]</pre>'
+      description: 'Reactivates archived custom attributes that are named in the parameter list. After activation, they can be used in personalization during the message composition process.
+
+        Request body example:
+
+
+        ["attributename"]'
       operationId: activateAttributeDefinitions
       responses:
         '204':
@@ -37,7 +42,12 @@ paths:
       tags:
       - Meta
       summary: Archive attribute definitions
-      description: 'Archives custom attributes. An archived attribute is still stored in the system. The attributes can still be in use for existing messages and sendouts, but they are not available in the GUI message creation process (i.e. personalization builder).<br>Request body example: <br><br><pre>["attributename"]</pre>'
+      description: 'Archives custom attributes. An archived attribute is still stored in the system. The attributes can still be in use for existing messages and sendouts, but they are not available in the GUI message creation process (i.e. personalization builder).
+
+        Request body example:
+
+
+        ["attributename"]'
       operationId: archiveAttributeDefinitions
       responses:
         '204':
@@ -56,7 +66,6 @@ paths:
       tags:
       - Meta
       summary: Attach tags
-      description: Attach tags
       operationId: attachTags
       parameters:
       - name: entityId
@@ -89,7 +98,34 @@ paths:
       tags:
       - Meta
       summary: Create attribute definitions
-      description: 'Creates a new data field (custom user attribute) where information about users can be stored. With the standard setup, you are permitted to create a limited number of custom attributes with different data types.<br>Each custom user attribute has a unique name. If an attribute is no longer needed, it may be archived. Please contact your customer support representative if you need to delete an attribute.<br>Request body example: <br><br><pre>[{<br>"name": "attributename",<br>"type": "STRING",<br>"enumerationValues":<br>[<br>"value1",<br>"value2",<br>"value3"<br>],<br>"active": "true"<br>}]</pre>'
+      description: 'Creates a new data field (custom user attribute) where information about users can be stored. With the standard setup, you are permitted to create a limited number of custom attributes with different data types.
+
+        Each custom user attribute has a unique name. If an attribute is no longer needed, it may be archived. Please contact your customer support representative if you need to delete an attribute.
+
+        Request body example:
+
+
+        [{
+
+        "name": "attributename",
+
+        "type": "STRING",
+
+        "enumerationValues":
+
+        [
+
+        "value1",
+
+        "value2",
+
+        "value3"
+
+        ],
+
+        "active": "true"
+
+        }]'
       operationId: createAttributeDefinitions
       responses:
         '204':
@@ -108,7 +144,26 @@ paths:
       tags:
       - Meta
       summary: Create link categories
-      description: 'Creates new link categories. Link categories are automatically assigned to a link via a regex pattern.<br>The link categories group together different links for statistical purposes and can be used to trigger automated processes when a link of a certain category is clicked.<br>The name and pattern are mandatory inputs for the category. The ID is automatically assigned by the system<br>Request body example: <br><br><pre>[{<br>"id": "",<br>"name": "TestApi",<br>"description" : "Rest Api Call",<br>"pattern": "TestAp[i]"<br>}]</pre>'
+      description: 'Creates new link categories. Link categories are automatically assigned to a link via a regex pattern.
+
+        The link categories group together different links for statistical purposes and can be used to trigger automated processes when a link of a certain category is clicked.
+
+        The name and pattern are mandatory inputs for the category. The ID is automatically assigned by the system
+
+        Request body example:
+
+
+        [{
+
+        "id": "",
+
+        "name": "TestApi",
+
+        "description" : "Rest Api Call",
+
+        "pattern": "TestAp[i]"
+
+        }]'
       operationId: createLinkCategories
       responses:
         '204':
@@ -146,7 +201,6 @@ paths:
       tags:
       - Meta
       summary: Detach tags
-      description: Detach tags
       operationId: detachTags
       parameters:
       - name: entityId
@@ -237,7 +291,6 @@ paths:
       tags:
       - Meta
       summary: Get link categories
-      description: Get link categories
       operationId: getLinkCategories
       responses:
         '200':
@@ -256,7 +309,6 @@ paths:
       tags:
       - Meta
       summary: Get tags
-      description: Get tags
       operationId: getTags
       parameters:
       - name: entityId
@@ -289,7 +341,32 @@ paths:
       tags:
       - Meta
       summary: Merge attribute definitions
-      description: 'Updates the list of custom attributes that are available on the interface. It is used to archive, activate, and create custom attributes. This call affects every custom attribute that is available in your system. It updates all of the attributes that are available for saving user data and reusing it in a different context. If an attribute is not mentioned, it is automatically deactivated. Errors and changes are delivered at the end of the process when all attributes are processed. The update cannot be used in an interactional way. Errors do not stop the update process. The attribute with the error is skipped and the process continues with the next attribute. It is not possible to change the attribute name, type, or enumeration with this method. The results of the merge method are as follows: * New attributes are created if the attribute is listed and did not exist before. * Custom attributes that are not listed are archived. * Custom attributes that are listed and are identical to the ones that already exist have no state change. * Custom attributes that are archived and not listed remain archived. * Custom attributes that have a state other than archived/active generate an error and remain unchanged.<br>Request body example: <br><br><pre>[{<br>"name": "attributename",<br>"type": "STRING",<br>"enumerationValues":<br>[<br>"value1",<br>"value2",<br>"value3"<br>],<br>"active": "true"<br>}]</pre>'
+      description: 'Updates the list of custom attributes that are available on the interface. It is used to archive, activate, and create custom attributes. This call affects every custom attribute that is available in your system. It updates all of the attributes that are available for saving user data and reusing it in a different context. If an attribute is not mentioned, it is automatically deactivated. Errors and changes are delivered at the end of the process when all attributes are processed. The update cannot be used in an interactional way. Errors do not stop the update process. The attribute with the error is skipped and the process continues with the next attribute. It is not possible to change the attribute name, type, or enumeration with this method. The results of the merge method are as follows: * New attributes are created if the attribute is listed and did not exist before. * Custom attributes that are not listed are archived. * Custom attributes that are listed and are identical to the ones that already exist have no state change. * Custom attributes that are archived and not listed remain archived. * Custom attributes that have a state other than archived/active generate an error and remain unchanged.
+
+        Request body example:
+
+
+        [{
+
+        "name": "attributename",
+
+        "type": "STRING",
+
+        "enumerationValues":
+
+        [
+
+        "value1",
+
+        "value2",
+
+        "value3"
+
+        ],
+
+        "active": "true"
+
+        }]'
       operationId: mergeAttributeDefinitions
       responses:
         '200':

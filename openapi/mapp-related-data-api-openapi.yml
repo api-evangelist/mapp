@@ -18,7 +18,47 @@ paths:
       tags:
       - Related Data
       summary: Create a related data record
-      description: 'Adds ONE record to a data set. The data to insert is defined in a JSON block submitted in the request body. <br>The JSON block must contain the dataset''s name, the key value, and a data array of name and value elements. The name references the column in the related data set, and the value contains the data to be inserted into the corresponding columns. <br><br>datasetName (String, required) - Name of the related data set. All related data records reside within a data set identified by a unique name.<br>key (String, required) - Key defining which record(s) to select from the data set.<br>data (Attribute, optional) - An optional list of name, value pair.<br>Request body example:<br><br> <pre>{<br>  "datasetName": "products",<br>  "key": "testuser@domain.com",<br>  "data": [<br>    {<br>      "name": "productname",<br>      "value": "bicycle"        <br>    },<br>    {<br>      "name": "quantity",<br>      "value": "1"     <br>    }   <br>  ]<br>}</pre>'
+      description: 'Adds ONE record to a data set. The data to insert is defined in a JSON block submitted in the request body.
+
+        The JSON block must contain the dataset''s name, the key value, and a data array of name and value elements. The name references the column in the related data set, and the value contains the data to be inserted into the corresponding columns.
+
+
+        datasetName (String, required) - Name of the related data set. All related data records reside within a data set identified by a unique name.
+
+        key (String, required) - Key defining which record(s) to select from the data set.
+
+        data (Attribute, optional) - An optional list of name, value pair.
+
+        Request body example:
+
+
+        {
+
+        "datasetName": "products",
+
+        "key": "testuser@domain.com",
+
+        "data": [
+
+        {
+
+        "name": "productname",
+
+        "value": "bicycle"
+
+        },
+
+        {
+
+        "name": "quantity",
+
+        "value": "1"
+
+        }
+
+        ]
+
+        }'
       operationId: createRecord
       responses:
         '200':
@@ -35,7 +75,26 @@ paths:
       tags:
       - Related Data
       summary: Delete related data records
-      description: 'Delete a record in a related data set.<br>Request body example:<br><br> <pre>{"datasetName": "products",<br> "key": "testuser@domain.com",<br> "filter":<br>    [{<br>        "name":"bicycle",<br>          "value":"14"<br>     }]<br>}</pre>'
+      description: 'Delete a record in a related data set.
+
+        Request body example:
+
+
+        {"datasetName": "products",
+
+        "key": "testuser@domain.com",
+
+        "filter":
+
+        [{
+
+        "name":"bicycle",
+
+        "value":"14"
+
+        }]
+
+        }'
       operationId: deleteRecords
       responses:
         '200':
@@ -61,7 +120,37 @@ paths:
       tags:
       - Related Data
       summary: Get related data records by key
-      description: 'Returns all related data records stored under the specified key in a related data set.<br><br>Response body example - 1 record:<br><br><pre>[<br>    {<br>        "datasetName": "products",<br>        "key": "test-user@example.com",<br>        "data": [<br>            { "name": "hairColor", "value": "green" },<br>            { "name": "eyeColor", "value": "blue" }<br>        ]<br>    }<br>]</pre><br><br>Response body example - empty result:<br><br><pre>[]</pre>'
+      description: 'Returns all related data records stored under the specified key in a related data set.
+
+
+        Response body example - 1 record:
+
+
+        [
+
+        {
+
+        "datasetName": "products",
+
+        "key": "test-user@example.com",
+
+        "data": [
+
+        { "name": "hairColor", "value": "green" },
+
+        { "name": "eyeColor", "value": "blue" }
+
+        ]
+
+        }
+
+        ]
+
+
+        Response body example - empty result:
+
+
+        []'
       operationId: getRecordsByKey
       parameters:
       - name: datasetName
@@ -92,7 +181,43 @@ paths:
       tags:
       - Related Data
       summary: Update related data records
-      description: 'Updates all or specific records for a key in a related data set. For the requests without filter, the behavior is the same as in file import ("delete all + add").<br><br>There is no possibility to update the unique RD column. The unique column is treated as a part of the key that''s why to change such entities it needs to be deleted and created as the new row.<br>Request body example:<br><br> <pre>{<br>  "datasetName": "products",<br>  "key": "testuser@domain.com",<br>  "data": [<br>    {<br>      "name": "quantity",<br>      "value": "14"        <br>    } <br>  ]<br>  ,<br>  "filter": [{<br>      "name": "bicycle",<br>      "value": "1"      <br>    }]<br>}</pre>'
+      description: 'Updates all or specific records for a key in a related data set. For the requests without filter, the behavior is the same as in file import ("delete all + add").
+
+
+        There is no possibility to update the unique RD column. The unique column is treated as a part of the key that''s why to change such entities it needs to be deleted and created as the new row.
+
+        Request body example:
+
+
+        {
+
+        "datasetName": "products",
+
+        "key": "testuser@domain.com",
+
+        "data": [
+
+        {
+
+        "name": "quantity",
+
+        "value": "14"
+
+        }
+
+        ]
+
+        ,
+
+        "filter": [{
+
+        "name": "bicycle",
+
+        "value": "1"
+
+        }]
+
+        }'
       operationId: updateRecords
       responses:
         '200':
