@@ -748,285 +748,66 @@ paths:
                 skipped_attributes: {}
 components:
   schemas:
-    UpsertVariantOperationFlatSchema:
+    PaginatedVariantsResponseDTO:
       type: object
       properties:
-        brand:
-          type: string
-          description: Product brand name.
-          example: AnnTaylor
-        price:
-          type: object
-          additionalProperties:
-            type: number
-            description: Current selling price keyed by ISO 3166-1 alpha-2 country code or '*' fallback.
-          description: Current selling price keyed by ISO 3166-1 alpha-2 country code or '*' fallback.
-          example:
-            US: 29.99
-            GB: 24.99
-            DE: 27.5
-            FR: 28.0
-        currency:
-          type: object
-          additionalProperties:
-            type: string
-            description: Currency keyed by the same country codes as price. Values are ISO 4217 currency codes.
-            example: '{"US":"USD","GB":"GBP","DE":"EUR","FR":"EUR","*":"USD"}'
-          description: Currency keyed by the same country codes as price. Values are ISO 4217 currency codes.
-          example:
-            US: USD
-            GB: GBP
-            DE: EUR
-            FR: EUR
-            '*': USD
-        size:
-          type: object
-          additionalProperties:
-            type: string
-            description: Size keyed by ISO 3166-1 alpha-2 country code or '*' fallback.
-            example: '{"US":"S","GB":"8","EU":"36"}'
-          description: Size keyed by ISO 3166-1 alpha-2 country code or '*' fallback.
-          example:
-            US: S
-            GB: '8'
-            EU: '36'
-        color:
-          type: object
-          additionalProperties:
-            type: string
-            description: Localized colour keyed by BCP 47 locale or '*' fallback.
-            example: '{"en-GB":"Navy Blue","de-DE":"Marineblau","fr-FR":"Bleu marine"}'
-          description: Localized colour keyed by BCP 47 locale or '*' fallback.
-          example:
-            en-GB: Navy Blue
-            de-DE: Marineblau
-            fr-FR: Bleu marine
-        mpn:
-          type: string
-          description: Manufacturer Part Number. Maximum length is 70 characters.
-          example: DRESS-BLK-M-2023
-        gtin:
-          type: string
-          description: Global Trade Item Number. Expected length is 8-14 digits.
-          example: '1234567890123'
-        status:
-          type: integer
-          description: 'Variant status value: 0 = pre_order, 1 = active, 2 = discontinued.'
-          format: int32
-          example: 1
-          enum:
-          - 0
-          - 1
-          - 2
-        availability:
-          type: boolean
-          description: Variant availability value.
-          example: true
-        material:
-          type: string
-          description: Material of the product.
-          example: cotton
-        gender:
-          type: string
-          description: Gender value for fashion catalogs.
-          example: female
-          enum:
-          - female
-          - male
-          - girls
-          - boys
-          - unisex
-        category:
-          type: array
-          description: Category hierarchy.
-          example:
-          - ladies
-          - dresses
-          - short
-          items:
-            type: string
-            description: Category hierarchy.
-            example: '["ladies","dresses","short"]'
-        locale:
-          type: array
-          description: Supported locales for this variant.
-          example:
-          - en-GB
-          - de-DE
-          items:
-            type: string
-            description: Supported locales for this variant.
-            example: '["en-GB","de-DE"]'
-        ean:
-          type: string
-          description: Standardised article number.
-          example: '8076809513456'
-        multipack:
-          type: integer
-          description: Multipack quantity.
-          format: int32
-          example: 3
-        collaboration:
-          type: array
-          description: Retailer-specific collaboration values.
-          example:
-          - designer-capsule
-          - summer-edit
-          items:
-            type: string
-            description: Retailer-specific collaboration values.
-            example: '["designer-capsule","summer-edit"]'
-        product_id:
-          type: string
-          description: Identifier used for grouping all variants belonging to the same product. Provide it when creating a new variant.
-          example: P-500
-        style_id:
-          type: string
-          description: Groups variants that share colour or style but differ by option attributes such as size.
-          example: S-1000
-        variant_title:
-          type: string
-          description: Human-readable title of the variant.
-          example: Basic t-shirt, size L
-        style_title:
-          type: string
-          description: Human-readable title of the style.
-          example: Black basic t-shirt
-        product_title:
-          type: object
-          additionalProperties:
-            type: string
-            description: Localized product title keyed by BCP 47 locale or '*' fallback.
-            example: '{"en-GB":"Summer dress","de-DE":"Sommerkleid","fr-FR":"Robe d''ete","*":"Summer dress"}'
-          description: Localized product title keyed by BCP 47 locale or '*' fallback.
-          example:
-            en-GB: Summer dress
-            de-DE: Sommerkleid
-            fr-FR: Robe d'ete
-            '*': Summer dress
-        product_description:
-          type: object
-          additionalProperties:
-            type: string
-            description: Localized product description keyed by BCP 47 locale or '*' fallback.
-            example: '{"en-GB":"Light dress","de-DE":"Leichtes Kleid"}'
-          description: Localized product description keyed by BCP 47 locale or '*' fallback.
-          example:
-            en-GB: Light dress
-            de-DE: Leichtes Kleid
-        image_url:
-          type: array
-          description: List of product image URLs.
-          example:
-          - https://cdn.com/photo1.jpg
-          - https://cdn.com/photo2.jpg
-          - https://cdn.com/photo3.jpg
-          items:
-            type: string
-            description: List of product image URLs.
-            example: '["https://cdn.com/photo1.jpg","https://cdn.com/photo2.jpg","https://cdn.com/photo3.jpg"]'
-        pdp_url:
-          type: object
-          additionalProperties:
-            type: string
-            description: Localized product detail page URL keyed by BCP 47 locale or '*' fallback.
-            example: '{"en-GB":"https://shop.example/gb/basic-tshirt-001","de-DE":"https://shop.example/de/basic-tshirt-001"}'
-          description: Localized product detail page URL keyed by BCP 47 locale or '*' fallback.
-          example:
-            en-GB: https://shop.example/gb/basic-tshirt-001
-            de-DE: https://shop.example/de/basic-tshirt-001
-        season_code:
-          type: boolean
-          description: Indicates whether the product belongs to a seasonal assortment.
-          example: true
-        old_price:
-          type: object
-          additionalProperties:
-            type: number
-            description: Former selling price keyed by ISO 3166-1 alpha-2 country code or '*' fallback.
-          description: Former selling price keyed by ISO 3166-1 alpha-2 country code or '*' fallback.
-          example:
-            US: 39.99
-            GB: 34.99
-        set_id:
-          type: string
-          description: Identifier for products sold as a set.
-          example: BIKINI-SET-001
-        extra_id:
-          type: object
-          additionalProperties:
-            type: string
-            description: Additional localized or country-specific product identifier.
-            example: '{"US":"EXTRA-US-1001","GB":"EXTRA-GB-1001"}'
-          description: Additional localized or country-specific product identifier.
-          example:
-            US: EXTRA-US-1001
-            GB: EXTRA-GB-1001
-        ancillary_product_code:
-          type: string
-          description: Additional product identifier.
-          example: ANC-1001
-        min_age:
-          type: integer
-          description: Minimal age in months for children's wear.
-          format: int32
-          example: 12
-        max_age:
-          type: integer
-          description: Maximum age in months for children's wear.
-          format: int32
-          example: 24
-        best_model_image:
-          type: string
-          description: Best model image URL.
-          example: https://cdn.com/best_model_image.jpg
-        best_product_image:
-          type: string
-          description: Best product-only image URL.
-          example: https://cdn.com/best_product_image.jpg
-      description: 'Flat request payload for creating or fully replacing a SOURCE variant, where: <br>- predefined SOURCE attributes are documented as fields here.<br>- custom SOURCE attributes are added dynamically on top-level as fields.<br>- ENRICHED attributes are not accepted by this endpoint; this endpoint writes SOURCE data only.<br>If the variant doesn''t exist, it will be created. If it exists, all data will be completely replaced with the provided payload.'
-    PaginationCursorDTO:
-      type: object
-      properties:
-        nextPageExists:
-          type: boolean
-        previousPageExists:
-          type: boolean
-        firstId:
-          type: string
-          example: V-1001
-        lastId:
-          type: string
-          example: V-1010
-      description: Only set when pagination is used
-    SkippedAttributesDTO:
-      type: object
-      properties:
-        non_existing_attributes:
-          uniqueItems: true
+        productViewPayloads:
           type: array
           example:
-          - custom_attribute_abc
+          - variant_id: V-1001
+            product_id: P-500
+            status:
+              value: 1
+              label: active
+            availability:
+              value: true
+              label: available
+            catalog_id: 12345
+            source_creation_time: 1783502993000
+            source_update_time: 1783503093000
+            enriched_creation_time: 1783503193000
+            enriched_update_time: 1783503293000
+            color:
+              en-GB: Navy Blue
+              de-DE: Marineblau
+              fr-FR: Bleu marine
+            price:
+              US: 29.99
+              GB: 24.99
+            size:
+              US: S
+              EU: '36'
+            fashion_material: leather
+            fashion_season: summer
+          - variant_id: V-1002
+            product_id: P-500
+            status:
+              value: 1
+              label: active
+            availability:
+              value: true
+              label: available
+            catalog_id: 12345
+            source_creation_time: 1783503393000
+            source_update_time: 1783503493000
+            enriched_creation_time: 1783503593000
+            enriched_update_time: 1783503693000
+            color:
+              en-GB: Navy Blue
+              de-DE: Marineblau
+              fr-FR: Bleu marine
+            price:
+              US: 29.99
+              GB: 24.99
+            size:
+              US: M
+              EU: '38'
+            fashion_material: leather
+            fashion_season: summer
           items:
-            type: string
-            example: '["custom_attribute_abc"]'
-        inactive_attributes:
-          uniqueItems: true
-          type: array
-          example:
-          - custom_attribute_def
-          items:
-            type: string
-            example: '["custom_attribute_def"]'
-        invalid_data_type_attributes:
-          type: object
-          additionalProperties:
-            type: string
-            example: '{"price":"price map value must be a number","gtin":"gtin field must be 8-14 digits","min_age":"min_age value must be a number"}'
-          example:
-            price: price map value must be a number
-            gtin: gtin field must be 8-14 digits
-            min_age: min_age value must be a number
+            $ref: '#/components/schemas/VariantFlatViewResponse'
+        paginationCursor:
+          $ref: '#/components/schemas/PaginationCursorDTO'
     PartialUpdateVariantOperationFlatSchema:
       type: object
       properties:
@@ -1264,48 +1045,243 @@ components:
           description: Best product-only image URL.
           example: https://cdn.com/best_product_image.jpg
       description: 'Flat request payload for partially updating a SOURCE variant, where: <br>- predefined SOURCE attributes are documented as fields here.<br>- custom SOURCE attributes are added dynamically on top-level as fields.<br>- ENRICHED attributes are not accepted by this endpoint; this endpoint writes SOURCE data only.<br>Only the provided fields will be updated. If the variant doesn''t exist, no action is taken.'
-    CatalogOperationResponseDTO:
+    UpsertVariantOperationFlatSchema:
       type: object
       properties:
-        catalog_id:
-          type: integer
-          format: int64
-          example: 123
+        brand:
+          type: string
+          description: Product brand name.
+          example: AnnTaylor
+        price:
+          type: object
+          additionalProperties:
+            type: number
+            description: Current selling price keyed by ISO 3166-1 alpha-2 country code or '*' fallback.
+          description: Current selling price keyed by ISO 3166-1 alpha-2 country code or '*' fallback.
+          example:
+            US: 29.99
+            GB: 24.99
+            DE: 27.5
+            FR: 28.0
+        currency:
+          type: object
+          additionalProperties:
+            type: string
+            description: Currency keyed by the same country codes as price. Values are ISO 4217 currency codes.
+            example: '{"US":"USD","GB":"GBP","DE":"EUR","FR":"EUR","*":"USD"}'
+          description: Currency keyed by the same country codes as price. Values are ISO 4217 currency codes.
+          example:
+            US: USD
+            GB: GBP
+            DE: EUR
+            FR: EUR
+            '*': USD
+        size:
+          type: object
+          additionalProperties:
+            type: string
+            description: Size keyed by ISO 3166-1 alpha-2 country code or '*' fallback.
+            example: '{"US":"S","GB":"8","EU":"36"}'
+          description: Size keyed by ISO 3166-1 alpha-2 country code or '*' fallback.
+          example:
+            US: S
+            GB: '8'
+            EU: '36'
+        color:
+          type: object
+          additionalProperties:
+            type: string
+            description: Localized colour keyed by BCP 47 locale or '*' fallback.
+            example: '{"en-GB":"Navy Blue","de-DE":"Marineblau","fr-FR":"Bleu marine"}'
+          description: Localized colour keyed by BCP 47 locale or '*' fallback.
+          example:
+            en-GB: Navy Blue
+            de-DE: Marineblau
+            fr-FR: Bleu marine
+        mpn:
+          type: string
+          description: Manufacturer Part Number. Maximum length is 70 characters.
+          example: DRESS-BLK-M-2023
+        gtin:
+          type: string
+          description: Global Trade Item Number. Expected length is 8-14 digits.
+          example: '1234567890123'
         status:
-          type: string
+          type: integer
+          description: 'Variant status value: 0 = pre_order, 1 = active, 2 = discontinued.'
+          format: int32
+          example: 1
           enum:
-          - accepted
-          - failed
-        message:
+          - 0
+          - 1
+          - 2
+        availability:
+          type: boolean
+          description: Variant availability value.
+          example: true
+        material:
           type: string
-        event_id:
+          description: Material of the product.
+          example: cotton
+        gender:
           type: string
-          description: 'Unique generated UUID assigned to the event and preserved throughout its whole lifecycle.
-
-            The event_id is used in logs and is also sent back to the client with webhook events when
-
-            webhooks are configured, so clients are advised to log/save it on their side.'
-          example: 550e8400-e29b-41d4-a716-446655440000
-        operation:
-          type: string
-          example: delete
+          description: Gender value for fashion catalogs.
+          example: female
           enum:
-          - add
-          - upsert
-          - partial_update
-          - delete
-          - delete_attributes
-          - add_existing_only
-          - overwrite
-          - overwrite_existing_only
-          - update
-          - update_existing_only
-          - update_localized_attribute
-          - update_localized_attribute_existing_only
-          - clean
-        accepted_at:
+          - female
+          - male
+          - girls
+          - boys
+          - unisex
+        category:
+          type: array
+          description: Category hierarchy.
+          example:
+          - ladies
+          - dresses
+          - short
+          items:
+            type: string
+            description: Category hierarchy.
+            example: '["ladies","dresses","short"]'
+        locale:
+          type: array
+          description: Supported locales for this variant.
+          example:
+          - en-GB
+          - de-DE
+          items:
+            type: string
+            description: Supported locales for this variant.
+            example: '["en-GB","de-DE"]'
+        ean:
           type: string
-          format: date-time
+          description: Standardised article number.
+          example: '8076809513456'
+        multipack:
+          type: integer
+          description: Multipack quantity.
+          format: int32
+          example: 3
+        collaboration:
+          type: array
+          description: Retailer-specific collaboration values.
+          example:
+          - designer-capsule
+          - summer-edit
+          items:
+            type: string
+            description: Retailer-specific collaboration values.
+            example: '["designer-capsule","summer-edit"]'
+        product_id:
+          type: string
+          description: Identifier used for grouping all variants belonging to the same product. Provide it when creating a new variant.
+          example: P-500
+        style_id:
+          type: string
+          description: Groups variants that share colour or style but differ by option attributes such as size.
+          example: S-1000
+        variant_title:
+          type: string
+          description: Human-readable title of the variant.
+          example: Basic t-shirt, size L
+        style_title:
+          type: string
+          description: Human-readable title of the style.
+          example: Black basic t-shirt
+        product_title:
+          type: object
+          additionalProperties:
+            type: string
+            description: Localized product title keyed by BCP 47 locale or '*' fallback.
+            example: '{"en-GB":"Summer dress","de-DE":"Sommerkleid","fr-FR":"Robe d''ete","*":"Summer dress"}'
+          description: Localized product title keyed by BCP 47 locale or '*' fallback.
+          example:
+            en-GB: Summer dress
+            de-DE: Sommerkleid
+            fr-FR: Robe d'ete
+            '*': Summer dress
+        product_description:
+          type: object
+          additionalProperties:
+            type: string
+            description: Localized product description keyed by BCP 47 locale or '*' fallback.
+            example: '{"en-GB":"Light dress","de-DE":"Leichtes Kleid"}'
+          description: Localized product description keyed by BCP 47 locale or '*' fallback.
+          example:
+            en-GB: Light dress
+            de-DE: Leichtes Kleid
+        image_url:
+          type: array
+          description: List of product image URLs.
+          example:
+          - https://cdn.com/photo1.jpg
+          - https://cdn.com/photo2.jpg
+          - https://cdn.com/photo3.jpg
+          items:
+            type: string
+            description: List of product image URLs.
+            example: '["https://cdn.com/photo1.jpg","https://cdn.com/photo2.jpg","https://cdn.com/photo3.jpg"]'
+        pdp_url:
+          type: object
+          additionalProperties:
+            type: string
+            description: Localized product detail page URL keyed by BCP 47 locale or '*' fallback.
+            example: '{"en-GB":"https://shop.example/gb/basic-tshirt-001","de-DE":"https://shop.example/de/basic-tshirt-001"}'
+          description: Localized product detail page URL keyed by BCP 47 locale or '*' fallback.
+          example:
+            en-GB: https://shop.example/gb/basic-tshirt-001
+            de-DE: https://shop.example/de/basic-tshirt-001
+        season_code:
+          type: boolean
+          description: Indicates whether the product belongs to a seasonal assortment.
+          example: true
+        old_price:
+          type: object
+          additionalProperties:
+            type: number
+            description: Former selling price keyed by ISO 3166-1 alpha-2 country code or '*' fallback.
+          description: Former selling price keyed by ISO 3166-1 alpha-2 country code or '*' fallback.
+          example:
+            US: 39.99
+            GB: 34.99
+        set_id:
+          type: string
+          description: Identifier for products sold as a set.
+          example: BIKINI-SET-001
+        extra_id:
+          type: object
+          additionalProperties:
+            type: string
+            description: Additional localized or country-specific product identifier.
+            example: '{"US":"EXTRA-US-1001","GB":"EXTRA-GB-1001"}'
+          description: Additional localized or country-specific product identifier.
+          example:
+            US: EXTRA-US-1001
+            GB: EXTRA-GB-1001
+        ancillary_product_code:
+          type: string
+          description: Additional product identifier.
+          example: ANC-1001
+        min_age:
+          type: integer
+          description: Minimal age in months for children's wear.
+          format: int32
+          example: 12
+        max_age:
+          type: integer
+          description: Maximum age in months for children's wear.
+          format: int32
+          example: 24
+        best_model_image:
+          type: string
+          description: Best model image URL.
+          example: https://cdn.com/best_model_image.jpg
+        best_product_image:
+          type: string
+          description: Best product-only image URL.
+          example: https://cdn.com/best_product_image.jpg
+      description: 'Flat request payload for creating or fully replacing a SOURCE variant, where: <br>- predefined SOURCE attributes are documented as fields here.<br>- custom SOURCE attributes are added dynamically on top-level as fields.<br>- ENRICHED attributes are not accepted by this endpoint; this endpoint writes SOURCE data only.<br>If the variant doesn''t exist, it will be created. If it exists, all data will be completely replaced with the provided payload.'
     VariantFlatViewResponse:
       required:
       - availability
@@ -1631,38 +1607,20 @@ components:
           EU: '38'
         fashion_material: leather
         fashion_season: summer
-    ErrorResponse:
+    CatalogOperationResponseDTO:
       type: object
       properties:
-        message:
-          type: string
-        httpStatus:
-          type: integer
-          format: int32
-        errorCode:
-          type: string
-        timestamp:
-          type: string
-          format: date-time
-    VariantOperationResponseDTO:
-      type: object
-      properties:
-        variant_id:
-          type: string
-          example: V-1001
         catalog_id:
           type: integer
           format: int64
           example: 123
         status:
           type: string
-          example: accepted
           enum:
           - accepted
           - failed
         message:
           type: string
-          example: Variant add accepted for processing
         event_id:
           type: string
           description: 'Unique generated UUID assigned to the event and preserved throughout its whole lifecycle.
@@ -1673,7 +1631,7 @@ components:
           example: 550e8400-e29b-41d4-a716-446655440000
         operation:
           type: string
-          example: add
+          example: delete
           enum:
           - add
           - upsert
@@ -1689,31 +1647,8 @@ components:
           - update_localized_attribute_existing_only
           - clean
         accepted_at:
-          type: integer
-          format: int64
-          example: 1783502993000
-        accepted_attributes:
-          type: object
-          additionalProperties:
-            type: object
-            example:
-              color:
-                en-GB: Navy Blue
-                de-DE: Marineblau
-                fr-FR: Bleu marine
-              size:
-                US: S
-                EU: '36'
-          example:
-            color:
-              en-GB: Navy Blue
-              de-DE: Marineblau
-              fr-FR: Bleu marine
-            size:
-              US: S
-              EU: '36'
-        skipped_attributes:
-          $ref: '#/components/schemas/SkippedAttributesDTO'
+          type: string
+          format: date-time
     AddVariantOperationFlatSchema:
       required:
       - variant_id
@@ -1957,66 +1892,131 @@ components:
           description: Best product-only image URL.
           example: https://cdn.com/best_product_image.jpg
       description: 'Flat request payload for adding a SOURCE variant, where: <br>- predefined SOURCE attributes are documented as fields here.<br>- custom SOURCE attributes are added dynamically on top-level as fields.<br>- ENRICHED attributes are not accepted by this endpoint; this endpoint writes SOURCE data only.<br>The field variant_id is always required. product_id should be provided when creating a new variant.'
-    PaginatedVariantsResponseDTO:
+    SkippedAttributesDTO:
       type: object
       properties:
-        productViewPayloads:
+        non_existing_attributes:
+          uniqueItems: true
           type: array
           example:
-          - variant_id: V-1001
-            product_id: P-500
-            status:
-              value: 1
-              label: active
-            availability:
-              value: true
-              label: available
-            catalog_id: 12345
-            source_creation_time: 1783502993000
-            source_update_time: 1783503093000
-            enriched_creation_time: 1783503193000
-            enriched_update_time: 1783503293000
+          - custom_attribute_abc
+          items:
+            type: string
+            example: '["custom_attribute_abc"]'
+        inactive_attributes:
+          uniqueItems: true
+          type: array
+          example:
+          - custom_attribute_def
+          items:
+            type: string
+            example: '["custom_attribute_def"]'
+        invalid_data_type_attributes:
+          type: object
+          additionalProperties:
+            type: string
+            example: '{"price":"price map value must be a number","gtin":"gtin field must be 8-14 digits","min_age":"min_age value must be a number"}'
+          example:
+            price: price map value must be a number
+            gtin: gtin field must be 8-14 digits
+            min_age: min_age value must be a number
+    ErrorResponse:
+      type: object
+      properties:
+        message:
+          type: string
+        httpStatus:
+          type: integer
+          format: int32
+        errorCode:
+          type: string
+        timestamp:
+          type: string
+          format: date-time
+    PaginationCursorDTO:
+      type: object
+      properties:
+        nextPageExists:
+          type: boolean
+        previousPageExists:
+          type: boolean
+        firstId:
+          type: string
+          example: V-1001
+        lastId:
+          type: string
+          example: V-1010
+      description: Only set when pagination is used
+    VariantOperationResponseDTO:
+      type: object
+      properties:
+        variant_id:
+          type: string
+          example: V-1001
+        catalog_id:
+          type: integer
+          format: int64
+          example: 123
+        status:
+          type: string
+          example: accepted
+          enum:
+          - accepted
+          - failed
+        message:
+          type: string
+          example: Variant add accepted for processing
+        event_id:
+          type: string
+          description: 'Unique generated UUID assigned to the event and preserved throughout its whole lifecycle.
+
+            The event_id is used in logs and is also sent back to the client with webhook events when
+
+            webhooks are configured, so clients are advised to log/save it on their side.'
+          example: 550e8400-e29b-41d4-a716-446655440000
+        operation:
+          type: string
+          example: add
+          enum:
+          - add
+          - upsert
+          - partial_update
+          - delete
+          - delete_attributes
+          - add_existing_only
+          - overwrite
+          - overwrite_existing_only
+          - update
+          - update_existing_only
+          - update_localized_attribute
+          - update_localized_attribute_existing_only
+          - clean
+        accepted_at:
+          type: integer
+          format: int64
+          example: 1783502993000
+        accepted_attributes:
+          type: object
+          additionalProperties:
+            type: object
+            example:
+              color:
+                en-GB: Navy Blue
+                de-DE: Marineblau
+                fr-FR: Bleu marine
+              size:
+                US: S
+                EU: '36'
+          example:
             color:
               en-GB: Navy Blue
               de-DE: Marineblau
               fr-FR: Bleu marine
-            price:
-              US: 29.99
-              GB: 24.99
             size:
               US: S
               EU: '36'
-            fashion_material: leather
-            fashion_season: summer
-          - variant_id: V-1002
-            product_id: P-500
-            status:
-              value: 1
-              label: active
-            availability:
-              value: true
-              label: available
-            catalog_id: 12345
-            source_creation_time: 1783503393000
-            source_update_time: 1783503493000
-            enriched_creation_time: 1783503593000
-            enriched_update_time: 1783503693000
-            color:
-              en-GB: Navy Blue
-              de-DE: Marineblau
-              fr-FR: Bleu marine
-            price:
-              US: 29.99
-              GB: 24.99
-            size:
-              US: M
-              EU: '38'
-            fashion_material: leather
-            fashion_season: summer
-          items:
-            $ref: '#/components/schemas/VariantFlatViewResponse'
-        paginationCursor:
-          $ref: '#/components/schemas/PaginationCursorDTO'
+        skipped_attributes:
+          $ref: '#/components/schemas/SkippedAttributesDTO'
   securitySchemes:
     Keycloak:
       type: http

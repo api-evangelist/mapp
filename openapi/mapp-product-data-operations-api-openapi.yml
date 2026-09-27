@@ -166,6 +166,20 @@ paths:
                 timestamp: '2026-07-08T12:00:00Z'
 components:
   schemas:
+    PaginationCursorDTO:
+      type: object
+      properties:
+        nextPageExists:
+          type: boolean
+        previousPageExists:
+          type: boolean
+        firstId:
+          type: string
+          example: V-1001
+        lastId:
+          type: string
+          example: V-1010
+      description: Only set when pagination is used
     ProductVariantsResponseDTO:
       type: object
       properties:
@@ -240,20 +254,6 @@ components:
             fashion_season: summer
           items:
             $ref: '#/components/schemas/VariantFlatViewResponse'
-    PaginationCursorDTO:
-      type: object
-      properties:
-        nextPageExists:
-          type: boolean
-        previousPageExists:
-          type: boolean
-        firstId:
-          type: string
-          example: V-1001
-        lastId:
-          type: string
-          example: V-1010
-      description: Only set when pagination is used
     VariantFlatViewResponse:
       required:
       - availability
