@@ -113,52 +113,6 @@ paths:
                 timestamp: '2026-07-08T12:00:00Z'
 components:
   schemas:
-    CatalogDTO:
-      type: object
-      properties:
-        id:
-          type: integer
-          description: Catalog identifier
-          format: int64
-          readOnly: true
-        name:
-          type: string
-          description: Catalog name
-        description:
-          type: string
-          description: Catalog description
-        enrichReady:
-          type: boolean
-          description: Whether enriched catalog data is ready
-        createDate:
-          type: string
-          description: Catalog creation date
-          format: date-time
-          readOnly: true
-        modifyDate:
-          type: string
-          description: Catalog last modification date
-          format: date-time
-          readOnly: true
-        creatorId:
-          type: integer
-          description: Identifier of the user who created the catalog
-          format: int64
-          readOnly: true
-      description: Public catalog metadata
-    ErrorResponse:
-      type: object
-      properties:
-        message:
-          type: string
-        httpStatus:
-          type: integer
-          format: int32
-        errorCode:
-          type: string
-        timestamp:
-          type: string
-          format: date-time
     CatalogAttributeDTO:
       type: object
       properties:
@@ -248,6 +202,52 @@ components:
           - ENRICHED
           - COMBINED
       description: Represents a single product catalog attribute with its data type and optional localization metadata
+    ErrorResponse:
+      type: object
+      properties:
+        message:
+          type: string
+        httpStatus:
+          type: integer
+          format: int32
+        errorCode:
+          type: string
+        timestamp:
+          type: string
+          format: date-time
+    CatalogDTO:
+      type: object
+      properties:
+        id:
+          type: integer
+          description: Catalog identifier
+          format: int64
+          readOnly: true
+        name:
+          type: string
+          description: Catalog name
+        description:
+          type: string
+          description: Catalog description
+        enrichReady:
+          type: boolean
+          description: Whether enriched catalog data is ready
+        createDate:
+          type: string
+          description: Catalog creation date
+          format: date-time
+          readOnly: true
+        modifyDate:
+          type: string
+          description: Catalog last modification date
+          format: date-time
+          readOnly: true
+        creatorId:
+          type: integer
+          description: Identifier of the user who created the catalog
+          format: int64
+          readOnly: true
+      description: Public catalog metadata
   securitySchemes:
     Keycloak:
       type: http

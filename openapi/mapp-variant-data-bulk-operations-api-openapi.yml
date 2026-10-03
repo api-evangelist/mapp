@@ -412,6 +412,34 @@ paths:
                 timestamp: '2026-07-08T12:00:00Z'
 components:
   schemas:
+    SkippedAttributesDTO:
+      type: object
+      properties:
+        non_existing_attributes:
+          uniqueItems: true
+          type: array
+          example:
+          - custom_attribute_abc
+          items:
+            type: string
+            example: '["custom_attribute_abc"]'
+        inactive_attributes:
+          uniqueItems: true
+          type: array
+          example:
+          - custom_attribute_def
+          items:
+            type: string
+            example: '["custom_attribute_def"]'
+        invalid_data_type_attributes:
+          type: object
+          additionalProperties:
+            type: string
+            example: '{"price":"price map value must be a number","gtin":"gtin field must be 8-14 digits","min_age":"min_age value must be a number"}'
+          example:
+            price: price map value must be a number
+            gtin: gtin field must be 8-14 digits
+            min_age: min_age value must be a number
     BulkPartialUpdateVariantOperationFlatSchema:
       required:
       - variant_id
@@ -655,61 +683,75 @@ components:
           description: Client-defined unique identifier of the purchasable variant. Maximum length is 255 characters.
           example: V-1001
       description: 'Flat request payload for bulk partially updating a SOURCE variant, where: <br>- predefined SOURCE attributes are documented as fields here.<br>- custom SOURCE attributes are added dynamically on top-level as fields.<br>- ENRICHED attributes are not accepted by this endpoint; this endpoint writes SOURCE data only.<br>Only the provided fields will be updated. If the variant doesn''t exist, no action is taken. '
-    BulkVariantOperationResponseDTO:
+    VariantEventResult:
       type: object
       properties:
-        operation_id:
+        event_id:
           type: string
-          example: 350e8400-dgwe-41d4-a716-546655440000
+          description: 'Unique generated UUID assigned to the event and preserved throughout its whole lifecycle.
+
+            The event_id is used in logs and is also sent back to the client with webhook events when
+
+            webhooks are configured, so clients are advised to log/save it on their side.'
+          example: 550e8400-e29b-41d4-a716-446655440000
+        variant_id:
+          type: string
+          example: V-1001
         status:
           type: string
           example: accepted
           enum:
           - accepted
           - failed
-        catalog_id:
-          type: integer
-          format: int64
-          example: 123
-        operation:
+        accepted_attributes:
+          type: object
+          additionalProperties:
+            type: object
+            example:
+              color:
+                en-GB: Navy Blue
+                de-DE: Marineblau
+                fr-FR: Bleu marine
+              size:
+                US: S
+                EU: '36'
+          example:
+            color:
+              en-GB: Navy Blue
+              de-DE: Marineblau
+              fr-FR: Bleu marine
+            size:
+              US: S
+              EU: '36'
+        skipped_attributes:
+          $ref: '#/components/schemas/SkippedAttributesDTO'
+        failure_reason:
           type: string
-          example: add
-          enum:
-          - add
-          - upsert
-          - partial_update
-          - delete
-          - delete_attributes
-          - add_existing_only
-          - overwrite
-          - overwrite_existing_only
-          - update
-          - update_existing_only
-          - update_localized_attribute
-          - update_localized_attribute_existing_only
-          - clean
-        total_variants_success:
-          type: integer
-          format: int32
-          example: 1
-        total_variants_failed:
-          type: integer
-          format: int32
-          example: 1
+          description: Filled in only when variant could not be processed.
+          example: price mandatory field cannot be deleted
+    BulkDeleteVariantOperationFlatSchema:
+      required:
+      - variant_id
+      type: object
+      properties:
+        variant_id:
+          type: string
+          description: Client-defined unique identifier of the purchasable variant. Maximum length is 255 characters.
+          example: V-1001
+      description: 'Flat request payload for bulk deleting a SOURCE variant. '
+    ErrorResponse:
+      type: object
+      properties:
         message:
           type: string
-          example: Variant add accepted for processing"
-        accepted_at:
+        httpStatus:
+          type: integer
+          format: int32
+        errorCode:
+          type: string
+        timestamp:
           type: string
           format: date-time
-        variant_events_success:
-          type: array
-          items:
-            $ref: '#/components/schemas/VariantEventResult'
-        variant_events_failed:
-          type: array
-          items:
-            $ref: '#/components/schemas/VariantEventResult'
     AddVariantOperationFlatSchema:
       required:
       - variant_id
@@ -953,103 +995,61 @@ components:
           description: Best product-only image URL.
           example: https://cdn.com/best_product_image.jpg
       description: 'Flat request payload for adding a SOURCE variant, where: <br>- predefined SOURCE attributes are documented as fields here.<br>- custom SOURCE attributes are added dynamically on top-level as fields.<br>- ENRICHED attributes are not accepted by this endpoint; this endpoint writes SOURCE data only.<br>The field variant_id is always required. product_id should be provided when creating a new variant.'
-    SkippedAttributesDTO:
+    BulkVariantOperationResponseDTO:
       type: object
       properties:
-        non_existing_attributes:
-          uniqueItems: true
-          type: array
-          example:
-          - custom_attribute_abc
-          items:
-            type: string
-            example: '["custom_attribute_abc"]'
-        inactive_attributes:
-          uniqueItems: true
-          type: array
-          example:
-          - custom_attribute_def
-          items:
-            type: string
-            example: '["custom_attribute_def"]'
-        invalid_data_type_attributes:
-          type: object
-          additionalProperties:
-            type: string
-            example: '{"price":"price map value must be a number","gtin":"gtin field must be 8-14 digits","min_age":"min_age value must be a number"}'
-          example:
-            price: price map value must be a number
-            gtin: gtin field must be 8-14 digits
-            min_age: min_age value must be a number
-    ErrorResponse:
-      type: object
-      properties:
-        message:
+        operation_id:
           type: string
-        httpStatus:
-          type: integer
-          format: int32
-        errorCode:
-          type: string
-        timestamp:
-          type: string
-          format: date-time
-    VariantEventResult:
-      type: object
-      properties:
-        event_id:
-          type: string
-          description: 'Unique generated UUID assigned to the event and preserved throughout its whole lifecycle.
-
-            The event_id is used in logs and is also sent back to the client with webhook events when
-
-            webhooks are configured, so clients are advised to log/save it on their side.'
-          example: 550e8400-e29b-41d4-a716-446655440000
-        variant_id:
-          type: string
-          example: V-1001
+          example: 350e8400-dgwe-41d4-a716-546655440000
         status:
           type: string
           example: accepted
           enum:
           - accepted
           - failed
-        accepted_attributes:
-          type: object
-          additionalProperties:
-            type: object
-            example:
-              color:
-                en-GB: Navy Blue
-                de-DE: Marineblau
-                fr-FR: Bleu marine
-              size:
-                US: S
-                EU: '36'
-          example:
-            color:
-              en-GB: Navy Blue
-              de-DE: Marineblau
-              fr-FR: Bleu marine
-            size:
-              US: S
-              EU: '36'
-        skipped_attributes:
-          $ref: '#/components/schemas/SkippedAttributesDTO'
-        failure_reason:
+        catalog_id:
+          type: integer
+          format: int64
+          example: 123
+        operation:
           type: string
-          description: Filled in only when variant could not be processed.
-          example: price mandatory field cannot be deleted
-    BulkDeleteVariantOperationFlatSchema:
-      required:
-      - variant_id
-      type: object
-      properties:
-        variant_id:
+          example: add
+          enum:
+          - add
+          - upsert
+          - partial_update
+          - delete
+          - delete_attributes
+          - add_existing_only
+          - overwrite
+          - overwrite_existing_only
+          - update
+          - update_existing_only
+          - update_localized_attribute
+          - update_localized_attribute_existing_only
+          - clean
+        total_variants_success:
+          type: integer
+          format: int32
+          example: 1
+        total_variants_failed:
+          type: integer
+          format: int32
+          example: 1
+        message:
           type: string
-          description: Client-defined unique identifier of the purchasable variant. Maximum length is 255 characters.
-          example: V-1001
-      description: 'Flat request payload for bulk deleting a SOURCE variant. '
+          example: Variant add accepted for processing"
+        accepted_at:
+          type: string
+          format: date-time
+        variant_events_success:
+          type: array
+          items:
+            $ref: '#/components/schemas/VariantEventResult'
+        variant_events_failed:
+          type: array
+          items:
+            $ref: '#/components/schemas/VariantEventResult'
     BulkUpsertVariantOperationFlatSchema:
       required:
       - variant_id

@@ -136,30 +136,16 @@ paths:
       x-operation-id-source: derived
 components:
   schemas:
-    DataTypeEnum:
+    ContextEnum:
       type: string
-      description: Type of data
+      description: Context to evaluate the metric/dimension. If context property is not given or empty the default context of the object will be used. The default context can be identified from the context property in the response list of /query-objects.
       enum:
-      - STRING
-      - NUMBER
-      - GENERIC
-    ElementTypeEnum:
-      type: string
-      description: Type of element
-      enum:
-      - CAMPAIGNS_ATTRIBUTION
-      - CUSTOM_CATEGORY
-      - CUSTOM_FORMULA
-      - CUSTOM_METRIC
-      - CUSTOM_PARAMETER
-      - CUSTOM_PROCESS
-      - CUSTOM_SOURCE
-      - CUSTOM_VISITOR_GROUPS_TRAFFIC
-      - CUSTOM_WEBSITE_GOALS
-      - DEFAULT_DIMENSION
-      - DEFAULT_METRIC
-      - PREDEFINED_FORMULA
-      - PREDEFINED_METRIC
+      - VISITOR
+      - SESSION
+      - PAGE
+      - ACTION
+      - ATOMIC
+      - NONE
     DisplayTypeEnum:
       type: string
       description: Indicate how the data should be displayed
@@ -169,6 +155,13 @@ components:
       - CURRENCY
       - DISTRIBUTION
       - COMPARE
+    DataTypeEnum:
+      type: string
+      description: Type of data
+      enum:
+      - STRING
+      - NUMBER
+      - GENERIC
     Problem:
       type: object
       properties:
@@ -192,34 +185,6 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/Warning'
-    Metric:
-      title: Metric
-      type: object
-      description: Description of a metric
-      properties:
-        name:
-          type: string
-          description: API name of the metric
-        dataType:
-          $ref: '#/components/schemas/DataTypeEnum'
-        title:
-          type: string
-          description: Human readable name of the metric. Localized
-        elementType:
-          $ref: '#/components/schemas/ElementTypeEnum'
-        metricDisplayType:
-          $ref: '#/components/schemas/DisplayTypeEnum'
-        context:
-          $ref: '#/components/schemas/ContextEnum'
-        sortable:
-          type: boolean
-          description: Indicates if object can be sorted.
-      required:
-      - name
-      - dataType
-      - title
-      - elementType
-      - metricDisplayType
     DynamicTimeFilterDefinition:
       title: DynamicTimeFilterDefinition
       description: Dynamic Time Filter
@@ -261,30 +226,90 @@ components:
       - title
       - name
       - dynamicFilter
-    SegmentDefinition:
-      title: SegmentDefinition
-      description: User segment
+    ElementTypeEnum:
+      type: string
+      description: Type of element
+      enum:
+      - CAMPAIGNS_ATTRIBUTION
+      - CUSTOM_CATEGORY
+      - CUSTOM_FORMULA
+      - CUSTOM_METRIC
+      - CUSTOM_PARAMETER
+      - CUSTOM_PROCESS
+      - CUSTOM_SOURCE
+      - CUSTOM_VISITOR_GROUPS_TRAFFIC
+      - CUSTOM_WEBSITE_GOALS
+      - DEFAULT_DIMENSION
+      - DEFAULT_METRIC
+      - PREDEFINED_FORMULA
+      - PREDEFINED_METRIC
+    Dimension:
+      title: Dimension
       type: object
+      description: Description of a Dimension element
       properties:
-        id:
-          type: integer
-          description: ID of the segment to be used in analysis
+        name:
+          type: string
+          description: API name of the dimension
+        dataType:
+          $ref: '#/components/schemas/DataTypeEnum'
         title:
           type: string
-          description: Name of the segment
-        description:
+          description: Human readable name of the metric. Localized
+        elementType:
+          $ref: '#/components/schemas/ElementTypeEnum'
+        context:
+          $ref: '#/components/schemas/ContextEnum'
+        mapping:
+          type: object
+          description: Optional list of Mapping values
+          additionalProperties:
+            type: string
+        timeFormatPattern:
+          description: Standard datetime pattern. Indicates that current STRING represents a Date
           type: string
-          description: Description of the segment
+        sortable:
+          type: boolean
+          description: Indicates if object can be sorted.
       required:
-      - id
+      - name
+      - dataType
       - title
-      - description
+      - elementType
     ConnectorPredicateEnum:
       type: string
       description: Connectors
       enum:
       - AND
       - OR
+    Metric:
+      title: Metric
+      type: object
+      description: Description of a metric
+      properties:
+        name:
+          type: string
+          description: API name of the metric
+        dataType:
+          $ref: '#/components/schemas/DataTypeEnum'
+        title:
+          type: string
+          description: Human readable name of the metric. Localized
+        elementType:
+          $ref: '#/components/schemas/ElementTypeEnum'
+        metricDisplayType:
+          $ref: '#/components/schemas/DisplayTypeEnum'
+        context:
+          $ref: '#/components/schemas/ContextEnum'
+        sortable:
+          type: boolean
+          description: Indicates if object can be sorted.
+      required:
+      - name
+      - dataType
+      - title
+      - elementType
+      - metricDisplayType
     Warning:
       type: object
       properties:
@@ -355,66 +380,6 @@ components:
       - BETWEEN
       - LIKE
       - NOT_LIKE
-    ContextEnum:
-      type: string
-      description: Context to evaluate the metric/dimension. If context property is not given or empty the default context of the object will be used. The default context can be identified from the context property in the response list of /query-objects.
-      enum:
-      - VISITOR
-      - SESSION
-      - PAGE
-      - ACTION
-      - ATOMIC
-      - NONE
-    Dimension:
-      title: Dimension
-      type: object
-      description: Description of a Dimension element
-      properties:
-        name:
-          type: string
-          description: API name of the dimension
-        dataType:
-          $ref: '#/components/schemas/DataTypeEnum'
-        title:
-          type: string
-          description: Human readable name of the metric. Localized
-        elementType:
-          $ref: '#/components/schemas/ElementTypeEnum'
-        context:
-          $ref: '#/components/schemas/ContextEnum'
-        mapping:
-          type: object
-          description: Optional list of Mapping values
-          additionalProperties:
-            type: string
-        timeFormatPattern:
-          description: Standard datetime pattern. Indicates that current STRING represents a Date
-          type: string
-        sortable:
-          type: boolean
-          description: Indicates if object can be sorted.
-      required:
-      - name
-      - dataType
-      - title
-      - elementType
-    QueryObjects:
-      title: QueryObjects
-      type: object
-      properties:
-        metrics:
-          type: array
-          description: List of available metrics
-          items:
-            $ref: '#/components/schemas/Metric'
-        dimensions:
-          type: array
-          description: List of available dimensions
-          items:
-            $ref: '#/components/schemas/Dimension'
-      required:
-      - metrics
-      - dimensions
     Error:
       type: object
       properties:
@@ -466,6 +431,41 @@ components:
               description: List of object names (dimension, metrics, filter, ...) that corresponds to the error.
               items:
                 type: string
+    QueryObjects:
+      title: QueryObjects
+      type: object
+      properties:
+        metrics:
+          type: array
+          description: List of available metrics
+          items:
+            $ref: '#/components/schemas/Metric'
+        dimensions:
+          type: array
+          description: List of available dimensions
+          items:
+            $ref: '#/components/schemas/Dimension'
+      required:
+      - metrics
+      - dimensions
+    SegmentDefinition:
+      title: SegmentDefinition
+      description: User segment
+      type: object
+      properties:
+        id:
+          type: integer
+          description: ID of the segment to be used in analysis
+        title:
+          type: string
+          description: Name of the segment
+        description:
+          type: string
+          description: Description of the segment
+      required:
+      - id
+      - title
+      - description
   responses:
     Forbidden:
       description: No permission to execute operation
