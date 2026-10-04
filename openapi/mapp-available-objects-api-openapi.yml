@@ -136,96 +136,6 @@ paths:
       x-operation-id-source: derived
 components:
   schemas:
-    ContextEnum:
-      type: string
-      description: Context to evaluate the metric/dimension. If context property is not given or empty the default context of the object will be used. The default context can be identified from the context property in the response list of /query-objects.
-      enum:
-      - VISITOR
-      - SESSION
-      - PAGE
-      - ACTION
-      - ATOMIC
-      - NONE
-    DisplayTypeEnum:
-      type: string
-      description: Indicate how the data should be displayed
-      enum:
-      - NORMAL
-      - TIME
-      - CURRENCY
-      - DISTRIBUTION
-      - COMPARE
-    DataTypeEnum:
-      type: string
-      description: Type of data
-      enum:
-      - STRING
-      - NUMBER
-      - GENERIC
-    Problem:
-      type: object
-      properties:
-        status:
-          type: integer
-          description: HTTP Status Code
-        statusCode:
-          type: string
-          description: Specific Mapp Error Code
-        title:
-          type: string
-          description: Short description of the problem
-        detail:
-          type: string
-          description: Detailed informations about the problem
-        errors:
-          type: array
-          items:
-            $ref: '#/components/schemas/Error'
-        warnings:
-          type: array
-          items:
-            $ref: '#/components/schemas/Warning'
-    DynamicTimeFilterDefinition:
-      title: DynamicTimeFilterDefinition
-      description: Dynamic Time Filter
-      type: object
-      properties:
-        title:
-          type: string
-          description: Human readable description of the dynamic time filter (localized)
-        name:
-          type: string
-          description: API name of the filter value
-        dynamicFilter:
-          type: object
-          description: Snippet code which can be used in analysis
-          properties:
-            name:
-              type: string
-              description: API Name of the filtered dimension
-            filterPredicate:
-              $ref: '#/components/schemas/FilterPredicateEnum'
-            connector:
-              $ref: '#/components/schemas/ConnectorPredicateEnum'
-            context:
-              $ref: '#/components/schemas/ContextEnum'
-            value1:
-              type: string
-              description: Value to be filtered on.
-            value2:
-              type: string
-              description: Second value to be filtered on. Only relevant for BETWEEN.
-          required:
-          - name
-          - connector
-          - filterPredicate
-          - value1
-          - value2
-          - context
-      required:
-      - title
-      - name
-      - dynamicFilter
     ElementTypeEnum:
       type: string
       description: Type of element
@@ -243,39 +153,13 @@ components:
       - DEFAULT_METRIC
       - PREDEFINED_FORMULA
       - PREDEFINED_METRIC
-    Dimension:
-      title: Dimension
-      type: object
-      description: Description of a Dimension element
-      properties:
-        name:
-          type: string
-          description: API name of the dimension
-        dataType:
-          $ref: '#/components/schemas/DataTypeEnum'
-        title:
-          type: string
-          description: Human readable name of the metric. Localized
-        elementType:
-          $ref: '#/components/schemas/ElementTypeEnum'
-        context:
-          $ref: '#/components/schemas/ContextEnum'
-        mapping:
-          type: object
-          description: Optional list of Mapping values
-          additionalProperties:
-            type: string
-        timeFormatPattern:
-          description: Standard datetime pattern. Indicates that current STRING represents a Date
-          type: string
-        sortable:
-          type: boolean
-          description: Indicates if object can be sorted.
-      required:
-      - name
-      - dataType
-      - title
-      - elementType
+    DataTypeEnum:
+      type: string
+      description: Type of data
+      enum:
+      - STRING
+      - NUMBER
+      - GENERIC
     ConnectorPredicateEnum:
       type: string
       description: Connectors
@@ -310,63 +194,6 @@ components:
       - title
       - elementType
       - metricDisplayType
-    Warning:
-      type: object
-      properties:
-        name:
-          type: string
-          description: 'Each warnings has specific properties described in following table:
-
-
-            | Warning| Description | Relevant parameters |
-
-            | ---------------- | ------------| -----------------------------------|
-
-            | FilterLogicalCubeMismatch | At least one filter is ignored due to incompatibily with Dimensions and Metrics used. | List of incomptible filter objects in _names_ array. |
-
-            | InvalidMetricContext | Metric used in an invalid context. | List of metric with invalid context in _aliases_ array. |
-
-            | SortingEnforced |  Sorting criteria has been added automatically | List of objects that were sorted automatically in _aliases_ array. |
-
-            | NoSortingDefined |  Sorting criteria is required for some dimensions. | List of dimensions requiring a sorting in _names_ array. |
-
-            | SortingLimitExceeded | 3 sorting criteria are allowed. All additional sorting criteria have been omitted.| List of columns ignored for sorting in _aliases_ array. |
-
-            | SortingRemoved | A requested sorting criteria has been removed | List of objects that were removed automatically in _aliases_ array. |
-
-            | TodayRemoved | Today date has been removed from calculation time range because the selected datasource does not contain it. | daysInDataSource, todayDate|'
-          enum:
-          - FilterLogicalCubeMismatch
-          - InvalidMetricContext
-          - SortingEnforced
-          - NoSortingDefined
-          - SortingLimitExceeded
-          - SortingRemoved
-          - TodayRemoved
-        parameters:
-          type: object
-          properties:
-            arrangeTypes:
-              type: array
-              description: List of internal object names (dimension, metrics, filter, ...) that corresponds to the warning.
-              items:
-                type: string
-            aliases:
-              type: array
-              description: List of columns aliases that corresponds to the error. See Result Header alias property.
-              items:
-                type: string
-            names:
-              type: array
-              description: List of object names (dimension, metrics, filter, ...) that corresponds to the warning.
-              items:
-                type: string
-            daysInDataSource:
-              type: string
-              description: Number of days in the datasource which is beeing cut
-            todayDate:
-              type: string
-              description: Date of the day being cut
     FilterPredicateEnum:
       type: string
       description: Filter predicates
@@ -431,23 +258,80 @@ components:
               description: List of object names (dimension, metrics, filter, ...) that corresponds to the error.
               items:
                 type: string
-    QueryObjects:
-      title: QueryObjects
+    Dimension:
+      title: Dimension
+      type: object
+      description: Description of a Dimension element
+      properties:
+        name:
+          type: string
+          description: API name of the dimension
+        dataType:
+          $ref: '#/components/schemas/DataTypeEnum'
+        title:
+          type: string
+          description: Human readable name of the metric. Localized
+        elementType:
+          $ref: '#/components/schemas/ElementTypeEnum'
+        context:
+          $ref: '#/components/schemas/ContextEnum'
+        mapping:
+          type: object
+          description: Optional list of Mapping values
+          additionalProperties:
+            type: string
+        timeFormatPattern:
+          description: Standard datetime pattern. Indicates that current STRING represents a Date
+          type: string
+        sortable:
+          type: boolean
+          description: Indicates if object can be sorted.
+      required:
+      - name
+      - dataType
+      - title
+      - elementType
+    DynamicTimeFilterDefinition:
+      title: DynamicTimeFilterDefinition
+      description: Dynamic Time Filter
       type: object
       properties:
-        metrics:
-          type: array
-          description: List of available metrics
-          items:
-            $ref: '#/components/schemas/Metric'
-        dimensions:
-          type: array
-          description: List of available dimensions
-          items:
-            $ref: '#/components/schemas/Dimension'
+        title:
+          type: string
+          description: Human readable description of the dynamic time filter (localized)
+        name:
+          type: string
+          description: API name of the filter value
+        dynamicFilter:
+          type: object
+          description: Snippet code which can be used in analysis
+          properties:
+            name:
+              type: string
+              description: API Name of the filtered dimension
+            filterPredicate:
+              $ref: '#/components/schemas/FilterPredicateEnum'
+            connector:
+              $ref: '#/components/schemas/ConnectorPredicateEnum'
+            context:
+              $ref: '#/components/schemas/ContextEnum'
+            value1:
+              type: string
+              description: Value to be filtered on.
+            value2:
+              type: string
+              description: Second value to be filtered on. Only relevant for BETWEEN.
+          required:
+          - name
+          - connector
+          - filterPredicate
+          - value1
+          - value2
+          - context
       required:
-      - metrics
-      - dimensions
+      - title
+      - name
+      - dynamicFilter
     SegmentDefinition:
       title: SegmentDefinition
       description: User segment
@@ -466,6 +350,122 @@ components:
       - id
       - title
       - description
+    Warning:
+      type: object
+      properties:
+        name:
+          type: string
+          description: 'Each warnings has specific properties described in following table:
+
+
+            | Warning| Description | Relevant parameters |
+
+            | ---------------- | ------------| -----------------------------------|
+
+            | FilterLogicalCubeMismatch | At least one filter is ignored due to incompatibily with Dimensions and Metrics used. | List of incomptible filter objects in _names_ array. |
+
+            | InvalidMetricContext | Metric used in an invalid context. | List of metric with invalid context in _aliases_ array. |
+
+            | SortingEnforced |  Sorting criteria has been added automatically | List of objects that were sorted automatically in _aliases_ array. |
+
+            | NoSortingDefined |  Sorting criteria is required for some dimensions. | List of dimensions requiring a sorting in _names_ array. |
+
+            | SortingLimitExceeded | 3 sorting criteria are allowed. All additional sorting criteria have been omitted.| List of columns ignored for sorting in _aliases_ array. |
+
+            | SortingRemoved | A requested sorting criteria has been removed | List of objects that were removed automatically in _aliases_ array. |
+
+            | TodayRemoved | Today date has been removed from calculation time range because the selected datasource does not contain it. | daysInDataSource, todayDate|'
+          enum:
+          - FilterLogicalCubeMismatch
+          - InvalidMetricContext
+          - SortingEnforced
+          - NoSortingDefined
+          - SortingLimitExceeded
+          - SortingRemoved
+          - TodayRemoved
+        parameters:
+          type: object
+          properties:
+            arrangeTypes:
+              type: array
+              description: List of internal object names (dimension, metrics, filter, ...) that corresponds to the warning.
+              items:
+                type: string
+            aliases:
+              type: array
+              description: List of columns aliases that corresponds to the error. See Result Header alias property.
+              items:
+                type: string
+            names:
+              type: array
+              description: List of object names (dimension, metrics, filter, ...) that corresponds to the warning.
+              items:
+                type: string
+            daysInDataSource:
+              type: string
+              description: Number of days in the datasource which is beeing cut
+            todayDate:
+              type: string
+              description: Date of the day being cut
+    DisplayTypeEnum:
+      type: string
+      description: Indicate how the data should be displayed
+      enum:
+      - NORMAL
+      - TIME
+      - CURRENCY
+      - DISTRIBUTION
+      - COMPARE
+    QueryObjects:
+      title: QueryObjects
+      type: object
+      properties:
+        metrics:
+          type: array
+          description: List of available metrics
+          items:
+            $ref: '#/components/schemas/Metric'
+        dimensions:
+          type: array
+          description: List of available dimensions
+          items:
+            $ref: '#/components/schemas/Dimension'
+      required:
+      - metrics
+      - dimensions
+    ContextEnum:
+      type: string
+      description: Context to evaluate the metric/dimension. If context property is not given or empty the default context of the object will be used. The default context can be identified from the context property in the response list of /query-objects.
+      enum:
+      - VISITOR
+      - SESSION
+      - PAGE
+      - ACTION
+      - ATOMIC
+      - NONE
+    Problem:
+      type: object
+      properties:
+        status:
+          type: integer
+          description: HTTP Status Code
+        statusCode:
+          type: string
+          description: Specific Mapp Error Code
+        title:
+          type: string
+          description: Short description of the problem
+        detail:
+          type: string
+          description: Detailed informations about the problem
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Error'
+        warnings:
+          type: array
+          items:
+            $ref: '#/components/schemas/Warning'
   responses:
     Forbidden:
       description: No permission to execute operation

@@ -166,20 +166,6 @@ paths:
                 timestamp: '2026-07-08T12:00:00Z'
 components:
   schemas:
-    PaginationCursorDTO:
-      type: object
-      properties:
-        nextPageExists:
-          type: boolean
-        previousPageExists:
-          type: boolean
-        firstId:
-          type: string
-          example: V-1001
-        lastId:
-          type: string
-          example: V-1010
-      description: Only set when pagination is used
     ErrorResponse:
       type: object
       properties:
@@ -193,80 +179,6 @@ components:
         timestamp:
           type: string
           format: date-time
-    ProductVariantsResponseDTO:
-      type: object
-      properties:
-        paginationCursor:
-          $ref: '#/components/schemas/PaginationCursorDTO'
-        catalog_id:
-          type: integer
-          format: int64
-        view:
-          type: string
-          example: flat
-        product_id:
-          type: string
-        total_variants:
-          type: integer
-          description: Only set when pagination is not used
-          format: int32
-        variants:
-          type: array
-          example:
-          - variant_id: V-1001
-            product_id: P-500
-            style_id: S-42
-            status:
-              value: 1
-              label: active
-            availability:
-              value: true
-              label: available
-            catalog_id: 12345
-            source_creation_time: 1783502993000
-            source_update_time: 1783503093000
-            enriched_creation_time: 1783503193000
-            enriched_update_time: 1783503293000
-            color:
-              en-GB: Navy Blue
-              de-DE: Marineblau
-              fr-FR: Bleu marine
-            price:
-              US: 29.99
-              GB: 24.99
-            size:
-              US: S
-              EU: '36'
-            fashion_material: leather
-            fashion_season: summer
-          - variant_id: V-1002
-            product_id: P-500
-            style_id: S-42
-            status:
-              value: 1
-              label: active
-            availability:
-              value: true
-              label: available
-            catalog_id: 12345
-            source_creation_time: 1783503393000
-            source_update_time: 1783503493000
-            enriched_creation_time: 1783503593000
-            enriched_update_time: 1783503693000
-            color:
-              en-GB: Navy Blue
-              de-DE: Marineblau
-              fr-FR: Bleu marine
-            price:
-              US: 29.99
-              GB: 24.99
-            size:
-              US: M
-              EU: '38'
-            fashion_material: leather
-            fashion_season: summer
-          items:
-            $ref: '#/components/schemas/VariantFlatViewResponse'
     VariantFlatViewResponse:
       required:
       - availability
@@ -592,6 +504,94 @@ components:
           EU: '38'
         fashion_material: leather
         fashion_season: summer
+    ProductVariantsResponseDTO:
+      type: object
+      properties:
+        paginationCursor:
+          $ref: '#/components/schemas/PaginationCursorDTO'
+        catalog_id:
+          type: integer
+          format: int64
+        view:
+          type: string
+          example: flat
+        product_id:
+          type: string
+        total_variants:
+          type: integer
+          description: Only set when pagination is not used
+          format: int32
+        variants:
+          type: array
+          example:
+          - variant_id: V-1001
+            product_id: P-500
+            style_id: S-42
+            status:
+              value: 1
+              label: active
+            availability:
+              value: true
+              label: available
+            catalog_id: 12345
+            source_creation_time: 1783502993000
+            source_update_time: 1783503093000
+            enriched_creation_time: 1783503193000
+            enriched_update_time: 1783503293000
+            color:
+              en-GB: Navy Blue
+              de-DE: Marineblau
+              fr-FR: Bleu marine
+            price:
+              US: 29.99
+              GB: 24.99
+            size:
+              US: S
+              EU: '36'
+            fashion_material: leather
+            fashion_season: summer
+          - variant_id: V-1002
+            product_id: P-500
+            style_id: S-42
+            status:
+              value: 1
+              label: active
+            availability:
+              value: true
+              label: available
+            catalog_id: 12345
+            source_creation_time: 1783503393000
+            source_update_time: 1783503493000
+            enriched_creation_time: 1783503593000
+            enriched_update_time: 1783503693000
+            color:
+              en-GB: Navy Blue
+              de-DE: Marineblau
+              fr-FR: Bleu marine
+            price:
+              US: 29.99
+              GB: 24.99
+            size:
+              US: M
+              EU: '38'
+            fashion_material: leather
+            fashion_season: summer
+          items:
+            $ref: '#/components/schemas/VariantFlatViewResponse'
+    PaginationCursorDTO:
+      type: object
+      properties:
+        nextPageExists:
+          type: boolean
+        previousPageExists:
+          type: boolean
+        firstId:
+          type: string
+          example: V-1001
+        lastId:
+          type: string
+          example: V-1010
+      description: Only set when pagination is used
   securitySchemes:
     Keycloak:
       type: http
