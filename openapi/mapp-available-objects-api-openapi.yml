@@ -136,6 +136,32 @@ paths:
       x-operation-id-source: derived
 components:
   schemas:
+    ConnectorPredicateEnum:
+      type: string
+      description: Connectors
+      enum:
+      - AND
+      - OR
+    FilterPredicateEnum:
+      type: string
+      description: Filter predicates
+      enum:
+      - EQUAL
+      - UNEQUAL
+      - LESS
+      - LESSEQUAL
+      - GREATER
+      - GREATEREQUAL
+      - BETWEEN
+      - LIKE
+      - NOT_LIKE
+    DataTypeEnum:
+      type: string
+      description: Type of data
+      enum:
+      - STRING
+      - NUMBER
+      - GENERIC
     ElementTypeEnum:
       type: string
       description: Type of element
@@ -153,19 +179,6 @@ components:
       - DEFAULT_METRIC
       - PREDEFINED_FORMULA
       - PREDEFINED_METRIC
-    DataTypeEnum:
-      type: string
-      description: Type of data
-      enum:
-      - STRING
-      - NUMBER
-      - GENERIC
-    ConnectorPredicateEnum:
-      type: string
-      description: Connectors
-      enum:
-      - AND
-      - OR
     Metric:
       title: Metric
       type: object
@@ -194,70 +207,6 @@ components:
       - title
       - elementType
       - metricDisplayType
-    FilterPredicateEnum:
-      type: string
-      description: Filter predicates
-      enum:
-      - EQUAL
-      - UNEQUAL
-      - LESS
-      - LESSEQUAL
-      - GREATER
-      - GREATEREQUAL
-      - BETWEEN
-      - LIKE
-      - NOT_LIKE
-    Error:
-      type: object
-      properties:
-        name:
-          type: string
-          description: 'Each error has specific properties described in following table:
-
-
-            | Error| Description | Relevant parameters |
-
-            | ---------------- | ------------| -----------------------------------|
-
-            | UnmappedName | At least one object name cannot be found. | List of objects not found in _names_ array. |
-
-            | PivotIncompatibleMetric | Metric not usable in Pivot detected.| List of incompatible Metrics in _names_ array. |
-
-            | PivotIncompatibleDimension |Dimension not usable in Pivot detected. | List of incompatible Dimensions in _names_ array. |
-
-            | AnalysisLogicalCubeMismatch | All Dimensions and Metrics are not compatible. | List of incompatible objects in _names_ array. |
-
-            | InvalidSortingCriteria | Sorting is applied on a non-sortable object.| List of invalid sorted objects in _names_ array. |
-
-            | TimeFilterMissing | Each query must have a minimum of one Time Filter.| N/A |
-
-            | InvalidSegmentNoneContainer | A segment container has context set to NONE but either its connector is not set to AND or its inOrNotIn property is not set to IN.| N/A |'
-          enum:
-          - UnmappedName
-          - PivotIncompatibleMetric
-          - PivotIncompatibleDimension
-          - AnalysisLogicalCubeMismatch
-          - InvalidSortingCriteria
-          - TimeFilterMissing
-          - InvalidSegmentNoneContainer
-        parameters:
-          type: object
-          properties:
-            arrangeTypes:
-              type: array
-              description: List of internal object names (dimension, metrics, filter, ...) that corresponds to the error.
-              items:
-                type: string
-            aliases:
-              type: array
-              description: List of columns aliases that corresponds to the error. See Result Header alias property.
-              items:
-                type: string
-            names:
-              type: array
-              description: List of object names (dimension, metrics, filter, ...) that corresponds to the error.
-              items:
-                type: string
     Dimension:
       title: Dimension
       type: object
@@ -291,47 +240,6 @@ components:
       - dataType
       - title
       - elementType
-    DynamicTimeFilterDefinition:
-      title: DynamicTimeFilterDefinition
-      description: Dynamic Time Filter
-      type: object
-      properties:
-        title:
-          type: string
-          description: Human readable description of the dynamic time filter (localized)
-        name:
-          type: string
-          description: API name of the filter value
-        dynamicFilter:
-          type: object
-          description: Snippet code which can be used in analysis
-          properties:
-            name:
-              type: string
-              description: API Name of the filtered dimension
-            filterPredicate:
-              $ref: '#/components/schemas/FilterPredicateEnum'
-            connector:
-              $ref: '#/components/schemas/ConnectorPredicateEnum'
-            context:
-              $ref: '#/components/schemas/ContextEnum'
-            value1:
-              type: string
-              description: Value to be filtered on.
-            value2:
-              type: string
-              description: Second value to be filtered on. Only relevant for BETWEEN.
-          required:
-          - name
-          - connector
-          - filterPredicate
-          - value1
-          - value2
-          - context
-      required:
-      - title
-      - name
-      - dynamicFilter
     SegmentDefinition:
       title: SegmentDefinition
       description: User segment
@@ -350,6 +258,33 @@ components:
       - id
       - title
       - description
+    QueryObjects:
+      title: QueryObjects
+      type: object
+      properties:
+        metrics:
+          type: array
+          description: List of available metrics
+          items:
+            $ref: '#/components/schemas/Metric'
+        dimensions:
+          type: array
+          description: List of available dimensions
+          items:
+            $ref: '#/components/schemas/Dimension'
+      required:
+      - metrics
+      - dimensions
+    ContextEnum:
+      type: string
+      description: Context to evaluate the metric/dimension. If context property is not given or empty the default context of the object will be used. The default context can be identified from the context property in the response list of /query-objects.
+      enum:
+      - VISITOR
+      - SESSION
+      - PAGE
+      - ACTION
+      - ATOMIC
+      - NONE
     Warning:
       type: object
       properties:
@@ -407,42 +342,47 @@ components:
             todayDate:
               type: string
               description: Date of the day being cut
-    DisplayTypeEnum:
-      type: string
-      description: Indicate how the data should be displayed
-      enum:
-      - NORMAL
-      - TIME
-      - CURRENCY
-      - DISTRIBUTION
-      - COMPARE
-    QueryObjects:
-      title: QueryObjects
+    DynamicTimeFilterDefinition:
+      title: DynamicTimeFilterDefinition
+      description: Dynamic Time Filter
       type: object
       properties:
-        metrics:
-          type: array
-          description: List of available metrics
-          items:
-            $ref: '#/components/schemas/Metric'
-        dimensions:
-          type: array
-          description: List of available dimensions
-          items:
-            $ref: '#/components/schemas/Dimension'
+        title:
+          type: string
+          description: Human readable description of the dynamic time filter (localized)
+        name:
+          type: string
+          description: API name of the filter value
+        dynamicFilter:
+          type: object
+          description: Snippet code which can be used in analysis
+          properties:
+            name:
+              type: string
+              description: API Name of the filtered dimension
+            filterPredicate:
+              $ref: '#/components/schemas/FilterPredicateEnum'
+            connector:
+              $ref: '#/components/schemas/ConnectorPredicateEnum'
+            context:
+              $ref: '#/components/schemas/ContextEnum'
+            value1:
+              type: string
+              description: Value to be filtered on.
+            value2:
+              type: string
+              description: Second value to be filtered on. Only relevant for BETWEEN.
+          required:
+          - name
+          - connector
+          - filterPredicate
+          - value1
+          - value2
+          - context
       required:
-      - metrics
-      - dimensions
-    ContextEnum:
-      type: string
-      description: Context to evaluate the metric/dimension. If context property is not given or empty the default context of the object will be used. The default context can be identified from the context property in the response list of /query-objects.
-      enum:
-      - VISITOR
-      - SESSION
-      - PAGE
-      - ACTION
-      - ATOMIC
-      - NONE
+      - title
+      - name
+      - dynamicFilter
     Problem:
       type: object
       properties:
@@ -466,6 +406,66 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/Warning'
+    Error:
+      type: object
+      properties:
+        name:
+          type: string
+          description: 'Each error has specific properties described in following table:
+
+
+            | Error| Description | Relevant parameters |
+
+            | ---------------- | ------------| -----------------------------------|
+
+            | UnmappedName | At least one object name cannot be found. | List of objects not found in _names_ array. |
+
+            | PivotIncompatibleMetric | Metric not usable in Pivot detected.| List of incompatible Metrics in _names_ array. |
+
+            | PivotIncompatibleDimension |Dimension not usable in Pivot detected. | List of incompatible Dimensions in _names_ array. |
+
+            | AnalysisLogicalCubeMismatch | All Dimensions and Metrics are not compatible. | List of incompatible objects in _names_ array. |
+
+            | InvalidSortingCriteria | Sorting is applied on a non-sortable object.| List of invalid sorted objects in _names_ array. |
+
+            | TimeFilterMissing | Each query must have a minimum of one Time Filter.| N/A |
+
+            | InvalidSegmentNoneContainer | A segment container has context set to NONE but either its connector is not set to AND or its inOrNotIn property is not set to IN.| N/A |'
+          enum:
+          - UnmappedName
+          - PivotIncompatibleMetric
+          - PivotIncompatibleDimension
+          - AnalysisLogicalCubeMismatch
+          - InvalidSortingCriteria
+          - TimeFilterMissing
+          - InvalidSegmentNoneContainer
+        parameters:
+          type: object
+          properties:
+            arrangeTypes:
+              type: array
+              description: List of internal object names (dimension, metrics, filter, ...) that corresponds to the error.
+              items:
+                type: string
+            aliases:
+              type: array
+              description: List of columns aliases that corresponds to the error. See Result Header alias property.
+              items:
+                type: string
+            names:
+              type: array
+              description: List of object names (dimension, metrics, filter, ...) that corresponds to the error.
+              items:
+                type: string
+    DisplayTypeEnum:
+      type: string
+      description: Indicate how the data should be displayed
+      enum:
+      - NORMAL
+      - TIME
+      - CURRENCY
+      - DISTRIBUTION
+      - COMPARE
   responses:
     Forbidden:
       description: No permission to execute operation
