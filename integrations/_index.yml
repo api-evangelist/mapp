@@ -101,3 +101,35 @@
     detected: '2026-10-18'
   status: not-a-workflow
   arazzo: null
+- slug: mapp-mach-alliance
+  label: MACH Alliance
+  partner_name: MACH Alliance
+  category: composable (MACH) commerce alliance membership
+  type: register
+  channel: standard-directory
+  evidence: https://machalliance.org/members/mapp
+  source: edge
+  relationship: standard-participant
+  contract_reference:
+    register: MACH Alliance members directory (machalliance.org/members)
+    standard: MACH Alliance (Microservices, API-first, Cloud-native SaaS, Headless)
+    spec_file: null
+    role: mach-certified-vendor
+    registered_name: Mapp
+    register_id: mapp
+    register_category: MACH Certified ISVs
+    register_country: GB
+    matched_domain: mapp.com
+    matched_by: domain
+    signal_note: certified_products = ONE entry for the vendor's MACH certification (the Alliance certifies the
+      vendor against the MACH criteria; no per-product list); awards and self-listed partnerships are context, never
+      counted
+    detected_by: sweep-mach-headless-commerce.py
+    detected: '2026-10-20'
+    certified_products:
+    - product: MACH certified ISV
+      product_type: MACH certified ISV
+      certifier: MACH Alliance
+      lapsed: false
+  status: not-a-workflow
+  arazzo: null
