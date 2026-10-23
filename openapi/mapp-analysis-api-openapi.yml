@@ -2008,3 +2008,9 @@ x-apievangelist-provenance:
   generated: '2026-08-12'
   source: https://docs.mapp.com/apidocs/ (per-endpoint OpenAPI fragments, Analytics API)
   note: Union of the OpenAPI 3.0.3 fragments Mapp publishes on each Analytics API endpoint page. Content verbatim.
+x-provenance:
+  method: harvested
+  publisher: Mapp Marketing Cloud
+  source: https://raw.githubusercontent.com/mapp-digital/Mapp-Intelligence-API-Docs/HEAD/analytics-api/analytics-api-full.yaml
+  note: split by refine-openapis from the provider's own published document, verified by fetch (openapi/_original/*.fetch.json);
+    stamped by stamp-openapi-provenance.py (roadmap#793)
